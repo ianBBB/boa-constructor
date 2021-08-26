@@ -9,40 +9,41 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Companions.GizmoCompanion'
+print('importing Companions.GizmoCompanion')
 
 import wx
-import wx.gizmos
+import wx.lib.gizmos
+import wx.adv
 
 import Preferences, Utils
 
-import BaseCompanions, Companions, ContainerCompanions
+from . import BaseCompanions, Companions, ContainerCompanions
 
-import EventCollections, Constructors
+from . import EventCollections, Constructors
 from PropEdit import PropertyEditors
 
 
 class GizmoDTCMix:
     def writeImports(self):
-        return 'import wx.gizmos'
+        return 'import wx.lib.gizmos'
 
 EventCollections.EventCategories['DynamicSashEvent'] = (
-      'wx.gizmos.EVT_DYNAMIC_SASH_SPLIT', 'wx.gizmos.EVT_DYNAMIC_SASH_UNIFY')
+      'wx.lib.gizmos.EVT_DYNAMIC_SASH_SPLIT', 'wx.lib.gizmos.EVT_DYNAMIC_SASH_UNIFY')
 EventCollections.commandCategories.append('DynamicSashEvent')
 
 # Derives from Window instead of Container because children must be added in
 # the OnSplit event, not at design-time (crashes if children not added in event)
-class DynamicSashWindowDTC(GizmoDTCMix, Constructors.WindowConstr, BaseCompanions.WindowDTC):
+class DynamicSashWindowDTC(BaseCompanions.WindowDTC, GizmoDTCMix, Constructors.WindowConstr):
     def __init__(self, name, designer, parent, ctrlClass):
         BaseCompanions.WindowDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.gizmos.DS_MANAGE_SCROLLBARS', 'wx.gizmos.DS_DRAG_CORNER'] + self.windowStyles
+        self.windowStyles = ['wx.lib.gizmos.DS_MANAGE_SCROLLBARS', 'wx.lib.gizmos.DS_DRAG_CORNER'] + self.windowStyles
         self.ctrlDisabled = True
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
         return {'pos':   position,
                 'size':  'wx.Size(100, 100)',
                 'style': 'wx.CLIP_CHILDREN',
-                'name':  `self.name`}
+                'name':  repr(self.name)}
 
     def events(self):
         return BaseCompanions.WindowDTC.events(self) + ['DynamicSashEvent']
@@ -53,22 +54,22 @@ class DynamicSashWindowDTC(GizmoDTCMix, Constructors.WindowConstr, BaseCompanion
 
 #-------------------------------------------------------------------------------
 
-LEDNumberCtrlAlignment = [wx.gizmos.LED_ALIGN_LEFT, wx.gizmos.LED_ALIGN_RIGHT,
-                          wx.gizmos.LED_ALIGN_CENTER, wx.gizmos.LED_ALIGN_MASK, wx.gizmos.LED_DRAW_FADED]
-LEDNumberCtrlAlignmentNames = {'wx.gizmos.LED_ALIGN_LEFT': wx.gizmos.LED_ALIGN_LEFT,
-                               'wx.gizmos.LED_ALIGN_RIGHT': wx.gizmos.LED_ALIGN_RIGHT,
-                               'wx.gizmos.LED_ALIGN_CENTER': wx.gizmos.LED_ALIGN_CENTER,
-                               'wx.gizmos.LED_ALIGN_MASK': wx.gizmos.LED_ALIGN_MASK,
-                               'wx.gizmos.LED_DRAW_FADED': wx.gizmos.LED_DRAW_FADED}
+LEDNumberCtrlAlignment = [wx.lib.gizmos.LED_ALIGN_LEFT, wx.lib.gizmos.LED_ALIGN_RIGHT,
+                          wx.lib.gizmos.LED_ALIGN_CENTER, wx.lib.gizmos.LED_ALIGN_MASK, wx.lib.gizmos.LED_DRAW_FADED]
+LEDNumberCtrlAlignmentNames = {'wx.lib.gizmos.LED_ALIGN_LEFT': wx.lib.gizmos.LED_ALIGN_LEFT,
+                               'wx.lib.gizmos.LED_ALIGN_RIGHT': wx.lib.gizmos.LED_ALIGN_RIGHT,
+                               'wx.lib.gizmos.LED_ALIGN_CENTER': wx.lib.gizmos.LED_ALIGN_CENTER,
+                               'wx.lib.gizmos.LED_ALIGN_MASK': wx.lib.gizmos.LED_ALIGN_MASK,
+                               'wx.lib.gizmos.LED_DRAW_FADED': wx.lib.gizmos.LED_DRAW_FADED}
 
 class LEDNumberCtrlDTC(GizmoDTCMix, BaseCompanions.WindowDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         BaseCompanions.WindowDTC.__init__(self, name, designer, parent, ctrlClass)
         self.editors.update({'Alignment'   : PropertyEditors.EnumPropEdit,
                              'DrawFaded' : PropertyEditors.BoolPropEdit})
-        self.windowStyles = ['wx.gizmos.LED_ALIGN_LEFT', 'wx.gizmos.LED_ALIGN_RIGHT',
-                             'wx.gizmos.LED_ALIGN_CENTER', 'wx.gizmos.LED_ALIGN_MASK',
-                             'wx.gizmos.LED_DRAW_FADED'] + self.windowStyles
+        self.windowStyles = ['wx.lib.gizmos.LED_ALIGN_LEFT', 'wx.lib.gizmos.LED_ALIGN_RIGHT',
+                             'wx.lib.gizmos.LED_ALIGN_CENTER', 'wx.lib.gizmos.LED_ALIGN_MASK',
+                             'wx.lib.gizmos.LED_DRAW_FADED'] + self.windowStyles
         self.options['Alignment'] = LEDNumberCtrlAlignment
         self.names['Alignment'] = LEDNumberCtrlAlignmentNames
 
@@ -79,7 +80,7 @@ class LEDNumberCtrlDTC(GizmoDTCMix, BaseCompanions.WindowDTC):
         return {'pos':   position,
                 'size':  'wx.Size(%d, %d)'%(Preferences.dsDefaultControlSize.x,
                                            Preferences.dsDefaultControlSize.y),
-                'style': 'wx.gizmos.LED_ALIGN_LEFT'}
+                'style': 'wx.lib.gizmos.LED_ALIGN_LEFT'}
 
     def writeImports(self):
         return '\n'.join( (BaseCompanions.WindowDTC.writeImports(self),
@@ -98,10 +99,10 @@ class EditableListBoxDTC(GizmoDTCMix, ContainerCompanions.PanelDTC):
         return {'Label': 'label', 'Position': 'pos', 'Size': 'size', 'Name': 'name'}
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
-        return {'label': `self.name`,
+        return {'label': repr(self.name),
                 'pos':   position,
                 'size':  self.getDefCtrlSize(),
-                'name': `self.name`}
+                'name': repr(self.name)}
 
     def writeImports(self):
         return '\n'.join( (ContainerCompanions.PanelDTC.writeImports(self),
@@ -109,7 +110,7 @@ class EditableListBoxDTC(GizmoDTCMix, ContainerCompanions.PanelDTC):
 
 #-------------------------------------------------------------------------------
 
-import ListCompanions
+from . import ListCompanions
 
 class TreeListCtrlDTC(GizmoDTCMix, ListCompanions.TreeCtrlDTC):
     def __init__(self, name, designer, parent, ctrlClass):
@@ -164,12 +165,12 @@ class TreeListCtrlColumnsCDTC(BaseCompanions.CollectionDTC):
 
     def properties(self):
         props = BaseCompanions.CollectionDTC.properties(self)
-        props.update({'Text':  ('IndexRoute', wx.gizmos.TreeListCtrl.GetColumnText,
-                                              wx.gizmos.TreeListCtrl.SetColumnText)})
+        props.update({'Text':  ('IndexRoute', wx.lib.gizmos.TreeListCtrl.GetColumnText,
+                                              wx.lib.gizmos.TreeListCtrl.SetColumnText)})
         return props
 
     def designTimeSource(self, wId, method=None):
-        return {'text': `'%s%d'%(self.propName, wId)`}
+        return {'text': repr('%s%d'%(self.propName, wId))}
 
     def moveItem(self, idx, dir):
         newIdx = BaseCompanions.CollectionDTC.moveItem(self, idx, dir)
@@ -184,11 +185,11 @@ class TreeListCtrlColumnsCDTC(BaseCompanions.CollectionDTC):
 #-------------------------------------------------------------------------------
 
 import Plugins
-Plugins.registerComponent('ContainersLayout', wx.gizmos.DynamicSashWindow,
-                          'wx.gizmos.DynamicSashWindow', DynamicSashWindowDTC)
-Plugins.registerComponent('BasicControls', wx.gizmos.LEDNumberCtrl,
-                          'wx.gizmos.LEDNumberCtrl', LEDNumberCtrlDTC)
-Plugins.registerComponent('ListControls', wx.gizmos.EditableListBox,
-                          'wx.gizmos.EditableListBox', EditableListBoxDTC)
-Plugins.registerComponent('ListControls', wx.gizmos.TreeListCtrl,
-                          'wx.gizmos.TreeListCtrl', TreeListCtrlDTC)
+Plugins.registerComponent('ContainersLayout', wx.lib.gizmos.DynamicSashWindow,
+                          'wx.lib.gizmos.DynamicSashWindow', DynamicSashWindowDTC)
+Plugins.registerComponent('BasicControls', wx.lib.gizmos.LEDNumberCtrl,
+                          'wx.lib.gizmos.LEDNumberCtrl', LEDNumberCtrlDTC)
+Plugins.registerComponent('ListControls', wx.adv.EditableListBox,
+                          'wx.adv.EditableListBox', EditableListBoxDTC)
+Plugins.registerComponent('ListControls', wx.lib.gizmos.TreeListCtrl,
+                          'wx.lib.gizmos.TreeListCtrl', TreeListCtrlDTC)
