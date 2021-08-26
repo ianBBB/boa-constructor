@@ -230,18 +230,18 @@ class DialogDTC(FramesConstr, BaseFrameDTC):
     def events(self):
         return BaseFrameDTC.events(self) + ['DialogEvent']
 
-class MiniFrameDTC(FramesConstr, FrameDTC):
+class MiniFrameDTC(FrameDTC,FramesConstr):
     def __init__(self, name, designer, frameCtrl):
         FrameDTC.__init__(self, name, designer, frameCtrl)
         self.windowStyles.extend(['wx.TINY_CAPTION_HORIZ', 'wx.TINY_CAPTION_VERT'])
 
-class MDIParentFrameDTC(FramesConstr, FrameDTC):
+class MDIParentFrameDTC(FrameDTC,FramesConstr):
     def designTimeSource(self):
         dts = FrameDTC.designTimeSource(self)
         dts.update({'style': 'wx.DEFAULT_FRAME_STYLE | wx.VSCROLL | wx.HSCROLL'})
         return dts
 
-class MDIChildFrameDTC(FramesConstr, FrameDTC):
+class MDIChildFrameDTC(FrameDTC,FramesConstr):
     pass
 
 class PopupWindowDTC(ContainerDTC):
@@ -281,7 +281,7 @@ class PopupWindowDTC(ContainerDTC):
 
 EventCategories['PanelEvent'] = ('wx.EVT_SYS_COLOUR_CHANGED',)
 
-class FramePanelDTC(Constructors.WindowConstr, BaseFrameDTC):
+class FramePanelDTC(BaseFrameDTC, Constructors.WindowConstr):
     dialogLayout = True
     suppressWindowId = False
 
