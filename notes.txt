@@ -1,0 +1,15 @@
+template 2to3 command:
+2to3 -w -f all -f idioms -f set_literal -f buffer
+
+
+List of activities on current file
+==================================
+About
+# 2to3
+warnings (but still some left)
+
+List of activities on current file
+==================================
+langlistctrl.py
+# 2to3
+warnings (but still some left)

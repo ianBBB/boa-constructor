@@ -1,3 +1,3 @@
-version = '0.7.2'
-wx_version = (2, 6, 0, 0)
-wx_version_max = None # set to None to have no upper version check
+version = '0.8.0'
+wx_version = (4, 1, 1, 0)
+wx_version_max = (4, 1, 1, 0) # reactivating this.

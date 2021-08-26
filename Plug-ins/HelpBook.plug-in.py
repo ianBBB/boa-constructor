@@ -12,7 +12,7 @@
 #Boa:Dialog:HelpBookItemDlg
 
 import wx
-from wxCompat import wxNO_3D
+# from wxCompat import wxNO_3D
 
 from Utils import _
 
@@ -684,7 +684,7 @@ class HelpBookIndexView(wx.SplitterWindow, EditorViews.EditorView):
     delBmp = 'Images/Shared/DeleteItem.png'
     def __init__(self, parent, model):
         wx.SplitterWindow.__init__(self, parent, -1,
-              style=wx.CLIP_CHILDREN | wxNO_3D | wx.SP_3DSASH)
+              style=wx.CLIP_CHILDREN | wx.SP_3DSASH)
 
         self.indexes = HelpBookIndexListView(self, model, self)
         self.files = HelpBookFilesView(self, model, False)
@@ -855,7 +855,7 @@ class HelpBookContentsView(wx.SplitterWindow, EditorViews.EditorView):
     delBmp = 'Images/Shared/DeleteItem.png'
     def __init__(self, parent, model):
         wx.SplitterWindow.__init__(self, parent, -1,
-              style=wx.CLIP_CHILDREN | wxNO_3D | wx.SP_3DSASH)
+              style=wx.CLIP_CHILDREN | wx.SP_3DSASH)
 
         self.contents = HelpBookContentsTreeView(self, model, self)
         self.files = HelpBookFilesView(self, model, False)

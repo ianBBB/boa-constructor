@@ -11,14 +11,14 @@
 #-----------------------------------------------------------------------------
 
 import sys, linecache, traceback, shutil
-from cStringIO import StringIO
+from io import StringIO
 
 import wx
 import wx.stc
 
 from ExternalLib import ndiff
-from EditorViews import EditorView, CloseableViewMix
-from StyledTextCtrls import PythonStyledTextCtrlMix
+from .EditorViews import EditorView, CloseableViewMix
+from .StyledTextCtrls import PythonStyledTextCtrlMix
 import Preferences, Utils
 from Utils import _
 
@@ -41,7 +41,7 @@ def ndiff_lcompare(a, b):
         elif tag == 'equal':
             ndiff.dump(' ', a, alo, ahi)
         else:
-            raise ValueError, _('unknown tag %r')%tag
+            raise ValueError(_('unknown tag %r')%tag)
 
     return 1
 

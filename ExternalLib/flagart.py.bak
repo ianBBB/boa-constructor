@@ -16,22 +16,16 @@ This module is (c) 2006 Riaan Booysen and licensed under the Python license.
 
 import wx
 from wx import ImageFromStream, BitmapFromImage
-import io
+import cStringIO
 
 catalog = {}
 index = []
-class ImageClass:
-    # def __init__(self):
-    #     self.getBitmap = None
-    #     self.getImage = None
-    #     self.getData = None
-
-    pass
+class ImageClass: pass
 
 #----------------------------------------------------------------------
 def getAEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xddIDAT(\x91\x85\x8e\xb1M\x03P\x10C\xdf\'\xbf\xa4\xa3\x8a\x04]\x98"\
 %\x1d\xf3\xd0EL\xc1\x14i\xb3I6 \x12L\x80h\xce\xbe;\x8a\x04\x01E\xc8\xd3\xc9\
@@ -45,11 +39,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00IEND\xaeB`\x82' 
 
 def getAEBitmap():
-    return wx.Bitmap(getAEImage())
+    return BitmapFromImage(getAEImage())
 
 def getAEImage():
-    stream = io.BytesIO(getAEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getAEData())
+    return ImageFromStream(stream)
 
 index.append('AE')
 catalog['AE'] = ImageClass()
@@ -61,7 +55,7 @@ catalog['AE'].getBitmap = getAEBitmap
 #----------------------------------------------------------------------
 def getAFData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01mIDAT(\x91U\x90\xbdNUa\x14D\xe7\xe0\x01\x01\x7f\n\t\x02%\x15\xe1\x05\
 (\xa9-\xedi\xe05,\xef\x1bX[\xf2\x04t\xc6\xa8\xb12\xb1\xd2\xc2\x88\x891\xc6N \
@@ -80,11 +74,11 @@ k\x1f?u\xb2G4\xd2D\xb4I-\xdd\xfe\n$\x1fml\xdc\x9e\x06\x05q\x90\x06r\xb0\x97\
 \x04\xd6\xf1\x07\xfbEiS4\x8b\x8d>\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getAFBitmap():
-    return wx.Bitmap(getAFImage())
+    return BitmapFromImage(getAFImage())
 
 def getAFImage():
-    stream = io.BytesIO(getAFData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getAFData())
+    return ImageFromStream(stream)
 
 index.append('AF')
 catalog['AF'] = ImageClass()
@@ -96,7 +90,7 @@ catalog['AF'].getBitmap = getAFBitmap
 #----------------------------------------------------------------------
 def getALData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x80IDAT(\x91M\xd1?\x8fMa\x14\x85\xf1u\xde\xf3r\x1d\x17\x99\x8c\x89\
 \x98h\x14\x12\x89D\xa5\xf41\x90\xa8T\xd3\x88f\n\x8ai\x94\xa2\x11\xa2\xd1\x8c\
@@ -116,11 +110,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x03e\xfaB@$q9K\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getALBitmap():
-    return wx.Bitmap(getALImage())
+    return BitmapFromImage(getALImage())
 
 def getALImage():
-    stream = io.BytesIO(getALData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getALData())
+    return ImageFromStream(stream)
 
 index.append('AL')
 catalog['AL'] = ImageClass()
@@ -132,7 +126,7 @@ catalog['AL'].getBitmap = getALBitmap
 #----------------------------------------------------------------------
 def getAMData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x13IDAT(\x91UO\xbdN\x9bA\x10\x9c\xfb|\x95\xddR\xa0\x88\x967\xa0\xcc\
 \xd3!\xaaH.\xd3$\xb4<\x1a\x12\n\x92\xf5a\t\x12n\xe7\'\xc5\xd9\x90\xacV\xa3\
@@ -148,11 +142,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 ND\xaeB`\x82' 
 
 def getAMBitmap():
-    return wx.Bitmap(getAMImage())
+    return BitmapFromImage(getAMImage())
 
 def getAMImage():
-    stream = io.BytesIO(getAMData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getAMData())
+    return ImageFromStream(stream)
 
 index.append('AM')
 catalog['AM'] = ImageClass()
@@ -164,7 +158,7 @@ catalog['AM'].getBitmap = getAMBitmap
 #----------------------------------------------------------------------
 def getARData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x019IDAT(\x91M\x91\xbdNUQ\x10\x85\xd7>l\x0f(\xa1\xc0\x1b\x0c\x8d\x85\
 \x95\x11K\x13J\x1a\x94\xc4G\xf0\x01lH(\xad\xa9y\x1ebl\xb4\xf3\xe7\rhL\xb0&\
@@ -181,11 +175,11 @@ l\xdb\xb2\xf1\x88\xd8\x0f\x8av^\xce\xeb\xf3-f\xbd$\xd9\x96e\xd9\xb7_rq\x8e\
 H(\xa4^\xff\x01\xf6\x01p\xe7$\xc8U\xac\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getARBitmap():
-    return wx.Bitmap(getARImage())
+    return BitmapFromImage(getARImage())
 
 def getARImage():
-    stream = io.BytesIO(getARData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getARData())
+    return ImageFromStream(stream)
 
 index.append('AR')
 catalog['AR'] = ImageClass()
@@ -197,7 +191,7 @@ catalog['AR'].getBitmap = getARBitmap
 #----------------------------------------------------------------------
 def getATData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xe9IDAT(\x91}\x91\xadnBA\x14\x84\xbfmoj\xd077\x08\x1c\xa65(\x1e\x0c\
 \x8d\xe7\x810\xbc\x01\x9e\x17@\xb5\x82P\\k\xf6\xfcL\xc5\xde\x14hH''_FL6g\xe7\
@@ -211,11 +205,11 @@ m\x07\x80\xf4\xfeA\x04\x112k\x1c\xa7\x9a\xac\xaaV\x99\x95\xd9,\xa1c\xb9\xd4\
 \x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getATBitmap():
-    return wx.Bitmap(getATImage())
+    return BitmapFromImage(getATImage())
 
 def getATImage():
-    stream = io.BytesIO(getATData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getATData())
+    return ImageFromStream(stream)
 
 index.append('AT')
 catalog['AT'] = ImageClass()
@@ -227,7 +221,7 @@ catalog['AT'].getBitmap = getATBitmap
 #----------------------------------------------------------------------
 def getAUData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x02\x0bIDAT(\x91M\xc7OHSq\x1c\x00\xf0\xef\xdb\xdehK\x9d\xd3\xb9\xb6i\
 \xcf\xb6\xe5"\xe7\xa6\x1db\x0b\xb3\xc2\xb2\x81\xd9""(\xe8\x94\x15\x1d\xa3\
@@ -252,11 +246,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 q\xa6\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getAUBitmap():
-    return wx.Bitmap(getAUImage())
+    return BitmapFromImage(getAUImage())
 
 def getAUImage():
-    stream = io.BytesIO(getAUData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getAUData())
+    return ImageFromStream(stream)
 
 index.append('AU')
 catalog['AU'] = ImageClass()
@@ -268,7 +262,7 @@ catalog['AU'].getBitmap = getAUBitmap
 #----------------------------------------------------------------------
 def getAZData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01nIDAT(\x91M\x90\xbdjTa\x18\x84\xe7;9\xbb!k\xc0F$?D\xb3j\xab\xa0\xb5m\
 n"\x17\xb0w`\x15\xbc\x834\xa6\xdb\xe0%h\xe3\r(.\xa8\xd8\tY\xbbUD\x11m\xd4\
@@ -287,11 +281,11 @@ n"\x17\xb0w`\x15\xbc\x834\xa6\xdb\xe0%h\xe3\r(.\xa8\xd8\tY\xbbUD\x11m\xd4\
 \x00\x00IEND\xaeB`\x82' 
 
 def getAZBitmap():
-    return wx.Bitmap(getAZImage())
+    return BitmapFromImage(getAZImage())
 
 def getAZImage():
-    stream = io.BytesIO(getAZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getAZData())
+    return ImageFromStream(stream)
 
 index.append('AZ')
 catalog['AZ'] = ImageClass()
@@ -303,7 +297,7 @@ catalog['AZ'].getBitmap = getAZBitmap
 #----------------------------------------------------------------------
 def getBEData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xeeIDAT(\x91m\x91AJ\x83a\x0cD\xdf\xa7UDT\xc4\x8dt\xe1\xc6\x0bx!o\
 \xd2[\xf5:\xd5]\x05W\x8a\xe2*3I\\\xf4\xff[\x15\x87!\xab\xbc\xcc@\x06\xbf\xf5\
@@ -317,11 +311,11 @@ D\x1d\xd1\x16N2='x\xb9\\J\xb2s\x0c\x81\xc6\x10\x18\x84\xcc\xbd\xc9\xdc\xb9`\
 \xe0\x1b\xafZe\xef\x08@\x1fr\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getBEBitmap():
-    return wx.Bitmap(getBEImage())
+    return BitmapFromImage(getBEImage())
 
 def getBEImage():
-    stream = io.BytesIO(getBEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBEData())
+    return ImageFromStream(stream)
 
 index.append('BE')
 catalog['BE'] = ImageClass()
@@ -333,7 +327,7 @@ catalog['BE'].getBitmap = getBEBitmap
 #----------------------------------------------------------------------
 def getBGData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x07IDAT(\x91mN1NCQ\x0c\xf3\xfb\xbc.\x95\xd8X*\x15ua\xe1\x1e\x9c\xa9\
 #\x0b7\xe02\xcc\x95\x988\x02\xaa\x18:ua\x01\x15\x89\xd8q\x18~\x0b\x1f\x84\
@@ -348,11 +342,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xf1\xa9\x8f\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getBGBitmap():
-    return wx.Bitmap(getBGImage())
+    return BitmapFromImage(getBGImage())
 
 def getBGImage():
-    stream = io.BytesIO(getBGData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBGData())
+    return ImageFromStream(stream)
 
 index.append('BG')
 catalog['BG'] = ImageClass()
@@ -364,7 +358,7 @@ catalog['BG'].getBitmap = getBGBitmap
 #----------------------------------------------------------------------
 def getBHData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01"IDAT(\x91]\x91=n\xc2@\x10\x85\x9f\x91[\x174\xb1\x94\x88\x1b@\x93\
 \xdc\x86\x9b\xd0\x91\x94!H\xa4AJ\x8a\xe4\x0e4\xdc\x81\xa4\x83\x0b\xd0P\xd8\n\
@@ -380,11 +374,11 @@ f\xcd\x0e\\\xaf1y\xe2\xcfw\xf5\xbc\x13JKC\x04\xc1!\x98\x90d\xbf\xcf\xe7\x19o\
 \xd0?w\xebTm\xac\xf7k\x18\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getBHBitmap():
-    return wx.Bitmap(getBHImage())
+    return BitmapFromImage(getBHImage())
 
 def getBHImage():
-    stream = io.BytesIO(getBHData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBHData())
+    return ImageFromStream(stream)
 
 index.append('BH')
 catalog['BH'] = ImageClass()
@@ -396,7 +390,7 @@ catalog['BH'].getBitmap = getBHBitmap
 #----------------------------------------------------------------------
 def getBIData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xffIDAT(\x915\xc9MH\x93q\x1c\x07\xf0\xef\xf3l\xc9|\x1e\xf7\xc2\xd6\
 \xdc\xcah\x8e,\x1b-j\xec\x90\x82t\x88^<F\xa7.\xa5DV\xa3K\xd1)\xe8\x9ab\x87\
@@ -420,11 +414,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xe7\xe6_}h&tLr\xcb)\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getBIBitmap():
-    return wx.Bitmap(getBIImage())
+    return BitmapFromImage(getBIImage())
 
 def getBIImage():
-    stream = io.BytesIO(getBIData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBIData())
+    return ImageFromStream(stream)
 
 index.append('BI')
 catalog['BI'] = ImageClass()
@@ -436,17 +430,17 @@ catalog['BI'].getBitmap = getBIBitmap
 #----------------------------------------------------------------------
 def getBLANKData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x06\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x06\
 \x00\x00\x00v\xe2\r9\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\
 \x00\x19IDAT(\x91cddbf\xa0\x040Q\xa4{\xd4\x80Q\x03\xa8e\x00\x0028\x00\x1c\
 \xbe#|\xfc\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getBLANKBitmap():
-    return wx.Bitmap(getBLANKImage())
+    return BitmapFromImage(getBLANKImage())
 
 def getBLANKImage():
-    stream = io.BytesIO(getBLANKData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBLANKData())
+    return ImageFromStream(stream)
 
 index.append('BLANK')
 catalog['BLANK'] = ImageClass()
@@ -458,7 +452,7 @@ catalog['BLANK'].getBitmap = getBLANKBitmap
 #----------------------------------------------------------------------
 def getBNData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xc3IDAT(\x91-\xcc1hSa\x14\xc5\xf1\xf3}\xef\xa5>\x93\x18\rv\x88\xc1\
 \xa1\x90\x08\x0e\x8aT\xc9\x92\x0e\xa2\x8b\xa0\x9b\x8b\xa0\xe0"\x1dD\x04\x89\
@@ -480,11 +474,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 f^,\xf4\xbdI\x03\r\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getBNBitmap():
-    return wx.Bitmap(getBNImage())
+    return BitmapFromImage(getBNImage())
 
 def getBNImage():
-    stream = io.BytesIO(getBNData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBNData())
+    return ImageFromStream(stream)
 
 index.append('BN')
 catalog['BN'] = ImageClass()
@@ -496,7 +490,7 @@ catalog['BN'].getBitmap = getBNBitmap
 #----------------------------------------------------------------------
 def getBOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1cIDAT(\x91mQ=\xaa\x14a\x10\xac\xd9\xfd4\xf2\x99\xa9\x0b\x06\x82\
 \xe01\xbc\x87\xb1\xb9x\t\x11C1\xf3\x0e&\x1e\xc2{\x18\x8b\x81,o\x1f\xe3W\x7f\
@@ -512,11 +506,11 @@ L\xff\x126l\xe6\xe1\xde\xcd\xafw\x18\x08\x1a\xb7j\x85\xb8e\xc2\xeeC\nf\xc3\
 |\xb7\xb6e\x1c\x8d\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getBOBitmap():
-    return wx.Bitmap(getBOImage())
+    return BitmapFromImage(getBOImage())
 
 def getBOImage():
-    stream = io.BytesIO(getBOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBOData())
+    return ImageFromStream(stream)
 
 index.append('BO')
 catalog['BO'] = ImageClass()
@@ -528,7 +522,7 @@ catalog['BO'].getBitmap = getBOBitmap
 #----------------------------------------------------------------------
 def getBRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xadIDAT(\x91M\x91;h\x93a\x14\x86\xdf\xfe\xf9B\xad(!\x83\x12\xdb\x82\
 C\x15\xc1[\x06G\x15\x94\n"\xe2\xe0%\xa0\xc4IQ!\x93C]\n\nE\xb1\xe0\xa2\xb4\
@@ -550,11 +544,11 @@ E\xbc\xfb\xe3\xe6\xf1 \x16\xa8B%\x8d\x00\x02"\x84,,[E\x151!W\x94\'\xa5\xbc\
 \x93\xbf\xf2C/A9\xd1-\x1e\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getBRBitmap():
-    return wx.Bitmap(getBRImage())
+    return BitmapFromImage(getBRImage())
 
 def getBRImage():
-    stream = io.BytesIO(getBRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBRData())
+    return ImageFromStream(stream)
 
 index.append('BR')
 catalog['BR'] = ImageClass()
@@ -566,7 +560,7 @@ catalog['BR'].getBitmap = getBRBitmap
 #----------------------------------------------------------------------
 def getBTData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x9eIDAT(\x91m\xca\xbfo\xccq\x1c\xc7\xf1\xe7\xf7{\x9f\xbb\xf6\xd2\
 \xf6\x82\xdc\xc5\x8f\x94F%\xc2\xc0\x1f\xe0\x0f`\xb2\x18\r\x06\t\xe9\x1f \x16\
@@ -588,11 +582,11 @@ y\x06B9\x8bJ\xd3\xbb\xde\xc1\xf5e\xa6\xb2\x8e\xce\xb7\xbe\xbe\xa87bq`\x812\
 #\xea\x19>\xf5\x97\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getBTBitmap():
-    return wx.Bitmap(getBTImage())
+    return BitmapFromImage(getBTImage())
 
 def getBTImage():
-    stream = io.BytesIO(getBTData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBTData())
+    return ImageFromStream(stream)
 
 index.append('BT')
 catalog['BT'] = ImageClass()
@@ -604,7 +598,7 @@ catalog['BT'].getBitmap = getBTBitmap
 #----------------------------------------------------------------------
 def getBWData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x0eIDAT(\x91}Q\xb1J\xa3a\x10\x9c\x8d?\x8a`\x08\x9c\xa0\x9d\x81\x03\
 \xf1\r\xf3\x04b\xe9\x8b\xdc\x03\xd8\xd8\xa4S\x1f!M X\x1d\x17\xb8\x80B\xd8\
@@ -620,11 +614,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 D\xaeB`\x82' 
 
 def getBWBitmap():
-    return wx.Bitmap(getBWImage())
+    return BitmapFromImage(getBWImage())
 
 def getBWImage():
-    stream = io.BytesIO(getBWData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBWData())
+    return ImageFromStream(stream)
 
 index.append('BW')
 catalog['BW'] = ImageClass()
@@ -636,7 +630,7 @@ catalog['BW'].getBitmap = getBWBitmap
 #----------------------------------------------------------------------
 def getBYData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01LIDAT(\x91M\x8e\xb1jTa\x10\x85\xbf\xbd{\xb1\xddj\t[\xa4\xf1\x1d\xf2\
 \x12\x16\xe2\x0b\x84`\xaa4a\x1b+\xb1\xd3\xd8\xa4\x8b\x16>E0A\x10RX\xda\xf8\
@@ -654,11 +648,11 @@ L\xad\xa9\xad\xad\xd5U\xc1#\xea\xb27g\xd3T\xaf^,\x9e.\xbc\x84\x87T\xa4"/\xae\
 \x82' 
 
 def getBYBitmap():
-    return wx.Bitmap(getBYImage())
+    return BitmapFromImage(getBYImage())
 
 def getBYImage():
-    stream = io.BytesIO(getBYData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBYData())
+    return ImageFromStream(stream)
 
 index.append('BY')
 catalog['BY'] = ImageClass()
@@ -670,7 +664,7 @@ catalog['BY'].getBitmap = getBYBitmap
 #----------------------------------------------------------------------
 def getBZData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xa4IDAT(\x91U\x91\xbfk\x93a\x14\x85\xcf\xfb\xf5k\x92j\xdaDM$BB\xb1\
 \xa5:(\x82\x14\\\xfcA'Aqtprr\xf6_pp\x11\x04\xf1?p\x13\xc7\xee\x82P\xed(\x05+\
@@ -692,11 +686,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x82" 
 
 def getBZBitmap():
-    return wx.Bitmap(getBZImage())
+    return BitmapFromImage(getBZImage())
 
 def getBZImage():
-    stream = io.BytesIO(getBZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getBZData())
+    return ImageFromStream(stream)
 
 index.append('BZ')
 catalog['BZ'] = ImageClass()
@@ -708,7 +702,7 @@ catalog['BZ'].getBitmap = getBZBitmap
 #----------------------------------------------------------------------
 def getCAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xa1IDAT(\x91M\x91\xbdn\x13A\x18E\xef\xcc\xcez\xd7?`\xcb\x0e\x16\xa2\
 A@\x01\x0f@H\x9d\x9a\x927H\x99\x0e\t\xc9\x12U^\x80\x86\x82\x9f\x12Q\xe7\x05\
@@ -729,11 +723,11 @@ _L\xe6*I\x01s\x0c(\x90\x80_\xc0\x8d\xd5\xca{\xff/\xf0f\x88\xc8zw\xb7\x07(\
 \x00\xe0/\x16\xb12\xdd\xfc\xf2\xe0\xa8\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getCABitmap():
-    return wx.Bitmap(getCAImage())
+    return BitmapFromImage(getCAImage())
 
 def getCAImage():
-    stream = io.BytesIO(getCAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCAData())
+    return ImageFromStream(stream)
 
 index.append('CA')
 catalog['CA'] = ImageClass()
@@ -745,7 +739,7 @@ catalog['CA'].getBitmap = getCABitmap
 #----------------------------------------------------------------------
 def getCBData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01NIDAT(\x91U\x91/o\xd3q\x1c\x84\xaf\xcd\x8f\xfdIZ\xc9\xc2\xb2t \x088\
 \x82!$\x08\xc8\xf4\x02\x82\xf4\x05\xccL\xf1\x0e\x86\xc1\xf1*\xd6\xbd\x04\x12\
@@ -764,11 +758,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 B`\x82' 
 
 def getCBBitmap():
-    return wx.Bitmap(getCBImage())
+    return BitmapFromImage(getCBImage())
 
 def getCBImage():
-    stream = io.BytesIO(getCBData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCBData())
+    return ImageFromStream(stream)
 
 index.append('CB')
 catalog['CB'] = ImageClass()
@@ -780,7 +774,7 @@ catalog['CB'].getBitmap = getCBBitmap
 #----------------------------------------------------------------------
 def getCDData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xa1IDAT(\x91M\x91=h\xd3\x01\x10\xc5/1(6\x16m\xd1\xc6\x14\xfe\n\x82\
 \x1f\x84\xe2G\x89\xc1\xe2\xc7\xe4dgg\x1d\\u\x14\x04\x17\x97\x0e\x82\x85\xe2\
@@ -802,11 +796,11 @@ Q2\xf3-v\xd2g\xafn\xd4\xbflmv\x067\x7f\xc2\xfa\xea\x9e\xce\xef\xdc\xf2\xf7!\
 \x00\x00\x00IEND\xaeB`\x82" 
 
 def getCDBitmap():
-    return wx.Bitmap(getCDImage())
+    return BitmapFromImage(getCDImage())
 
 def getCDImage():
-    stream = io.BytesIO(getCDData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCDData())
+    return ImageFromStream(stream)
 
 index.append('CD')
 catalog['CD'] = ImageClass()
@@ -818,7 +812,7 @@ catalog['CD'].getBitmap = getCDBitmap
 #----------------------------------------------------------------------
 def getCFData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x8fIDAT(\x91M\xca?HU\x01\x18\x86\xf1\xf7\xdcs\xecv+\xba\x9e\xc1\xe2\
 *\ri\xd2\x14Ak5\xd4\xeaP\xad\xd5\xe4\xe0\xd0?\x97\xbb:D\x93--\xe1\xe4\xec\
@@ -839,11 +833,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x03\xbd\x9e\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getCFBitmap():
-    return wx.Bitmap(getCFImage())
+    return BitmapFromImage(getCFImage())
 
 def getCFImage():
-    stream = io.BytesIO(getCFData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCFData())
+    return ImageFromStream(stream)
 
 index.append('CF')
 catalog['CF'] = ImageClass()
@@ -855,7 +849,7 @@ catalog['CF'].getBitmap = getCFBitmap
 #----------------------------------------------------------------------
 def getCHData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x06\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x06\
 \x00\x00\x00v\xe2\r9\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\
 \x00\xb0IDAT(\x91\x85R\xc1\x15\x830\x08\xfdQ\x0f\xbeN`:\x86kd\x8c\x8c\xe1,\
 \x1e=zt''h\xfeE\xed!MM\nV.\x10\xe0\xc3\x87`LU\x03\x00\xf6};\xf0G\x98\xd9\x8f\
@@ -867,11 +861,11 @@ Q[[0\x01\x80J\x14\x08A\x9b\x00$\xd5\x98d\x90wN\xc0y\x8e\x0f\xefE\xbad\xf0\
 \xaeB`\x82" 
 
 def getCHBitmap():
-    return wx.Bitmap(getCHImage())
+    return BitmapFromImage(getCHImage())
 
 def getCHImage():
-    stream = io.BytesIO(getCHData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCHData())
+    return ImageFromStream(stream)
 
 index.append('CH')
 catalog['CH'] = ImageClass()
@@ -883,7 +877,7 @@ catalog['CH'].getBitmap = getCHBitmap
 #----------------------------------------------------------------------
 def getCLData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x0bIDAT(\x91u\x8c=JCQ\x10\x85\xbf{\xdf\x13\x13\x8b j\x93\xd2\xacAD\
 \\\x8a\x856\x82e\x16`\xe5NR\xb9\x07\x1b[!6\xb6\x82H\x10\xecb~$\x9a\xe4\xce\
@@ -898,11 +892,11 @@ J^_\xe2g\xbd\x18\xcf,{4K\x8d\xbaO\xa7\x0e\xabo\x97\x83\x18\xad\xdf\x0f\x19h\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getCLBitmap():
-    return wx.Bitmap(getCLImage())
+    return BitmapFromImage(getCLImage())
 
 def getCLImage():
-    stream = io.BytesIO(getCLData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCLData())
+    return ImageFromStream(stream)
 
 index.append('CL')
 catalog['CL'] = ImageClass()
@@ -914,7 +908,7 @@ catalog['CL'].getBitmap = getCLBitmap
 #----------------------------------------------------------------------
 def getCNData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01$IDAT(\x91]\x911JCa\x10\x84'\xc9\x8bb\x11\xb0\x12S\xa4\x10\x04/\xa0G\
 \xf0\x18\xe6\x10\x96Zx\x1d\x0b\x91\x98\xc2\xc6RA\xbc\x80\x9e\xc0BE\x10\x13\
@@ -930,11 +924,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xaa\x02\xfe\x00:\xaes0^l*\xa0\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getCNBitmap():
-    return wx.Bitmap(getCNImage())
+    return BitmapFromImage(getCNImage())
 
 def getCNImage():
-    stream = io.BytesIO(getCNData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCNData())
+    return ImageFromStream(stream)
 
 index.append('CN')
 catalog['CN'] = ImageClass()
@@ -946,7 +940,7 @@ catalog['CN'].getBitmap = getCNBitmap
 #----------------------------------------------------------------------
 def getCOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x11IDAT(\x91e\x8e\xb1\xae\x8ea\x10\x84\x9f\x8f/G\xa3!"\x14\x12r.@\
 \xed\x9e\xb4*7\xa0v)"\xd1k\x84FI\xe3\x88B\xa1R\xfa\xed\xcc;\xa3\xf8\xcf\x9f\
@@ -961,11 +955,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xffG\xc0\x1f\xb0\x80k\xc1\x03!\x8e\xc7\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getCOBitmap():
-    return wx.Bitmap(getCOImage())
+    return BitmapFromImage(getCOImage())
 
 def getCOImage():
-    stream = io.BytesIO(getCOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCOData())
+    return ImageFromStream(stream)
 
 index.append('CO')
 catalog['CO'] = ImageClass()
@@ -977,7 +971,7 @@ catalog['CO'].getBitmap = getCOBitmap
 #----------------------------------------------------------------------
 def getCRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01$IDAT(\x91eQ1JCQ\x10\x9c\x97\xfc"(\xa87\xf0\x10\x9e@,\xbc\x83\x17\
 \xf0\x00Bn\x10R\xab\xd8XX\x04,\xc4Sx\x0b[-\xac\x144\x8a\x92\xdd\x9d\x19\x8b\
@@ -994,11 +988,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 wG\xf1\xb3\xa7\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getCRBitmap():
-    return wx.Bitmap(getCRImage())
+    return BitmapFromImage(getCRImage())
 
 def getCRImage():
-    stream = io.BytesIO(getCRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCRData())
+    return ImageFromStream(stream)
 
 index.append('CR')
 catalog['CR'] = ImageClass()
@@ -1010,7 +1004,7 @@ catalog['CR'].getBitmap = getCRBitmap
 #----------------------------------------------------------------------
 def getCZData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01;IDAT(\x91u\x91\xbdjTq\x10\xc5\xcf\xde\xfc\th\x14VH\x10\xfc(\xdcR\
 \x1bAlW+\x0bA\xb0Hoo\x91\x17\xf1E\x02\x11\xf1V\xbe@\xda\xecF\x10\xc5\x17\x90\
@@ -1027,11 +1021,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getCZBitmap():
-    return wx.Bitmap(getCZImage())
+    return BitmapFromImage(getCZImage())
 
 def getCZImage():
-    stream = io.BytesIO(getCZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getCZData())
+    return ImageFromStream(stream)
 
 index.append('CZ')
 catalog['CZ'] = ImageClass()
@@ -1043,7 +1037,7 @@ catalog['CZ'].getBitmap = getCZBitmap
 #----------------------------------------------------------------------
 def getDEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x015IDAT(\x91u\x901\xaa\x14\x01\x10Dkfg\xc1H\x14\x13\x03\x7fj\xa8\xe072\
 T\xcc>h\xe8=~\xe0-\xbc\x88\xb0\x970\xd1\xd4\xa3\x082\xdd]\xddU\x06\xb3h\xe4\
@@ -1060,11 +1054,11 @@ o\xd8\xfc\x02~&?\x1ei\xa4\xb1F\xd3\x96\xa4>\xde\xac\xb1%\t~\xb2\xe8=6\x14\
 \xf0\xab\xf0\x078 \x87a\xf5\xfb\xbfZ\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getDEBitmap():
-    return wx.Bitmap(getDEImage())
+    return BitmapFromImage(getDEImage())
 
 def getDEImage():
-    stream = io.BytesIO(getDEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getDEData())
+    return ImageFromStream(stream)
 
 index.append('DE')
 catalog['DE'] = ImageClass()
@@ -1076,7 +1070,7 @@ catalog['DE'].getBitmap = getDEBitmap
 #----------------------------------------------------------------------
 def getDKData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01(IDAT(\x91eR;N\x03Q\x0c\x9c\xf7v\x0b\x04\x8aD\x85\x94b\x1bn\xc0A\xe0\
  \xb4\xd0\xe5V)s\x88\\!\x02AA\x04R\x96\x04\xa4xl\x0f\xc5[\x90\x00\xcb\x85e\
@@ -1092,11 +1086,11 @@ ZR\x912\xb3\xdfv\xdd\xec\xf666\x1b\xb9\xcb\xect\xb5\xd28\x1e\xaeor\xff\xde\
 \xb9\x02_\x06\xaeY\xf5\xbd\xb5\x05\x04\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getDKBitmap():
-    return wx.Bitmap(getDKImage())
+    return BitmapFromImage(getDKImage())
 
 def getDKImage():
-    stream = io.BytesIO(getDKData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getDKData())
+    return ImageFromStream(stream)
 
 index.append('DK')
 catalog['DK'] = ImageClass()
@@ -1108,7 +1102,7 @@ catalog['DK'].getBitmap = getDKBitmap
 #----------------------------------------------------------------------
 def getDOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x017IDAT(\x91uQ1j\x94a\x14\x9c\xef\xdf\x1f\x8b\x15\x84\x10\x8c,\x98"\
 \x8d\xe2\x01\xbc\x8d\x85M\xeaTv9\x83\x85\'\x10\x82\x17H\x97\xde\x0b\xa4\x88\
@@ -1126,11 +1120,11 @@ L\xf9\xe5\x8b\xa7_>~\x9e\x0cd\x1f*W\xa5*\xf7\x95\xfb\xbb\xea,j\xca\x94\xa5\
 ND\xaeB`\x82' 
 
 def getDOBitmap():
-    return wx.Bitmap(getDOImage())
+    return BitmapFromImage(getDOImage())
 
 def getDOImage():
-    stream = io.BytesIO(getDOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getDOData())
+    return ImageFromStream(stream)
 
 index.append('DO')
 catalog['DO'] = ImageClass()
@@ -1142,7 +1136,7 @@ catalog['DO'].getBitmap = getDOBitmap
 #----------------------------------------------------------------------
 def getDZData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x99IDAT(\x91M\x8f=kTQ\x10\x86\xdfs\xce\xdd\xbb\xbb\x97\x15\xa3d\r\
 \x9b\xb0\x85\x04\x14\xc9?\xd0:\x88\xe8Bl\xf4\x07\xd8\xd8XX\x1aAl\x04\xfd\x01\
@@ -1163,11 +1157,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 3\x00\xf8\x030\xe7M\xc9\xeb\xfd~\xae\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getDZBitmap():
-    return wx.Bitmap(getDZImage())
+    return BitmapFromImage(getDZImage())
 
 def getDZImage():
-    stream = io.BytesIO(getDZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getDZData())
+    return ImageFromStream(stream)
 
 index.append('DZ')
 catalog['DZ'] = ImageClass()
@@ -1179,7 +1173,7 @@ catalog['DZ'].getBitmap = getDZBitmap
 #----------------------------------------------------------------------
 def getECData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01*IDAT(\x91m\x8e=J\x9da\x10\x85\xcf\xa7\xaf W\t\x88!\x11+\xb9M\x9a\
 \xec \xab\xc9\x02l\xc4\xdaJ\xd2\xa4uC. \xd8\xaa\x95"61\x89\x17\xa3\xa2\xef\
@@ -1196,11 +1190,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getECBitmap():
-    return wx.Bitmap(getECImage())
+    return BitmapFromImage(getECImage())
 
 def getECImage():
-    stream = io.BytesIO(getECData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getECData())
+    return ImageFromStream(stream)
 
 index.append('EC')
 catalog['EC'] = ImageClass()
@@ -1212,7 +1206,7 @@ catalog['EC'].getBitmap = getECBitmap
 #----------------------------------------------------------------------
 def getEEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xf2IDAT(\x91\x85\x911JCQ\x10E\xcf\x83\x07.\xc0"\x95X\xb9\x04\x17 \
 \xae\xc7\xd6\xc6]\xb9\x81 \xb8\x80,!\x04S\xdb\x86\x99;w,\xbe\xf9\xc6B<\xcd\
@@ -1227,11 +1221,11 @@ I\xb6\xed\xefaY\xd4g\x80/\xd4.~\xec\x91&]\x97\x00\x00\x00\x00IEND\xaeB`\x82'\
  
 
 def getEEBitmap():
-    return wx.Bitmap(getEEImage())
+    return BitmapFromImage(getEEImage())
 
 def getEEImage():
-    stream = io.BytesIO(getEEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getEEData())
+    return ImageFromStream(stream)
 
 index.append('EE')
 catalog['EE'] = ImageClass()
@@ -1243,7 +1237,7 @@ catalog['EE'].getBitmap = getEEBitmap
 #----------------------------------------------------------------------
 def getEGData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01#IDAT(\x91\x9d\x8f!NCa\x10\x84\xe7\x7f<P$\xa8R*p5`\xaa\x90\x1c\x82;\
 \x90\xfa:\x12,\xa9@r\x00\x1c\x17\xa8Ar\x86^\xa0\nH\xa0\xc1T\x10\xfa\xcf\xec\
@@ -1260,11 +1254,11 @@ j\xb5j\xbaw7\x19l\xbb\xbe\\k\xbd\xcaX\xd7\xe7+\xff\x04\xc8\xcc\xe6O\xdb\xb6-\
 \x00IEND\xaeB`\x82' 
 
 def getEGBitmap():
-    return wx.Bitmap(getEGImage())
+    return BitmapFromImage(getEGImage())
 
 def getEGImage():
-    stream = io.BytesIO(getEGData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getEGData())
+    return ImageFromStream(stream)
 
 index.append('EG')
 catalog['EG'] = ImageClass()
@@ -1276,7 +1270,7 @@ catalog['EG'].getBitmap = getEGBitmap
 #----------------------------------------------------------------------
 def getESData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1fIDAT(\x91}\x91\xadN\\Q\x14\x85\xbfs\xe7\xb6\x08B%\t\x02\x05H\x10\
 \xf5\x18\x9e\x01Y\x8d\xe8+L&\xc1cx\x16lUU-\x83gT+\x9a0\xc9\x84\xce\x94\xb9g\
@@ -1292,11 +1286,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getESBitmap():
-    return wx.Bitmap(getESImage())
+    return BitmapFromImage(getESImage())
 
 def getESImage():
-    stream = io.BytesIO(getESData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getESData())
+    return ImageFromStream(stream)
 
 index.append('ES')
 catalog['ES'] = ImageClass()
@@ -1308,7 +1302,7 @@ catalog['ES'].getBitmap = getESBitmap
 #----------------------------------------------------------------------
 def getESPERANTOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x06\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x06\
 \x00\x00\x00v\xe2\r9\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\
 \x00\xbbIDAT(\x91\xcd\xcc\xb1\n\x82P\x18\x86\xe1\xf7\xc8!\x84h;\xb8\xd5\x18N\
 \x0e98\xb9G\xa3W\xe05x\x05]\x84\x83\x9bS]\x83\x108\xd6\xec\x12\xb5\x05\xd1f5\
@@ -1320,11 +1314,11 @@ Td\x19\xd8\xea\x10XN}\xe3\xcf\xff\xbc"\x9c\x85\x0f\xcb\xb4dUU\x08!\x00\x98.\
 \xccS\xd0\x19\xaa\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getESPERANTOBitmap():
-    return wx.Bitmap(getESPERANTOImage())
+    return BitmapFromImage(getESPERANTOImage())
 
 def getESPERANTOImage():
-    stream = io.BytesIO(getESPERANTOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getESPERANTOData())
+    return ImageFromStream(stream)
 
 index.append('ESPERANTO')
 catalog['ESPERANTO'] = ImageClass()
@@ -1336,7 +1330,7 @@ catalog['ESPERANTO'].getBitmap = getESPERANTOBitmap
 #----------------------------------------------------------------------
 def getETData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x84IDAT(\x91]\x8b\xb1k\x93a\x18\xc4\xef\xfd\xf2\x19+\x16\r\xb4J\x1a\
 \x08\xb1\x9d\x84n\x8e\x0e\x1d\xfc\x0f\n]\xea\xe4\xe2"\xb88\x88\xa0\xb848\x0b\
@@ -1356,11 +1350,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00IEND\xaeB`\x82' 
 
 def getETBitmap():
-    return wx.Bitmap(getETImage())
+    return BitmapFromImage(getETImage())
 
 def getETImage():
-    stream = io.BytesIO(getETData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getETData())
+    return ImageFromStream(stream)
 
 index.append('ET')
 catalog['ET'] = ImageClass()
@@ -1372,7 +1366,7 @@ catalog['ET'].getBitmap = getETBitmap
 #----------------------------------------------------------------------
 def getFIData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x017IDAT(\x91m\x91\xbdj\x94a\x10\x85\xcf|~\xa2\x84\x15\x14\x02\n\t\x16\
 \x92"V\n\xb6\x96^G\xaeB\xd2j#\xf1JR\x08\xd6\x16\x06\xc4J;+\x05\xd1\x904\x11$\
@@ -1389,11 +1383,11 @@ D3#(\x99\x8b\xf5T\x82]\tUK\xf2*\x14\xd1L\xe8\xc9\xc7\x9d\xe7\x1bG\'-\x93\xd6\
  
 
 def getFIBitmap():
-    return wx.Bitmap(getFIImage())
+    return BitmapFromImage(getFIImage())
 
 def getFIImage():
-    stream = io.BytesIO(getFIData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getFIData())
+    return ImageFromStream(stream)
 
 index.append('FI')
 catalog['FI'] = ImageClass()
@@ -1405,7 +1399,7 @@ catalog['FI'].getBitmap = getFIBitmap
 #----------------------------------------------------------------------
 def getFJData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xccIDAT(\x91M\x91?h\x93a\x18\xc4\xefM\xbe\xb41%\xd6h\x12\xdb\xb4\
 \xc5j\xb1h\x87\xd2V\x1d\\\\*B\x9d\xdaA\xaa\x83\x83\x93\x14Q\x91\x0e\x82\x15\
@@ -1428,11 +1422,11 @@ Q\xacU\x9b\xcd\xd0$\x16\xa57\xd6\xc8s/\xae\xf4\x94\nZ\xddd\x10\xfd6x\xe4\xe8\
 \x85\xb4\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getFJBitmap():
-    return wx.Bitmap(getFJImage())
+    return BitmapFromImage(getFJImage())
 
 def getFJImage():
-    stream = io.BytesIO(getFJData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getFJData())
+    return ImageFromStream(stream)
 
 index.append('FJ')
 catalog['FJ'] = ImageClass()
@@ -1444,7 +1438,7 @@ catalog['FJ'].getBitmap = getFJBitmap
 #----------------------------------------------------------------------
 def getFOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01BIDAT(\x91m\x91\xbdJ\x03A\x10\xc7g\xb9\x15\x9b\xdc\x15\xe1.\x06\xc9\
 \xc5\x0f\x08>\x85\x85\x85\xbe\x81\x85\xef (\xc4\x8f\xdaN[}\x02\x0b\x1f\xc0\
@@ -1461,11 +1455,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x10a\x11\xdf\xf0\x03x0_\xe6\x0b~m\xe3\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getFOBitmap():
-    return wx.Bitmap(getFOImage())
+    return BitmapFromImage(getFOImage())
 
 def getFOImage():
-    stream = io.BytesIO(getFOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getFOData())
+    return ImageFromStream(stream)
 
 index.append('FO')
 catalog['FO'] = ImageClass()
@@ -1477,7 +1471,7 @@ catalog['FO'].getBitmap = getFOBitmap
 #----------------------------------------------------------------------
 def getFRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01<IDAT(\x91m\x91=\x8aTQ\x14\x84\xeb\xbc~\x06#8\x89\x82\xb4f.@p\x03F\
 \xc6\x82\x1b111\x1614\x11c\xdd\xd3lA\xcc\x8c\x9cn\xee=\xb7~\x0cz\x04\x03\xbf\
@@ -1495,11 +1489,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xaeB`\x82' 
 
 def getFRBitmap():
-    return wx.Bitmap(getFRImage())
+    return BitmapFromImage(getFRImage())
 
 def getFRImage():
-    stream = io.BytesIO(getFRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getFRData())
+    return ImageFromStream(stream)
 
 index.append('FR')
 catalog['FR'] = ImageClass()
@@ -1511,7 +1505,7 @@ catalog['FR'].getBitmap = getFRBitmap
 #----------------------------------------------------------------------
 def getGBData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x02\x02IDAT(\x91\x05\xc1[HSa\x00\xc0\xf1\xffw\\\xabV\x94\x87E\x9aF\xa2v\
 \x81\xa4\x87(\xa8\x91\x10\xd1\xcd\x11E>D\x99E\t\x15B\x12H \xf4\x10\x96\x96\
@@ -1536,11 +1530,11 @@ VQ}n\xff=\xa6\xd2\xebv\xcd_\xdb\xe9\x05.\xf7\xaeR\xa3\x9f\x9b\x89\x1dr\xf8\'\
 ' 
 
 def getGBBitmap():
-    return wx.Bitmap(getGBImage())
+    return BitmapFromImage(getGBImage())
 
 def getGBImage():
-    stream = io.BytesIO(getGBData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getGBData())
+    return ImageFromStream(stream)
 
 index.append('GB')
 catalog['GB'] = ImageClass()
@@ -1552,7 +1546,7 @@ catalog['GB'].getBitmap = getGBBitmap
 #----------------------------------------------------------------------
 def getGEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xb6IDAT(\x91E\x91Ok\x13Q\x14\xc5\xef{y\x99@\xa9\xb6\r\x01\x8dHW\xba\
 \x8e\xb4:\x8b\x82\x7fw.\xfc\x83\xda\x85\xf8\x01\\\xf9\r\x04\xc1U\xa1\x1b\xa1\
@@ -1574,11 +1568,11 @@ Q\x14\xc5q\xdch4t^p\xfajs\xb8\xfdf\xb2\xf92\x0f\n\xf7?t\xfc\xfcY\x7fw\'Z\x7f\
 \xf4W\xf2\xc7\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getGEBitmap():
-    return wx.Bitmap(getGEImage())
+    return BitmapFromImage(getGEImage())
 
 def getGEImage():
-    stream = io.BytesIO(getGEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getGEData())
+    return ImageFromStream(stream)
 
 index.append('GE')
 catalog['GE'] = ImageClass()
@@ -1590,7 +1584,7 @@ catalog['GE'].getBitmap = getGEBitmap
 #----------------------------------------------------------------------
 def getGHData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x17IDAT(\x91m\x8e=\x8aT\x01\x10\x84\xeb\xe9\x0b\x84\r\x8c\x97eL\xbc\
 \x817\xf0\x06\x82\x89\xac\x81\xe0f\x1e\xc0d#O\xa3\x91\xb0\xe39<\x83\x89\x1e@\
@@ -1606,11 +1600,11 @@ r\xe4\xb1F\x8e]\'I\x93\t\x06\x0b\xae\x00\x02\x06x"\x9f\\|\xd4\x00\xc0_\x862e\
 e\xe4:\x93\x12\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getGHBitmap():
-    return wx.Bitmap(getGHImage())
+    return BitmapFromImage(getGHImage())
 
 def getGHImage():
-    stream = io.BytesIO(getGHData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getGHData())
+    return ImageFromStream(stream)
 
 index.append('GH')
 catalog['GH'] = ImageClass()
@@ -1622,7 +1616,7 @@ catalog['GH'].getBitmap = getGHBitmap
 #----------------------------------------------------------------------
 def getGLData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01&IDAT(\x91eO\xbbj\x02Q\x10=WW\x0b\x0b\xc1\x85\x04\xac\x02\xfe\x82\
 \x8d\x1fbgmko\x9f\xb4\tZ$\x85\x8dZ\xf8\x1b\xa2$6\xd6\xb6"\x16\x8b\xdd\xee\
@@ -1639,11 +1633,11 @@ M\xa2\xdf\xe7d\x82\xed\x96\x87\x03W+\xbe\x7fp\xb1x\xd8\xa0\xaa\x99\xf4\xf6 \
 \xaeB`\x82' 
 
 def getGLBitmap():
-    return wx.Bitmap(getGLImage())
+    return BitmapFromImage(getGLImage())
 
 def getGLImage():
-    stream = io.BytesIO(getGLData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getGLData())
+    return ImageFromStream(stream)
 
 index.append('GL')
 catalog['GL'] = ImageClass()
@@ -1655,7 +1649,7 @@ catalog['GL'].getBitmap = getGLBitmap
 #----------------------------------------------------------------------
 def getGRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01NIDAT(\x91e\x91?K\x03A\x10\xc5\xdf]N4b\xe0\x08\x11\x1b\xd3X\xe9\x81]\
 D\xc1B\x10\xc9g\x11\xf1;X\x0b\x16\x16\xe2\xa7\x10D\x05\x8btF\x05\x11\xc5\x14\
@@ -1673,11 +1667,11 @@ D\xc1B\x10\xc9g\x11\xf1;X\x0b\x16\x16\xe2\xa7\x10D\x05\x8btF\x05\x11\xc5\x14\
 G\x864\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getGRBitmap():
-    return wx.Bitmap(getGRImage())
+    return BitmapFromImage(getGRImage())
 
 def getGRImage():
-    stream = io.BytesIO(getGRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getGRData())
+    return ImageFromStream(stream)
 
 index.append('GR')
 catalog['GR'] = ImageClass()
@@ -1689,7 +1683,7 @@ catalog['GR'].getBitmap = getGRBitmap
 #----------------------------------------------------------------------
 def getGTData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1bIDAT(\x91e\x8f1jVQ\x14\x84\xbf\x9bw\x8b\xbf\x90` \xc4\xc2\xc22\
 \xcb\xb0\xca\x1e,\xec\x93\xca\xde\x15\xb8\x01W\xe0"\xdc\x84k\xb0\xb2\x08\x84\
@@ -1705,11 +1699,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x0c\xde-\xfe\x02\xd5\x00s\xcdr\x8cr\x81\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getGTBitmap():
-    return wx.Bitmap(getGTImage())
+    return BitmapFromImage(getGTImage())
 
 def getGTImage():
-    stream = io.BytesIO(getGTData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getGTData())
+    return ImageFromStream(stream)
 
 index.append('GT')
 catalog['GT'] = ImageClass()
@@ -1721,7 +1715,7 @@ catalog['GT'].getBitmap = getGTBitmap
 #----------------------------------------------------------------------
 def getHKData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01PIDAT(\x91U\x91\xb1.\x84q\x10\xc4\xe7\xfb\xdfG|\x1c"\xa2P\xd0\xea\
 \x14J:\x8fB\xe7\t$<\x85\xc2S\x88\xe2\x94\x1a\x12/\xa1\xe2rDHD\xf8\x8e\xb0\
@@ -1739,11 +1733,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x1b\xf2\x8b=\xe6c\xc4\xda\x04\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getHKBitmap():
-    return wx.Bitmap(getHKImage())
+    return BitmapFromImage(getHKImage())
 
 def getHKImage():
-    stream = io.BytesIO(getHKData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getHKData())
+    return ImageFromStream(stream)
 
 index.append('HK')
 catalog['HK'] = ImageClass()
@@ -1755,7 +1749,7 @@ catalog['HK'].getBitmap = getHKBitmap
 #----------------------------------------------------------------------
 def getHNData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01bIDAT(\x91m\x911k\x14q\x14\xc4g\xe3\x12s^\x1f#\x18E\x08\xd8\xe6\x0b(\
 \xc8\x81b:\x05\xbb\xd4~\t\x0b\x11\x8b\x83@P\xb4H\xa1\xd8\x88\xa0B \x9d \xf6\
@@ -1774,11 +1768,11 @@ i\xa6I3\xc5\x14\xa9\xa0\x98~\xb7\xfb\xbaFQ\t\x1d\xfe\xea3\x95\x89\x85\xed\
 \xf6\xca\x7f\xd9\xbdt\xc3\xb4K\xeei\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getHNBitmap():
-    return wx.Bitmap(getHNImage())
+    return BitmapFromImage(getHNImage())
 
 def getHNImage():
-    stream = io.BytesIO(getHNData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getHNData())
+    return ImageFromStream(stream)
 
 index.append('HN')
 catalog['HN'] = ImageClass()
@@ -1790,7 +1784,7 @@ catalog['HN'].getBitmap = getHNBitmap
 #----------------------------------------------------------------------
 def getHRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01lIDAT(\x91m\x911hSq\x18\xc4\xef\xc5T;t\x11Dp\x08\x8a \x94\xee\xed\
 \xdc\x0e]\xc4U\x04\x17\x11:\xe9,\x08\x05\x1d\x0b\xa5\x82\xd0\xd9\xc5\xa1\xd8\
@@ -1810,11 +1804,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xaeB`\x82' 
 
 def getHRBitmap():
-    return wx.Bitmap(getHRImage())
+    return BitmapFromImage(getHRImage())
 
 def getHRImage():
-    stream = io.BytesIO(getHRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getHRData())
+    return ImageFromStream(stream)
 
 index.append('HR')
 catalog['HR'] = ImageClass()
@@ -1826,7 +1820,7 @@ catalog['HR'].getBitmap = getHRBitmap
 #----------------------------------------------------------------------
 def getHUData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xecIDAT(\x91}\x8e)RCQ\x10E\xef\xab\xfa8\x14."\x06\x96\xc1"\xd8\x04*\
 \n\x9f]e\x1f\xc9\x16b\xc0"\xa2R}\x87F\xfc|f\xb8\xa2\xebt\xd5\xe9a\xec\xf1%\
@@ -1840,11 +1834,11 @@ t\xfa\xb3\xddU-u1\xac\xb0\xba\x98\xaay\xbe\x80a{\x8c\x01\xa0\xbb\xd1h\xf4_\
 \x03\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getHUBitmap():
-    return wx.Bitmap(getHUImage())
+    return BitmapFromImage(getHUImage())
 
 def getHUImage():
-    stream = io.BytesIO(getHUData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getHUData())
+    return ImageFromStream(stream)
 
 index.append('HU')
 catalog['HU'] = ImageClass()
@@ -1856,7 +1850,7 @@ catalog['HU'].getBitmap = getHUBitmap
 #----------------------------------------------------------------------
 def getIDData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xf6IDAT(\x91}\x8e;J\x04Q\x10E\xef\xeb\xee\xc0@a\xc6\xc0@\xb7"\xb8\
 \x1aC\xd7a\xe6\x02\x0c\xdd\x8f\xb8\x00\x03C\xcd\x9a\x11\x95\xe1\xd5\xfd\x18\
@@ -1871,11 +1865,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xd4o\xffbv\xee\x97/\x0e>\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getIDBitmap():
-    return wx.Bitmap(getIDImage())
+    return BitmapFromImage(getIDImage())
 
 def getIDImage():
-    stream = io.BytesIO(getIDData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getIDData())
+    return ImageFromStream(stream)
 
 index.append('ID')
 catalog['ID'] = ImageClass()
@@ -1887,7 +1881,7 @@ catalog['ID'].getBitmap = getIDBitmap
 #----------------------------------------------------------------------
 def getIEData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x14IDAT(\x91m\x8f=\x8aTa\x14D\xcf\xf7x\x828L\xe4\xcf0\x83&\x82\x1b\
 \x11\x8c\\\x80\x89\xa1\xa9\x99\x820\xabp+&\xb3\x18\x93\t\xec@0\xd2\x16\x1f\
@@ -1903,11 +1897,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x84\x03\\\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getIEBitmap():
-    return wx.Bitmap(getIEImage())
+    return BitmapFromImage(getIEImage())
 
 def getIEImage():
-    stream = io.BytesIO(getIEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getIEData())
+    return ImageFromStream(stream)
 
 index.append('IE')
 catalog['IE'] = ImageClass()
@@ -1919,7 +1913,7 @@ catalog['IE'].getBitmap = getIEBitmap
 #----------------------------------------------------------------------
 def getILData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\rIDAT(\x91m\x91\xb1J\x03Q\x10E\xe7\x85\x04\xc1\xc6n\xb1\x10\xec\xfc\
 \tK\x05\xbb\x90\xcaB\xacD\x10A\x02"vi\x04\x1b\x11\x05\xad,\x14\x1b\x05\xed\
@@ -1935,11 +1929,11 @@ l\xad\x92$\xa9\x16\x92\xdc\xdd\xcc\xdc\xbdz\xa6\xa5\x9d|?,\xcc,\x00,d\x92\
 `\x82' 
 
 def getILBitmap():
-    return wx.Bitmap(getILImage())
+    return BitmapFromImage(getILImage())
 
 def getILImage():
-    stream = io.BytesIO(getILData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getILData())
+    return ImageFromStream(stream)
 
 index.append('IL')
 catalog['IL'] = ImageClass()
@@ -1951,7 +1945,7 @@ catalog['IL'].getBitmap = getILBitmap
 #----------------------------------------------------------------------
 def getINData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01@IDAT(\x91MM\xbdjTa\x10=\xdf\xf5\xa2\x18\x8b\xf8\xb3\xa601\x881 \x16\
 \x8a\x82\xaf!>\x82\xe0#XZ\xa5\xcb\x93\x98\xde&`\x93F\xb0\x11;\xab,v[Y\xc8&n\
@@ -1968,11 +1962,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getINBitmap():
-    return wx.Bitmap(getINImage())
+    return BitmapFromImage(getINImage())
 
 def getINImage():
-    stream = io.BytesIO(getINData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getINData())
+    return ImageFromStream(stream)
 
 index.append('IN')
 catalog['IN'] = ImageClass()
@@ -1984,7 +1978,7 @@ catalog['IN'].getBitmap = getINBitmap
 #----------------------------------------------------------------------
 def getIQData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\\IDAT(\x91\x9d\x8e\xb1j\x93a\x14\x86\xdfO\x7fl)\xea &!\xd4\x80B\x16\
 ]\x02\xa5\x1d\xf4\n\xf4\x02\xa4\xeded\xee\x9e\xab(\x1du/B\xc4M\xd4\xe8\x9a\
@@ -2002,11 +1996,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 I\x9a\xb9YyH3+mf~\x0e\xfe\x83_x\x8eB~M9z*\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getIQBitmap():
-    return wx.Bitmap(getIQImage())
+    return BitmapFromImage(getIQImage())
 
 def getIQImage():
-    stream = io.BytesIO(getIQData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getIQData())
+    return ImageFromStream(stream)
 
 index.append('IQ')
 catalog['IQ'] = ImageClass()
@@ -2018,7 +2012,7 @@ catalog['IQ'].getBitmap = getIQBitmap
 #----------------------------------------------------------------------
 def getIRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01UIDAT(\x91]O\xbbNBQ\x10\x9cs9\x01\x95\x98\xa8\x05\x85\x08\rT\x16\xfa\
 \x01\xd6\xfe\x82\x85\x7f@Go\xfc\x07\xec,\x8d\x85\xb1\xb6\xc1XjCALH\xecL\xf0\
@@ -2037,11 +2031,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00IEND\xaeB`\x82' 
 
 def getIRBitmap():
-    return wx.Bitmap(getIRImage())
+    return BitmapFromImage(getIRImage())
 
 def getIRImage():
-    stream = io.BytesIO(getIRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getIRData())
+    return ImageFromStream(stream)
 
 index.append('IR')
 catalog['IR'] = ImageClass()
@@ -2053,7 +2047,7 @@ catalog['IR'].getBitmap = getIRBitmap
 #----------------------------------------------------------------------
 def getISData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01aIDAT(\x91mQ\xb1j\xd4q\x18\xcb\xef\xfe\x7f\x87\xd6\xa9\xedU\xe1(\xb4\
 8\xba\xf8\x00\x05qW7\xc1\x17\xf0\t\\\xbc\x1e\x05\x11\'\x07A\x1c\x047\x11\x07\
@@ -2072,11 +2066,11 @@ P\xc9b\x89\xac\xdd\xab\x97??\x7f\xd5cA\xaa\x96\xb2\xed\x8a\xb0\x9dT\xfc3\x98\
 \xd4\xea\xe0Z1\xfe\x02ZAf\x94h\x00P6\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getISBitmap():
-    return wx.Bitmap(getISImage())
+    return BitmapFromImage(getISImage())
 
 def getISImage():
-    stream = io.BytesIO(getISData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getISData())
+    return ImageFromStream(stream)
 
 index.append('IS')
 catalog['IS'] = ImageClass()
@@ -2088,7 +2082,7 @@ catalog['IS'].getBitmap = getISBitmap
 #----------------------------------------------------------------------
 def getITData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xe2IDAT(\x91\x85\x91AJ\x03Q\x10D\xdf\xc8\xdfy\x82\x11\x02\x12\xc89\
 \xb2\xf2\x16Yy\x077\xe6\x14^%\xf7\xc8\t\xb25\x17\x90\x08\xc3\xef\xeaj\x17##\
@@ -2102,11 +2096,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xba\xce\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getITBitmap():
-    return wx.Bitmap(getITImage())
+    return BitmapFromImage(getITImage())
 
 def getITImage():
-    stream = io.BytesIO(getITData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getITData())
+    return ImageFromStream(stream)
 
 index.append('IT')
 catalog['IT'] = ImageClass()
@@ -2118,7 +2112,7 @@ catalog['IT'].getBitmap = getITBitmap
 #----------------------------------------------------------------------
 def getJMData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xc8IDAT(\x91U\x91OH\x13p\x1c\xc5\xdf\xfeD\xb5\x9af\x1b\x83r5\x8b2\
 \xbd\x8c\x9c\x11\x91yH")\xf3P\xd0!D(\xa1S\x05\x1d\x83\xe8\x12H7oE\xd4!\x98\
@@ -2141,11 +2135,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xa0\xb5\x01\x7f\x00\xbc\xc6>\x16W\xa20\xbb\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getJMBitmap():
-    return wx.Bitmap(getJMImage())
+    return BitmapFromImage(getJMImage())
 
 def getJMImage():
-    stream = io.BytesIO(getJMData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getJMData())
+    return ImageFromStream(stream)
 
 index.append('JM')
 catalog['JM'] = ImageClass()
@@ -2157,7 +2151,7 @@ catalog['JM'].getBitmap = getJMBitmap
 #----------------------------------------------------------------------
 def getJOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01-IDAT(\x91\x95\x8e1K\x9bq\x18\xc4\xef\x8do\x9d\x84\x82\xb8d\x08\xc4j\
 \xbf\x80[\xd6N\xa1\x05!\x93 \x08n\x85.\x8e\x1d\\]\xba\xd4\xecnYJ\xa1 \x84R\
@@ -2174,11 +2168,11 @@ c\xc3%\x1b@+\x01\x93\xbe\xbd\xc5j\xb5\xd8*~\xdfol\x03x\xbcT\'\xb0\x11a\xf2\
 \x00\x00IEND\xaeB`\x82' 
 
 def getJOBitmap():
-    return wx.Bitmap(getJOImage())
+    return BitmapFromImage(getJOImage())
 
 def getJOImage():
-    stream = io.BytesIO(getJOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getJOData())
+    return ImageFromStream(stream)
 
 index.append('JO')
 catalog['JO'] = ImageClass()
@@ -2190,7 +2184,7 @@ catalog['JO'].getBitmap = getJOBitmap
 #----------------------------------------------------------------------
 def getJPData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x03IDAT(\x91u\x91=n\x021\x10\x85\xc7\xab\xad\xb6\xd8\x06\xd1Pp\x0cJ\
 \x0e@CAK\x81\x94\\\x0c%\x1d\xe2\x02\x144\xe4\x1a[ \x12i\x9bEB\x82"ck\xbe\x14\
@@ -2206,11 +2200,11 @@ f,\x16\x85\xed\x9c\xb3\xa8\xf0\x87\xbd\xdf\xb3\xdd\x12\x02\xea9\x9d\xf8\xfa\
 \x82' 
 
 def getJPBitmap():
-    return wx.Bitmap(getJPImage())
+    return BitmapFromImage(getJPImage())
 
 def getJPImage():
-    stream = io.BytesIO(getJPData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getJPData())
+    return ImageFromStream(stream)
 
 index.append('JP')
 catalog['JP'] = ImageClass()
@@ -2222,7 +2216,7 @@ catalog['JP'].getBitmap = getJPBitmap
 #----------------------------------------------------------------------
 def getKEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01zIDAT(\x91\x95\x8e?OSa\x1c\x85\xcf{{\xd1Bjt\xb1\xeaRH7C\x98\xf4S\xf8\
 \x11\xca``E\xc3l\x1ae"awgbq\xad\x8b\x0b\xd1\x81\xa5\xeeDo\x1bcro\x03\xd2\x08\
@@ -2241,11 +2235,11 @@ h\xa4\xf1\xfb\xaa\xd0\xf8P\xe5\xbe\xb5\xdcA\x13u15T\x08\xd8\x06*@\x808\x9f\
 \xfc#2\x17\x03\x04h\xe1/[b=+\x9c\x1eE7\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getKEBitmap():
-    return wx.Bitmap(getKEImage())
+    return BitmapFromImage(getKEImage())
 
 def getKEImage():
-    stream = io.BytesIO(getKEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getKEData())
+    return ImageFromStream(stream)
 
 index.append('KE')
 catalog['KE'] = ImageClass()
@@ -2257,7 +2251,7 @@ catalog['KE'].getBitmap = getKEBitmap
 #----------------------------------------------------------------------
 def getKGData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01*IDAT(\x91mQ1j\x95a\x10\x9c\xef\xcb\x13+\t\x06,\x02\xbeF\x1b\x83\x85\
 \xe29r\xa3\xdc\xc4\xca3\xe4\x02\x96b\x11\xc1\xc2Z\x84H\x82] \x81\xbc\x99\xd9\
@@ -2274,11 +2268,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getKGBitmap():
-    return wx.Bitmap(getKGImage())
+    return BitmapFromImage(getKGImage())
 
 def getKGImage():
-    stream = io.BytesIO(getKGData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getKGData())
+    return ImageFromStream(stream)
 
 index.append('KG')
 catalog['KG'] = ImageClass()
@@ -2290,7 +2284,7 @@ catalog['KG'].getBitmap = getKGBitmap
 #----------------------------------------------------------------------
 def getKHData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01mIDAT(\x91]\x91\xb1jTa\x10\x85\xcf\xfd\xbdw\xf7\x86u\xafkX\xc8\xaa\
 \xb8hc)\x16\x06+;\x03na\x13|\x07\xed\x15AE\xb1\xb05\xe0#\x08\xa9\x0c\xbe\x81\
@@ -2309,11 +2303,11 @@ U$\\\xa3\x1b\xd7\x07\x93s\xb3\xe7\xcf.\xbc|\xd1\x8cGgo\xad\xc3\x95fi\x06\x12\
 \x9e\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getKHBitmap():
-    return wx.Bitmap(getKHImage())
+    return BitmapFromImage(getKHImage())
 
 def getKHImage():
-    stream = io.BytesIO(getKHData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getKHData())
+    return ImageFromStream(stream)
 
 index.append('KH')
 catalog['KH'] = ImageClass()
@@ -2325,7 +2319,7 @@ catalog['KH'].getBitmap = getKHBitmap
 #----------------------------------------------------------------------
 def getKRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xcaIDAT(\x91MQKO\x13a\x14\xbd_[\x98v\xc6\xb6\xd3N\x19\xd2\x8e$ \xc5\
 \tFTR\x16\xae5\xd2\x86\x1f`p\xe7\x0f\xf0\xc1\xd6\x10m\xe2\x9e\x05\x0b\xfb\'\
@@ -2348,11 +2342,11 @@ o\x1f>\x1e4\x9b\x13\xe9\xb4\xa9g\x999\x16\x1a\xf7z=\xc7q\xfc\x1f~\xce4ggf\
 \xaeB`\x82' 
 
 def getKRBitmap():
-    return wx.Bitmap(getKRImage())
+    return BitmapFromImage(getKRImage())
 
 def getKRImage():
-    stream = io.BytesIO(getKRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getKRData())
+    return ImageFromStream(stream)
 
 index.append('KR')
 catalog['KR'] = ImageClass()
@@ -2364,7 +2358,7 @@ catalog['KR'].getBitmap = getKRBitmap
 #----------------------------------------------------------------------
 def getKWData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01(IDAT(\x91}Q?J\x1dq\x18\x9c\xdd\xac"\xf1a\xf1L\xc4\'H\x1aO\x10\xde\
 \x01\xbc\x84\x9e!\x9dm\xe0\x9d\xc0>\xea\rr\x80W\xe4\x06\x1e\xc0\xda\xd6\xb4!\
@@ -2381,11 +2375,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x82' 
 
 def getKWBitmap():
-    return wx.Bitmap(getKWImage())
+    return BitmapFromImage(getKWImage())
 
 def getKWImage():
-    stream = io.BytesIO(getKWData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getKWData())
+    return ImageFromStream(stream)
 
 index.append('KW')
 catalog['KW'] = ImageClass()
@@ -2397,7 +2391,7 @@ catalog['KW'].getBitmap = getKWBitmap
 #----------------------------------------------------------------------
 def getKZData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x93IDAT(\x91M\xd1\xdfk\xcdq\x1c\xc7\xf1\xd7\xf7{\xbeZ\xedp6\xbb`\
 \x895\x8d\xd4\xb2R\xc8\xcd\x8ar\xa1\x95\xbbq\xc1%\x85\x1b\xb9\x14W\xee\xdc-\
@@ -2418,11 +2412,11 @@ uV*\\%\x87\xadR\xb9\x90\x9d\x8e{\xb6\xb4\x07\xf8\xd2O{\x17\xaf^\xa7\xfd\x8e\
 \xfa\r\xbfiZs\xa4\xc5\x10\x93\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getKZBitmap():
-    return wx.Bitmap(getKZImage())
+    return BitmapFromImage(getKZImage())
 
 def getKZImage():
-    stream = io.BytesIO(getKZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getKZData())
+    return ImageFromStream(stream)
 
 index.append('KZ')
 catalog['KZ'] = ImageClass()
@@ -2434,7 +2428,7 @@ catalog['KZ'].getBitmap = getKZBitmap
 #----------------------------------------------------------------------
 def getLAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01fIDAT(\x91e\x91\xbdj\x94a\x10\x85\xcf\xfb\xedg\x84EML\\\x15\xd4\x14n\
 \x99\xde\xd6NH\xa1\x16\xa9\xacDHc\xb7\x9d\x84\x08\xb9\x06\t\xd8\xda\n6\xb2w\
@@ -2453,11 +2447,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x11\xc4\\\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getLABitmap():
-    return wx.Bitmap(getLAImage())
+    return BitmapFromImage(getLAImage())
 
 def getLAImage():
-    stream = io.BytesIO(getLAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getLAData())
+    return ImageFromStream(stream)
 
 index.append('LA')
 catalog['LA'] = ImageClass()
@@ -2469,7 +2463,7 @@ catalog['LA'].getBitmap = getLABitmap
 #----------------------------------------------------------------------
 def getLBData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01PIDAT(\x91UQ\xbdJ\x1e\x01\x10\x9c=\x0f\xedD;\xb9\x88\x82\xcf\xa0\xe6\
 -\xf2\x0c\t1V>A|\x00mEk!u:-\xa2!\xa4\xb2\x08\x12\x90\xf8EL\xa1D\x94\xc4\x0f\
@@ -2488,11 +2482,11 @@ J\x00(\xcb\xb8\xfe\x8b\xa4\x18\n\xaa\xd5\x89\xae\xda\xd3]\xacU{QM\'P\x8e^]\
 `\x82' 
 
 def getLBBitmap():
-    return wx.Bitmap(getLBImage())
+    return BitmapFromImage(getLBImage())
 
 def getLBImage():
-    stream = io.BytesIO(getLBData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getLBData())
+    return ImageFromStream(stream)
 
 index.append('LB')
 catalog['LB'] = ImageClass()
@@ -2504,7 +2498,7 @@ catalog['LB'].getBitmap = getLBBitmap
 #----------------------------------------------------------------------
 def getLIData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01VIDAT(\x91e\x8c1j\x94a\x18\x84\xe7\xff\xf6\xd3\x10%\x8bFX\x08\xb2B"\
 \x06,\x02B\xca\xdc\xc0#\x08\xde\xc2\x0b\x08z\x894)\xc5J\xd2\x05\xb5\xf0\x00\
@@ -2523,11 +2517,11 @@ o\xa9,[\xb4$\xa5h\xd2\x92MI\x96<\xb9v\xf35v\xfb\xbb\xd9\xde\xca\xaf1~\x1c\
 END\xaeB`\x82' 
 
 def getLIBitmap():
-    return wx.Bitmap(getLIImage())
+    return BitmapFromImage(getLIImage())
 
 def getLIImage():
-    stream = io.BytesIO(getLIData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getLIData())
+    return ImageFromStream(stream)
 
 index.append('LI')
 catalog['LI'] = ImageClass()
@@ -2539,7 +2533,7 @@ catalog['LI'].getBitmap = getLIBitmap
 #----------------------------------------------------------------------
 def getLTData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01 IDAT(\x91U\x8d1N\x9cQ\x0c\x84\xe7_\x1eB4\xa1\x06\nN\x80\xe8\xb8A$N\
 \xc4\x05\xa2\xdc#m\x8a4\xa9\xd3p\x02D\xa2TTP \x05\xa5B+\x81<\xe3\x99\x14oY\
@@ -2555,11 +2549,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xac\x80\x7f%"wC\xeb\n\x9e\x0b\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getLTBitmap():
-    return wx.Bitmap(getLTImage())
+    return BitmapFromImage(getLTImage())
 
 def getLTImage():
-    stream = io.BytesIO(getLTData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getLTData())
+    return ImageFromStream(stream)
 
 index.append('LT')
 catalog['LT'] = ImageClass()
@@ -2571,7 +2565,7 @@ catalog['LT'].getBitmap = getLTBitmap
 #----------------------------------------------------------------------
 def getLUData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1aIDAT(\x91}\x8f1J\x83Q\x10\x84\xe7%\xafPD\xe3\x0fb\x04AA\x11l\xac\
 \xbd\x85\x95x\x12\x0bm\x03\x16\x9e\xc2s\xe8\t,<\x86\x95\xbf\x81\xa8\x11\xc3{\
@@ -2587,11 +2581,11 @@ r\x08{\xebx{@\x06\xd4Cow\ra\x07A\x81BU\xea \xd4%\x89\xb6\x04d\xa5t\xf3\xe9\
 \x00IEND\xaeB`\x82" 
 
 def getLUBitmap():
-    return wx.Bitmap(getLUImage())
+    return BitmapFromImage(getLUImage())
 
 def getLUImage():
-    stream = io.BytesIO(getLUData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getLUData())
+    return ImageFromStream(stream)
 
 index.append('LU')
 catalog['LU'] = ImageClass()
@@ -2603,7 +2597,7 @@ catalog['LU'].getBitmap = getLUBitmap
 #----------------------------------------------------------------------
 def getLVData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1aIDAT(\x91u\x911jBQ\x10E\xef\x93\x87B\x14R\x0bj\xe1^\xd2d)\xf6!\
 \x85\x0bH\x9d2\xdbp\x13b\xf3\xb7`\x08I\x11H\xa1\x92\x80\xcc\x9d;\x93\xe2\xff\
@@ -2619,11 +2613,11 @@ j\x05\x80\xfcy\xffH)\xa4 [\x15\x19\xa4\x8c\xa2\x85\x99\xc8\xf1|\x1e@=\x03\
 \x94\xd8|\xd3\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getLVBitmap():
-    return wx.Bitmap(getLVImage())
+    return BitmapFromImage(getLVImage())
 
 def getLVImage():
-    stream = io.BytesIO(getLVData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getLVData())
+    return ImageFromStream(stream)
 
 index.append('LV')
 catalog['LV'] = ImageClass()
@@ -2635,7 +2629,7 @@ catalog['LV'].getBitmap = getLVBitmap
 #----------------------------------------------------------------------
 def getLYData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xdcIDAT(\x91UQ\xdbm\xc3@\x0cc\x00\x7f\xa4\x13\xb4@F\xe9tA\xa6\xe8\
 \x00\xfd\xc8b\x99\xa1\x10\x1f\xea\x87l\xc7>\x08\x82tG\x8a<\xe8\x82\x1f\x9c\
@@ -2649,11 +2643,11 @@ p$\xcbb\xb8\x12d\xd3\xdc?:\xea\xbb\x08\x9b\xf3*\x0b\x19B\xebd\xfd0\xbeB\x852\
 \xaeB`\x82' 
 
 def getLYBitmap():
-    return wx.Bitmap(getLYImage())
+    return BitmapFromImage(getLYImage())
 
 def getLYImage():
-    stream = io.BytesIO(getLYData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getLYData())
+    return ImageFromStream(stream)
 
 index.append('LY')
 catalog['LY'] = ImageClass()
@@ -2665,7 +2659,7 @@ catalog['LY'].getBitmap = getLYBitmap
 #----------------------------------------------------------------------
 def getMAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xecIDAT(\x91}Q1J\x04A\x10\xac9\x17\xb9/\x9c\xb0\xa9`bb\xe0\xe3\xeeW\
 \xf7\x8cCCA\x033\xcd\r\xee\x10\xbb\xaa\xbb\x0cf\x8f\xdd\x05\xb1)\x8aa\xa6\
@@ -2679,11 +2673,11 @@ DI&\x11a\x86\x83]\x00\xb2\x80\xa1\x80\x96\t\xc9\x12(\x8b\xdf\xe6\xf3=K|8\xc6\
 \x02\xf9\xcbZ\xc0\x13\xfe\x86t\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getMABitmap():
-    return wx.Bitmap(getMAImage())
+    return BitmapFromImage(getMAImage())
 
 def getMAImage():
-    stream = io.BytesIO(getMAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMAData())
+    return ImageFromStream(stream)
 
 index.append('MA')
 catalog['MA'] = ImageClass()
@@ -2695,7 +2689,7 @@ catalog['MA'].getBitmap = getMABitmap
 #----------------------------------------------------------------------
 def getMCData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xc9IDAT(\x91\x85\x8fKj\x03A\x10C_\x0f\xed\x0bxi\x98\x93\xfaV\xbe\
 \x81O\xe1\x0b$`\xf06\xabn\xb5\x94E\x0fN\x868\x89(\n\x15%\xd5\xa7\x84/x\xcf_F\
@@ -2708,11 +2702,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getMCBitmap():
-    return wx.Bitmap(getMCImage())
+    return BitmapFromImage(getMCImage())
 
 def getMCImage():
-    stream = io.BytesIO(getMCData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMCData())
+    return ImageFromStream(stream)
 
 index.append('MC')
 catalog['MC'] = ImageClass()
@@ -2724,7 +2718,7 @@ catalog['MC'].getBitmap = getMCBitmap
 #----------------------------------------------------------------------
 def getMDData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01[IDAT(\x91=\x90\xbbjUa\x14\x84g\xef\xb3O4\xde@\x82\x10"^\xba\xe0\x1b\
 \xf8\x02\xc1\xc2ti\xa2\x82\x96\xb6\x01K[\x1b+\x1f@{\xb1\xb1\xb2\x8bh\xb0\xb1\
@@ -2743,11 +2737,11 @@ p\xa0\x8a\xca\x94\x13\xee\xbc^<\xff\xb4]\x7f3\xdb\xd9^\x88\x9b\x1b\xddZ\xb5\
 END\xaeB`\x82' 
 
 def getMDBitmap():
-    return wx.Bitmap(getMDImage())
+    return BitmapFromImage(getMDImage())
 
 def getMDImage():
-    stream = io.BytesIO(getMDData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMDData())
+    return ImageFromStream(stream)
 
 index.append('MD')
 catalog['MD'] = ImageClass()
@@ -2759,7 +2753,7 @@ catalog['MD'].getBitmap = getMDBitmap
 #----------------------------------------------------------------------
 def getMGData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x00IDAT(\x91u\x8e=NB\x01\x10\x84\xe7\xc9K\x88\tF\x12\n*\x1a\x1b.\
 \xe49<\x85\\\x88CXx\rD\x121\xa1\x90\x86\x9d\xd9Y\x8b\xf7\x83\xc6\xb8\xd9L\
@@ -2774,11 +2768,11 @@ fS\xc7O\xa4\x1ai"\xdd\x90%\xd5\xa0\xe7\xed\xb6\xed\xf2z\x1a\xa8\xfd\x1e\x87C\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getMGBitmap():
-    return wx.Bitmap(getMGImage())
+    return BitmapFromImage(getMGImage())
 
 def getMGImage():
-    stream = io.BytesIO(getMGData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMGData())
+    return ImageFromStream(stream)
 
 index.append('MG')
 catalog['MG'] = ImageClass()
@@ -2790,7 +2784,7 @@ catalog['MG'].getBitmap = getMGBitmap
 #----------------------------------------------------------------------
 def getMKData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x88IDAT(\x91=\xc9=H\x96a\x18\x86\xe1\xf3\xf5{\xdb\xc2\xa6\xa0"%\nB\
 \xfa\x01\r\x9cl\xa8\xad\xa1\x9f)\x88\x96\x9a\xac1j1\x82\xa0Q\xa7\x88\x86&\t\
@@ -2811,11 +2805,11 @@ BzHk\xa7\x9f\xb6L\xc2\x0e{t\x89\xf3\x85\x99\xe2w\xa2\x14/\xca\xad\xfcY\x0ey8\
 \xdf\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getMKBitmap():
-    return wx.Bitmap(getMKImage())
+    return BitmapFromImage(getMKImage())
 
 def getMKImage():
-    stream = io.BytesIO(getMKData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMKData())
+    return ImageFromStream(stream)
 
 index.append('MK')
 catalog['MK'] = ImageClass()
@@ -2827,7 +2821,7 @@ catalog['MK'].getBitmap = getMKBitmap
 #----------------------------------------------------------------------
 def getMMData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x17IDAT(\x91m\x91\xb1.DQ\x10\x86\xbfs]\x8bH\xb4(\xb6PP\xf1 \x1eE\
 \xaf\xdd\x87\xd9\x9e\xc6\x13\xe8\xc4;\x08\xc9\xb6"\xe2b\xaf;\xff\x9c3\x8a\
@@ -2843,11 +2837,11 @@ w\x0f\xc3\xe3\xe2\xb5\xeb|\xf9\x9c\x93Q\xa4\x15u\x05\xdc\x0b\xb4O\x9cn\xe5\
 \xee8\x02>\x013\xecV\x12\x92s\xba\xce\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getMMBitmap():
-    return wx.Bitmap(getMMImage())
+    return BitmapFromImage(getMMImage())
 
 def getMMImage():
-    stream = io.BytesIO(getMMData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMMData())
+    return ImageFromStream(stream)
 
 index.append('MM')
 catalog['MM'] = ImageClass()
@@ -2859,7 +2853,7 @@ catalog['MM'].getBitmap = getMMBitmap
 #----------------------------------------------------------------------
 def getMNData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1eIDAT(\x91]\x91\xb1j\x95A\x14\x84\xbf\xfd\xef\x1f\x14\xb1\x88$\
 \x85Q\xd2\x88\x92w\xc8;X\x85@\n\xdf$\xf8 \xbeF^\xc0\xde\xd6\xc2\xc2JDA\x10A\
@@ -2875,11 +2869,11 @@ W\xb46\xd0\xa1\\\xef\xfcb\x87\x03>\xc3\xf3\x9d\xc1\xfa\x1b'\xe35\xea\x1e\x9e\
 \x19N\x12\xd7\xb1\x80\xd6\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getMNBitmap():
-    return wx.Bitmap(getMNImage())
+    return BitmapFromImage(getMNImage())
 
 def getMNImage():
-    stream = io.BytesIO(getMNData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMNData())
+    return ImageFromStream(stream)
 
 index.append('MN')
 catalog['MN'] = ImageClass()
@@ -2891,7 +2885,7 @@ catalog['MN'].getBitmap = getMNBitmap
 #----------------------------------------------------------------------
 def getMOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x8fIDAT(\x91M\x911kSq\x14\xc5\xcf{\xfe\t\x94\x17i\xea\x12\x1a\x89b&\
 [l\xd5\xa5K\xa9\x93\xfd\x08\xdd\x04A\x14AA\x04\xa3\x82\xdd\xfc\x06\xea\xe4\
@@ -2912,11 +2906,11 @@ Z\xaf\x7f|\xd2\xd0\xc5\xc6\xe2\xe0\xcb \x81\xd0P1\xa1SM\xfaG\xfd\x85\xb4P\
 END\xaeB`\x82' 
 
 def getMOBitmap():
-    return wx.Bitmap(getMOImage())
+    return BitmapFromImage(getMOImage())
 
 def getMOImage():
-    stream = io.BytesIO(getMOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMOData())
+    return ImageFromStream(stream)
 
 index.append('MO')
 catalog['MO'] = ImageClass()
@@ -2928,7 +2922,7 @@ catalog['MO'].getBitmap = getMOBitmap
 #----------------------------------------------------------------------
 def getMTData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xefIDAT(\x91m\x91\xb1n\xc2P\x0cEo^\xdc\xad\xf4\x0b`b\xa1e@\x0ce\xe1\
 \xaf\xf84\xfe&R\xd521\x04\x06\xa2\xd0\xe5\xd9\xcf\xb7\xc3KB\xd2\xf6\xca\xb2<\
@@ -2942,11 +2936,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xe3\xac\x1f5\xa6Z\xed\x19\x00\xa0J\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getMTBitmap():
-    return wx.Bitmap(getMTImage())
+    return BitmapFromImage(getMTImage())
 
 def getMTImage():
-    stream = io.BytesIO(getMTData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMTData())
+    return ImageFromStream(stream)
 
 index.append('MT')
 catalog['MT'] = ImageClass()
@@ -2958,7 +2952,7 @@ catalog['MT'].getBitmap = getMTBitmap
 #----------------------------------------------------------------------
 def getMXData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01pIDAT(\x91E\x90A\x8b\xcdq\x18\x85\xcf\xff7\xff\xb9MHw\xee4\x84fjV\
 \x94\x05\x1b\x1b\xba\x1b\xb3\xe1#H\xf2\x05,|\x05\x0b\x0b\x1bek\xe1\x0b\xd8+\
@@ -2978,11 +2972,11 @@ R%\x91&\t4\xd0Te1\x8b\xa1\xb4\xfd\xf4\xf5\x8b\xaf+\x93\xd5\xb3g\x9e\xbcz.[\
 \xaeB`\x82' 
 
 def getMXBitmap():
-    return wx.Bitmap(getMXImage())
+    return BitmapFromImage(getMXImage())
 
 def getMXImage():
-    stream = io.BytesIO(getMXData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMXData())
+    return ImageFromStream(stream)
 
 index.append('MX')
 catalog['MX'] = ImageClass()
@@ -2994,7 +2988,7 @@ catalog['MX'].getBitmap = getMXBitmap
 #----------------------------------------------------------------------
 def getMYData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xa2IDAT(\x91M\x91?h\x14a\x10\xc5\xdf\x97o\xbd\xec\x99Ssb\x1a=\x0c\
 \x111\x8d\x04,\xec\x04\xb5\xf4*\xab\x80V\xa2\xbd\x1b,\x0cXZ\xa5\xb0\x11%""X\
@@ -3015,11 +3009,11 @@ fYil\xecM\xa3\xe1\xb6;\x9d\xa8Z-lv\xae\x0e\xb3\x7f\x1f\x00h\x06\x12\xc0\xb7V\
 \x00\xba\x16Z\xd9\x8b\xc35\x87\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getMYBitmap():
-    return wx.Bitmap(getMYImage())
+    return BitmapFromImage(getMYImage())
 
 def getMYImage():
-    stream = io.BytesIO(getMYData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMYData())
+    return ImageFromStream(stream)
 
 index.append('MY')
 catalog['MY'] = ImageClass()
@@ -3031,7 +3025,7 @@ catalog['MY'].getBitmap = getMYBitmap
 #----------------------------------------------------------------------
 def getMZData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x85IDAT(\x91M\xc6=k\x93a\x18\xc5\xf1s7wbmm\xe9\xd2B\x84G-t\x14:\xfb\
 \x05\x04\xc1I\xd0M\xbbw\x13\x17Q\xac\x8e\x82\x8asqpr\x10q\t\x88/\x9f@:\xd5.\
@@ -3051,11 +3045,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x19^\x18d\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getMZBitmap():
-    return wx.Bitmap(getMZImage())
+    return BitmapFromImage(getMZImage())
 
 def getMZImage():
-    stream = io.BytesIO(getMZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getMZData())
+    return ImageFromStream(stream)
 
 index.append('MZ')
 catalog['MZ'] = ImageClass()
@@ -3067,7 +3061,7 @@ catalog['MZ'].getBitmap = getMZBitmap
 #----------------------------------------------------------------------
 def getNGData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1eIDAT(\x91u\x91\xb1NUa\x10\x84\xbfs9\xe1\x9a@"\xb9\r\xa1\xa0\xa1\
 \xe1A\x88\xbd\x0f@m|\x01+\x1a+{K_\x83\x97\xe0!(h\xb4\xa1 \x91`r\xf2\xef\xcc\
@@ -3083,11 +3077,11 @@ Y\x88\x19\xe1H\xd1\xc8\x90_\x12\xfeE\xeag\x84\xea\x1a\x1e\xb2\xca\xa3\xd3\
 \xdc6\xb7\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getNGBitmap():
-    return wx.Bitmap(getNGImage())
+    return BitmapFromImage(getNGImage())
 
 def getNGImage():
-    stream = io.BytesIO(getNGData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getNGData())
+    return ImageFromStream(stream)
 
 index.append('NG')
 catalog['NG'] = ImageClass()
@@ -3099,7 +3093,7 @@ catalog['NG'].getBitmap = getNGBitmap
 #----------------------------------------------------------------------
 def getNIData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01;IDAT(\x91]Q\xb1jT\x01\x10\x9c\xbd{\x81\xdc)\x1c\xc1\x84\x08*i\x8c\
 \xadM\x04K\xfd\x824\xf9\x88\xb4\xf7\x05\x81\x14\xfe\x82\x95\x85\xa5 \x88U\
@@ -3116,11 +3110,11 @@ R\x95\x1a\x17\xdd\x7f(\xf9`\x8c\xafo\x14$#\x02\x80m\x18\x86=\xff\x90\xf3V\
 1b\xbb\xb0X\xc4#\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getNIBitmap():
-    return wx.Bitmap(getNIImage())
+    return BitmapFromImage(getNIImage())
 
 def getNIImage():
-    stream = io.BytesIO(getNIData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getNIData())
+    return ImageFromStream(stream)
 
 index.append('NI')
 catalog['NI'] = ImageClass()
@@ -3132,7 +3126,7 @@ catalog['NI'].getBitmap = getNIBitmap
 #----------------------------------------------------------------------
 def getNLData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xfdIDAT(\x91}\x8e\xcd*\x85a\x14\x85\xd7\xabOR\xe7\x8c$\t\xe1\x12\\\
 \x81\xcb2\x90\x0b025t\r\xe6\xee\xe5$18EG\x94\xde\xbd~\x0c>\x0e\n\xab\xdd\xea\
@@ -3147,11 +3141,11 @@ i\xb7\xf6j\xb7\xe0K\xfe\xc9\xbfN\x0b\x80\xd3s\x00\xb1aA\n\r1\x14\xc8\x14C\
 \x9f\xbe\xf2\x0e\xd9$jsT\xa0\xbcG\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getNLBitmap():
-    return wx.Bitmap(getNLImage())
+    return BitmapFromImage(getNLImage())
 
 def getNLImage():
-    stream = io.BytesIO(getNLData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getNLData())
+    return ImageFromStream(stream)
 
 index.append('NL')
 catalog['NL'] = ImageClass()
@@ -3163,7 +3157,7 @@ catalog['NL'].getBitmap = getNLBitmap
 #----------------------------------------------------------------------
 def getNOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01ZIDAT(\x91m\x91\xb1jTa\x14\x84\xe7\xbf\xf7\xdaXH\x96\xd5b\x93\xac\
 \x84\xd8X\x88\xa5\x8d\xe0K\xd8Y\x88`\x17L\x11\xb1\x93<\x81\x81<@\x1a\x8b\xb4\
@@ -3182,11 +3176,11 @@ J)\xc3K\n\xdb^\xf90\xf3u*\xa5\xdc\xbf\xbc,\xed\xd3\xcf\xfb/\xd7\xce{FZ\xb22\
 \x00\x00IEND\xaeB`\x82' 
 
 def getNOBitmap():
-    return wx.Bitmap(getNOImage())
+    return BitmapFromImage(getNOImage())
 
 def getNOImage():
-    stream = io.BytesIO(getNOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getNOData())
+    return ImageFromStream(stream)
 
 index.append('NO')
 catalog['NO'] = ImageClass()
@@ -3198,7 +3192,7 @@ catalog['NO'].getBitmap = getNOBitmap
 #----------------------------------------------------------------------
 def getNPData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x06\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x06\
 \x00\x00\x00v\xe2\r9\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\
 \x017IDAT(\x91\x95\x90\xc1+\x83q\x1c\xc6?\xef\x10k\xd9f-i\xc4E\xad\xc5\x8988\
 +\xc9EJN\x8e\xfe\x8c\xe5\xe0\xb2R\xeer\x94\x1c\x9c\x948Y8 \x07\xb9*5\x8c\xd5\
@@ -3215,11 +3209,11 @@ H\x0f7\xa3m\xb4\xcax\xea\\\x0e\xa8`Yf`\xe4\xa4\xd4L'P\x1d*\xa6\x84\x0f\xc4\
 \xaeB`\x82" 
 
 def getNPBitmap():
-    return wx.Bitmap(getNPImage())
+    return BitmapFromImage(getNPImage())
 
 def getNPImage():
-    stream = io.BytesIO(getNPData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getNPData())
+    return ImageFromStream(stream)
 
 index.append('NP')
 catalog['NP'] = ImageClass()
@@ -3231,7 +3225,7 @@ catalog['NP'].getBitmap = getNPBitmap
 #----------------------------------------------------------------------
 def getNRData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01QIDAT(\x91U\x911KW\x01\x14\xc5\xcf\xd37H\x10\xa2A\xf8\x07\x83tr\x08Z\
 Z\x84\xa4/\xd0\x10\xb4\x06\xad\x0emM-\xae\xba\tN\xe1g\x90>D\xe4\xec\xe0\xe4\
@@ -3249,11 +3243,11 @@ D*\x93!e*(\x92\x99J\xea\xf1d\xe1\xcb>f\x90\xcc\xf4\xc6\xd3\xd5w\xaf\x9foo\
 " 
 
 def getNRBitmap():
-    return wx.Bitmap(getNRImage())
+    return BitmapFromImage(getNRImage())
 
 def getNRImage():
-    stream = io.BytesIO(getNRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getNRData())
+    return ImageFromStream(stream)
 
 index.append('NR')
 catalog['NR'] = ImageClass()
@@ -3265,7 +3259,7 @@ catalog['NR'].getBitmap = getNRBitmap
 #----------------------------------------------------------------------
 def getNZData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xd8IDAT(\x91M\x91=kSa\x18\x86\xef\x9c\x9c$=\x874\xcdI\x93\xc6\x10k\
 \xc1F1\x01\xb1\xfd\x01\x16\xc1I\xa5\xa0\xe8hGqp\x10W\x1d\xa4\x83\xbbc\xa1\
@@ -3288,11 +3282,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x03\xee?\xf8\x90:\xacV7\nv\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getNZBitmap():
-    return wx.Bitmap(getNZImage())
+    return BitmapFromImage(getNZImage())
 
 def getNZImage():
-    stream = io.BytesIO(getNZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getNZData())
+    return ImageFromStream(stream)
 
 index.append('NZ')
 catalog['NZ'] = ImageClass()
@@ -3304,7 +3298,7 @@ catalog['NZ'].getBitmap = getNZBitmap
 #----------------------------------------------------------------------
 def getOMData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1aIDAT(\x91u\x8d=JC\x01\x10\x84\xe7\xc5\xa7\x82\xf8\xd3\t\x82\x10\
 \x88\x1e\xc0V\xd0cx\x00=\x83\xa4N\xe7il\xd3\xc6\x1c\xc0\xdc\xc0&E,M\x1a\xc1\
@@ -3320,11 +3314,11 @@ $\xc8\x8a\xa8N\xbb \x01h\x05T\xaa$3L\xf5\xc8b \xd8D4\\ku\x99\xec\xad\x0fHGX\
 \xdf\x86\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getOMBitmap():
-    return wx.Bitmap(getOMImage())
+    return BitmapFromImage(getOMImage())
 
 def getOMImage():
-    stream = io.BytesIO(getOMData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getOMData())
+    return ImageFromStream(stream)
 
 index.append('OM')
 catalog['OM'] = ImageClass()
@@ -3336,7 +3330,7 @@ catalog['OM'].getBitmap = getOMBitmap
 #----------------------------------------------------------------------
 def getPAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01MIDAT(\x91U\x90\xbdJ\xdcQ\x14\xc4\xe7^\xff)\x02q\x9b\x85\x85\x08bae\
 \xc0\xd6V\x10,\xac\xed\xf3\x0c\xb6\xb1L-b\xe9C\x04\x05{!>\x81\x95l\x13\x88\
@@ -3354,11 +3348,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xaeB`\x82' 
 
 def getPABitmap():
-    return wx.Bitmap(getPAImage())
+    return BitmapFromImage(getPAImage())
 
 def getPAImage():
-    stream = io.BytesIO(getPAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getPAData())
+    return ImageFromStream(stream)
 
 index.append('PA')
 catalog['PA'] = ImageClass()
@@ -3370,7 +3364,7 @@ catalog['PA'].getBitmap = getPABitmap
 #----------------------------------------------------------------------
 def getPEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xcfIDAT(\x91\x85\x91\xcdm\x821\x10D\x9f\xe1\xeb\x01q\xe0\x00}\xd0\t\
 \x9d\xd0\x15\x8dP\x00\xd7D4\x90\\\xbc\xb3;9\xf8\x0b\x7fB\xc9h\x0f\x96<O\x1e\
@@ -3383,11 +3377,11 @@ k\xed^\xe7n7vHfA\xfb~h\xb1\x80\xf3y.X\x9a\x0f\xfb\xfd|\x05\xc0\x0f\x02=a\x84\
 \xb72\xeb\xb6\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getPEBitmap():
-    return wx.Bitmap(getPEImage())
+    return BitmapFromImage(getPEImage())
 
 def getPEImage():
-    stream = io.BytesIO(getPEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getPEData())
+    return ImageFromStream(stream)
 
 index.append('PE')
 catalog['PE'] = ImageClass()
@@ -3399,7 +3393,7 @@ catalog['PE'].getBitmap = getPEBitmap
 #----------------------------------------------------------------------
 def getPHData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01qIDAT(\x91e\x91\xb1k\x93\x01\x14\xc4/_?\xb5\xf8Y\xc9P35K\x15\x84\xb6\
 \xa0\x88\xe0\xd8\x7f\xa0\x8bvu\xed\xea\xd4\xbdC\xff\x01\xa1BD\x05\x07\x11+\
@@ -3419,11 +3413,11 @@ e\xe5\xd4\xfa\xfaB\xbb=c&\xf7p\xa3\x9d\xd0aF3\xba\'`Ef\x02\x9f\x81\x8e\xd4Y\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getPHBitmap():
-    return wx.Bitmap(getPHImage())
+    return BitmapFromImage(getPHImage())
 
 def getPHImage():
-    stream = io.BytesIO(getPHData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getPHData())
+    return ImageFromStream(stream)
 
 index.append('PH')
 catalog['PH'] = ImageClass()
@@ -3435,7 +3429,7 @@ catalog['PH'].getBitmap = getPHBitmap
 #----------------------------------------------------------------------
 def getPKData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x8dIDAT(\x91eQ\xcdJ[a\x14\x9c\x9b{\xbd\x90&\x11i\x17%M\x04\x0b\x9a"\
 \xdd\xd8\xad\x15\xea\x03\xf8\x08\xe2\x0b\xb8\xad\xdbf\xe9\xdaM\xe9[(Y)\xb8sU\
@@ -3456,11 +3450,11 @@ qU\x131\x15\x97\xce\x87NV\xc8\xc7\x18\xdd\xbd7\xee\xdd\x86[s\x8b\x88\x8dJ\
 \xe5\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getPKBitmap():
-    return wx.Bitmap(getPKImage())
+    return BitmapFromImage(getPKImage())
 
 def getPKImage():
-    stream = io.BytesIO(getPKData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getPKData())
+    return ImageFromStream(stream)
 
 index.append('PK')
 catalog['PK'] = ImageClass()
@@ -3472,7 +3466,7 @@ catalog['PK'].getBitmap = getPKBitmap
 #----------------------------------------------------------------------
 def getPLData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xbaIDAT(\x91\x8d\x8d1nBA\x0cD\x9fakz\xc4\x9d\xb9\x037\x83\xe6\xf7\
 \xa0\xa4\xd9\xf1zRl\xf2\xc5\x0fD\xcahl\xd9\xf2\x1b9|\xbf\xf3\xa3Z\xab\xaa\
@@ -3485,11 +3479,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getPLBitmap():
-    return wx.Bitmap(getPLImage())
+    return BitmapFromImage(getPLImage())
 
 def getPLImage():
-    stream = io.BytesIO(getPLData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getPLData())
+    return ImageFromStream(stream)
 
 index.append('PL')
 catalog['PL'] = ImageClass()
@@ -3501,7 +3495,7 @@ catalog['PL'].getBitmap = getPLBitmap
 #----------------------------------------------------------------------
 def getPRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x8bIDAT(\x91m\x91\xcfK\x94a\x14\x85\xcf\xfb\xbd\xaf\xe3\x8f\x99\xc1\
 \x8d\x89\x90ZH\x04\xa5`\x88\xe6\xbe\xfe\x81\xfe\x80 \x82V\x82P\xdb\x86\x16\
@@ -3521,11 +3515,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x9eG,\x0f\xd3,\xbc\x95\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getPRBitmap():
-    return wx.Bitmap(getPRImage())
+    return BitmapFromImage(getPRImage())
 
 def getPRImage():
-    stream = io.BytesIO(getPRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getPRData())
+    return ImageFromStream(stream)
 
 index.append('PR')
 catalog['PR'] = ImageClass()
@@ -3537,7 +3531,7 @@ catalog['PR'].getBitmap = getPRBitmap
 #----------------------------------------------------------------------
 def getPTData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01^IDAT(\x91m\x911k\x93a\x14\x85\xcf\xf7\xe6mR+\xa5B:\xd8!\x82\x83"\
 \xe2\xa4\xfe\x03\x9d\xdc:\xbat\xeb \x9d\x9c3v)\x88\xbf@\xdc\x04g\x0b\n\xfe\
@@ -3556,11 +3550,11 @@ d\x00\x15\x02\x9d\xe6\xf6\xf1\x87\xfaw9yrr\xed\xcf\xcf\xeewv>Y\x99]lCJI\x8b\
 \x05\x02MO\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getPTBitmap():
-    return wx.Bitmap(getPTImage())
+    return BitmapFromImage(getPTImage())
 
 def getPTImage():
-    stream = io.BytesIO(getPTData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getPTData())
+    return ImageFromStream(stream)
 
 index.append('PT')
 catalog['PT'] = ImageClass()
@@ -3572,7 +3566,7 @@ catalog['PT'].getBitmap = getPTBitmap
 #----------------------------------------------------------------------
 def getPYData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x1fIDAT(\x91mR;J\x04A\x14\xac\x9e\x19\x075\x11\xc1@\x84\xdd\x0bx\
 \x0cS\x03\xf18n``b\xe8-D\x10\x83\xc5\x1b\x18\x8a\x81W\xf0\x83,\xac\xff]\xd4\
@@ -3588,11 +3582,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 o\xefV\xf1,"\x04\xa3\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getPYBitmap():
-    return wx.Bitmap(getPYImage())
+    return BitmapFromImage(getPYImage())
 
 def getPYImage():
-    stream = io.BytesIO(getPYData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getPYData())
+    return ImageFromStream(stream)
 
 index.append('PY')
 catalog['PY'] = ImageClass()
@@ -3604,7 +3598,7 @@ catalog['PY'].getBitmap = getPYBitmap
 #----------------------------------------------------------------------
 def getQAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01$IDAT(\x91}\x90\xcf*\x85Q\x14\xc5\xd7\xbd}\x19\xdcd`\xa4\x90\x97\xf0\
 .\x94\x94\x8cL\x94\x81(\xa2\xc8@)L\x8d\x0c\x0c\x98x\x0f#^Af\x92\x7f\xe9\x96\
@@ -3620,11 +3614,11 @@ h\xa3S\xa4D\x93J\xa5\x0c\xa0\xf3\xf9\xfe\xda\x1b\x9fhw(\xa5\x9c./\xa6(\xd5\
 \x03k}[\xe5\x9e\xcb>\x13\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getQABitmap():
-    return wx.Bitmap(getQAImage())
+    return BitmapFromImage(getQAImage())
 
 def getQAImage():
-    stream = io.BytesIO(getQAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getQAData())
+    return ImageFromStream(stream)
 
 index.append('QA')
 catalog['QA'] = ImageClass()
@@ -3636,7 +3630,7 @@ catalog['QA'].getBitmap = getQABitmap
 #----------------------------------------------------------------------
 def getROData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x14IDAT(\x91]\x911J]a\x10\x85\xbf{\xf3?Iz\x9b \x16\xda\xba\x00\x17\
 \x92\xc2&\x0b\t\xd8eI\x0fR\x06\xec\\\x84\x9d\x08\x16\x81\x18\x82\xa8o\xe6\
@@ -3652,11 +3646,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getROBitmap():
-    return wx.Bitmap(getROImage())
+    return BitmapFromImage(getROImage())
 
 def getROImage():
-    stream = io.BytesIO(getROData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getROData())
+    return ImageFromStream(stream)
 
 index.append('RO')
 catalog['RO'] = ImageClass()
@@ -3668,7 +3662,7 @@ catalog['RO'].getBitmap = getROBitmap
 #----------------------------------------------------------------------
 def getRSData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x11\x00\x00\x00\x0b\x08\x06\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x11\x00\x00\x00\x0b\x08\x06\
 \x00\x00\x00\x99 f\x07\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\
 \x01'IDAT(\x91\x9d\x91\xbdJ\xc3`\x14\x86\xdf$_C\x9a\x984E\xab\xc1A\rEQ\xc9\
 \xe2\xe0\xe05\x88\xa3\x93\x8b\x827\xe1e\x88\x83\x9b\xae^\x85\x93\xf0!B\xa7\
@@ -3684,11 +3678,11 @@ e\x05\xff\xa5\xf9\xe1\x83\x98\xb2\x02K+\xfd*\x84$\xc1\x90D\x98\t\xc4\xa9D$\
 \xb2\xd8\xb6\x8dO>1\x8eT\x1c4\xb0\xeb\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getRSBitmap():
-    return wx.Bitmap(getRSImage())
+    return BitmapFromImage(getRSImage())
 
 def getRSImage():
-    stream = io.BytesIO(getRSData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getRSData())
+    return ImageFromStream(stream)
 
 index.append('RS')
 catalog['RS'] = ImageClass()
@@ -3700,7 +3694,7 @@ catalog['RS'].getBitmap = getRSBitmap
 #----------------------------------------------------------------------
 def getRUData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xf2IDAT(\x91m\x8f=N\xc2Q\x10\xc4\x7f\x0f\xfe\x15v4\x86X\xd0\xd8Xx\r\
 \x13nB\xcb=<\x85W\xa0\xe0.\x16\x16\x14\x86\x8e\x98HL\xde\xcc\xdb\xb5xD>d\xb2\
@@ -3714,11 +3708,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x0b?\x89e\x1eo\xd1Q\x86\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getRUBitmap():
-    return wx.Bitmap(getRUImage())
+    return BitmapFromImage(getRUImage())
 
 def getRUImage():
-    stream = io.BytesIO(getRUData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getRUData())
+    return ImageFromStream(stream)
 
 index.append('RU')
 catalog['RU'] = ImageClass()
@@ -3730,7 +3724,7 @@ catalog['RU'].getBitmap = getRUBitmap
 #----------------------------------------------------------------------
 def getRWData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01EIDAT(\x91m\x8c1\x8a\x94Q\x10\x84\xeb\xbd\xff\xcd\x82\xb2*\xc8l\xb0\
 \x91\xe0e\x043\x83=\x81\x08\x06bd"\x82\x81\xe0\x9a\x19\xe8\x01\xcc\xf4\x10"x\
@@ -3748,11 +3742,11 @@ h\xb3Ly\x9b\xbes\xf8d?>tm\x8e\x96q\x8c\xfb]\x80\xe5\x12J\xa0\xccB\xdaYf9\xcb\
 B`\x82' 
 
 def getRWBitmap():
-    return wx.Bitmap(getRWImage())
+    return BitmapFromImage(getRWImage())
 
 def getRWImage():
-    stream = io.BytesIO(getRWData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getRWData())
+    return ImageFromStream(stream)
 
 index.append('RW')
 catalog['RW'] = ImageClass()
@@ -3764,7 +3758,7 @@ catalog['RW'].getBitmap = getRWBitmap
 #----------------------------------------------------------------------
 def getSAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01sIDAT(\x91}\x91\xbdjTq\x14\xc4\xe7~d\xb3\x9b\xc0"q\x8b\x801FBj\xadU\
 \x14l}\x8bT~4y\x04}\x86\xd4\x82\x9d\xd1\xbc@*\x9b\x10,T\x04\x85[\x08\x1b\xbb\
@@ -3784,11 +3778,11 @@ J4\xf0\xe0r\x7f\x99\xe1NR\xeer\x8a\x1eNq\xe7\xc3KQ\xabK\xd7\x18\x8c\x08\x00\
  
 
 def getSABitmap():
-    return wx.Bitmap(getSAImage())
+    return BitmapFromImage(getSAImage())
 
 def getSAImage():
-    stream = io.BytesIO(getSAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSAData())
+    return ImageFromStream(stream)
 
 index.append('SA')
 catalog['SA'] = ImageClass()
@@ -3800,7 +3794,7 @@ catalog['SA'].getBitmap = getSABitmap
 #----------------------------------------------------------------------
 def getSBData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xcfIDAT(\x91\x85\x8dAH\x93a\x1c\xc6\x9f\xb5\xef\xfbH%\xdc\xc2\x82\t\
 -\x0bV\x07CI\x0c\x84\xc5N\x16\x11Q\x87\xca\x08\x82X]\xbc\xe4\xa9\x08\xf1R\
@@ -3823,11 +3817,11 @@ bD\x8c\xe86F\x03\xf0\x15\x1f\xc0u\xf0\xb0\x8c\xf94\xb0\x89\xff\xf2\x07 \xdf+\
 \xe0\x8e\xc56 \x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getSBBitmap():
-    return wx.Bitmap(getSBImage())
+    return BitmapFromImage(getSBImage())
 
 def getSBImage():
-    stream = io.BytesIO(getSBData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSBData())
+    return ImageFromStream(stream)
 
 index.append('SB')
 catalog['SB'] = ImageClass()
@@ -3839,7 +3833,7 @@ catalog['SB'].getBitmap = getSBBitmap
 #----------------------------------------------------------------------
 def getSDData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x019IDAT(\x91\x95\x8f\xb1JBq\x14\x87\x7f\xde{\tS\xf4JK8\xb8\xf9\x00-\
 \x8dAkm>A/P[CDS\x05A\r\xb5\xf6\x04-MBkPo\xe0\x138\xe8\x90\xdd"5E\xfc\x9f\xdf\
@@ -3856,11 +3850,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
  
 
 def getSDBitmap():
-    return wx.Bitmap(getSDImage())
+    return BitmapFromImage(getSDImage())
 
 def getSDImage():
-    stream = io.BytesIO(getSDData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSDData())
+    return ImageFromStream(stream)
 
 index.append('SD')
 catalog['SD'] = ImageClass()
@@ -3872,7 +3866,7 @@ catalog['SD'].getBitmap = getSDBitmap
 #----------------------------------------------------------------------
 def getSEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01LIDAT(\x91M\x91?j\xd4q\x14\xc4\xe7\xbb\xfe4EDAQ\x08\x12\x04s\x00K++\
 \x0b\xb1\x11\xef`\x11\x10\xb62n#(\x16\x966\xdaz\x854\x82\xa5E\x0e\xe0\x19\
@@ -3890,11 +3884,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00IEND\xaeB`\x82' 
 
 def getSEBitmap():
-    return wx.Bitmap(getSEImage())
+    return BitmapFromImage(getSEImage())
 
 def getSEImage():
-    stream = io.BytesIO(getSEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSEData())
+    return ImageFromStream(stream)
 
 index.append('SE')
 catalog['SE'] = ImageClass()
@@ -3906,7 +3900,7 @@ catalog['SE'].getBitmap = getSEBitmap
 #----------------------------------------------------------------------
 def getSGData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\'IDAT(\x91\x8d\x92=JCQ\x10\x85\xcf\xbd\xefB4$\x9d\x8d\xf8\x93\xd2"\
 \xae +p=\xda\xbb\x96\xac!U\x8a`\xd2)i\x14L\x1f\x02\x82\x88(\xa4\x9183\xef\
@@ -3923,11 +3917,11 @@ I\x92\x04\xfce7\xdb\x00\n\xc9\n\xf8\xcf\x01\x00D\x14\x92\x9f6>H)\xe1\x0b\tP\
 \x8e\x1e\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getSGBitmap():
-    return wx.Bitmap(getSGImage())
+    return BitmapFromImage(getSGImage())
 
 def getSGImage():
-    stream = io.BytesIO(getSGData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSGData())
+    return ImageFromStream(stream)
 
 index.append('SG')
 catalog['SG'] = ImageClass()
@@ -3939,7 +3933,7 @@ catalog['SG'].getBitmap = getSGBitmap
 #----------------------------------------------------------------------
 def getSIData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01FIDAT(\x91m\x8c\xb1jTa\x10\x85\xcf\x7f\xef\x0f\xca\x16\x81\xa0`\x16;\
 \xb1\xd4J-\xad|\x05\x0b\x11\x1fC\xb0S,\x02v*\n"\xd8\xa8Ez;[}\x03\x1b\x1b\xb1\
@@ -3957,11 +3951,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x01\xf8\r^\x88\\1\x86\x01\xff\xc6\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getSIBitmap():
-    return wx.Bitmap(getSIImage())
+    return BitmapFromImage(getSIImage())
 
 def getSIImage():
-    stream = io.BytesIO(getSIData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSIData())
+    return ImageFromStream(stream)
 
 index.append('SI')
 catalog['SI'] = ImageClass()
@@ -3973,7 +3967,7 @@ catalog['SI'].getBitmap = getSIBitmap
 #----------------------------------------------------------------------
 def getSKData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x80IDAT(\x91e\x8e\xbfK\x95q\x14\xc6\x9f\xef{_oz\x8d,D\\\x1c\xa2\xff\
 "!"Qj\xe8\x0f\xa8\xc1\xa0p\xca\x1c\x1a\xeaB\xd1\xd4\xd6\xd4 \xd4TC\xa8\xa3D6\
@@ -3994,11 +3988,11 @@ z\xebC\xb3\x1b\xee\xe6\xb4\x90\x1b;\xce\xa1\xc1*\xe2K\x16\x0eQ\x0c\xea\xfe\
 \x82' 
 
 def getSKBitmap():
-    return wx.Bitmap(getSKImage())
+    return BitmapFromImage(getSKImage())
 
 def getSKImage():
-    stream = io.BytesIO(getSKData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSKData())
+    return ImageFromStream(stream)
 
 index.append('SK')
 catalog['SK'] = ImageClass()
@@ -4010,7 +4004,7 @@ catalog['SK'].getBitmap = getSKBitmap
 #----------------------------------------------------------------------
 def getSNData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01+IDAT(\x91U\x911j\x96a\x10\x84\x9f7\xf9AA\x04\x1b1\x11b\x91.\x95\x9d\
 vv\x16v\x1e\xc0B\xb0\xf4\x08\xa9r\x03o"\xa4\xf1"v\x82\x85h%\xd8\x18\x15wfw,\
@@ -4026,11 +4020,11 @@ I\xdf\xa5\xfb\xb7\xeb\xe9=\xa5\xf6\x95\xb0\x07v\x98\x1e{\\Sn\'zt\xb7\x1e\x1f\
 y\xb8\xdfx\xd3\x1f\xfe,[\x91A\xea\xa2\xe8\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getSNBitmap():
-    return wx.Bitmap(getSNImage())
+    return BitmapFromImage(getSNImage())
 
 def getSNImage():
-    stream = io.BytesIO(getSNData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSNData())
+    return ImageFromStream(stream)
 
 index.append('SN')
 catalog['SN'] = ImageClass()
@@ -4042,7 +4036,7 @@ catalog['SN'].getBitmap = getSNBitmap
 #----------------------------------------------------------------------
 def getSVData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01<IDAT(\x91U\x91\xbfj\x94Q\x10\xc5\xcfu?\xf7\xd3\xf4\x11V\x88\x08\x89\
 \xa4H!\x01S\xfa^\xa2\x90\x07H\x936>\x89E\x8a\x80\x10B\x12Ro!6\x16!\xa8\x08.\
@@ -4060,11 +4054,11 @@ t\x04\x1d\x1c\xed\xcf\x07A\xa2\x9b\x9f\x01\xcet\xa4#\x9d\xe9\x16\x8e\xa0\x85\
 \x82' 
 
 def getSVBitmap():
-    return wx.Bitmap(getSVImage())
+    return BitmapFromImage(getSVImage())
 
 def getSVImage():
-    stream = io.BytesIO(getSVData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSVData())
+    return ImageFromStream(stream)
 
 index.append('SV')
 catalog['SV'] = ImageClass()
@@ -4076,7 +4070,7 @@ catalog['SV'].getBitmap = getSVBitmap
 #----------------------------------------------------------------------
 def getSYData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x0cIDAT(\x91\x9dN=K\x03A\x14\x9c\r\xd7\x86\xd4)R\xa8\x87\xbfGE\x10\
 \xd1:\x7f"?$\xa5`\xa5\x87\x10H\x19A\x7f\xc3\x15V9N"\x11m"\xdc\x11\x0c\xd9y\
@@ -4092,11 +4086,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 D\xaeB`\x82' 
 
 def getSYBitmap():
-    return wx.Bitmap(getSYImage())
+    return BitmapFromImage(getSYImage())
 
 def getSYImage():
-    stream = io.BytesIO(getSYData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSYData())
+    return ImageFromStream(stream)
 
 index.append('SY')
 catalog['SY'] = ImageClass()
@@ -4108,7 +4102,7 @@ catalog['SY'].getBitmap = getSYBitmap
 #----------------------------------------------------------------------
 def getSZData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xc6IDAT(\x91%\xd1MK\x94a\x14\x06\xe0\xfb}\xe7\x99\xc9\x9a\xa2,BJ\
 \x9aM\r\xd2\xa2\xa0\xc0e\x10\xa66\x05\xb6k\x13\xb4\xae\x08\xda\xe8\xa2\xc2A\
@@ -4130,11 +4124,11 @@ z\x1bO\xcf\xc9\x1e\xe6]s$\xa99w:I\x91\xc8\x1c\xe8nt\xa3\xd3\xe9\xe2\xd5lW\
 \xe1\x1f$\xeeaN\xbc\x0e\xd5\xeb\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getSZBitmap():
-    return wx.Bitmap(getSZImage())
+    return BitmapFromImage(getSZImage())
 
 def getSZImage():
-    stream = io.BytesIO(getSZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getSZData())
+    return ImageFromStream(stream)
 
 index.append('SZ')
 catalog['SZ'] = ImageClass()
@@ -4146,7 +4140,7 @@ catalog['SZ'].getBitmap = getSZBitmap
 #----------------------------------------------------------------------
 def getTHData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x0eIDAT(\x91}Q\xb1JCQ\x14\xcb\xb5\x0f\x8aT\x1d\xaa\x8bS\x17urq\xd0\
 \xdd\xc1\x8f\x11\x1c\xab?\xe0\xcft\x15\xbaIq/~E\xf7:\xd4\n\xf6\x9e$\xc7\xe1A\
@@ -4161,11 +4155,11 @@ k\xa1\x1aB\x08g\x08\xe1\xa4$6\xf0\xb6\xdf\xc9\x92\x00\x9e\x9f\x01\xa4\x05\'\
 \xaf\xed!\xff\xd9\xb8\xc5\x0f_\xffe\x8c$1\t^\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getTHBitmap():
-    return wx.Bitmap(getTHImage())
+    return BitmapFromImage(getTHImage())
 
 def getTHImage():
-    stream = io.BytesIO(getTHData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getTHData())
+    return ImageFromStream(stream)
 
 index.append('TH')
 catalog['TH'] = ImageClass()
@@ -4177,7 +4171,7 @@ catalog['TH'].getBitmap = getTHBitmap
 #----------------------------------------------------------------------
 def getTJData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01;IDAT(\x91\x8d\x8f\xbdN[Q\x10\x84\xe7\\\x9b K\x96\x0c\x15\xe2\xc7I\n\
 \\\xf1\x04\xf4<\x0b\x05\x05\x1d\x12\x92\x83\x92\x86"Ux\x16^ E\x9a\xb4\xf4\
@@ -4194,11 +4188,11 @@ $\x7f\xdd\xde\xf6\x01\x00\xae\xf7KG "\xc9\x8c0\x99\xa4\xc9\xacLV\xd7\x9a\xe4\
 \x00\x00IEND\xaeB`\x82' 
 
 def getTJBitmap():
-    return wx.Bitmap(getTJImage())
+    return BitmapFromImage(getTJImage())
 
 def getTJImage():
-    stream = io.BytesIO(getTJData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getTJData())
+    return ImageFromStream(stream)
 
 index.append('TJ')
 catalog['TJ'] = ImageClass()
@@ -4210,7 +4204,7 @@ catalog['TJ'].getBitmap = getTJBitmap
 #----------------------------------------------------------------------
 def getTMData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x8fIDAT(\x91\x85\x8e?kSq\x18\x85O.\xf7\xde\xdc\xa4\xf6\xcf$\xad8h\
 \x17\x07q(H\xc5\xc9Qp\x94\x8e."\xfa\x05\x82\x14\xa4\xbb\xa3:\x16\xfa\r\x9c\
@@ -4230,11 +4224,11 @@ L\xb9\xf2k\xd8\xbb]\xdb\xdam\x1d\xecw\x1ar1\x90r:_\xd46#\x00(\xf0\xfb\xe8k\
 \xc0g`\x1d\xff\xe1/\x0b\xd0A&\xe7\xb8\xaev\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getTMBitmap():
-    return wx.Bitmap(getTMImage())
+    return BitmapFromImage(getTMImage())
 
 def getTMImage():
-    stream = io.BytesIO(getTMData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getTMData())
+    return ImageFromStream(stream)
 
 index.append('TM')
 catalog['TM'] = ImageClass()
@@ -4246,7 +4240,7 @@ catalog['TM'].getBitmap = getTMBitmap
 #----------------------------------------------------------------------
 def getTNData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x017IDAT(\x91}\x91\xb1JCa\x0c\x85\xcf\xad]\x05A(\x14[\x07\xa7\x8evq\xf2\
 \x01\xd4\xa1[\xa7\x82\xb3\xa3nB\xdf\xa1\xabN\xbe\x82\xe2\xe0$\xb6X\xe1.\xbat\
@@ -4263,11 +4257,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x93;~\x84\xff\xbb8\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getTNBitmap():
-    return wx.Bitmap(getTNImage())
+    return BitmapFromImage(getTNImage())
 
 def getTNImage():
-    stream = io.BytesIO(getTNData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getTNData())
+    return ImageFromStream(stream)
 
 index.append('TN')
 catalog['TN'] = ImageClass()
@@ -4279,7 +4273,7 @@ catalog['TN'].getBitmap = getTNBitmap
 #----------------------------------------------------------------------
 def getTOData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xf6IDAT(\x91uRAn\x021\x10s\x96=V\x8b8r\xe0\xc8\x8d\xe7\xf0\r\xa4\
 \xb6|\x81\xf6\x17\xf4\x01\x1cy\x0f\x12\xed\x13V\xa2\x87\x8e\x9d\xb8\x87,hWj#\
@@ -4294,11 +4288,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getTOBitmap():
-    return wx.Bitmap(getTOImage())
+    return BitmapFromImage(getTOImage())
 
 def getTOImage():
-    stream = io.BytesIO(getTOData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getTOData())
+    return ImageFromStream(stream)
 
 index.append('TO')
 catalog['TO'] = ImageClass()
@@ -4310,7 +4304,7 @@ catalog['TO'].getBitmap = getTOBitmap
 #----------------------------------------------------------------------
 def getTRData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x019IDAT(\x91}\x91=JCQ\x10\x85\xcf\x8b\xb1S\x03\xb1\xb2\xb0\x10\xc1\xc6\
 \xda, h:\x17 v.\xc1\x05X\x077`\xafE,,$U\xaa\x94\x81`\xe7\x12bV\xa0y\xa0wf\
@@ -4327,11 +4321,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00IEND\xaeB`\x82' 
 
 def getTRBitmap():
-    return wx.Bitmap(getTRImage())
+    return BitmapFromImage(getTRImage())
 
 def getTRImage():
-    stream = io.BytesIO(getTRData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getTRData())
+    return ImageFromStream(stream)
 
 index.append('TR')
 catalog['TR'] = ImageClass()
@@ -4343,7 +4337,7 @@ catalog['TR'].getBitmap = getTRBitmap
 #----------------------------------------------------------------------
 def getTTData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xd1IDAT(\x91M\x8b\xbfK\x1ba\x1c\x87?\x97\xc3%\x9ed\x0c\x19\xb2\x04\
 \\\xdb\x8a`K\xa0\r\xa5\x05\x83\xb4\x1d:\x0878(\x15\x11\x94\xd0.\x0ei\xab\xff\
@@ -4366,11 +4360,11 @@ u:\xd4\xe9(\x9a6r\x1c\xf5\x00\xa0d\x12\xbd\xbb\xb4\xae\xdb\xb5Z\xbb\xdd\xe6\
 \xfc\x05\x9e\x045\xa0\xd9,m\xf9\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getTTBitmap():
-    return wx.Bitmap(getTTImage())
+    return BitmapFromImage(getTTImage())
 
 def getTTImage():
-    stream = io.BytesIO(getTTData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getTTData())
+    return ImageFromStream(stream)
 
 index.append('TT')
 catalog['TT'] = ImageClass()
@@ -4382,7 +4376,7 @@ catalog['TT'].getBitmap = getTTBitmap
 #----------------------------------------------------------------------
 def getTWData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x11IDAT(\x91m\x91\xb1M\x03Q\x10D\xe7\xceg9E\x02\t\x1c8&!\xa2\x05j\
 \xb0(\x03\n\x80\x8c.\xa0\nS\x02\x14`Q\x80u\x04\x86\x04\x81@\xb6l\xfe\xcc\xce\
@@ -4397,11 +4391,11 @@ b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xe0\xc1\xf3\xe2%\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getTWBitmap():
-    return wx.Bitmap(getTWImage())
+    return BitmapFromImage(getTWImage())
 
 def getTWImage():
-    stream = io.BytesIO(getTWData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getTWData())
+    return ImageFromStream(stream)
 
 index.append('TW')
 catalog['TW'] = ImageClass()
@@ -4413,7 +4407,7 @@ catalog['TW'].getBitmap = getTWBitmap
 #----------------------------------------------------------------------
 def getUAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xf7IDAT(\x91m\x8cAJCQ\x0cE\xcf\xfb}\x08\x8a\xc3N\x94\n\xe2f\\\x8e\
 \x0bp\xec"\xdc\x86k\x10\x84\xee\xc0\x99\x82s\x1dX\xd0\x97\xe4^\x07\xfd\xad\
@@ -4428,11 +4422,11 @@ i\xbaz\x7fZw\x89\xe6\xb0\x07\xe4\xa1t`C\xda\x99\xd0%\x16\xa4\x1d\xb0\x97\xfe\
 \x82' 
 
 def getUABitmap():
-    return wx.Bitmap(getUAImage())
+    return BitmapFromImage(getUAImage())
 
 def getUAImage():
-    stream = io.BytesIO(getUAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getUAData())
+    return ImageFromStream(stream)
 
 index.append('UA')
 catalog['UA'] = ImageClass()
@@ -4444,7 +4438,7 @@ catalog['UA'].getBitmap = getUABitmap
 #----------------------------------------------------------------------
 def getUSData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xb9IDAT(\x91U\xd1\xbdkSa\x18\x05\xf0\xf3\xd6\x04\x17Q(\x08\x16\xa9\
 \xc1\xc5\xd5M\xa4\xa0\xc5M\xed\xa0\x83 \xd5E\xbcj\x06\'1\x8b\n\xe2\xd0?@\xa4\
@@ -4466,11 +4460,11 @@ T0\xd5\xf1;\x015:85\xc5Z\xc3\x18\x18\xc3Z\x1f\xbe{\xb5\xbaU\x15\xb5\xda\xd6\
 \xfd\x0bh\x80b\xaa\xc7\x98\x14\xc8\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getUSBitmap():
-    return wx.Bitmap(getUSImage())
+    return BitmapFromImage(getUSImage())
 
 def getUSImage():
-    stream = io.BytesIO(getUSData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getUSData())
+    return ImageFromStream(stream)
 
 index.append('US')
 catalog['US'] = ImageClass()
@@ -4482,7 +4476,7 @@ catalog['US'].getBitmap = getUSBitmap
 #----------------------------------------------------------------------
 def getUYData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01bIDAT(\x91e\x91\xb1\x8a\x93Q\x14\x84\xcf\xbd\xb9\xb9\xc6B\xb2\x8b\
 \xc2\x16\xb2\xf8\x08\xb6\x96\x82/\xb0o`\'\xa8\xdd\x82\x8d\x0f\xb0\xbe\x82\
@@ -4501,11 +4495,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xa9E4O\xf8\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getUYBitmap():
-    return wx.Bitmap(getUYImage())
+    return BitmapFromImage(getUYImage())
 
 def getUYImage():
-    stream = io.BytesIO(getUYData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getUYData())
+    return ImageFromStream(stream)
 
 index.append('UY')
 catalog['UY'] = ImageClass()
@@ -4517,7 +4511,7 @@ catalog['UY'].getBitmap = getUYBitmap
 #----------------------------------------------------------------------
 def getUZData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01dIDAT(\x91}\x91=K\\a\x14\x84\xe7\x85\xab`\xb1\x88\xb9\xa60`\x08"AHm\
 \xbd\x95\xa4\x92\x14\xe9\xd2\x19H\x13\xadR\xa4\xb0\x10k\x7f@@\x08\x04\x7f\
@@ -4535,11 +4529,11 @@ S\x0c\xc3\xe10\xc5L\x026Z\xad\xb7++\xf3{{\x9f\x0f\x0e>\x02\xde\xe9\xec|\xfb\
 o\x0fZk\xbdr\xc6m~\x03:<o^H\x87\xb8\xe7\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getUZBitmap():
-    return wx.Bitmap(getUZImage())
+    return BitmapFromImage(getUZImage())
 
 def getUZImage():
-    stream = io.BytesIO(getUZData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getUZData())
+    return ImageFromStream(stream)
 
 index.append('UZ')
 catalog['UZ'] = ImageClass()
@@ -4551,7 +4545,7 @@ catalog['UZ'].getBitmap = getUZBitmap
 #----------------------------------------------------------------------
 def getVAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01kIDAT(\x91U\x91\xb1NTa\x14\x84\xe7\xfc\xf7\xbf\xb0\xae\xba\xab\x1b\
 \xb6\x104&j\x0c\xa5\x05FH\xac,4\x16>\x8b\xcf\xe0\x13\xf8\x0e>\x81\xb1\xd3\
@@ -4570,11 +4564,11 @@ j\xec\xfcc\xffx\xf3\xd3\xab\xbaD\x1f;[\xdf\x9fO\x7f\x7f#\x99 \xc3t\xabvc76\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getVABitmap():
-    return wx.Bitmap(getVAImage())
+    return BitmapFromImage(getVAImage())
 
 def getVAImage():
-    stream = io.BytesIO(getVAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getVAData())
+    return ImageFromStream(stream)
 
 index.append('VA')
 catalog['VA'] = ImageClass()
@@ -4586,7 +4580,7 @@ catalog['VA'].getBitmap = getVABitmap
 #----------------------------------------------------------------------
 def getVEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01fIDAT(\x91]\x91=kTa\x10\x85\xcf{sA\xb6H#iR,!\xc6N\xff\x80Z\x9a@\x922\
 \xd8\xdb+"\nIa\x93\x7f\x10\xb4I#l\xf2\x03b\x93\xc0\x16\xf1"laca)\x88_\x10S\
@@ -4605,11 +4599,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getVEBitmap():
-    return wx.Bitmap(getVEImage())
+    return BitmapFromImage(getVEImage())
 
 def getVEImage():
-    stream = io.BytesIO(getVEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getVEData())
+    return ImageFromStream(stream)
 
 index.append('VE')
 catalog['VE'] = ImageClass()
@@ -4621,7 +4615,7 @@ catalog['VE'].getBitmap = getVEBitmap
 #----------------------------------------------------------------------
 def getVNData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x0bIDAT(\x91}\x91!N\xdda\x10\xc4\xe7O\x9f\x00A\x13$\xe2id\x1d\x86\
 \x03 8E]\xaf\xd0 @\xc0U\xdaj\x0eQ\xd5S4\x80"\x88\x866ag\xf6\xfb!>Rx\ta3\xd9\
@@ -4636,11 +4630,11 @@ I2\t\x1f\x92i\x11\x9bUqR\xdc\x9a*\x8e\xcc\xb6y(b\xa5\xd5\xadI\xd8r\xb4\xbf\
 \x02\x8bsUM\x8a:d\x82\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getVNBitmap():
-    return wx.Bitmap(getVNImage())
+    return BitmapFromImage(getVNImage())
 
 def getVNImage():
-    stream = io.BytesIO(getVNData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getVNData())
+    return ImageFromStream(stream)
 
 index.append('VN')
 catalog['VN'] = ImageClass()
@@ -4652,7 +4646,7 @@ catalog['VN'].getBitmap = getVNBitmap
 #----------------------------------------------------------------------
 def getVOLAPUKData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x85IDAT(\x91eP\xc1\x8a\x82P\x00|>\xd4T\xd2H\x14\xb3B\x92N\x85\x94\
 \x97\x0e}B\xa7>:\xe8Z\x97\nR)K\xd4(\x93\xd2\xc8\x97\xca\xdbC\x87v\xb7\xb9\r3\
@@ -4672,11 +4666,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xaeB`\x82' 
 
 def getVOLAPUKBitmap():
-    return wx.Bitmap(getVOLAPUKImage())
+    return BitmapFromImage(getVOLAPUKImage())
 
 def getVOLAPUKImage():
-    stream = io.BytesIO(getVOLAPUKData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getVOLAPUKData())
+    return ImageFromStream(stream)
 
 index.append('VOLAPUK')
 catalog['VOLAPUK'] = ImageClass()
@@ -4688,7 +4682,7 @@ catalog['VOLAPUK'].getBitmap = getVOLAPUKBitmap
 #----------------------------------------------------------------------
 def getVUData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x91IDAT(\x91M\x8bM\x88\xcc\x01\x18\xc6\x9f\xff\xcc\xdf\xc7\xbap\x13\
 Z\xdar2\xd8\xc3\xb8Hj\x0f\x9c\xe40,\xe5\xe30\x07N\x8a\xd3\xba\xac3\xce\xa3\
@@ -4709,11 +4703,11 @@ C\xf2$\x87\x18\x93\x96fI\x16\xa3\xa3\x01\xd4\x00\x84\xe7\x9b\x05\xbf\xd7\xad\
 \xc4\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getVUBitmap():
-    return wx.Bitmap(getVUImage())
+    return BitmapFromImage(getVUImage())
 
 def getVUImage():
-    stream = io.BytesIO(getVUData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getVUData())
+    return ImageFromStream(stream)
 
 index.append('VU')
 catalog['VU'] = ImageClass()
@@ -4725,7 +4719,7 @@ catalog['VU'].getBitmap = getVUBitmap
 #----------------------------------------------------------------------
 def getWSData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01)IDAT(\x91e\x91\xc1JBQ\x14E\xf7\xd3\x97\x83FBM\x1cX\xd4\xb0\xa18\x08\
 \xfa\x01?\xa0Y\xbf\xd1\xcc\x1f\xa9\xdfpX\x81\x10a\x10H4\x90HS\xa2 B\x1a$\x14\
@@ -4741,11 +4735,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x01\xf8\x05o\xd3]\x10"\x992\xd8\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getWSBitmap():
-    return wx.Bitmap(getWSImage())
+    return BitmapFromImage(getWSImage())
 
 def getWSImage():
-    stream = io.BytesIO(getWSData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getWSData())
+    return ImageFromStream(stream)
 
 index.append('WS')
 catalog['WS'] = ImageClass()
@@ -4757,7 +4751,7 @@ catalog['WS'].getBitmap = getWSBitmap
 #----------------------------------------------------------------------
 def getYEData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x00\xf8IDAT(\x91\x95\x8f=JCQ\x10\x85\xcf\x95\xdb<H@\xac\x02b\x93\x8d\
 \xa4\tYN6`m\x99G\x16\xe1\n\\Ev\x11\x08\x88v\x16I,\xee\x999\xc7\xe2\x91g\n\
@@ -4772,11 +4766,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \xf3oS\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getYEBitmap():
-    return wx.Bitmap(getYEImage())
+    return BitmapFromImage(getYEImage())
 
 def getYEImage():
-    stream = io.BytesIO(getYEData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getYEData())
+    return ImageFromStream(stream)
 
 index.append('YE')
 catalog['YE'] = ImageClass()
@@ -4788,7 +4782,7 @@ catalog['YE'].getBitmap = getYEBitmap
 #----------------------------------------------------------------------
 def getYUData():
     return \
-b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x11\x00\x00\x00\x0b\x08\x06\
+"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x11\x00\x00\x00\x0b\x08\x06\
 \x00\x00\x00\x99 f\x07\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\
 \x01'IDAT(\x91\x9d\x91\xbdJ\xc3`\x14\x86\xdf$_C\x9a\x984E\xab\xc1A\rEQ\xc9\
 \xe2\xe0\xe05\x88\xa3\x93\x8b\x827\xe1e\x88\x83\x9b\xae^\x85\x93\xf0!B\xa7\
@@ -4804,11 +4798,11 @@ e\x05\xff\xa5\xf9\xe1\x83\x98\xb2\x02K+\xfd*\x84$\xc1\x90D\x98\t\xc4\xa9D$\
 \xb2\xd8\xb6\x8dO>1\x8eT\x1c4\xb0\xeb\x00\x00\x00\x00IEND\xaeB`\x82" 
 
 def getYUBitmap():
-    return wx.Bitmap(getYUImage())
+    return BitmapFromImage(getYUImage())
 
 def getYUImage():
-    stream = io.BytesIO(getYUData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getYUData())
+    return ImageFromStream(stream)
 
 index.append('YU')
 catalog['YU'] = ImageClass()
@@ -4820,7 +4814,7 @@ catalog['YU'].getBitmap = getYUBitmap
 #----------------------------------------------------------------------
 def getZAData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\xd3IDAT(\x91M\xc6OH\x93q\x1c\xc7\xf1\xcf\xb3\xfd\xb6\xb6\xe7\x19\
 \x1a\x9a\rJ\x91`5\x0fu(B\x84\x92\xa4\xa0\xa0 \xa1\xa0\xaeu\x89":\t\xf3RF\x88\
@@ -4843,11 +4837,11 @@ x=\x88\x05\xab\xdf\x83zMD\x9c\xaaSu\xa2\x9a\tL\xf7\xae\x0b\xe6\xe18\xf2\xfd\
 \x0c\xe6\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getZABitmap():
-    return wx.Bitmap(getZAImage())
+    return BitmapFromImage(getZAImage())
 
 def getZAImage():
-    stream = io.BytesIO(getZAData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getZAData())
+    return ImageFromStream(stream)
 
 index.append('ZA')
 catalog['ZA'] = ImageClass()
@@ -4859,7 +4853,7 @@ catalog['ZA'].getBitmap = getZABitmap
 #----------------------------------------------------------------------
 def getZWData():
     return \
-b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
+'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00\xf9\x80\x9an\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\
 \x00\x01\x9aIDAT(\x91M\x91?h\x93q\x14E\xdf/\xfd\x9a\xf8\'\xd1I*\xd2R\x03u\
 \xa8\x82.N\x0e\x0eJ\x91\x12h\xc0\xa1B\x04\x11A\\\xd5\xb1\x82\x83\x93\xab:U7\
@@ -4880,11 +4874,11 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x0b\x08\x02\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def getZWBitmap():
-    return wx.Bitmap(getZWImage())
+    return BitmapFromImage(getZWImage())
 
 def getZWImage():
-    stream = io.BytesIO(getZWData())
-    return wx.Image(stream)
+    stream = cStringIO.StringIO(getZWData())
+    return ImageFromStream(stream)
 
 index.append('ZW')
 catalog['ZW'] = ImageClass()

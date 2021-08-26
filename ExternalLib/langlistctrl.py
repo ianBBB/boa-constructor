@@ -13,7 +13,7 @@
 """
 import wx
 
-import flagart
+from . import flagart
 
 langIdCountryMap = {
     # generated from wx.Locale info and locale.windows_locale
@@ -339,7 +339,7 @@ def GetWxIdentifierForLanguage(lang):
     for n in dir(wx):
         if n.startswith('LANGUAGE_') and getattr(wx, n) == lang:
             return n
-    raise Exception, 'Language %s not found' % lang
+    raise Exception('Language %s not found' % lang)
 
 
 #-------------------------------------------------------------------------------
@@ -377,7 +377,7 @@ class LanguageListCtrl(wx.ListCtrl):
         if idx != -1:
             return self.langs[idx]
         else:
-            None
+            return None
 
     def SetLanguage(self, lang):
         """ Selects the given language ids item in the control """
@@ -395,7 +395,7 @@ class LanguageListCtrl(wx.ListCtrl):
 if __name__ == '__main__':
     a = wx.PySimpleApp()
 
-    print GetLanguageFlag(wx.LANGUAGE_AFRIKAANS)
+    print(GetLanguageFlag(wx.LANGUAGE_AFRIKAANS))
 
     f = wx.Frame(None, -1)
     f.p = wx.Panel(f, -1)

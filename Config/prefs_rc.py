@@ -7,7 +7,7 @@ import wx
 import wx.stc
 if not hasattr(wx.stc, 'STC_CP_DBCS'):
     wx.stc.STC_CP_DBCS = None
-from wxCompat import wxNO_3D
+
 
 #-Miscellaneous-----------------------------------------------------------------
 
@@ -26,7 +26,7 @@ paletteStyle = 'tabs'
 # Frame test button on the Palette toolbar
 showFrameTestButton = False
 # Style flags used by most splitters in the IDE
-splitterStyle = wx.SP_LIVE_UPDATE | wx.SP_3DSASH | wxNO_3D
+splitterStyle = wx.SP_LIVE_UPDATE | wx.SP_3DSASH
 
 # Alternating background colours used in ListCtrls (pastel blue and yellow)
 pastels = True

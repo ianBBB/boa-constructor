@@ -24,7 +24,7 @@ is configured.
 
 """
 
-import os, sys, shutil, ConfigParser
+import os, sys, shutil, configparser
 
 import wx
 
@@ -39,7 +39,7 @@ else:
 
 #---Import preference namespace from resource .rc. files------------------------
 
-print 'reading user preferences'
+print('reading user preferences')
 
 # This cannot be stored as a Preference option for obvious reasons :)
 if hasattr(sys, "frozen"):
@@ -54,8 +54,8 @@ if '--OverridePrefsDirName' in sys.argv or '-O' in sys.argv:
 
     if idx != -1:
         try: prefsDirName = sys.argv[idx + 1]
-        except IndexError: raise Exception, 'OverridePrefsDirName must specify a directory'
-        print 'using preference directory name', prefsDirName
+        except IndexError: raise Exception('OverridePrefsDirName must specify a directory')
+        print('using preference directory name', prefsDirName)
 
 # To prevent using the HOME env variable run different versions of Boa this flag
 # forces Boa to use Preference settings either in the Config dir or in a 
@@ -63,7 +63,7 @@ if '--OverridePrefsDirName' in sys.argv or '-O' in sys.argv:
 if os.path.isabs(prefsDirName):
     rcPath = prefsDirName
 elif '--BlockHomePrefs' in sys.argv or '-B' in sys.argv:
-    print 'ignoring $HOME (if set)'
+    print('ignoring $HOME (if set)')
     rcPath = os.path.join(pyPath, prefsDirName)
 else:
     homeDir = os.environ.get('HOMEPATH', None)
@@ -83,7 +83,7 @@ else:
             if not os.path.isdir(pth):
                 try:
                     os.mkdir(pth)
-                    print 'Created directory: %s' % pth
+                    print('Created directory: %s' % pth)
                 except OSError:
                     # Protected
                     pass
@@ -100,18 +100,18 @@ eoErrOutFont = wx.NORMAL_FONT
 
 def _backupAndCopyNewestConfig(prefsFile, file, ext):
     bkno=0;bkstr=''
-    while 1:
+    while True:
         bkfile = os.path.splitext(file)[0]+ext+'~'+bkstr
         try:
             os.rename(file, bkfile)
-        except OSError, err:
+        except OSError as err:
             if err.errno != 17: raise
             bkno=bkno+1;bkstr=str(bkno)
         else:
             break
     shutil.copy2(os.path.join(pyPath, 'Config', prefsFile), file)
-    print 'Preference file %s replaced, previous version backed up to %s'%(
-          file, bkfile)
+    print('Preference file %s replaced, previous version backed up to %s'%(
+          file, bkfile))
 
 
 wxPlatforms = {'__WXMSW__': 'msw',
@@ -120,7 +120,7 @@ wxPlatforms = {'__WXMSW__': 'msw',
 thisPlatform = wxPlatforms[wx.Platform]
 
 if not os.path.exists(rcPath):
-    raise Exception, 'Config directory is missing'
+    raise Exception('Config directory is missing')
 
 # load default config
 from Config.prefs_rc import *
@@ -141,7 +141,7 @@ for prefsFile, version in (('prefs_rc.py', 18),
     if not os.path.exists(file):
         prefsFilePath = os.path.join(pyPath, 'Config', prefsFile)
         if not os.path.exists(prefsFilePath):
-            raise Exception, 'Config file %s not found'%prefsFilePath
+            raise Exception('Config file %s not found'%prefsFilePath)
         else:
             shutil.copy2(os.path.join(pyPath, 'Config', prefsFile), file)
     # check version
@@ -156,7 +156,7 @@ for prefsFile, version in (('prefs_rc.py', 18),
             if rcver < version:
                 _backupAndCopyNewestConfig(prefsFile, file, '.py')
 
-    exec(open(file,'r'))
+    exec(open(file).read())
 
 # upgrade/install config files if needed, different config filetypes handled seperately
 # ConfigParser files
@@ -164,7 +164,7 @@ for confFile, version in (('Explorer.%s.cfg' % thisPlatform, 2),):
     file = os.path.join(rcPath, confFile)
     confVersion = 0
     if os.path.exists(file):
-        c = ConfigParser.ConfigParser()
+        c = configparser.ConfigParser()
         c.read(file)
         if c.has_section('resourceconfig') and c.has_option('resourceconfig', 'version'):
             confVersion = c.getint('resourceconfig', 'version')
@@ -217,6 +217,7 @@ for ppth in pluginPaths:
 
 if imageStoreType == 'files':
     from ImageStore import ImageStore
+    pass
 if imageStoreType == 'zip' :
     from ImageStore import ZippedImageStore as ImageStore
 if imageStoreType == 'resource':
@@ -227,7 +228,7 @@ def getPythonInterpreterPath():
     if not pythonInterpreterPath:
         if hasattr(sys, 'frozen'):
             from Utils import _
-            raise Exception, _('No python interpreter defined')
+            raise Exception(_('No python interpreter defined'))
         else:
             return sys.executable
     else:
@@ -275,11 +276,11 @@ def initScreenVars():
     underPalette = paletteHeight + windowManagerTop + windowManagerBottom + topMenuHeight + screenY
 
     if wx.Platform == '__WXMSW__':
-        oglBoldFont = wx.Font(7, wx.DEFAULT, wx.NORMAL, wx.BOLD, False)
-        oglStdFont = wx.Font(7, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False)
+        oglBoldFont = wx.Font(7, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
+        oglStdFont = wx.Font(7, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
     else:
-        oglBoldFont = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.BOLD, False)
-        oglStdFont = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False)
+        oglBoldFont = wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
+        oglStdFont = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
 
 
 paletteTitle = 'Boa Constructor'

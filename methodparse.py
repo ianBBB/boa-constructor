@@ -153,7 +153,7 @@ def matchbracket(text, findBracket, dir=None):
         end = len(text)
         brktIdx = containEnd.index(findBracket)
     else:
-        raise Exception, _('Unhandled bracket')
+        raise Exception(_('Unhandled bracket'))
 
     # () {} []
     levels = [0, 0, 0]
@@ -259,10 +259,10 @@ class PerLineParser:
 
     def KVParamsAsText(self, params):
         kvlist = []
-        sortedkeys = params.keys()
+        sortedkeys = list(params.keys())
         sortedkeys.sort()
         for key in sortedkeys:
-            if type(key) is type(0):
+            if isinstance(key, type(0)):
                 kvlist.append(params[key])
             else:    
                 kvlist.append(Preferences.cgKeywordArgFormat%{'keyword': key,
@@ -320,14 +320,14 @@ class ConstructorParse(PerLineParser):
 
 
     def renameCompName2(self, old_value, new_value):
-        if self.params.has_key('parent') and \
+        if 'parent' in self.params and \
               self.params['parent'] == Utils.srcRefFromCtrlName(old_value):
             self.params['parent'] = Utils.srcRefFromCtrlName(new_value)
         if self.comp_name == old_value:
             self.comp_name = new_value
-            if self.params.has_key('name'):
-                self.params['name'] = `new_value`
-            if self.params.has_key('id') and \
+            if 'name' in self.params:
+                self.params['name'] = repr(new_value)
+            if 'id' in self.params and \
                   self.params['id'] not in EventCollections.reservedWxNames:
                 self.params['id'] = \
                   self.params['id'][:-len(old_value)]+new_value.upper()
@@ -337,7 +337,7 @@ class ConstructorParse(PerLineParser):
 
     def prependFrameWinId(self, frame):
         idPrfx = self.getIdPrefix(frame)
-        if self.params.has_key('id') and \
+        if 'id' in self.params and \
               self.params['id'] not in EventCollections.reservedWxNames:
             self.params['id'] = idPrfx + self.params['id']
 
@@ -346,7 +346,7 @@ class ConstructorParse(PerLineParser):
             idPrfx = self.getIdPrefix(stripFrameWinIdPrefix)
             params = {}
             params.update(self.params)
-            if params.has_key('id') and self.checkId(params['id'], idPrfx):
+            if 'id' in params and self.checkId(params['id'], idPrfx):
                 params['id'] = params['id'][len(idPrfx):]
         else:
             params = self.params
@@ -384,14 +384,14 @@ class PropertyParse(PerLineParser):
                 self.params = safesplitfields(self.m.group('params'), ',')
                 compsetter = self.m.group('name').split('.')
 
-                if len(compsetter) < 1: raise Exception, _('Atleast 1 segment required, got: %r')%compsetter
+                if len(compsetter) < 1: raise Exception(_('Atleast 1 segment required, got: %r')%compsetter)
                 if len(compsetter) == 1:
                     self.comp_name = ''
                     self.prop_setter = compsetter[0]
                 elif len(compsetter) == 2:
                     self.comp_name = compsetter[0]
                     self.prop_setter = compsetter[1]
-                else: raise Exception, _('Too many attribute levels')
+                else: raise Exception(_('Too many attribute levels'))
                 
                 if self.prop_setter == 'Bind':
                     self.m = None
@@ -496,7 +496,7 @@ class CollectionItemInitParse(PerLineParser):
 
     def renameFrameName(self, old_value, new_value):
         PerLineParser.renameFrameName(self, old_value, new_value)
-        if self.params.has_key('id'):
+        if 'id' in self.params:
             self.params['id'] = self.renameWindowId(self.params['id'],
                 old_value, new_value, self.ctrl_name, self.ctrl_name)
 
@@ -504,19 +504,19 @@ class CollectionItemInitParse(PerLineParser):
         # Regenerate window ids
         if self.ctrl_name == old_value:
             self.ctrl_name = new_value
-            if self.params.has_key('id'):
+            if 'id' in self.params:
                 self.params['id'] = self.renameWindowId(self.params['id'],
                       self.frame_name, self.frame_name, old_value, new_value)
 
         # Check for references
         src_old = Utils.srcRefFromCtrlName(old_value)
-        for key, val in self.params.items()[:]:
+        for key, val in list(self.params.items())[:]:
             if val == src_old:
                 self.params[key] = Utils.srcRefFromCtrlName(new_value)
 
     def prependFrameWinId(self, frame):
         idPrfx = self.getIdPrefix(frame)
-        if self.params.has_key('id') and \
+        if 'id' in self.params and \
               self.params['id'] not in EventCollections.reservedWxNames:
             self.params['id'] = idPrfx + self.params['id']
 
@@ -525,7 +525,7 @@ class CollectionItemInitParse(PerLineParser):
             idPrfx = self.getIdPrefix(stripFrameWinIdPrefix)
             params = {}
             params.update(self.params)
-            if params.has_key('id') and self.checkId(params['id'], idPrfx):
+            if 'id' in params and self.checkId(params['id'], idPrfx):
                 params['id'] = params['id'][len(idPrfx):]
         else:
             params = self.params
@@ -670,17 +670,17 @@ class EventParse(PerLineParser):
 
 def testRename():
     cp = ConstructorParse("self.menu1 = wx.Menu(title = '')")
-    print cp.asText('wx.Frame1')
+    print(cp.asText('wx.Frame1'))
     cp = ConstructorParse("self.button1 = wx.Button(id = wxID_WXFRAME1BUTTON1, label = 'button1', name = 'button1', parent = self, pos = wx.Point(232, 168), size = wx.Size(75, 23), style = 0)")
-    print cp.asText('wx.Frame1')
+    print(cp.asText('wx.Frame1'))
     cp2 = ConstructorParse(cp.asText('wx.Frame1'))
     cp2.prependFrameWinId('wx.Frame2')
-    print cp2.asText()
+    print(cp2.asText())
     ciip = CollectionItemInitParse("parent.Append(checkable = False, helpString = '', id = wxID_WXFRAME1MENU1ITEMS0, item = 'Items0')")
-    print ciip.asText('wx.Frame1')
+    print(ciip.asText('wx.Frame1'))
     ciip2 = CollectionItemInitParse(ciip.asText('wx.Frame1'))
     ciip2.prependFrameWinId('wx.Frame2')
-    print ciip2.asText()
+    print(ciip2.asText())
     #ep = EventParse("EVT_MENU(self, wxID_WXFRAME1MENU1ITEMS0, self.OnMenu1items0Menu)")
     #print ep.asText('wxFrame1')
     #ep2 = EventParse(ep.asText('wxFrame1'))
@@ -699,7 +699,7 @@ def test():
      "        self._init_utils()",
     ])#[0][ConstructorParse]
 
-    print cp#[0].params
+    print(cp)#[0].params
 
 if __name__ == '__main__':
     test()

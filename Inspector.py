@@ -24,7 +24,7 @@ from types import *
 
 import wx
 import wx.lib.stattext
-from wxCompat import wxNO_3D
+# from wxCompat import wxNO_3D
 
 import PaletteMapping, PaletteStore, Preferences, Help
 from PropEdit import PropertyEditors
@@ -872,7 +872,7 @@ class EventsWindow(wx.SplitterWindow):
           style = Preferences.splitterStyle)
 
         self.categories = wx.SplitterWindow(self, -1,
-              style=wxNO_3D | wx.SP_3D | wx.SP_LIVE_UPDATE)
+              style = wx.SP_3D | wx.SP_LIVE_UPDATE)
         self.definitions = InspectorEventScrollWin(self, -1,
               style=wx.SUNKEN_BORDER | wx.TAB_TRAVERSAL)
 

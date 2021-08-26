@@ -9,15 +9,15 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Companions.FrameCompanions'
+print('importing Companions.FrameCompanions')
 
 import wx
-from wxCompat import wxNO_3D, wxDIALOG_MODAL, wxDIALOG_MODELESS
+from wxCompat import wxDIALOG_MODAL, wxDIALOG_MODELESS
 
-from BaseCompanions import ContainerDTC
+from .BaseCompanions import ContainerDTC
 
-import Constructors
-from EventCollections import *
+from . import Constructors
+from .EventCollections import *
 
 from PropEdit.PropertyEditors import *
 from PropEdit.Enumerations import *
@@ -63,7 +63,7 @@ class BaseFrameDTC(ContainerDTC):
     def generateWindowId(self):
         if self.designer:
             self.id = Utils.windowIdentifier(self.designer.GetName(), '')
-        else: self.id = `wx.NewId()`
+        else: self.id = repr(wx.NewId())
 
     def events(self):
         return ContainerDTC.events(self) + ['FrameEvent']
@@ -111,10 +111,10 @@ class FrameDTC(FramesConstr, BaseFrameDTC):
               ] + self.windowStyles
 
     def designTimeSource(self):
-        return {'title': `self.name`,
-                'pos':   `wxDefaultFramePos`,
-                'size':  `wxDefaultFrameSize`,
-                'name':  `self.name`,
+        return {'title': repr(self.name),
+                'pos':   repr(wxDefaultFramePos),
+                'size':  repr(wxDefaultFrameSize),
+                'name':  repr(self.name),
                 'style': 'wx.DEFAULT_FRAME_STYLE'}
 
     def dependentProps(self):
@@ -143,9 +143,9 @@ class FrameDTC(FramesConstr, BaseFrameDTC):
             # XXX and can only be connected to a frame once
             # XXX Actually not even once!
             mb = self.control.GetMenuBar()
-            if mb and `mb` == `compn.control`:
+            if mb and repr(mb) == repr(compn.control):
                 if wx.Platform == '__WXGTK__':
-                    raise Exception, _('May not delete a wx.MenuBar, it would cause a segfault on wxGTK')
+                    raise Exception(_('May not delete a wx.MenuBar, it would cause a segfault on wxGTK'))
                 self.propRevertToDefault('MenuBar', 'SetMenuBar')
                 self.control.SetMenuBar(None)
                 #if wx.Platform == '__WXGTK__':
@@ -153,7 +153,7 @@ class FrameDTC(FramesConstr, BaseFrameDTC):
 
             # ToolBar
             tb = self.control.GetToolBar()
-            if tb and `tb` == `compn.control`:
+            if tb and repr(tb) == repr(compn.control):
                 self.propRevertToDefault('ToolBar', 'SetToolBar')
                 self.control.SetToolBar(None)
 
@@ -188,7 +188,7 @@ class DialogDTC(FramesConstr, BaseFrameDTC):
     def __init__(self, name, designer, frameCtrl):
         BaseFrameDTC.__init__(self, name, designer, frameCtrl)
         self.windowStyles += ['wx.CAPTION', 'wx.DEFAULT_DIALOG_STYLE',
-              'wx.RESIZE_BORDER', 'wx.THICK_FRAME', 'wx.STAY_ON_TOP',
+              'wx.RESIZE_BORDER', 'THICK_FRAME', 'wx.STAY_ON_TOP',
               'wx.DIALOG_NO_PARENT', 'wx.SYSTEM_MENU', 'wx.CLOSE_BOX']
 
         # wx.DIALOG_MODAL compat
@@ -203,11 +203,11 @@ class DialogDTC(FramesConstr, BaseFrameDTC):
         elif hasattr(wx, 'wxDIALOG_MODELESS'):
             self.windowStyles += ['wx.wxDIALOG_MODELESS']
 
-        # wx.NO_3D compat
-        if hasattr(wx, 'NO_3D'):
-            self.windowStyles += ['wx.NO_3D']
-        elif hasattr(wx, 'wxNO_3D'):
-            self.windowStyles += ['wx.wxNO_3D']
+        # # wx.NO_3D compat
+        # if hasattr(wx, 'NO_3D'):
+            # self.windowStyles += ['wx.NO_3D']
+        # elif hasattr(wx, 'wxNO_3D'):
+            # self.windowStyles += ['wx.wxNO_3D']
 
 
     def hideDesignTime(self):
@@ -218,10 +218,10 @@ class DialogDTC(FramesConstr, BaseFrameDTC):
               'StatusBar', 'StatusBarPane']
 
     def designTimeSource(self):
-        return {'title': `self.name`,
-                'pos':   `wxDefaultFramePos`,
-                'size':  `wxDefaultFrameSize`,
-                'name':  `self.name`,
+        return {'title': repr(self.name),
+                'pos':   repr(wxDefaultFramePos),
+                'size':  repr(wxDefaultFrameSize),
+                'name':  repr(self.name),
                 'style': 'wx.DEFAULT_DIALOG_STYLE'}
 
     def events(self):
@@ -296,7 +296,7 @@ class FramePanelDTC(Constructors.WindowConstr, BaseFrameDTC):
         return {'pos':   position,
                 'size': self.getDefCtrlSize(),
                 'style': 'wx.TAB_TRAVERSAL',
-                'name':  `self.name`}
+                'name':  repr(self.name)}
 
     def events(self):
         # skip frame events

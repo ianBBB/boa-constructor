@@ -98,6 +98,7 @@ __version__ = 1, 4, 0
 # have been in sys.argv[1:] had the cmd-line form been used.
 
 import string
+from functools import reduce
 TRACE = 0
 
 # define what "junk" means
@@ -197,7 +198,7 @@ class SequenceMatcher:
         b = self.b
         self.b2j = b2j = {}
         self.b2jhas = b2jhas = b2j.has_key
-        for i in xrange(len(b)):
+        for i in range(len(b)):
             elt = b[i]
             if b2jhas(elt):
                 b2j[elt].append(i)
@@ -210,7 +211,7 @@ class SequenceMatcher:
         # saved.
         isjunk, junkdict = self.isjunk, {}
         if isjunk:
-            for elt in b2j.keys():
+            for elt in list(b2j.keys()):
                 if isjunk(elt):
                     junkdict[elt] = 1   # value irrelevant; it's a set
                     del b2j[elt]
@@ -269,7 +270,7 @@ class SequenceMatcher:
         # junk-free match ending with a[i-1] and b[j]
         j2len = {}
         nothing = []
-        for i in xrange(alo, ahi):
+        for i in range(alo, ahi):
             # look at all instances of a[i] in b; note that because
             # b2j has no junk keys, the loop is skipped if a[i] is junk
             j2lenget = j2len.get
@@ -302,8 +303,8 @@ class SequenceMatcher:
             bestsize = bestsize + 1
 
         if TRACE:
-            print "get_matching_blocks", alo, ahi, blo, bhi
-            print "    returns", besti, bestj, bestsize
+            print("get_matching_blocks", alo, ahi, blo, bhi)
+            print("    returns", besti, bestj, bestsize)
         return besti, bestj, bestsize
 
     def get_matching_blocks(self):
@@ -314,7 +315,7 @@ class SequenceMatcher:
         self.__helper(0, la, 0, lb, self.matching_blocks)
         self.matching_blocks.append( (la, lb, 0) )
         if TRACE:
-            print '*** matching blocks', self.matching_blocks
+            print('*** matching blocks', self.matching_blocks)
         return self.matching_blocks
 
     # builds list of matching blocks covering a[alo:ahi] and
@@ -405,8 +406,8 @@ class SequenceMatcher:
 
 # meant for dumping lines
 def dump(tag, x, lo, hi):
-    for i in xrange(lo, hi):
-        print tag, x[i],
+    for i in range(lo, hi):
+        print(tag, x[i], end=' ')
 
 # figure out which mark to stick under characters in lines that
 # have changed (blank = same, - = deleted, + = inserted, ^ = replaced)
@@ -433,7 +434,7 @@ def plain_replace(a, alo, ahi, b, blo, bhi):
 
 def fancy_replace(a, alo, ahi, b, blo, bhi):
     if TRACE:
-        print '*** fancy_replace', alo, ahi, blo, bhi
+        print('*** fancy_replace', alo, ahi, blo, bhi)
         dump('>', a, alo, ahi)
         dump('<', b, blo, bhi)
 
@@ -446,10 +447,10 @@ def fancy_replace(a, alo, ahi, b, blo, bhi):
     # search for the pair that matches best without being identical
     # (identical lines must be junk lines, & we don't want to synch up
     # on junk -- unless we have to)
-    for j in xrange(blo, bhi):
+    for j in range(blo, bhi):
         bj = b[j]
         cruncher.set_seq2(bj)
-        for i in xrange(alo, ahi):
+        for i in range(alo, ahi):
             ai = a[i]
             if ai == bj:
                 if eqi is None:
@@ -481,7 +482,7 @@ def fancy_replace(a, alo, ahi, b, blo, bhi):
     # a[best_i] very similar to b[best_j]; eqi is None iff they're not
     # identical
     if TRACE:
-        print '*** best_ratio', best_ratio, best_i, best_j
+        print('*** best_ratio', best_ratio, best_i, best_j)
         dump('>', a, best_i, best_i+1)
         dump('<', b, best_j, best_j+1)
 
@@ -507,18 +508,18 @@ def fancy_replace(a, alo, ahi, b, blo, bhi):
                 atags = atags + ' ' * la
                 btags = btags + ' ' * lb
             else:
-                raise ValueError, 'unknown tag ' + `tag`
+                raise ValueError('unknown tag ' + repr(tag))
         la, lb = len(atags), len(btags)
         if la < lb:
             atags = atags + ' ' * (lb - la)
         elif lb < la:
             btags = btags + ' ' * (la - lb)
-        combined = map(lambda x,y: _combine[x+y], atags, btags)
-        print '-', aelt, '+', belt, '?', \
-              string.rstrip(string.join(combined, ''))
+        combined = list(map(lambda x,y: _combine[x+y], atags, btags))
+        print('-', aelt, '+', belt, '?', \
+              string.rstrip(string.join(combined, '')))
     else:
         # the synch pair is identical
-        print ' ', aelt,
+        print(' ', aelt, end=' ')
 
     # pump out diffs from after the synch point
     fancy_helper(a, best_i+1, ahi, b, best_j+1, bhi)
@@ -544,7 +545,7 @@ def fail(msg):
 def fopen(fname):
     try:
         return open(fname, 'r')
-    except IOError, detail:
+    except IOError as detail:
         return fail("couldn't open " + fname + ": " + str(detail))
 
 # open two files & spray the diff to stdout; return false iff a problem
@@ -568,7 +569,7 @@ def fcompare(f1name, f2name):
         elif tag == 'equal':
             dump(' ', a, alo, ahi)
         else:
-            raise ValueError, 'unknown tag ' + `tag`
+            raise ValueError('unknown tag ' + repr(tag))
 
     return 1
 
@@ -579,7 +580,7 @@ def main(args):
     import getopt
     try:
         opts, args = getopt.getopt(args, "qr:")
-    except getopt.error, detail:
+    except getopt.error as detail:
         return fail(str(detail))
     noisy = 1
     qseen = rseen = 0
@@ -603,8 +604,8 @@ def main(args):
         return fail("need 2 filename args")
     f1name, f2name = args
     if noisy:
-        print '-:', f1name
-        print '+:', f2name
+        print('-:', f1name)
+        print('+:', f2name)
     return fcompare(f1name, f2name)
 
 def restore(which):
@@ -613,7 +614,7 @@ def restore(which):
     prefixes = ("  ", tag)
     for line in sys.stdin.readlines():
         if line[:2] in prefixes:
-            print line[2:],
+            print(line[2:], end=' ')
 
 if __name__ == '__main__':
     import sys

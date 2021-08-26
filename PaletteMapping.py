@@ -100,7 +100,7 @@ if Utils.IsComEnabled():
 
 #-Plug-ins initialisation-------------------------------------------------------
 if Preferences.pluginPaths:
-    print 'executing plug-ins...'
+    print('executing plug-ins...')
     fails = Preferences.failedPlugins
     succeeded = Preferences.installedPlugins
 
@@ -110,18 +110,19 @@ if Preferences.pluginPaths:
 
         pluginBasename = os.path.basename(pluginFilename)
         
-        print 'executing %s'% os.path.splitext(pluginBasename)[0]
+        print('executing %s'% os.path.splitext(pluginBasename)[0])
         
         filename = pluginFilename.lower()
         try:
-            exec(open(pluginFilename,'r'))
+            #exec(open(pluginFilename,'r'))
+            exec(open(pluginFilename.py).read())
             succeeded.append(filename)
-        except Plugins.SkipPluginSilently, msg:
+        except Plugins.SkipPluginSilently as msg:
             fails[filename] = ('Skipped', msg)
-        except Plugins.SkipPlugin, msg:
+        except Plugins.SkipPlugin as msg:
             fails[filename] = ('Skipped', msg)
             wx.LogWarning(_('Plugin skipped: %s, %s')%(pluginBasename, msg))
-        except Exception, error:
+        except Exception as error:
             fails[filename] = ('Error', str(error))
             if Preferences.pluginErrorHandling == 'raise':
                 raise
@@ -156,9 +157,9 @@ def evalCtrl(expr, localsDct=None, preserveExc=True):
     wx.NullBitmap = _NB
     try:
         return eval(expr, globals(), localsDct)
-    except Exception, err:
+    except Exception as err:
         if preserveExc:
             raise
         else:
             clsName = err.__class__.__name__
-            raise DesignTimeExpressionError, clsName+': '+str(err)
+            raise DesignTimeExpressionError(clsName+': '+str(err))

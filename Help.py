@@ -292,9 +292,9 @@ def decorateWxPythonWithDocStrs(dbfile):
     try:
         db = marshal.load(open(dbfile, 'rb'))
     except IOError:
-        print 'wxPython Doc strings: %s failed to load'%dbfile
+        print('wxPython Doc strings: %s failed to load'%dbfile)
     else:
-        for name, doc in db['classes'].items():
+        for name, doc in list(db['classes'].items()):
             try:
                 wxClass = namespace[name]
                 wxClass.__doc__ = doc
@@ -304,14 +304,14 @@ def decorateWxPythonWithDocStrs(dbfile):
             except:
                 pass
 
-        for name, doc in db['methods'].items():
+        for name, doc in list(db['methods'].items()):
             try:
                 cls, mth = string.split(name, '.')
                 wxMeth = getattr(namespace[cls], mth)
-                wxMeth.im_func.__doc__ = doc
+                wxMeth.__func__.__doc__ = doc
 
                 wxMeth = getattr(namespace[cls+'Ptr'], mth)
-                wxMeth.im_func.__doc__ = doc
+                wxMeth.__func__.__doc__ = doc
             except:
                 pass
 
@@ -333,7 +333,7 @@ class wxHtmlHelpControllerEx(wx.html.HtmlHelpController):
     def UseConfig(self, config):
         # Fix config file if stored as minimised
         if config.ReadInt('hcX') == -32000:
-            map(config.DeleteEntry, ('hcX', 'hcY', 'hcW', 'hcH'))
+            list(map(config.DeleteEntry, ('hcX', 'hcY', 'hcW', 'hcH')))
 
         wx.html.HtmlHelpController.UseConfig(self, config)
 
@@ -535,7 +535,7 @@ def initHelp(calledAtStartup=False):
     books = eval(conf.get('help', 'books'), {})
     for book in books:
         if calledAtStartup:
-            print 'Help: loading %s'% os.path.basename(book)
+            print('Help: loading %s'% os.path.basename(book))
         bookPath = os.path.normpath(jn(docsDir, book))
         if os.path.exists(bookPath):
             _hc.AddBook(bookPath,
@@ -565,7 +565,8 @@ def testPydocServerAddress(host, port):
     try:
         try:
             sock.bind((host, port))
-        except socket.error, (code, msg):
+        except socket.error as xxx_todo_changeme:
+            (code, msg) = xxx_todo_changeme.args
             if code == 10048: # address in use
                 return False
             raise

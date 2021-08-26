@@ -9,10 +9,10 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-print 'importing Views.SourceViews'
+print('importing Views.SourceViews')
 
 import time, os
-from StringIO import StringIO
+from io import StringIO
 
 import wx
 import wx.stc
@@ -21,8 +21,9 @@ from Preferences import keyDefs
 import Utils
 from Utils import _
 
-import EditorViews, Search, Help, Preferences, Utils
-from StyledTextCtrls import TextSTCMix, idWord, object_delim, eols as endOfLines
+import Search, Help, Preferences, Utils
+from . import EditorViews
+from .StyledTextCtrls import TextSTCMix, idWord, object_delim, eols as endOfLines
 
 ##endOfLines = {  wx.stc.STC_EOL_CRLF : '\r\n',
 ##                wx.stc.STC_EOL_CR : '\r',
@@ -291,8 +292,8 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
         selStartLine = self.LineFromPosition(selStartPos)
         selEndLine = self.LineFromPosition(selEndPos)
 
-        return range(self.LineFromPosition(selStartPos),
-              self.LineFromPosition(selEndPos))
+        return list(range(self.LineFromPosition(selStartPos),
+              self.LineFromPosition(selEndPos)))
 
 #-------------------------------------------------------------------------------
     def setLinePtr(self, lineNo):
@@ -533,7 +534,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
         self.stcMacroCmds.append(data)
 
     def OnPrint(self, event):
-        import STCPrinting
+        from . import STCPrinting
 
         dlg = STCPrinting.STCPrintDlg(self.model.editor, self, self.model.filename)
         dlg.ShowModal()

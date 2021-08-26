@@ -36,10 +36,10 @@ def findInText(sourcelines, pattern, caseSensitive, includeLine = 0):
         sourcelines = [sourceline.lower() for sourceline in sourcelines]
         pattern = pattern.lower()
 
-    matches = zip(sourcelines, range(len(sourcelines)))
+    matches = list(zip(sourcelines, list(range(len(sourcelines)))))
     for line, sourceIdx in matches:
         idx = -1
-        while 1:
+        while True:
             idx = line.find(pattern, idx + 1)
             if idx == -1: break
             else:
@@ -184,4 +184,4 @@ def listFiles(folders, file_filter, bIncludeFilter=1, bRecursive=1):
 if __name__ == '__main__':
     wx.PySimpleApp()
     f = wx.Frame(None, -1, 'results', size=(0, 0))
-    print findInFiles(f, os.path.abspath('ExternalLib'), 'riaan', filemask = ('.*',))
+    print(findInFiles(f, os.path.abspath('ExternalLib'), 'riaan', filemask = ('.*',)))

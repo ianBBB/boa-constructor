@@ -10,7 +10,8 @@
 # Licence:     GPL
 #----------------------------------------------------------------------
 import wx
-from wxCompat import wxNO_3D
+from wx import adv
+# from wxCompat import wxNO_3D
 
 def reverseDict(dict):
     rev = {}
@@ -18,32 +19,35 @@ def reverseDict(dict):
         rev[dict[k]] = k
     return rev
 
-windowStyles =[wx.CAPTION, wx.MINIMIZE_BOX, wx.MAXIMIZE_BOX, wx.THICK_FRAME,
+windowStyles =[wx.CAPTION, wx.MINIMIZE_BOX, wx.MAXIMIZE_BOX, THICK_FRAME,
 wx.SIMPLE_BORDER, wx.DOUBLE_BORDER, wx.SUNKEN_BORDER, wx.RAISED_BORDER,
-wx.STATIC_BORDER, wx.TRANSPARENT_WINDOW, wxNO_3D, wx.TAB_TRAVERSAL, wx.VSCROLL,
+wx.STATIC_BORDER, wx.TRANSPARENT_WINDOW, wx.TAB_TRAVERSAL, wx.VSCROLL,
 wx.HSCROLL, wx.CLIP_CHILDREN]
 
 windowNameStyles = {'wx.CAPTION':wx.CAPTION, 'wx.MINIMIZE_BOX':wx.MINIMIZE_BOX,
-'wx.MAXIMIZE_BOX':wx.MAXIMIZE_BOX, 'wx.THICK_FRAME':wx.THICK_FRAME,
+'wx.MAXIMIZE_BOX':wx.MAXIMIZE_BOX, 'THICK_FRAME':THICK_FRAME,
 'wx.SIMPLE_BORDER':wx.SIMPLE_BORDER, 'wx.DOUBLE_BORDER':wx.DOUBLE_BORDER,
 'wx.SUNKEN_BORDER':wx.SUNKEN_BORDER, 'wx.RAISED_BORDER':wx.RAISED_BORDER,
 'wx.STATIC_BORDER':wx.STATIC_BORDER, 'wx.TRANSPARENT_WINDOW':wx.TRANSPARENT_WINDOW,
 'wx.TAB_TRAVERSAL':wx.TAB_TRAVERSAL, 'wx.VSCROLL':wx.VSCROLL,
 'wx.HSCROLL':wx.HSCROLL, 'wx.CLIP_CHILDREN':wx.CLIP_CHILDREN}
 
-if hasattr(wx, 'NO_3D'):
-    windowNameStyles.update({'wx.NO_3D':wxNO_3D})
-elif hasattr(wx, 'wxNO_3D'):
-    windowNameStyles.update({'wx.wxNO_3D':wxNO_3D})
+# if hasattr(wx, 'NO_3D'):
+    # windowNameStyles.update({'wx.NO_3D':wxNO_3D})
+# elif hasattr(wx, 'wxNO_3D'):
+    # windowNameStyles.update({'wx.wxNO_3D':wxNO_3D})
 
 # Fonts
-fontFamily = [wx.DEFAULT, wx.DECORATIVE, wx.ROMAN, wx.SCRIPT, wx.SWISS, wx.MODERN]
-fontFamilyNames = {'wx.DEFAULT':wx.DEFAULT, 'wx.DECORATIVE':wx.DECORATIVE, 'wx.ROMAN':wx.ROMAN,
-                   'wx.SCRIPT':wx.SCRIPT, 'wx.SWISS':wx.SWISS, 'wx.MODERN':wx.MODERN}
-fontStyle = [wx.NORMAL, wx.SLANT, wx.ITALIC]
-fontStyleNames = {'wx.NORMAL':wx.NORMAL, 'wx.SLANT':wx.SLANT, 'wx.ITALIC':wx.ITALIC}
-fontWeight = [wx.NORMAL, wx.LIGHT, wx.BOLD]
-fontWeightNames = {'wx.NORMAL':wx.NORMAL, 'wx.LIGHT':wx.LIGHT, 'wx.BOLD':wx.BOLD}
+fontFamily = [wx.FONTFAMILY_DEFAULT, wx.FONTFAMILY_DECORATIVE, wx.FONTFAMILY_ROMAN,
+              wx.FONTFAMILY_SCRIPT, wx.FONTFAMILY_SWISS, wx.FONTFAMILY_MODERN]
+fontFamilyNames = {'wx.DEFAULT':wx.FONTFAMILY_DEFAULT, 'wx.DECORATIVE':wx.FONTFAMILY_DECORATIVE,
+                   'wx.ROMAN':wx.FONTFAMILY_ROMAN, 'wx.SCRIPT':wx.FONTFAMILY_SCRIPT,
+                   'wx.SWISS':wx.FONTFAMILY_SWISS, 'wx.MODERN':wx.FONTFAMILY_MODERN}
+fontStyle = [wx.FONTSTYLE_NORMAL, wx.FONTSTYLE_SLANT, wx.FONTSTYLE_ITALIC]
+fontStyleNames = {'wx.NORMAL':wx.FONTSTYLE_NORMAL, 'wx.SLANT':wx.FONTSTYLE_SLANT, 'wx.ITALIC':wx.FONTSTYLE_ITALIC}
+fontWeight = [wx.FONTWEIGHT_NORMAL, wx.FONTWEIGHT_LIGHT, wx.FONTWEIGHT_BOLD]
+fontWeightNames = {'wx.NORMAL':wx.FONTWEIGHT_NORMAL, 'wx.LIGHT':wx.FONTWEIGHT_LIGHT,
+                   'wx.BOLD':wx.FONTWEIGHT_BOLD}
 
 splitterWindowSplitMode = [1, 2]
 splitterWindowSplitModeNames = {'wx.SPLIT_HORIZONTAL': 1,
@@ -58,17 +62,17 @@ constraintRelationships = ['wx.Unconstrained', 'wx.AsIs', 'wx.Above', 'wx.Below'
 formatStyle = ['wx.LIST_FORMAT_LEFT', 'wx.LIST_FORMAT_RIGHT','wx.LIST_FORMAT_CENTRE',
                'wx.LIST_FORMAT_CENTER']
 
-sashLayoutOrientation = [wx.LAYOUT_HORIZONTAL, wx.LAYOUT_VERTICAL]
-sashLayoutOrientationNames = {'wx.LAYOUT_HORIZONTAL' : wx.LAYOUT_HORIZONTAL,
-                              'wx.LAYOUT_VERTICAL' : wx.LAYOUT_VERTICAL}
+sashLayoutOrientation = [wx.adv.LAYOUT_HORIZONTAL, wx.adv.LAYOUT_VERTICAL]
+sashLayoutOrientationNames = {'wx.adv.LAYOUT_HORIZONTAL' : wx.adv.LAYOUT_HORIZONTAL,
+                              'wx.adv.LAYOUT_VERTICAL' : wx.adv.LAYOUT_VERTICAL}
 
-sashLayoutAlignment = [wx.LAYOUT_NONE, wx.LAYOUT_TOP, wx.LAYOUT_LEFT, wx.LAYOUT_RIGHT,
-                       wx.LAYOUT_BOTTOM]
-sashLayoutAlignmentNames = {'wx.LAYOUT_NONE' : wx.LAYOUT_NONE,
-                            'wx.LAYOUT_TOP' : wx.LAYOUT_TOP,
-                            'wx.LAYOUT_LEFT' : wx.LAYOUT_LEFT,
-                            'wx.LAYOUT_RIGHT' : wx.LAYOUT_RIGHT,
-                            'wx.LAYOUT_BOTTOM' : wx.LAYOUT_BOTTOM}
+sashLayoutAlignment = [wx.adv.LAYOUT_NONE, wx.adv.LAYOUT_TOP, wx.adv.LAYOUT_LEFT, wx.adv.LAYOUT_RIGHT,
+                       wx.adv.LAYOUT_BOTTOM]
+sashLayoutAlignmentNames = {'wx.adv.LAYOUT_NONE' : wx.adv.LAYOUT_NONE,
+                            'wx.adv.LAYOUT_TOP' : wx.adv.LAYOUT_TOP,
+                            'wx.adv.LAYOUT_LEFT' : wx.adv.LAYOUT_LEFT,
+                            'wx.adv.LAYOUT_RIGHT' : wx.adv.LAYOUT_RIGHT,
+                            'wx.adv.LAYOUT_BOTTOM' : wx.adv.LAYOUT_BOTTOM}
 
 wxStockIds = [
     'wx.ID_ADD', 'wx.ID_APPLY', 'wx.ID_BOLD', 'wx.ID_CANCEL', 'wx.ID_CLEAR', 

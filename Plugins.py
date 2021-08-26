@@ -10,7 +10,8 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
-import os, glob, new, pprint
+#import os, glob, new, pprint
+import os, glob, pprint
 
 import Preferences, Utils
 from Utils import _
@@ -56,11 +57,11 @@ def importFromPlugins(name):
         if os.path.isfile(modpath):
             break
     else:
-        raise ImportError, _('Module %s could not be found in Plug-ins')%modname
+        raise ImportError(_('Module %s could not be found in Plug-ins')%modname)
 
     mod = new.module(name)
 
-    execfile(modpath, mod.__dict__)
+    exec(modpath, mod.__dict__)
 
     return mod
 
@@ -247,7 +248,7 @@ def registerPreference(pluginName, prefName, defPrefValSrc, docs=[], info=''):
         
         try:
             value = eval(defPrefValSrc, Preferences.__dict__)
-        except Exception, err:
+        except Exception as err:
             raise PluginError(
                   (_('Could not create default value from "%s" for %s. (%s:%s)')%(
                   defPrefValSrc, prefName, err.__class__, err)))

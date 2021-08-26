@@ -16,19 +16,20 @@
 They implement design time behaviour and interfaces. Also used for inspectable
 objects """
 
-print 'importing Companions'
+print('importing Companions')
 
 import copy
 
 import wx
-from wxCompat import wxNO_3D
+# from wxCompat import wxNO_3D
 
 import Preferences, Utils
 from Utils import _
 
 from PropEdit.PropertyEditors import *
-from Constructors import WindowConstr
-import RTTI, EventCollections
+from .Constructors import WindowConstr
+import RTTI
+from . import EventCollections
 
 import methodparse, sourceconst
 
@@ -256,7 +257,7 @@ class DesignTimeCompanion(Companion):
             See also: setConstr """
 
         paramStrs = []
-        for param in params.keys():
+        for param in list(params.keys()):
             paramStrs.append('%s = %s'%(param, params[param]))
 
         # XXX Is frame name initialised ???
@@ -428,7 +429,7 @@ class DesignTimeCompanion(Companion):
 
     def getPropNameFromSetter(self, setter):
         props = self.properties()
-        for prop in props.keys():
+        for prop in list(props.keys()):
             if props[prop][1] and props[prop][1].__name__ == setter:
                 return prop
         if setter[:3] == 'Set': return setter[3:]
@@ -438,8 +439,8 @@ class DesignTimeCompanion(Companion):
         import PaletteMapping
         try:
             return PaletteMapping.evalCtrl(expr, self.designer.model.specialAttrs)
-        except Exception, err:
-            print _('Illegal expression: %s')%expr
+        except Exception as err:
+            print(_('Illegal expression: %s')%expr)
             raise
 
     def defaultAction(self):
@@ -570,7 +571,7 @@ class NYIDTC(DesignTimeCompanion):
     """ Blank holder for companions which have not been implemented."""
     host = 'Not Implemented'
     def __init__(self, name, designer, parent, ctrlClass):
-        raise Exception, _('Not Implemented')
+        raise Exception(_('Not Implemented'))
 
 
 class ControlDTC(DesignTimeCompanion):
@@ -609,7 +610,7 @@ class ControlDTC(DesignTimeCompanion):
         dts = self.designTimeSource('wx.Point(%s, %s)'%(position.x, position.y),
           'wx.Size(%s, %s)'%(size.x, size.y))
 
-        for param in dts.keys():
+        for param in list(dts.keys()):
             dts[param] = self.eval(dts[param])
 
         dts[self.windowParentName] = self.parent
@@ -628,7 +629,7 @@ class ControlDTC(DesignTimeCompanion):
     def generateWindowId(self):
         if self.designer:
             self.id = Utils.windowIdentifier(self.designer.GetName(), self.name)
-        else: self.id = `wx.NewId()`
+        else: self.id = repr(wx.NewId())
 
     def SetName(self, oldValue, newValue):
         DesignTimeCompanion.SetName(self, oldValue, newValue)
@@ -792,7 +793,7 @@ class UtilityDTC(DesignTimeCompanion):
 
         dts = self.designTimeSource()
 
-        for param in dts.keys():
+        for param in list(dts.keys()):
             dts[param] = self.eval(dts[param])
         return dts
 
@@ -850,9 +851,9 @@ class WindowDTC(WindowConstr, ControlDTC):
                                           'SizeHints': self.EvalSizeHints,})
 
         self.windowStyles = ['wx.CAPTION', 'wx.MINIMIZE_BOX', 'wx.MAXIMIZE_BOX',
-            'wx.THICK_FRAME', 'wx.SIMPLE_BORDER', 'wx.DOUBLE_BORDER',
+            'THICK_FRAME', 'wx.SIMPLE_BORDER', 'wx.DOUBLE_BORDER',
             'wx.SUNKEN_BORDER', 'wx.RAISED_BORDER', 'wx.STATIC_BORDER', 
-            'wx.TRANSPARENT_WINDOW', 'wxNO_3D', 'wx.TAB_TRAVERSAL', 
+            'wx.TRANSPARENT_WINDOW', 'wx.TAB_TRAVERSAL',
             'wx.WANTS_CHARS', 'wx.NO_FULL_REPAINT_ON_RESIZE', 'wx.VSCROLL', 
             'wx.HSCROLL', 'wx.CLIP_CHILDREN', 'wx.NO_BORDER', 'wx.ALWAYS_SHOW_SB']
         
@@ -882,7 +883,7 @@ class WindowDTC(WindowConstr, ControlDTC):
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
         return {'pos':  position,
                 'size': self.getDefCtrlSize(),
-                'name': `self.name`,
+                'name': repr(self.name),
                 'style': '0'}
 
     def dependentProps(self):
@@ -908,7 +909,7 @@ class WindowDTC(WindowConstr, ControlDTC):
 
     def notification(self, compn, action):
         if action == 'delete':
-            if self._cursor and `self._cursor` == `compn.control`:
+            if self._cursor and repr(self._cursor) == repr(compn.control):
                 self.propRevertToDefault('Cursor', 'SetCursor')
                 self.SetCursor(wx.NullCursor)
         # XXX sizer
@@ -916,7 +917,7 @@ class WindowDTC(WindowConstr, ControlDTC):
     def persistProp(self, name, setterName, value):
         if setterName == 'SetSizeHints':
             minW, minH, maxW, maxH = self.eval(value)
-            newParams = [`minW`, `minH`, `maxW`, `maxH`]
+            newParams = [repr(minW), repr(minH), repr(maxW), repr(maxH)]
             # edit if exists
             for prop in self.textPropList:
                 if prop.prop_setter == setterName:
@@ -1252,7 +1253,7 @@ class CollectionDTC(DesignTimeCompanion):
         # renumber items following deleted one
         if self.indexProp != '(None)':
             for constr in self.textConstrLst[idx:]:
-                constr.params[self.indexProp] = `int(constr.params[self.indexProp]) -1`
+                constr.params[self.indexProp] = repr(int(constr.params[self.indexProp]) -1)
 
     def moveItem(self, idx, dir):
         tc = self.textConstrLst[idx]
@@ -1276,10 +1277,10 @@ class CollectionDTC(DesignTimeCompanion):
             method = self.insertionMethod
         args = []
         kwargs = {}
-        paramItems = self.designTimeDefaults(params, method).items()
+        paramItems = list(self.designTimeDefaults(params, method).items())
         paramItems.sort()
         for k, v in paramItems:
-            if type(k) is type(0):
+            if isinstance(k, type(0)):
                 args.append(v)
             else:
                 kwargs[k] = v
@@ -1305,7 +1306,7 @@ class CollectionDTC(DesignTimeCompanion):
     def designTimeDefaults(self, vals, method=None):
         """ Return a dictionary of parameters for adding an item to the collection """
         dtd = {}
-        for param in vals.keys():
+        for param in list(vals.keys()):
             dtd[param] = self.eval(vals[param])
         return dtd
 
@@ -1421,7 +1422,7 @@ class CollectionIddDTC(CollectionDTC):
         self.updateWindowIds()
 
     def newUnusedItemNames(self, wId):
-        while 1:
+        while True:
             newItemName = '%s%d'%(self.propName, wId)
             winId = self.newWinId(newItemName)
             if self.isIdUsed(winId): wId = wId + 1
@@ -1489,7 +1490,7 @@ class CollectionIddDTC(CollectionDTC):
             Derived classes should only call this base method if method
             requires an id parameter. This is usually the case."""
         values = copy.copy(vals)
-        values[self.idProp] = `wx.NewId()`
+        values[self.idProp] = repr(wx.NewId())
         dts = CollectionDTC.designTimeDefaults(self, values)
         dts[self.idProp] = wx.NewId()
         return dts
