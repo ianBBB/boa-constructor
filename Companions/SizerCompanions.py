@@ -10,7 +10,7 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
-print 'importing Companions.SizerCompanions'
+print('importing Companions.SizerCompanions')
 
 # XXX _in_sizer is not necessary, use GetContainingSizer() instead
 
@@ -23,8 +23,8 @@ import wx
 import Preferences, Utils
 from Utils import _
 
-from BaseCompanions import UtilityDTC, CollectionDTC, CollectionIddDTC, NYIDTC, HelperDTC
-import Companions
+from .BaseCompanions import UtilityDTC, CollectionDTC, CollectionIddDTC, NYIDTC, HelperDTC
+from . import Companions
 
 from PropEdit.PropertyEditors import IntConstrPropEdit, StrConstrPropEdit, \
       CollectionPropEdit, ObjEnumConstrPropEdit, EnumConstrPropEdit, \
@@ -37,7 +37,8 @@ from PropEdit.InspectorEditorControls import TextCtrlIEC
 from PropEdit.FlexGridGrowablesDlg import FlexGridGrowablesDlg
 
 from PropEdit import Enumerations
-import EventCollections, RTTI, methodparse
+import RTTI, methodparse
+from . import EventCollections
 
 
 class SizerItemsColPropEdit(CollectionPropEdit): pass
@@ -88,7 +89,7 @@ class SizerDTC(UtilityDTC):
         self.designer.objects[self.name][1] = self.control
 
     def recreateSizerItems(self):
-        for collComp in self.collections.values():
+        for collComp in list(self.collections.values()):
             collComp.control = self.control
             for crt in collComp.textConstrLst:
                 collComp.applyDesignTimeDefaults(crt.params, crt.method)
@@ -106,10 +107,10 @@ class SizerWinEnumConstrPropEdit(ObjEnumConstrPropEdit):
     def getObjects(self):
         designer = self.companion.designer.controllerView
         windows = designer.getObjectsOfClass(wx.Window)
-        for n, w in windows.items():
+        for n, w in list(windows.items()):
             if hasattr(w, '_in_sizer') or n == 'self':
                 del windows[n]
-        windowNames = windows.keys()
+        windowNames = list(windows.keys())
         windowNames.sort()
         res = ['None'] + windowNames
         if self.value != 'None':
@@ -443,10 +444,10 @@ class GrowablesCDTC(CollectionDTC):
 
     def setGrowables(self, rows, cols):
         self.textConstrLst = []
-        for idx, row in zip(range(len(rows)), rows):
+        for idx, row in zip(list(range(len(rows))), rows):
             if row:
                 self._appendItem('AddGrowableRow', idx)
-        for idx, col in zip(range(len(cols)), cols):
+        for idx, col in zip(list(range(len(cols))), cols):
             if col:
                 self._appendItem('AddGrowableCol', idx)
 
@@ -508,9 +509,9 @@ class ControlLinkedSizerDTC(SizerDTC):
         else:
             linkClassName = self.LinkClass.__name__[:-3]
             dtd = self.designTimeDefaults()
-            linkObjs = self.designer.controllerView.getObjectsOfClass(self.LinkClass).items()
+            linkObjs = list(self.designer.controllerView.getObjectsOfClass(self.LinkClass).items())
             if not linkObjs:
-                raise Exception, _('No %s controls available')%linkClassName
+                raise Exception(_('No %s controls available')%linkClassName)
 
             linkObjs.sort()
             names, objs = [], []
@@ -521,7 +522,7 @@ class ControlLinkedSizerDTC(SizerDTC):
                   _('Create sizer'), names)
             try:
                 if dlg.ShowModal() != wx.ID_OK:
-                    raise Exception, _('Must choose a control to link with sizer')
+                    raise Exception(_('Must choose a control to link with sizer'))
                 idx = dlg.GetSelection()
             finally:
                 dlg.Destroy()
@@ -677,13 +678,13 @@ class GBSizerItemsCDTC(SizerItemsCDTC):
 
         pos = self.eval(params[1])
         if self.control.FindItemAtPosition(pos):
-            raise Exception, _('Cannot use Position %s, an item is already at that position')%params[1]
+            raise Exception(_('Cannot use Position %s, an item is already at that position')%params[1])
         if pos[0] < 0 or pos[1] < 0:
-            raise Exception, _('Position %s invalid, cannot contain negative values')%params[1]
+            raise Exception(_('Position %s invalid, cannot contain negative values')%params[1])
         
         span = self.eval(params['span'])
         if span[0] < 0 or span[1] < 0:
-            raise Exception, _('Span %s invalid, cannot contain negative values')%params[1]
+            raise Exception(_('Span %s invalid, cannot contain negative values')%params[1])
         
 
         if (method in ('AddWindow', 'AddSizer') and params[0] == 'None') or \
@@ -743,7 +744,7 @@ class SpanTuplePropEdit(TupleConstrPropEdit):
 class PositiveIntPropEdit(IntPropEdit):
     def inspectorEdit(self):
         IntPropEdit.inspectorEdit(self)
-        self.editorCtrl.editorCtrl.SetRange(0, 2L**31-1)
+        self.editorCtrl.editorCtrl.SetRange(0, 2**31-1)
     
 class RowColDTC(HelperDTC):
     propName = 'Prop'
@@ -773,7 +774,7 @@ class RowColDTC(HelperDTC):
             newVal = (value, t[1])
         elif name == 'Column': 
             newVal = (t[0], value)
-        self.ownerCompn.textConstr.params[self.paramName] = `newVal`
+        self.ownerCompn.textConstr.params[self.paramName] = repr(newVal)
         self.designer.inspector.constructorUpdate(self.propName)
         # XXX Setting to an existing position causes asserts and is wrong
         # XXX Not sure how to handle this everywhere in the GridBagSizer support

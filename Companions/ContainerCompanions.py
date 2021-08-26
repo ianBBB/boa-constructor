@@ -31,7 +31,7 @@ import methodparse, sourceconst
 
 EventCategories['PanelEvent'] = ('wx.EVT_SYS_COLOUR_CHANGED',)
 
-class PanelDTC(Constructors.WindowConstr, ContainerDTC):
+class PanelDTC(ContainerDTC, Constructors.WindowConstr):
     def __init__(self, name, designer, parent, ctrlClass):
         ContainerDTC.__init__(self, name, designer, parent, ctrlClass)
         self.editors['DefaultItem'] = ButtonClassLinkPropEdit
@@ -51,7 +51,7 @@ class PanelDTC(Constructors.WindowConstr, ContainerDTC):
 
 EventCategories['SashEvent'] = ('wx.EVT_SASH_DRAGGED', )
 commandCategories.append('SashEvent')
-class SashWindowDTC(Constructors.WindowConstr, ContainerDTC):
+class SashWindowDTC(ContainerDTC, Constructors.WindowConstr):
     def __init__(self, name, designer, parent, ctrlClass):
         ContainerDTC.__init__(self, name, designer, parent, ctrlClass)
         self.editors.update({'SashVisibleLeft' : SashVisiblePropEdit,
@@ -154,7 +154,7 @@ class SashLayoutWindowDTC(SashWindowDTC):
         self.control.SetDefaultSize(self.control.GetSize())
         wx.LayoutAlgorithm().LayoutWindow(self.control.GetParent())
 
-class ScrolledWindowDTC(Constructors.WindowConstr, ContainerDTC):
+class ScrolledWindowDTC(ContainerDTC, Constructors.WindowConstr):
     def __init__(self, name, designer, parent, ctrlClass):
         ContainerDTC.__init__(self, name, designer, parent, ctrlClass)
         self.editors['TargetWindow'] = WindowClassLinkPropEdit
@@ -182,7 +182,7 @@ class ScrolledWindowDTC(Constructors.WindowConstr, ContainerDTC):
                 self.propRevertToDefault('TargetWindow', 'SetTargetWindow')
                 self.control.SetTargetWindow(self.control)
 
-class BookCtrlDTC(Constructors.WindowConstr, ContainerDTC):
+class BookCtrlDTC(ContainerDTC, Constructors.WindowConstr):
     bookCtrlName = 'wx.BookCtrl'
     def __init__(self, name, designer, parent, ctrlClass):
         ContainerDTC.__init__(self, name, designer, parent, ctrlClass)
@@ -778,7 +778,7 @@ class SplitterWindowDTC(ContainerDTC):
 
 EventCategories['ToolEvent'] = ('wx.EVT_TOOL', 'wx.EVT_TOOL_RCLICKED')
 commandCategories.append('ToolEvent')
-class ToolBarDTC(Constructors.WindowConstr, ContainerDTC):
+class ToolBarDTC(ContainerDTC, Constructors.WindowConstr):
     def __init__(self, name, designer, parent, ctrlClass):
         ContainerDTC.__init__(self, name, designer, parent, ctrlClass)
         self.editors.update({'Tools': CollectionPropEdit})
@@ -1147,8 +1147,8 @@ Plugins.registerComponents('ContainersLayout',
       (wx.Panel, 'wx.Panel', PanelDTC),
       (wx.ScrolledWindow, 'wx.ScrolledWindow', ScrolledWindowDTC),
       (wx.SplitterWindow, 'wx.SplitterWindow', SplitterWindowDTC),
-      (wx.SashWindow, 'wx.SashWindow', SashWindowDTC),
-      (wx.SashLayoutWindow, 'wx.SashLayoutWindow', SashLayoutWindowDTC),
+      (wx.adv.SashWindow, 'wx.SashWindow', SashWindowDTC),
+      (wx.adv.SashLayoutWindow, 'wx.SashLayoutWindow', SashLayoutWindowDTC),
       (wx.ToolBar, 'wx.ToolBar', ToolBarDTC),
       (wx.StatusBar, 'wx.StatusBar', StatusBarDTC),
       (wx.Window, 'wx.Window', ContainerDTC),
