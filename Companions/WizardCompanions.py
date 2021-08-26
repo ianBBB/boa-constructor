@@ -15,7 +15,8 @@ print('importing Companions.WizardCompanions')
 import wx
 # import wx.wizard
 from wx import adv
-from wx.adv import Wizard as wx.wizard
+
+
 
 from Preferences import wxDefaultFrameSize, wxDefaultFramePos
 from .FrameCompanions import DialogDTC, FramePanelDTC
@@ -102,7 +103,7 @@ class WizardPageSimpleDTC(FramePanelDTC):
 import Plugins
 
 Plugins.registerComponents(None,
-      (wx.wizard.Wizard, 'wx.wizard.Wizard', WizardDTC),
-      (wx.wizard.PyWizardPage, 'wx.wizard.PyWizardPage', PyWizardPageDTC),
-      (wx.wizard.WizardPageSimple, 'wx.wizard.WizardPageSimple', WizardPageSimpleDTC),
+      (wx.adv.Wizard, 'wx.adv.Wizard', WizardDTC),
+      (wx.adv.PyWizardPage, 'wx.adv.PyWizardPage', PyWizardPageDTC), # May no longer be available
+      (wx.adv.WizardPage, 'wx.adv.WizardPage', WizardPageSimpleDTC),
     )

@@ -510,7 +510,8 @@ def getCacheDir():
     return cacheDir
 
 # needed for .htb files
-wx.FileSystem.AddHandler(wx.ZipFSHandler())
+# wx.FileSystem.AddHandler(wx.ZipFSHandler())
+wx.FileSystem.AddHandler(wx.ArchiveFSHandler())
 
 use_standard_controller = False
 def initHelp(calledAtStartup=False):
