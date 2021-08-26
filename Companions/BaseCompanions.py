@@ -851,7 +851,7 @@ class WindowDTC(WindowConstr, ControlDTC):
                                           'SizeHints': self.EvalSizeHints,})
 
         self.windowStyles = ['wx.CAPTION', 'wx.MINIMIZE_BOX', 'wx.MAXIMIZE_BOX',
-            'THICK_FRAME', 'wx.SIMPLE_BORDER', 'wx.DOUBLE_BORDER',
+            'wx.SIMPLE_BORDER', 'wx.DOUBLE_BORDER',
             'wx.SUNKEN_BORDER', 'wx.RAISED_BORDER', 'wx.STATIC_BORDER', 
             'wx.TRANSPARENT_WINDOW', 'wx.TAB_TRAVERSAL',
             'wx.WANTS_CHARS', 'wx.NO_FULL_REPAINT_ON_RESIZE', 'wx.VSCROLL', 

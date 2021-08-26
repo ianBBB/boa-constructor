@@ -11,6 +11,7 @@
 #----------------------------------------------------------------------
 import wx
 from wx import adv
+from wx import Dialog
 # from wxCompat import wxNO_3D
 
 def reverseDict(dict):
@@ -19,13 +20,15 @@ def reverseDict(dict):
         rev[dict[k]] = k
     return rev
 
-windowStyles =[wx.CAPTION, wx.MINIMIZE_BOX, wx.MAXIMIZE_BOX, THICK_FRAME,
+# windowStyles =[wx.CAPTION, wx.MINIMIZE_BOX, wx.MAXIMIZE_BOX, THICK_FRAME,
+windowStyles =[wx.CAPTION, wx.MINIMIZE_BOX, wx.MAXIMIZE_BOX,
 wx.SIMPLE_BORDER, wx.DOUBLE_BORDER, wx.SUNKEN_BORDER, wx.RAISED_BORDER,
 wx.STATIC_BORDER, wx.TRANSPARENT_WINDOW, wx.TAB_TRAVERSAL, wx.VSCROLL,
 wx.HSCROLL, wx.CLIP_CHILDREN]
 
 windowNameStyles = {'wx.CAPTION':wx.CAPTION, 'wx.MINIMIZE_BOX':wx.MINIMIZE_BOX,
-'wx.MAXIMIZE_BOX':wx.MAXIMIZE_BOX, 'THICK_FRAME':THICK_FRAME,
+# 'wx.MAXIMIZE_BOX':wx.MAXIMIZE_BOX, 'THICK_FRAME':THICK_FRAME,
+'wx.MAXIMIZE_BOX':wx.MAXIMIZE_BOX,
 'wx.SIMPLE_BORDER':wx.SIMPLE_BORDER, 'wx.DOUBLE_BORDER':wx.DOUBLE_BORDER,
 'wx.SUNKEN_BORDER':wx.SUNKEN_BORDER, 'wx.RAISED_BORDER':wx.RAISED_BORDER,
 'wx.STATIC_BORDER':wx.STATIC_BORDER, 'wx.TRANSPARENT_WINDOW':wx.TRANSPARENT_WINDOW,

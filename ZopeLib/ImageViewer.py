@@ -27,7 +27,7 @@ class ImageViewer(wx.MiniFrame):
         self.sashWindow1 = wx.SashWindow(id=wxID_IMAGEVIEWERSASHWINDOW1,
               name='sashWindow1', parent=self, pos=wx.Point(0, 0),
               size=wx.Size(119, 104),
-              style=wx.SW_BORDER | THICK_FRAME | wx.SW_3D)
+              style=wx.SW_BORDER | wx.SW_3D)
         self.sashWindow1.SetExtraBorderSize(self.borderSize)
         self.sashWindow1.SetMinimumSizeX(24)
         self.sashWindow1.SetMinimumSizeY(24)
