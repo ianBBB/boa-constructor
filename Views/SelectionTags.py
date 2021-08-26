@@ -342,10 +342,10 @@ class SelectionGroup:
 
         else:
             # Moving
-            if dbgInfo: InspDbgInfo(self.inspector, `position`+':'+`ps`, 1)
+            if dbgInfo: InspDbgInfo(self.inspector, repr(position)+':'+repr(ps), 1)
             trPos = wx.Point(granulariseMove(position.x, ps.x),
                             granulariseMove(position.y, ps.y))
-            if dbgInfo: InspDbgInfo(self.inspector, `trPos`, 0)
+            if dbgInfo: InspDbgInfo(self.inspector, repr(trPos), 0)
             trSze = wx.Size(sz.x, sz.y)
 
         self.slT.SetDimensions(trPos.x -frmWid, trPos.y -frmWid, trSze.x +frmWid, frmWid)
@@ -612,7 +612,7 @@ class SideSelTag(SelectionTag):
         if self.hasSizer:
             if designer.sizersView:
                 s = companion.GetSizer(None)
-                for objInfo in designer.sizersView.objects.values():
+                for objInfo in list(designer.sizersView.objects.values()):
                     if objInfo[1] == s:
                         compn = objInfo[0]
                         designer.sizersView.focus()
@@ -732,7 +732,7 @@ def openCollEditorForSizerItem(inspector, companion, sizersView=None):
         sizersView = companion.designer.sizersView
     if sizersView:
         s = companion.control.GetContainingSizer()
-        for objName, objInfo in sizersView.objects.items():
+        for objName, objInfo in list(sizersView.objects.items()):
             if objInfo[1] == s:
                 compn = objInfo[0]
                 inspector.selectObject(compn)
@@ -742,7 +742,7 @@ def openCollEditorForSizerItem(inspector, companion, sizersView=None):
                     nv.propEditor.edit(None)
                     collEditor = sizersView.collEditors[(objName, 'Items')]
                     for idx, crt in zip(
-                         range(len(collEditor.companion.textConstrLst)),
+                         list(range(len(collEditor.companion.textConstrLst))),
                          collEditor.companion.textConstrLst):
                         if crt.method == 'AddWindow' and \
                               crt.params[0] != 'None':
@@ -759,7 +759,7 @@ def openCollEditorForSizerItems(inspector, companion, sizersView=None, sizer=Non
     if sizersView:
         if sizer is None:
             sizer = companion.control.GetSizer()
-        for objName, objInfo in sizersView.objects.items():
+        for objName, objInfo in list(sizersView.objects.items()):
             if objInfo[1] == sizer:
                 compn = objInfo[0]
                 inspector.selectObject(compn)

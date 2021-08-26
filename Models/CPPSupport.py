@@ -9,7 +9,7 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Models.CPPSupport'
+print('importing Models.CPPSupport')
 
 import os
 
@@ -18,7 +18,7 @@ import wx
 import Preferences, Utils, Plugins
 from Utils import _
 
-import EditorHelper
+from . import EditorHelper
 EditorHelper.imgCPPModel = EditorHelper.imgIdxRange()
 
 from Models.EditorModels import SourceModel
@@ -95,7 +95,7 @@ class HPPSourceView(CPPSourceView):
         self.nonUserModification = False
         self.updatePageName()
 
-import Controllers
+from . import Controllers
 class CPPController(Controllers.SourceController):
     Model           = CPPModel
     DefaultViews    = [CPPSourceView, HPPSourceView]

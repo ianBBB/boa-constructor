@@ -9,18 +9,19 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Views.PySourceView'
+print('importing Views.PySourceView')
 
 import os, string, bdb, sys, types, keyword
 
 import wx
 import wx.stc
 
-import ProfileView, Search, Help, Preferences, ShellEditor, Utils, SourceViews
+import Search, Help, Preferences, ShellEditor, Utils
+from . import ProfileView, SourceViews
 from Utils import _
 
-from SourceViews import EditorStyledTextCtrl
-from StyledTextCtrls import PythonStyledTextCtrlMix, BrowseStyledTextCtrlMix,\
+from .SourceViews import EditorStyledTextCtrl
+from .StyledTextCtrls import PythonStyledTextCtrlMix, BrowseStyledTextCtrlMix,\
      FoldingStyledTextCtrlMix, AutoCompleteCodeHelpSTCMix, \
      CallTipCodeHelpSTCMix, DebuggingViewSTCMix, idWord, word_delim, object_delim
 from Preferences import keyDefs
@@ -28,11 +29,11 @@ import methodparse, moduleparse, sourceconst
 import wxNamespace
 
 mrkCnt = SourceViews.markerCnt
-brkPtMrk, tmpBrkPtMrk, disabledBrkPtMrk, stepPosMrk = range(mrkCnt+1, mrkCnt+5)
+brkPtMrk, tmpBrkPtMrk, disabledBrkPtMrk, stepPosMrk = list(range(mrkCnt+1, mrkCnt+5))
 SourceViews.markerCnt = mrkCnt + 4
 
-brwsIndc, synErrIndc = range(0, 2)
-lineNoMrg, symbolMrg, foldMrg = range(0, 3)
+brwsIndc, synErrIndc = list(range(0, 2))
+lineNoMrg, symbolMrg, foldMrg = list(range(0, 3))
 
 class ShellNameNotFound(Exception): pass
 
@@ -165,10 +166,10 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         # inside classes
         if cls:
             if len(objPth) == 2 and objPth[0] == 'self':
-                if cls.methods.has_key(objPth[1]):
+                if objPth[1] in cls.methods:
                     return self.prepareModSigTip(objPth[1],
                           cls.methods[objPth[1]].signature)
-                elif cls.super and type(cls.super[0]) is type(''):
+                elif cls.super and isinstance(cls.super[0], type('')):
                     return self.getFirstContinousBlock(
                       self.checkWxPyMethodTips(module, cls.super[0], objPth[1]))
 
@@ -191,13 +192,13 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         return self.checkShellTips(word)
 
     def getNameSig(self, name, module):
-        if module.classes.has_key(name) and \
-              module.classes[name].methods.has_key('__init__'):
+        if name in module.classes and \
+              '__init__' in module.classes[name].methods:
             return self.prepareModSigTip(name,
                 module.classes[name].methods['__init__'].signature)
-        elif module.functions.has_key(name):
+        elif name in module.functions:
             return self.prepareModSigTip(name, module.functions[name].signature)
-        elif __builtins__.has_key(name):
+        elif name in __builtins__:
             return self.getFirstContinousBlock(__builtins__[name].__doc__)
         return None
 
@@ -208,14 +209,14 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             return ''
 
     def checkWxPyTips(self, module, name):
-        if module.imports.has_key('wx'):
+        if 'wx' in module.imports:
             obj = wxNamespace.getWxObjPath(name)
             if obj:
                 return self.prepareWxModSigTip(obj.__init__.__doc__)
         return ''
 
     def checkWxPyMethodTips(self, module, cls, name):
-        if module.imports.has_key('wx'):
+        if 'wx' in module.imports:
             Cls = wxNamespace.getWxObjPath(cls)
             if Cls and hasattr(Cls, name):
                 meth = getattr(Cls, name)
@@ -236,10 +237,10 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         return None
 
     def getAttribSig(self, module, cls, attrib, meth):
-        if cls.attributes.has_key(attrib):
+        if attrib in cls.attributes:
             objtype = cls.attributes[attrib][0].signature
-            if module.classes.has_key(objtype) and \
-                  module.classes[objtype].methods.has_key(meth):
+            if objtype in module.classes and \
+                  meth in module.classes[objtype].methods:
                 return module.classes[objtype].methods[meth].signature
             klass = wxNamespace.getWxClass(objtype)
             if klass:
@@ -251,7 +252,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                   'number': int}
 
     def getTypeSig(self, objType, method, module):
-        if self.sigTypeMap.has_key(objType):
+        if objType in self.sigTypeMap:
             tpe = self.sigTypeMap[objType]
             try:
                 return getattr(getattr(tpe, method), '__doc__')
@@ -259,7 +260,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                 pass
 
         if objType in module.classes and \
-              module.classes[objType].methods.has_key(method):
+              method in module.classes[objType].methods:
             return self.prepareModSigTip(method,
                         module.classes[objType].methods[method].signature)
         meth = wxNamespace.getWxObjPath(objType+'.'+method)
@@ -316,7 +317,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                         if wrds and wrds[0] == 'def':
                             if isinstance(cls.super[0], moduleparse.Class):
                                 return self.getAttribs(cls.super[0], methsOnly=True)
-                            elif type(cls.super[0]) in types.StringTypes:
+                            elif type(cls.super[0]) in (str,):
                                 super = wxNamespace.getWxClass(cls.super[0])
                                 if super:
                                     return self.getWxAttribs(super)
@@ -369,8 +370,8 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
 
     def getImportedShellObj(self, words):
         module = self.model.getModule()
-        imports = module.imports.keys() + module.from_imports.keys() +\
-                module.from_imports_names.keys()
+        imports = list(module.imports.keys()) + list(module.from_imports.keys()) +\
+                list(module.from_imports_names.keys())
         if self.model.editor.shell:
             shellLocals = self.model.editor.shell.getShellLocals()
             name = words[0]
@@ -426,7 +427,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         return None
 
     def getTypeAttribs(self, objType, module):
-        if self.attrTypeMap.has_key(objType):
+        if objType in self.attrTypeMap:
             return self.attrTypeMap[objType]
         if objType in module.classes:
             return self.getAttribs(module.classes[objType])
@@ -439,9 +440,9 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         loopCls = cls
         lst = []
         while loopCls:
-            lst.extend(loopCls.methods.keys())
+            lst.extend(list(loopCls.methods.keys()))
             if not methsOnly:
-                lst.extend(loopCls.attributes.keys())
+                lst.extend(list(loopCls.attributes.keys()))
 
             if len(loopCls.super):
                 prnt = loopCls.super[0]
@@ -463,11 +464,11 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                    'tuple': dir(()), 'number': dir(0)}
 
     def getAttribAttribs(self, module, cls, attrib):
-        if cls.attributes.has_key(attrib):
+        if attrib in cls.attributes:
             objtype = cls.attributes[attrib][0].signature
-            if self.attrTypeMap.has_key(objtype):
+            if objtype in self.attrTypeMap:
                 return self.attrTypeMap[objtype]
-            elif module.classes.has_key(objtype):
+            elif objtype in module.classes:
                 return self.getAttribs(module.classes[objtype])
             else:
                 klass = wxNamespace.getWxClass(objtype)
@@ -478,13 +479,13 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
     def getCodeNamespace(self, module, block=None):
         names = []
 
-        names.extend(module.imports.keys())
-        names.extend(module.from_imports.keys())
-        names.extend(module.from_imports_names.keys())
+        names.extend(list(module.imports.keys()))
+        names.extend(list(module.from_imports.keys()))
+        names.extend(list(module.from_imports_names.keys()))
         names.extend(module.class_order)
         names.extend(module.function_order)
         names.extend(module.global_order)
-        names.extend(__builtins__.keys())
+        names.extend(list(__builtins__.keys()))
         names.extend(keyword.kwlist)
 
         if block:
@@ -494,7 +495,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
 
     def getAllClasses(self, module):
         names = []
-        names.extend(module.from_imports_names.keys())
+        names.extend(list(module.from_imports_names.keys()))
         names.extend(module.class_order)
 
         return names
@@ -503,11 +504,11 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
 
     def findNameInModule(self, module, word):
         """ Find either a classname, global function or attribute in module """
-        if module.classes.has_key(word):
+        if word in module.classes:
             return module.classes[word].block.start-1
-        elif module.functions.has_key(word):
+        elif word in module.functions:
             return module.functions[word].start-1
-        elif module.globals.has_key(word):
+        elif word in module.globals:
             return module.globals[word].start-1
         else:
             return None
@@ -527,16 +528,16 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         if cls:
             self.doClearBrwsLn()
             gotoLine = -1
-            if cls.attributes.has_key(word):
+            if word in cls.attributes:
                 gotoLine = cls.attributes[word][0].start-1
-            elif cls.methods.has_key(word):
+            elif word in cls.methods:
                 gotoLine = cls.methods[word].start-1
-            elif cls.class_attributes.has_key(word):
+            elif word in cls.class_attributes:
                 gotoLine = cls.class_attributes[word][0].start-1
             else:
                 found, cls, block = module.find_declarer(cls, word, None)
                 if found:
-                    if type(block) == type([]):
+                    if isinstance(block, type([])):
                         gotoLine = block[0].start-1
                     else:
                         gotoLine = block.start-1
@@ -572,7 +573,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         words = word.split('.')
 
         # Standard imports
-        if module.imports.has_key(word):
+        if word in module.imports:
             self.doClearBrwsLn()
 
             try: path, impType = self.model.findModule(word)
@@ -589,7 +590,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                     return True, model
             return False, None
         # Handle module part of from module import name
-        elif module.from_imports.has_key(word):
+        elif word in module.from_imports:
             try: path, impType = self.model.findModule(word)
             except ImportError: return False, None
             else:
@@ -600,7 +601,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                 model, ctrlr = self.model.editor.openOrGotoModule(path)
                 return True, model
         # Handle name part of from module import name
-        elif module.from_imports_names.has_key(word):
+        elif word in module.from_imports_names:
             modName = module.from_imports_names[word]
             try: path, impType = self.model.findModule(modName, word)
             except ImportError: return False, None
@@ -643,7 +644,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             if word in locals:
                 self.doClearBrwsLn()
                 self.model.editor.addBrowseMarker(lineNo)
-                if word in codeBlock.locals.keys():
+                if word in list(codeBlock.locals.keys()):
                     self.GotoLine(codeBlock.locals[word].lineno-1)
                 else:
                     self.GotoLine(codeBlock.start-1)
@@ -658,7 +659,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         else:
             shellLocals = {}
 
-        if shellLocals.has_key(word):
+        if word in shellLocals:
             obj = shellLocals[word]
         #elif hasattr(wxNamespace, word):
         #    obj = getattr(wxNamespace, word)
@@ -666,16 +667,16 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             return False
 
         self.doClearBrwsLn()
-        if hasattr(obj, '__init__') and type(obj.__init__) == types.MethodType:
+        if hasattr(obj, '__init__') and isinstance(obj.__init__, types.MethodType):
             self.model.editor.addBrowseMarker(currLineNo)
-            path = os.path.abspath(obj.__init__.im_func.func_code.co_filename)
+            path = os.path.abspath(obj.__init__.__func__.__code__.co_filename)
             mod, cntrl = self.model.editor.openOrGotoModule(path)
-            mod.views['Source'].GotoLine(obj.__init__.im_func.func_code.co_firstlineno -1)
+            mod.views['Source'].GotoLine(obj.__init__.__func__.__code__.co_firstlineno -1)
         elif hasattr(obj, 'func_code'):
             self.model.editor.addBrowseMarker(currLineNo)
-            path = os.path.abspath(obj.func_code.co_filename)
+            path = os.path.abspath(obj.__code__.co_filename)
             mod, cntrl = self.model.editor.openOrGotoModule(path)
-            mod.views['Source'].GotoLine(obj.func_code.co_firstlineno -1)
+            mod.views['Source'].GotoLine(obj.__code__.co_firstlineno -1)
         else:
             return False
         return True
@@ -697,7 +698,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             except KeyError:
                 res = None
                 continue
-            if res and self.model.editor.modules.has_key('file://'+res[0]):
+            if res and 'file://'+res[0] in self.model.editor.modules:
                 starModPage = self.model.editor.modules['file://'+res[0]]
                 starModule = starModPage.model.getModule()
                 lineNo = self.findNameInModule(starModule, word)
@@ -861,8 +862,8 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             return
 
         # Ignore multiline strings
-        if lineStartStyle in self.ignore_styles.keys() or \
-              lineEndStyle in self.ignore_styles.keys():
+        if lineStartStyle in list(self.ignore_styles.keys()) or \
+              lineEndStyle in list(self.ignore_styles.keys()):
             self.model.editor.statusBar.setHint(errstr)
             return
 
@@ -893,7 +894,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                 compile(compstr, '<editor>', 'single', compflags, 1)
             except TypeError:
                 compile(compstr, '<editor>', 'single')
-        except SyntaxError, err:
+        except SyntaxError as err:
             err.lineno = lineNo
             errstr = err.__class__.__name__+': '+str(err)
             indentpl = prevline.find(stripprevline)
@@ -924,12 +925,12 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                 if len(prevlines) == 1 and err.offset is not None and not contLinesOffset:
                     # Check for dedenting keywords
                     possblkeyword = stripprevline[:err.offset-len(indent)]
-                    if possblkeyword in self.if_keywords.keys():
+                    if possblkeyword in list(self.if_keywords.keys()):
                         self.checkSyntax( (prevline.replace(possblkeyword,
                               self.if_keywords[possblkeyword], 1),),
                             lineNo, getPrevLine)
                         return
-                    elif possblkeyword in self.try_keywords.keys():
+                    elif possblkeyword in list(self.try_keywords.keys()):
                         if stripprevline[-1] == ':':
                             prevline = prevline.rstrip()+'pass\n'
 
@@ -959,7 +960,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                                 lstripline = line.lstrip()
                                 if len(lstripline) >= 4:
                                     possblifkeyword = lstripline[:4]
-                                    if possblifkeyword in self.if_keywords.keys():
+                                    if possblifkeyword in list(self.if_keywords.keys()):
                                         ##print 'replace if kw'
                                         rstripline = rstripline.replace(
                                               possblifkeyword,
@@ -993,7 +994,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                 self.damagedLine = -1
                 return
 
-        except Exception, err:
+        except Exception as err:
             errstr = err.__class__.__name__+': '+str(err)
 
         if errstr:
@@ -1198,7 +1199,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             self.model.refreshFromViews()
             module = self.model.getModule()
             cls = module.getClassForLineNo(lnNo)
-            if cls and not cls.methods.has_key(methName):
+            if cls and methName not in cls.methods:
                 # Check if it looks like an event
                 if len(methName) > 2 and methName[:2] == 'On' and (methName[2]
                                                        in string.uppercase+'_'):
@@ -1207,7 +1208,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                     parms = 'self, '
 
                 module.addMethod(cls.name, methName, parms, [sourceconst.bodyIndent+'pass'], True)
-                if cls.methods.has_key(methName):
+                if methName in cls.methods:
                     lnNo = cls.methods[methName].start+1
                     self.model.refreshFromModule()
                     self.model.modified = True
@@ -1216,7 +1217,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                     self.SetCurrentPos(line2pos+8)
                     self.SetSelection(line2pos+8, line2pos+12)
                 else:
-                    print 'Method was not added'
+                    print('Method was not added')
         else:
             # 2nd Xform; Add inherited method call underneath method declation
             #            at cursor
@@ -1226,7 +1227,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                 cls = module.getClassForLineNo(lnNo)
                 if cls and cls.super:
                     base1 = cls.super[0]
-                    if type(base1) is type(''):
+                    if isinstance(base1, type('')):
                         baseName = base1
                     else:
                         baseName = base1.name

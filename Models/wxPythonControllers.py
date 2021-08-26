@@ -9,7 +9,7 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Models.wxPythonControllers'
+print('importing Models.wxPythonControllers')
 
 import os
 
@@ -19,10 +19,10 @@ from Utils import _
 
 import PaletteStore
 
-import Controllers
-from Controllers import addTool
-from PythonControllers import BaseAppController, ModuleController
-import EditorHelper, wxPythonEditorModels
+from . import Controllers
+from .Controllers import addTool
+from .PythonControllers import BaseAppController, ModuleController
+from . import EditorHelper, wxPythonEditorModels
 from Views import EditorViews, AppViews, Designer, DataView, SizersView
 
 class AppController(BaseAppController):
@@ -65,7 +65,7 @@ class BaseFrameController(ModuleController):
         params = tempComp.designTimeSource()
         params['parent'] = 'prnt'
         params['id'] = Utils.windowIdentifier(model.main, '')
-        params['title'] = `model.main`
+        params['title'] = repr(model.main)
         return params
 
     def afterAddModulePage(self, model):
@@ -83,19 +83,19 @@ class BaseFrameController(ModuleController):
         view.deleteFromNotebook('Source', name)
 
     def _cancelDesigner(self, views):
-        if views.has_key('Designer'):
+        if 'Designer' in views:
             views['Designer'].saveOnClose = False
             views['Designer'].close()
 
-        if views.has_key('Data'):
+        if 'Data' in views:
             self._cancelView(views['Data'], 'Data')
 
     def showDesigner(self):
         # Just show if already opened
         modulePage = self.editor.getActiveModulePage()
         model = modulePage.model
-        if model.views.has_key('Designer'):
-            if model.views.has_key('Data'):
+        if 'Designer' in model.views:
+            if 'Data' in model.views:
                 model.views['Data'].focus()
             model.views['Designer'].restore()
             return
@@ -116,7 +116,7 @@ class BaseFrameController(ModuleController):
 
                 try:
                     # add or focus data view
-                    if not model.views.has_key('Data'):
+                    if 'Data' not in model.views:
                         dataView = DataView.DataView(modulePage.notebook,
                              self.editor.inspector, model, self.editor.compPalette)
                         dataView.addToNotebook(modulePage.notebook)
@@ -125,7 +125,7 @@ class BaseFrameController(ModuleController):
                     else:
                         dataView = model.views['Data']
                 except:
-                    if model.views.has_key('Data'):
+                    if 'Data' in model.views:
                         self._cancelView(model.views['Data'], 'Data')
                     raise
 
@@ -134,7 +134,7 @@ class BaseFrameController(ModuleController):
 
                 try:
                     # add or focus frame designer
-                    if not model.views.has_key('Designer'):
+                    if 'Designer' not in model.views:
                         designer = Designer.DesignerView(self.editor,
                               self.editor.inspector, model,
                               self.editor.compPalette, model.Companion,
@@ -148,7 +148,7 @@ class BaseFrameController(ModuleController):
                 if Preferences.dsUseSizers:
                     try:
                         # add sizer view
-                        if not model.views.has_key('Sizers'):
+                        if 'Sizers' not in model.views:
                             sizersView = SizersView.SizersView(modulePage.notebook,
                                  self.editor.inspector, model,
                                  self.editor.compPalette, model.views['Designer'])
@@ -158,7 +158,7 @@ class BaseFrameController(ModuleController):
                         else:
                             sizersView = model.views['Sizers']
                     except:
-                        if model.views.has_key('Sizers'):
+                        if 'Sizers' in model.views:
                             self._cancelView(model.views['Sizers'], 'Sizers')
                         self._cancelDesigner(model.views)
                         raise
@@ -175,7 +175,7 @@ class BaseFrameController(ModuleController):
             finally:
                 os.chdir(cwd)
 
-        except Exception, error:
+        except Exception as error:
             self.editor.setStatus(\
                 _('An error occured while opening the Designer: %s')%str(error),
                   'Error')
@@ -249,7 +249,7 @@ Preferences.paletteTitle = Preferences.paletteTitle +' - wxPython GUI Builder'
 # this registers the class browser under Tools
 import ClassBrowser
 # registers resource support
-import ResourceSupport
+from . import ResourceSupport
 
 Controllers.appModelIdReg.append(wxPythonEditorModels.AppModel.modelIdentifier)
 

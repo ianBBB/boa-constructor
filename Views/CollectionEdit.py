@@ -10,7 +10,7 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 ##Boa:Frame:CollectionEditor
-print 'importing Views.CollectionEdit'
+print('importing Views.CollectionEdit')
 
 import os, sys
 
@@ -22,7 +22,8 @@ from Utils import _
 
 import sourceconst
 
-import InspectableViews
+from . import InspectableViews
+from functools import reduce
 
 # XXX 'Select Parent' from the Inspector should select the parent companion
 # XXX of the collection property
@@ -245,7 +246,7 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
         for itemIdx in range(self.itemList.GetItemCount()):
             if self.itemList.GetItemState(itemIdx, 0) & wx.LIST_STATE_SELECTED:
                 result.append(itemIdx)
-        wx.MessageBox(`result`)
+        wx.MessageBox(repr(result))
 
     def OnCloseWindow(self, event):
         if self.selected != -1:
@@ -282,7 +283,7 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
 
     def OnSwitchToDesigner(self, event):
         # XXX Should switch to data view
-        if self.collEditView.model.views.has_key('Designer'):
+        if 'Designer' in self.collEditView.model.views:
             self.collEditView.model.views['Designer'].restore()
 
 class ImageListCollectionEditor(CollectionEditor):
@@ -318,7 +319,7 @@ class CollectionEditorView(InspectableViews.InspectableObjectView):
         self.initObjectsAndCompanions(objCol.creators, objCol, {}, {})
 
     def initObjEvts(self, events, name, creator):
-        if events.has_key(''):
+        if '' in events:
             self.companion.setEvents(events[''])
 
     def initObjCreator(self, constrPrs):
@@ -475,7 +476,7 @@ class CollectionEditorView(InspectableViews.InspectableObjectView):
         if not self.frame:
             if self.additMeths:
                 am = tuple([(methInfo[0], meth)
-                            for meth, methInfo in self.additMeths.items()])
+                            for meth, methInfo in list(self.additMeths.items())])
             else:
                 am = ()
 

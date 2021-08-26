@@ -26,10 +26,10 @@ class ObjectCollection:
         self.collectionsByName = {}
 
     def __repr__(self):
-        return '<ObjectCollection instance: %s,\n %s,\n %s,\n %s,\nBy name:\n %s,\n %s,\n %s,\n %s,>'% (`self.creators`, `self.properties`,
-           `self.collections`, `self.events`,
-           `self.creatorByName`, `self.propertiesByName`,
-           `self.collectionsByName`, `self.eventsByName`)
+        return '<ObjectCollection instance: %s,\n %s,\n %s,\n %s,\nBy name:\n %s,\n %s,\n %s,\n %s,>'% (repr(self.creators), repr(self.properties),
+           repr(self.collections), repr(self.events),
+           repr(self.creatorByName), repr(self.propertiesByName),
+           repr(self.collectionsByName), repr(self.eventsByName))
 
     def setup(self, creators, properties, events, collections, initialisers, finalisers):
         self.creators = creators

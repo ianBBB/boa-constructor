@@ -9,7 +9,7 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-print 'importing Views.OGLViews'
+print('importing Views.OGLViews')
 
 import pickle, os
 
@@ -21,7 +21,7 @@ from Utils import _
 
 from Preferences import IS
 
-import EditorViews
+from . import EditorViews
 
 # XXX It would be better to not apply persistent positions after creating shapes,
 # XXX but to use positions when shape is created
@@ -60,7 +60,7 @@ class MyEvtHandler(ogl.ShapeEvtHandler):
                         # shapeList will become invalid (the control points are
                         # shapes too!) and bad things will happen...
                         toUnselect.append(s)
-                except Exception, message: pass#print Exception, message
+                except Exception as message: pass#print Exception, message
 
             shape.Select(True, dc)
 
@@ -87,7 +87,7 @@ class MyEvtHandler(ogl.ShapeEvtHandler):
             shape.GetCanvas().PopupMenu(self.menu, wx.Point(x, y))
 
     def OnRightDown(self, event):
-        print "OnRightDown", event
+        print("OnRightDown", event)
 
 #----------------------------------------------------------------------
 
@@ -109,7 +109,7 @@ class PersistentShapeCanvas(ogl.ShapeCanvas):
                 if hasattr(shape, 'unqPclName'):
                     persProps[shape.unqPclName] = shape.getPos()
             except:
-                print 'error:', shape
+                print('error:', shape)
                 raise
 
         from Explorers.Explorer import openEx
@@ -147,17 +147,17 @@ class PersistentShapeCanvas(ogl.ShapeCanvas):
 
             raise TransportError(_('Corrupt layout file'))
 
-        unmatchedPcls = persProps.keys()
+        unmatchedPcls = list(persProps.keys())
         matchedShapes = []
 
         for shape in self.shapes:
-            if persProps.has_key(shape.unqPclName):
+            if shape.unqPclName in persProps:
                 unmatchedPcls.remove(shape.unqPclName)
             else:
                 unmatchedPcls.append(shape.unqPclName)
 
         for shape in self.shapes:
-            if persProps.has_key(shape.unqPclName):
+            if shape.unqPclName in persProps:
                 pos = persProps[shape.unqPclName]
                 shape.setPos(pos)
 
@@ -357,7 +357,7 @@ class PersistentOGLView(ScrollingContainer, EditorViews.EditorView):
 
     def OnSetSize(self, event):
         dlg = wx.TextEntryDialog(self, 'Enter new canvas size (width==height)',
-            'Size', `self.size`)
+            'Size', repr(self.size))
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 self.size = int(dlg.GetValue())
@@ -366,7 +366,7 @@ class PersistentOGLView(ScrollingContainer, EditorViews.EditorView):
             dlg.Destroy()
 
     def OnRightClick1(self, event):
-        print self.canvas.HitTest(event.GetX(), event.GetX())
+        print(self.canvas.HitTest(event.GetX(), event.GetX()))
         event.Skip()
 
 
@@ -400,20 +400,20 @@ class SortedUMLViewMix:
         todo = [ module.createHierarchy() ]
         while todo:
             hierarchy = todo[0]
-            for className in hierarchy.keys():
+            for className in list(hierarchy.keys()):
                 if self.getCurrentShape( className ):
                     if className not in nodes:
                         nodes.append( className )
                 else:
                     # build a new node...
-                    if module.classes.has_key(className):
+                    if className in module.classes:
                         # this is a local class (defined in this module)
                         classModel = module.classes[className]
                         classShape = self.newClass(
                             (20, 30), (0, 0),
                             className,
-                            classModel.methods.keys(),
-                            classModel.attributes.keys()
+                            list(classModel.methods.keys()),
+                            list(classModel.attributes.keys())
                         )
                     else:
                         # external class
@@ -427,7 +427,7 @@ class SortedUMLViewMix:
                 # hierarchy maps the children of the classes by name
                 if hierarchy.get( className ):
                     todo.append( hierarchy.get(className) )
-                    children = hierarchy.get(className).keys()
+                    children = list(hierarchy.get(className).keys())
                     for child in children:
                         if (className, child) not in routes:
                             routes.append( (className, child) )
@@ -516,7 +516,7 @@ def sort(nodes, routes, noRecursion=0):
         # some other element!!!
         stage.append( nodes[0])
     taken.extend( stage )
-    nodes = filter ( lambda x, l=stage: x not in l, nodes )
+    nodes = list(filter ( lambda x, l=stage: x not in l, nodes ))
     while nodes:
         previousStageChildren = []
         nodelen = len(nodes)
@@ -545,7 +545,7 @@ def sort(nodes, routes, noRecursion=0):
                 stage.remove( remove )
         stages.append( stage)
         taken.extend( stage )
-        nodes = filter ( lambda x, l=stage: x not in l, nodes )
+        nodes = list(filter ( lambda x, l=stage: x not in l, nodes ))
         if nodelen == len(nodes):
             if noRecursion:
                 raise RecursionError( nodes )
@@ -681,30 +681,30 @@ class UMLView(PersistentOGLView, SortedUMLViewMix):
     def OnGotoDoc(self, event):
         if self.menuClass:
             name = self.menuClass
-            if self.model.views.has_key('Documentation') and \
-              self.model.getModule().classes.has_key(name):
+            if 'Documentation' in self.model.views and \
+              name in self.model.getModule().classes:
                 srcView = self.model.views['Documentation']
                 srcView.focus()
                 module = self.model.getModule()
                 #srcView.gotoLine(int(module.classes[name].block.start) -1)
             else:
-                print _('Documentation View is not open')
+                print(_('Documentation View is not open'))
         else:
-            print _('No shape selected')
+            print(_('No shape selected'))
 
     def OnGotoSource(self, event):
         if self.menuClass:
             name = self.menuClass
-            if self.model.views.has_key('Source') and \
-              self.model.getModule().classes.has_key(name):
+            if 'Source' in self.model.views and \
+              name in self.model.getModule().classes:
                 srcView = self.model.views['Source']
                 srcView.focus()
                 module = self.model.getModule()
                 srcView.gotoLine(int(module.classes[name].block.start) -1)
             else:
-                print _('No source for selection')
+                print(_('No source for selection'))
         else:
-            print _('No shape selected')
+            print(_('No shape selected'))
 
     ## This allows me to pop-up a menu for the shape. However it loses the
     ## main menu position (x, y) go to 0,0 after the skip
@@ -712,7 +712,7 @@ class UMLView(PersistentOGLView, SortedUMLViewMix):
         """If the event occurs on one of our shapes, I want to pop-up a shape"""
         x, y = (event.m_x, event.m_y)
         hit = 0
-        for (name, shape) in self.AllClasses.items():
+        for (name, shape) in list(self.AllClasses.items()):
             hit = shape.HitTest(x, y)
             if hit: break
         x, y = self.CalcScrolledPosition(x, y)
@@ -723,7 +723,7 @@ class UMLView(PersistentOGLView, SortedUMLViewMix):
             return
         # If we reach this point, then we have a selected shape.
         # However, it may be a class or external
-        if self.model.getModule().classes.has_key(name):
+        if name in self.model.getModule().classes:
             (self.menuShape, self.menuClass) = (shape, name)
             self.PopupMenu(self.menuStdClass, wx.Point(x, y))
             (self.menuShape, self.menuClass) = (None, None)
@@ -808,20 +808,20 @@ class ImportsView(PersistentOGLView):
         else:
             packageName = ''
         # Add shapes
-        for rel in relations.keys():
+        for rel in list(relations.keys()):
             impLst = []
-            for i in relations[rel].imports.keys():
+            for i in list(relations[rel].imports.keys()):
                 if i.startswith(packageName+'.'):
                     i = i[len(packageName)+1:]
-                if relations.has_key(i):
+                if i in relations:
                     impLst.append(i)
-            for i in relations[rel].from_imports.keys():
+            for i in list(relations[rel].from_imports.keys()):
                 if i.startswith(packageName+'.'):
                     i = i[len(packageName)+1:]
-                if relations.has_key(i):
+                if i in relations:
                     impLst.append(i)
 
-            shape, width = self.newModule((20, 30), (p, y), rel, relations[rel].classes.keys())
+            shape, width = self.newModule((20, 30), (p, y), rel, list(relations[rel].classes.keys()))
             shapes[rel] = (shape, impLst)
             p = p + width + 10
             if p > self.GetSize().x:
@@ -829,7 +829,7 @@ class ImportsView(PersistentOGLView):
                 y = y + 120
 
         # Add lines
-        for module in shapes.keys():
+        for module in list(shapes.keys()):
             for line in shapes[module][1]:
                 self.newLine(dc, shapes[module][0], shapes[line][0])
 
@@ -898,12 +898,12 @@ class AppPackageView(PersistentOGLView):
         p = 10
         y = 20
         # Add shapes
-        for rel in relations.keys():
+        for rel in list(relations.keys()):
             impLst = []
-            for i in relations[rel].imports.keys():
-                if relations.has_key(i): impLst.append(i)
+            for i in list(relations[rel].imports.keys()):
+                if i in relations: impLst.append(i)
 
-            shape, width = self.newModule((20, 30), (p, y), rel, relations[rel].classes.keys())
+            shape, width = self.newModule((20, 30), (p, y), rel, list(relations[rel].classes.keys()))
             shapes[rel] = (shape, impLst)
             p = p + width + 10
             if p > self.GetSize().x:
@@ -911,7 +911,7 @@ class AppPackageView(PersistentOGLView):
                 y = y + 120
 
         # Add lines
-        for module in shapes.keys():
+        for module in list(shapes.keys()):
             for line in shapes[module][1]:
                 self.newLine(dc, shapes[module][0], shapes[line][0])
 

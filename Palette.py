@@ -11,7 +11,7 @@
 #----------------------------------------------------------------------
 #Boa:Frame:BoaFrame
 
-print 'importing Palette'
+print('importing Palette')
 
 import os, sys
 
@@ -123,7 +123,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
         # Add additional helpbuttons if defined in the config file
         customHelpItems = eval(conf.get('help', 'customhelp'), {})
         self.customHelpItems = {}
-        for caption, helpFile in customHelpItems.items():
+        for caption, helpFile in list(customHelpItems.items()):
             mID = wx.NewId()
             self.toolBar.AddTool(mID, IS.load('Images/Shared/CustomHelp.png'),
               shortHelpString = caption)
@@ -380,7 +380,7 @@ class PanelPalettePage(wx.Panel, BasePalettePage):
         if hasattr(self, 'widgets'):
             del self.widgets
             self.DestroyChildren()
-            for btn in self.buttons.values():
+            for btn in list(self.buttons.values()):
                 btn.faceDnClr = None
                 btn.shadowPen = None
                 btn.highlightPen = None

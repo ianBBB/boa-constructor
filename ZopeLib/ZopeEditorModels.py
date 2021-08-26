@@ -9,7 +9,7 @@
 # Copyright:   (c) 2001 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing ZopeLib.ZopeEditorModels'
+print('importing ZopeLib.ZopeEditorModels')
 
 import os
 
@@ -100,7 +100,7 @@ class ZopeEditorModel(EditorModels.BasePersistentModel):
         from ExternalLib.xmlrpclib import Fault
         try:
             EditorModels.BasePersistentModel.save(self, overwriteNewer)
-        except Fault, err:
+        except Fault as err:
             from Explorers import ExplorerNodes
             raise ExplorerNodes.TransportSaveError(Utils.html2txt(err.faultString),
                 self.transport.resourcepath)
@@ -131,7 +131,7 @@ class ZopeDocumentModel(ZopeEditorModel):
         self.savedAs = True
 
     def saveAs(self, filename):
-        raise Exception, 'Save as not supported'
+        raise Exception('Save as not supported')
 
     def getPageName(self):
         if self.transport.name == 'index_html':
@@ -235,7 +235,7 @@ class ZopeExportFileController(Controllers.UndockedController):
                 else:
                     dlg = wx.SingleChoiceDialog(self.editor,
                         "To which Zope's import directory should this file be copied?",
-                        'Choose Zope instance', localZopes.keys())
+                        'Choose Zope instance', list(localZopes.keys()))
                     try:
                         if dlg.ShowModal() == wx.ID_OK:
                             selected = dlg.GetStringSelection()

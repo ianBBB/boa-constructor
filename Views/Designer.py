@@ -10,7 +10,7 @@
 # Licence:     GPL
 #----------------------------------------------------------------------
 
-print 'importing Views.Designer'
+print('importing Views.Designer')
 
 import copy, os, pprint, math
 
@@ -20,11 +20,11 @@ import Preferences, Utils, Help
 from Preferences import IS
 from Utils import _
 
-import CtrlAlign, CtrlSize
+from . import CtrlAlign, CtrlSize
 import sourceconst
 
-from InspectableViews import InspectableObjectView
-import SelectionTags
+from .InspectableViews import InspectableObjectView
+from . import SelectionTags
 
 from PropEdit import Enumerations
 
@@ -80,11 +80,11 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
             elif srcPrnt == 'self':
                 try:
                     args[prnt] = self
-                except AttributeError, name:
+                except AttributeError as name:
                     # XXX This isn't right
-                    if self.objects.has_key(name):
+                    if name in self.objects:
                         pass
-                    elif self.model.objectCollections.has_key(name):
+                    elif name in self.model.objectCollections:
                         pass
                     else:
                         raise
@@ -92,7 +92,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                 dot = srcPrnt.find('.')
                 if dot != -1:
                     srcPrnt = srcPrnt[dot + 1:]
-                else: raise Exception, _('Component name illegal %s')%srcPrnt
+                else: raise Exception(_('Component name illegal %s')%srcPrnt)
                 args[prnt] = self.objects[srcPrnt][1]
 
         # hack to allow stock ids to set the button
@@ -277,7 +277,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                 module.removeMethod(self.model.main, oc)
 
         # Update all size and pos parameters possibly updated externally
-        for compn, ctrl, prnt in self.objects.values():
+        for compn, ctrl, prnt in list(self.objects.values()):
             compn.updatePosAndSize()
 
         if self.sizersView and self.sizersView.objects:
@@ -290,7 +290,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
         InspectableObjectView.saveCtrls(self, definedCtrls, module, collDeps)
 
         # Regenerate window ids
-        companions = [i[0] for i in self.objects.values()]
+        companions = [i[0] for i in list(self.objects.values())]
         self.model.writeWindowIds(self.collectionMethod, companions)
 
     def renameCtrlAndParentRefs(self, oldName, newName, children=()):
@@ -302,7 +302,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
             if ctrl in children:
                 self.objects[ctrl][2] = newName
         # also do collections
-        for coll in self.collEditors.values():
+        for coll in list(self.collEditors.values()):
             coll.companion.renameCtrlRefs(oldName, newName)
 
     def renameCtrl(self, oldName, newName):
@@ -311,7 +311,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
         prel, pref = self.buildParentRelationship()
 
         # rename other ctrl references like parent
-        children = pref[oldName].keys()
+        children = list(pref[oldName].keys())
         self.renameCtrlAndParentRefs(oldName, newName, children)
 
         InspectableObjectView.renameCtrl(self, oldName, newName)
@@ -342,10 +342,10 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
             self.sizersView.renameFrame(oldName, newName)
 
         # update window ids in collection items
-        collEditors = self.collEditors.values() + \
-                      self.dataView.collEditors.values()
+        collEditors = list(self.collEditors.values()) + \
+                      list(self.dataView.collEditors.values())
         if self.sizersView:
-            collEditors.extend(self.sizersView.collEditors.values())
+            collEditors.extend(list(self.sizersView.collEditors.values()))
 
         for collEditor in collEditors:
             collEditor.renameFrame(oldName, newName)
@@ -525,7 +525,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
             elif factoryObj in self.objects:
                 constrPrs.class_name = self.objects[factoryObj][0].factory(factoryMeth)
             else:
-                raise Exception, _('%s not found')%factoryObj
+                raise Exception(_('%s not found')%factoryObj)
         InspectableObjectView.initObjCreator(self, constrPrs)
 
     def initSizers(self, sizersView):
@@ -546,11 +546,11 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
         """ Overridden to also add objects from the other views """
         results = InspectableObjectView.getObjectsOfClass(self, theClass)
         otherResults = {}
-        for objName in self.dataView.objects.keys():
+        for objName in list(self.dataView.objects.keys()):
             if isinstance(self.dataView.objects[objName][1], theClass):
                 otherResults['self.'+objName] = self.dataView.objects[objName][1]
         if self.sizersView:
-            for objName in self.sizersView.objects.keys():
+            for objName in list(self.sizersView.objects.keys()):
                 if isinstance(self.sizersView.objects[objName][1], theClass):
                     otherResults['self.'+objName] = self.sizersView.objects[objName][1]
         results.update(otherResults)
@@ -559,11 +559,11 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
     def getAllObjects(self):
         """ Overridden to also add objects from other views """
         results = InspectableObjectView.getAllObjects(self)
-        for objName in self.dataView.objects.keys():
+        for objName in list(self.dataView.objects.keys()):
             results[Utils.srcRefFromCtrlName(objName)] = \
                   self.dataView.objects[objName][1]
         if self.sizersView:
-            for objName in self.sizersView.objects.keys():
+            for objName in list(self.sizersView.objects.keys()):
                 results[Utils.srcRefFromCtrlName(objName)] = \
                       self.sizersView.objects[objName][1]
         return results
@@ -603,7 +603,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
 
         # delete all children
         children = parRef[name]
-        for child in children.keys():
+        for child in list(children.keys()):
             self.deleteCtrl(child, parRef)
 
         InspectableObjectView.deleteCtrl(self, name)
@@ -646,7 +646,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
     def connectToolBar(self, toolBar):
         parRel, parRef = self.buildParentRelationship()
         children = parRef['']
-        for childName in children.keys():
+        for childName in list(children.keys()):
             childCompn, childCtrl = self.objects[childName][:2]
             if not childCtrl.__class__ in self.ignoreWindows:
                 pos = childCtrl.GetPosition()
@@ -655,7 +655,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
     def disconnectToolBar(self, toolBar):
         parRel, parRef = self.buildParentRelationship()
         children = parRef['']
-        for childName in children.keys():
+        for childName in list(children.keys()):
             childCompn, childCtrl = self.objects[childName][:2]
             if not childCtrl.__class__ in self.ignoreWindows:
                 pos = childCtrl.GetPosition()
@@ -694,7 +694,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
             officialParent = ctrlName
             children = parRef[ctrlName]
 
-        for childName in children.keys():
+        for childName in list(children.keys()):
             childCompn, childCtrl = self.objects[childName][:2]
             pos = childCtrl.GetPosition()
             sze = childCtrl.GetSize()
@@ -734,7 +734,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
 
     def flattenParentRelationship(self, rel, lst):
         """ Add all items in a nested dictionary into a single list """
-        for itm in rel.keys():
+        for itm in list(rel.keys()):
             lst.append(itm)
             self.flattenParentRelationship(rel[itm], lst)
 
@@ -801,7 +801,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
             for key in d:
                 if str(k) == str(key):
                     return d[key]
-            raise KeyError, k
+            raise KeyError(k)
 
         self.vetoResize = True
         try:
@@ -843,7 +843,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                     # build a mapping from sizers to companions
                     sizerCompns = {}
                     view = self.model.views['Sizers']#CtrlCompanion.host]
-                    for name, vals in view.objects.items():
+                    for name, vals in list(view.objects.items()):
                         compn = vals[0]
                         sizerCompns[compn.control] = compn
                         items = compn.control.GetChildren()
@@ -866,7 +866,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                                 break
                             else:
                                 # sizer item
-                                print 'err', s
+                                print('err', s)
 
                 if CtrlCompanion.host == 'Sizers':
                     # create sizer
@@ -878,7 +878,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                         
                         if destSizer is not None:
                             # sizer dropped on sizer item
-                            if type(destSizerCmpn) is type(()):
+                            if isinstance(destSizerCmpn, type(())):
                                 destSizerCmpn, sizerItemIdx = destSizerCmpn
 
                                 tcl = destSizerCmpn.textConstrLst[sizerItemIdx]
@@ -958,7 +958,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                 if ctrlSzr is not None:
                     if destSizer is not None:
                         # ctrl dropped on sizer item
-                        if type(destSizerCmpn) is type(()):
+                        if isinstance(destSizerCmpn, type(())):
                             destSizerCmpn, sizerItemIdx = destSizerCmpn
                             tcl = destSizerCmpn.textConstrLst[sizerItemIdx]
                             tcl.method = 'AddWindow'
@@ -999,7 +999,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                     if prntCtrlSzr is not None:
                         if destSizer is not None:
                             # ctrl dropped on sizer item with ctrl, append to items
-                            if type(destSizerCmpn) is type(()):
+                            if isinstance(destSizerCmpn, type(())):
                                 destSizerCmpn, sizerItemIdx = destSizerCmpn
                                 collEditView = SelectionTags.openCollEditorForSizerItems(
                                     self.inspector, destSizerCmpn.parentCompanion, 
@@ -1405,7 +1405,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
 
         distLo = -1
         nearestCtrl = None
-        for objName in self.objects.keys():
+        for objName in list(self.objects.keys()):
             ctrl, parent = self.objects[objName][1:3]
             if parent == parentName and objName != selName:
 
@@ -1517,7 +1517,7 @@ class DesignerNamespace:
 
     def __getattr__(self, name):
         designer = self.__dict__['_designer']
-        if designer.objects.has_key(name):
+        if name in designer.objects:
             #return designer.objects[name][1]
             obj = designer.objects[name]
             if isinstance(obj[1], wx._core._wxPyDeadObject):
@@ -1525,13 +1525,13 @@ class DesignerNamespace:
                 obj[1] = obj[0].designTimeControl(wx.DefaultPosition, wx.DefaultSize)
                 obj[0].control = obj[1]
             return obj[1]
-        elif designer.dataView.objects.has_key(name):
+        elif name in designer.dataView.objects:
             return designer.dataView.objects[name][1]
         elif designer.sizersView and \
-              designer.sizersView.objects.has_key(name):
+              name in designer.sizersView.objects:
             return designer.sizerView.objects[name][1]
         else:
-            raise AttributeError, name
+            raise AttributeError(name)
 
 
 
@@ -1634,7 +1634,7 @@ class DesignerControlsEvtHandler(wx.EvtHandler):
                     # Count children
                     c = 0
                     ctrl = None
-                    for ctrlLst in dsgn.objects.values():
+                    for ctrlLst in list(dsgn.objects.values()):
                         if len(ctrlLst) > 2 and ctrlLst[2] == '' and \
                           (ctrlLst[1].__class__ not in dsgn.ignoreWindows):
                             c = c + 1

@@ -53,7 +53,7 @@ class PythonInterpreter:
                 code = compile(line, self.name, "single")
             self.lines = []
 
-        except SyntaxError, why:
+        except SyntaxError as why:
             if why[0] == "unexpected EOF while parsing":
                 # start collecting lines
                 self.lines.append(line)
@@ -67,7 +67,7 @@ class PythonInterpreter:
         else:
             # execute
             try:
-                exec code in self.locals
+                exec(code, self.locals)
             except:
                 self.showtraceback()
 
@@ -107,8 +107,8 @@ if __name__ == "__main__":
     #
     # simple console interpreter simulation
 
-    print 'Python', sys.version, "(PythonInterpreter)"
-    print sys.copyright
+    print('Python', sys.version, "(PythonInterpreter)")
+    print(sys.copyright)
 
     interp = PythonInterpreter()
 
@@ -116,8 +116,8 @@ if __name__ == "__main__":
 
         sys.stdout.write(sys.ps1)
 
-        while 1:
-            if interp.push(raw_input()):
+        while True:
+            if interp.push(input()):
                 sys.stdout.write(sys.ps2)
             else:
                 sys.stdout.write(sys.ps1)

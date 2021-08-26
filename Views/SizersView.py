@@ -9,7 +9,7 @@
 # Copyright:   (c) 2003 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-print 'importing Views.SizersView'
+print('importing Views.SizersView')
 
 import os, copy
 
@@ -21,9 +21,9 @@ from Utils import _
 import sourceconst
 import PaletteMapping, PaletteStore, Help
 
-from InspectableViews import DesignerError
-from DataView import DataView
-import ObjCollection
+from .InspectableViews import DesignerError
+from .DataView import DataView
+from . import ObjCollection
 
 class SizersView(DataView):
     viewName = 'Sizers'
@@ -50,7 +50,7 @@ class SizersView(DataView):
 
         # build and delete list of sizers that are not owned by other sizers
         delLst = []
-        for itemInfo in self.objects.values():
+        for itemInfo in list(self.objects.values()):
             sizer = itemInfo[1]
             if not hasattr(sizer, '_sub_sizer'):
                 delLst.append(sizer)
@@ -59,7 +59,7 @@ class SizersView(DataView):
                 sizer.Destroy()
 
         # remove references
-        for objInfo in self.controllerView.objects.values():
+        for objInfo in list(self.controllerView.objects.values()):
             ctrl = objInfo[1]
             if hasattr(ctrl, '_in_sizer'):
                 del ctrl._in_sizer
@@ -91,9 +91,9 @@ class SizersView(DataView):
                 prop.params[0] = srNewName
 
     def checkCollectionRename(self, oldName, newName, companion=None):
-        for objInfo in self.objects.values():
+        for objInfo in list(self.objects.values()):
             cmp = objInfo[0]
-            if cmp != companion and cmp.collections.has_key('Items'):
+            if cmp != companion and 'Items' in cmp.collections:
                 collEditView = cmp.collections['Items']
                 objColl = self.model.objectCollections[
                       collEditView.collectionMethod]
@@ -117,7 +117,7 @@ class SizersView(DataView):
     def initObjectsAndCompanions(self, creators, objColl, dependents, depLinks):
         DataView.initObjectsAndCompanions(self, creators, objColl, dependents, depLinks)
 
-        for ctrlName in objColl.propertiesByName.keys():
+        for ctrlName in list(objColl.propertiesByName.keys()):
             for prop in objColl.propertiesByName[ctrlName]:
                 if prop.prop_setter == 'SetSizer':
                     compn, ctrl = self.controllerView.objects[ctrlName][:2]

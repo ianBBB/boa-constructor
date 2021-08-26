@@ -94,7 +94,7 @@ class ResourceSelectDlg(wx.Dialog):
 
         if imageName:
             sel = -1
-            for idx, r in zip(range(len(self.resources.imageSrcInfo)),
+            for idx, r in zip(list(range(len(self.resources.imageSrcInfo))),
                               self.resources.imageSrcInfo):
                 if r[0] == imageName:
                     sel = idx
@@ -113,7 +113,7 @@ class ResourceSelectDlg(wx.Dialog):
 #-------------------------------------------------------------------------------
 
 import os
-from cStringIO import StringIO
+from io import StringIO
 
 import Preferences, Utils
 
@@ -124,7 +124,7 @@ class PyResourceModuleExec:
     def __init__(self, pyResImgSrc):
         self.imageFunctions = {}
         src = Utils.toUnixEOLMode(pyResImgSrc)+'\n\n'
-        exec src in self.imageFunctions
+        exec(src, self.imageFunctions)
 
 class PyResourceArtProvider(wx.ArtProvider):
     def __init__(self, pyResModExec):
@@ -292,11 +292,11 @@ class PyResourceBitmapController(PythonControllers.ModuleController):
                       [PyResourceImagesView]
 
 
-validFuncChars = string.letters+string.digits+'_'
+validFuncChars = string.ascii_letters+string.digits+'_'
 funcCharMap = {'-': '_', '.': '_'}
 def fileNameToFunctionName(fn):
     res = []
-    if fn and fn[0] in string.letters+'_':
+    if fn and fn[0] in string.ascii_letters+'_':
         res.append(fn[0])
     for c in fn[1:]:
         if c not in validFuncChars:

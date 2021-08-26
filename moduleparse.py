@@ -37,7 +37,7 @@ import os, sys
 import imp
 import re
 import string, pprint
-from types import IntType, StringType    #id([][,]id)*
+# from types import IntType, StringType    #id([][,]id)*
 
 import Preferences, Utils
 from Utils import _
@@ -114,7 +114,7 @@ class CodeBlock:
         elif self.end > from_line:
             self.end = self.end + increment
 
-        for attr in self.locals.values():
+        for attr in list(self.locals.values()):
             attr.renumber(from_line, increment)
 
     def contains(self, line):
@@ -134,10 +134,10 @@ class CodeBlock:
         return self.params
 
     def localnames(self):
-        locls=self.locals.keys()
+        locls=list(self.locals.keys())
         return [name for name in [fld.split('=')[0] 
                  for fld in methodparse.safesplitfields(self.signature, ',')]
-                if name not in locls] + self.locals.keys()
+                if name not in locls] + list(self.locals.keys())
 
 class Attrib:
     def __init__(self, name, lineno, objtype = ''):
@@ -170,8 +170,8 @@ class Class:
         self.block = CodeBlock('', lineno, lineno)
 
     def __repr__(self):
-        return self.name+`self.block`+'\n'+'\n'.join(
-               ['    '+meth+`self.methods[meth]` for meth in self.method_order])
+        return self.name+repr(self.block)+'\n'+'\n'.join(
+               ['    '+meth+repr(self.methods[meth]) for meth in self.method_order])
 
     def add_method(self, name, sig, linestart, lineend = None, to_bottom = 1):
         if not lineend: lineend = linestart
@@ -189,32 +189,32 @@ class Class:
         self.method_order.remove(name)
 
     def add_attr(self, name, lineno, thetype = ''):
-        if self.attributes.has_key(name):
+        if name in self.attributes:
             self.attributes[name].append(CodeBlock(thetype, lineno, lineno))
         else:
             self.attributes[name] = [CodeBlock(thetype, lineno, lineno)]
 
     def add_class_attr(self, name, lineno, thetype = ''):
-        if self.class_attributes.has_key(name):
+        if name in self.class_attributes:
             self.class_attributes[name].append(CodeBlock(thetype, lineno, lineno))
         else:
             self.class_attributes[name] = [CodeBlock(thetype, lineno, lineno)]
 
     def add_local(self, name, meth, lineno, thetype = ''):
-        if self.methods.has_key(meth):
-            if not self.methods[meth].locals.has_key(name):
+        if meth in self.methods:
+            if name not in self.methods[meth].locals:
                 self.methods[meth].locals[name] = Attrib(name, lineno, thetype)
 
     def renumber(self, start, deltaLines):
         self.block.renumber(start, deltaLines)
-        for block in self.methods.values():
+        for block in list(self.methods.values()):
             block.renumber(start, deltaLines)
-        for attr_lst in self.attributes.values():
+        for attr_lst in list(self.attributes.values()):
             for block in attr_lst:
                 block.renumber(start, deltaLines)
 
     def getMethodForLineNo(self, line_no):
-        for name, meth in self.methods.items():
+        for name, meth in list(self.methods.items()):
             if meth.contains(line_no):
                 return name, meth
         return '', None
@@ -222,7 +222,7 @@ class Class:
     def calcExtent(self):
         #return max(*[m.end for m in self.methods.values()])
         ext = 0
-        for meth in self.methods.values():
+        for meth in list(self.methods.values()):
             if meth.end > ext:
                 ext = meth.end
         return ext
@@ -412,7 +412,7 @@ class Module:
                 for n in inherit.split(','):
                     n = n.strip()
                     if n:
-                        if self.classes.has_key(n):
+                        if n in self.classes:
                             # we know this super class
                             n = self.classes[n]
                         else:
@@ -546,12 +546,12 @@ class Module:
             # function
             elif cur_func:
                 for name in names:
-                    if name not in cur_func.locals.keys():
+                    if name not in list(cur_func.locals.keys()):
                         cur_func.locals[name] = Attrib(name, lineno)
             #global
             else:
                 for name in names:
-                    if not self.globals.has_key(name):
+                    if name not in self.globals:
                         self.globals[name] = CodeBlock('', self.lineno, lineno)
                         self.global_order.append(name)
 
@@ -628,7 +628,7 @@ class Module:
             # function
             elif cur_func:
                 name = res.group('name')
-                if name not in cur_func.locals.keys():
+                if name not in list(cur_func.locals.keys()):
                     cur_func.locals[name] = Attrib(name, lineno, objtype)
 ##                if self.functions.has_key(cur_func):
 ##                    if name not in self.functions[cur_func].locals.keys():
@@ -636,7 +636,7 @@ class Module:
             #global
             else:
                 name = res.group('name')
-                if not self.globals.has_key(name):
+                if name not in self.globals:
                     self.globals[name] = CodeBlock(objtype, self.lineno, lineno)
                     self.global_order.append(name)
 
@@ -649,13 +649,13 @@ class Module:
             return found, cls, value
         else:
             for base in cls.super:
-                if type(base) == StringType:
+                if isinstance(base, str):
                     return found, cls, value
-                if base.attributes.has_key(attr):
+                if attr in base.attributes:
                     return 1, base, base.attributes[attr]
-                elif base.methods.has_key(attr):
+                elif attr in base.methods:
                     return 1, base, base.methods[attr]
-                elif base.class_attributes.has_key(attr):
+                elif attr in base.class_attributes:
                     return 1, base, base.class_attributes[attr]
                 else:
                     found, cls, value = self.find_declarer(base, attr, value, 0)
@@ -671,7 +671,7 @@ class Module:
         if not method_body: return
         a_class = self.classes[class_name]
         if method_name in a_class.method_order:
-            raise Exception, _('Method exists')
+            raise Exception(_('Method exists'))
 
         # Add a method code block
         if to_bottom or not a_class.method_order:
@@ -709,14 +709,14 @@ class Module:
 
     def renumber(self, deltaLines, start):
         if deltaLines:
-            for cls in self.classes.values():
+            for cls in list(self.classes.values()):
                 cls.renumber(start, deltaLines)
-            for func in self.functions.values():
+            for func in list(self.functions.values()):
                 func.renumber(func.start, deltaLines)
-            for glob in self.globals.values():
+            for glob in list(self.globals.values()):
                 glob.renumber(glob.start, deltaLines)
             for imptype in (self.imports, self.from_imports):
-                for imp, lns in imptype.items():
+                for imp, lns in list(imptype.items()):
                     #imptype[imp][0] = renumber(imptype[imp][0], deltaLines, start)
                     lns[0] = renumber(lns[0], deltaLines, start)
 ##                    l = []
@@ -754,7 +754,7 @@ class Module:
     def searchDoc(self, body):
         try:
             m = is_doc.search(body)
-        except RuntimeError, err:
+        except RuntimeError as err:
             if str(err) != 'maximum recursion limit exceeded':
                 raise
             else:
@@ -883,7 +883,7 @@ class Module:
 
         def AddPathToHierarchy(path, result, fn):
             """We have an exhausted path. Simply put it into the result dictionary."""
-            if path[0] in result.keys():
+            if path[0] in list(result.keys()):
                 if len(path) > 1: fn(path[1:], result[path[0]], fn)
             else:
                 for part in path:
@@ -891,9 +891,9 @@ class Module:
                     result = result[part]
 
         rv = {}
-        if classes.has_key(name):
+        if name in classes:
             for cls in classes[name].super:
-                if type(cls) == StringType:  # strings are always termination
+                if isinstance(cls, str):  # strings are always termination
                     rv[cls] = {}
                     exhausted = path + [cls]
                     exhausted.reverse()
@@ -910,7 +910,7 @@ class Module:
     def createHierarchy(self):
         """ Build the inheritance hierarchy """
         hierc = {}
-        for cls in self.classes.keys():
+        for cls in list(self.classes.keys()):
             self.ExhaustBranch(cls, self.classes, [cls], hierc)
         return hierc
 
@@ -924,7 +924,7 @@ class Module:
 
                 info = is_info.search(data)
                 if info:
-                    for key in info.groupdict().keys():
+                    for key in list(info.groupdict().keys()):
                         info_block[key] = info.group(key).strip()
                 else: return 'no info'
 
@@ -941,23 +941,23 @@ class Module:
         if m:
             for n in m.group('imp').split(','):
                 n = n.strip()
-                if not self.imports.has_key(n):
+                if n not in self.imports:
                     self.imports[n] = [defLineNo] 
                     impLine = impStmt
         else:
             m = is_from.match(impStmt)
             if m:
                 mod = m.group('module')
-                if not self.from_imports.has_key(mod):
+                if mod not in self.from_imports:
                     self.from_imports[mod] = [defLineNo]
                     impLine = impStmt
                     isImportFrom = 1
             else:
-                raise ModuleParseError, _('Import statement invalid: %s')%impStmt
+                raise ModuleParseError(_('Import statement invalid: %s')%impStmt)
 
         if impLine:
             # Add it beneath import wx
-            if self.imports.has_key('wx'):
+            if 'wx' in self.imports:
                 insLine = self.imports['wx'][0]
                 # Component imports are in a block with the wx import
                 if not resourceImport:
@@ -966,7 +966,7 @@ class Module:
                 # Resource import should create their own block under comps
                 else:
                     allImports = []
-                    for md, lns in self.from_imports.items() + self.imports.items():
+                    for md, lns in list(self.from_imports.items()) + list(self.imports.items()):
                         for ln in lns:
                             allImports.append( (ln, md) )
                     allImports.sort()
@@ -1010,7 +1010,7 @@ class Module:
                         imports = self.from_imports
                     else:
                         imports = self.imports
-                    for name, lins in imports.items():
+                    for name, lins in list(imports.items()):
                         if imports[name][0] == defLineNo:
                             imports[name][0] = insLine
 
@@ -1018,13 +1018,13 @@ class Module:
                             
 
     def getClassForLineNo(self, line_no):
-        for cls in self.classes.values():
+        for cls in list(self.classes.values()):
             if cls.block.contains(line_no):
                 return cls
         return None
 
     def getFunctionForLineNo(self, line_no):
-        for func in self.functions.values():
+        for func in list(self.functions.values()):
             if func.contains(line_no):
                 return func
         return None
@@ -1082,6 +1082,6 @@ def moduleFile(module, path=[], inpackage=0):
 if __name__ == '__main__':
     lines = open('moduleparse.py', 'rb').readlines()
     m = Module('', lines[:])
-    print m.from_imports_names
+    print(m.from_imports_names)
     
     

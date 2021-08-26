@@ -9,14 +9,14 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Models.XMLSupport'
+print('importing Models.XMLSupport')
 
 import wx
 
 import Preferences, Utils, Plugins
 from Utils import _
 
-import EditorHelper
+from . import EditorHelper
 EditorHelper.imgXMLFileModel = EditorHelper.imgIdxRange()
 
 from Models.EditorModels import PersistentModel
@@ -49,7 +49,7 @@ class XMLSourceView(EditorStyledTextCtrl, XMLStyledTextCtrlMix):
         self.active = True
 
 
-import Controllers
+from . import Controllers
 class XMLFileController(Controllers.PersistentController):
     Model           = XMLFileModel
     DefaultViews    = [XMLSourceView]

@@ -9,14 +9,14 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Models.ConfigSupport'
+print('importing Models.ConfigSupport')
 
 import wx
 
 import Preferences, Utils, Plugins
 from Utils import _
 
-import EditorHelper
+from . import EditorHelper
 EditorHelper.imgConfigFileModel = EditorHelper.imgIdxRange()
 
 from Models.EditorModels import SourceModel
@@ -47,7 +47,7 @@ class ConfigView(EditorStyledTextCtrl, ConfigSTCMix):
         self.active = True
 
 
-import Controllers
+from . import Controllers
 class ConfigFileController(Controllers.SourceController):
     Model           = ConfigFileModel
     DefaultViews    = [ConfigView]

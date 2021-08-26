@@ -9,7 +9,7 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Views.AppViews'
+print('importing Views.AppViews')
 
 """ View classes for the AppModel """
 
@@ -24,9 +24,9 @@ except ImportError:
 import wx
 import wx.stc
 
-from EditorViews import ListCtrlView, ModuleDocView, wxwAppModuleTemplate, \
+from .EditorViews import ListCtrlView, ModuleDocView, wxwAppModuleTemplate, \
                         ToDoView, CloseableViewMix, FindResultsAdderMixin
-import SourceViews
+from . import SourceViews
 import Search, Utils
 from Utils import _
 
@@ -60,11 +60,11 @@ class AppFindResults(ListCtrlView, CloseableViewMix):
         ListCtrlView.refreshCtrl(self)
         i = 0
         self.listResultIdxs = []
-        for mod in self.results.keys():
+        for mod in list(self.results.keys()):
             for result in self.results[mod]:
                 self.listResultIdxs.append((mod, result))
-                i = self.addReportItems(i, (os.path.basename(mod), `result[0]`,
-                  `result[1]`, result[2].strip()) )
+                i = self.addReportItems(i, (os.path.basename(mod), repr(result[0]),
+                  repr(result[1]), result[2].strip()) )
 
         self.model.editor.statusBar.setHint(_('%d matches of "%s".')%(i, self.findPattern))
 
@@ -134,25 +134,25 @@ class AppView(ListCtrlView, FindResultsAdderMixin):
 #        print 'drag', dir(event.__class__.__bases__[0])
 
     def explore(self):
-        modSort = self.model.modules.keys()
+        modSort = list(self.model.modules.keys())
         modSort.sort()
         return modSort
 
     def refreshCtrl(self):
         ListCtrlView.refreshCtrl(self)
         i = 0
-        modSort = self.model.modules.keys()
+        modSort = list(self.model.modules.keys())
         modSort.sort()
         for mod in modSort:
             # XXX Show a broken icon as default
             imgIdx = -1
             modTpe = 'Unknown'
-            if self.model.moduleModels.has_key(mod):
+            if mod in self.model.moduleModels:
                 imgIdx = self.model.moduleModels[mod].imgIdx
                 modTpe = self.model.moduleModels[mod].modelIdentifier
             else:
                 self.model.idModel(mod)
-                if self.model.moduleModels.has_key(mod):
+                if mod in self.model.moduleModels:
                     imgIdx = self.model.moduleModels[mod].imgIdx
                     modTpe = self.model.moduleModels[mod].modelIdentifier
 
@@ -204,13 +204,13 @@ class AppView(ListCtrlView, FindResultsAdderMixin):
         finally:
             wx.EndBusyCursor()
 
-        if self.model.views.has_key('Imports'):
+        if 'Imports' in self.model.views:
             self.model.views['Imports'].focus()
         self.model.update()
         self.model.notify()
 
     def OnOpenAll(self, event):
-        modules = self.model.modules.keys()
+        modules = list(self.model.modules.keys())
         modules.sort()
         for mod in modules:
             try:
@@ -245,7 +245,7 @@ class AppModuleDocView(ModuleDocView):
 
     def genModuleListSect(self):
         modLst = []
-        modNames = self.model.modules.keys()
+        modNames = list(self.model.modules.keys())
         modNames.sort()
         for amod in modNames:
             desc = self.model.modules[amod][1].strip()
@@ -315,8 +315,8 @@ class AppCompareView(ListCtrlView, CloseableViewMix):
                    _('changed')))
 
         # Find changed modules and modules not occuring in other module
-        for module in self.model.modules.keys():
-            if otherApp.modules.has_key(module):
+        for module in list(self.model.modules.keys()):
+            if module in otherApp.modules:
                 otherFile = otherApp.assertLocalFile(otherApp.moduleFilename(module))
                 filename = self.model.assertLocalFile(self.model.moduleFilename(module))
                 try:
@@ -328,8 +328,8 @@ class AppCompareView(ListCtrlView, CloseableViewMix):
                 i = self.addReportItems(i, (module, '', _('deleted')) )
 
         # Find modules only occuring in other module
-        for module in otherApp.modules.keys():
-            if not self.model.modules.has_key(module):
+        for module in list(otherApp.modules.keys()):
+            if module not in self.model.modules:
                 #otherFile = otherApp.moduleFilename(module)
                 i = self.addReportItems(i, (module, '', _('added')) )
 
@@ -381,13 +381,13 @@ class AppToDoView(ListCtrlView):
             #module = self.modules[moduleName]
             #filename = self.normaliseModuleRelativeToApp(module[2])
             if module[:7] != 'file://':
-                print _('%s skipped, only local files supported for Imports View')
+                print(_('%s skipped, only local files supported for Imports View'))
                 continue
             else:
                 fn = module[7:]
             try: f = open(fn)
             except IOError:
-                print _("couldn't load %s") % module
+                print(_("couldn't load %s") % module)
                 continue
             else:
                 data = f.read()
@@ -416,7 +416,7 @@ class AppToDoView(ListCtrlView):
         if self.selected >= 0:
             name, numTodos, path = self.todos[self.selected]
             mod, ctrlr = self.model.editor.openOrGotoModule(path)
-            if mod.views.has_key('Todo'):
+            if 'Todo' in mod.views:
                 view = mod.views['Todo']
             else:
                 view  = mod.editor.addNewView(ToDoView.viewName, ToDoView)
