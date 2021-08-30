@@ -1,5 +1,5 @@
 import time
-from cStringIO import StringIO
+from io import StringIO
 
 import wx
 
@@ -127,14 +127,14 @@ def _test():
     f.Show()
 
     def output(v):
-        print 'OUTPUT:', v
+        print('OUTPUT:', v)
     def errors(v):
-        print 'ERRORS:', v
+        print('ERRORS:', v)
     def fin():
         p = locals().get('p')
         if p: p.Close()
         f.Close()
-        print 'FINISHED'
+        print('FINISHED')
 
 
     def spin(p):
@@ -146,7 +146,7 @@ def _test():
         input = []
         p = wxPopen3('''c:\\python23\\python.exe -c "print '*'*5000"''',
                  input, output, errors, fin, f)
-        print p.pid
+        print(p.pid)
 
     app.MainLoop()
 

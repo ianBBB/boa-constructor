@@ -44,7 +44,12 @@ def yesNoDialog(parent, title, question):
 def AddToolButtonBmpObject(frame, toolbar, thebitmap, hint, triggermeth,
       theToggleBitmap=wx.NullBitmap):
     nId = wx.NewIdRef(count=1)
-    toolbar.AddTool(nId, thebitmap, theToggleBitmap, shortHelpString = hint)
+
+    if 'wx'in str(type(toolbar)):
+        toolbar.AddTool(nId, '', thebitmap, hint, wx.ITEM_NORMAL)
+    else:
+        toolbar.AddTool(nId, thebitmap, theToggleBitmap, hint, False)
+
     frame.Bind(wx.EVT_TOOL, triggermeth, id=nId)
     return nId
 
@@ -127,7 +132,8 @@ def duplicateMenu(source):
         if menu.IsSeparator():
             dest.AppendSeparator()
         else:
-            dest.Append(menu.GetId(), menu.GetText(), menu.GetHelp(), menu.IsCheckable())
+            # dest.Append(menu.GetId(), menu.GetText(), menu.GetHelp(), menu.IsCheckable())
+            dest.Append(menu)
             mi = dest.FindItemById(menu.GetId())
             if menu.IsCheckable() and menu.IsChecked():
                 mi.Check(True)
@@ -288,7 +294,7 @@ def showTip(frame, forceShow=0):
             tipsFile = tipsDir+'/tips.txt'
             if not os.path.exists(tipsFile):
                 tipsFile = toPyPath('Docs/tips.txt')
-        
+
         tp = wx.CreateFileTipProvider(tipsFile, index)
         showTip = wx.ShowTip(frame, tp, showTip)
         index = tp.GetCurrentTip()
@@ -849,12 +855,12 @@ def getIndentBlock():
 def getIndentedStrForLen(n):
     if Preferences.STCUseTabs:
         d, m = divmod(n, Preferences.STCTabWidth)
-        if m: 
+        if m:
             d += 1
         return '\t'*d
     else:
         return n*' '
-    
+
 #-------------------------------------------------------------------------------
 
 def canReadStream(stream):
@@ -882,7 +888,7 @@ def appendMenuItem(menu, wId, label, code=(), bmp='', help=''):
         if wx.Platform == '__WXGTK__' and wx.VERSION >= (2,3,3) or \
               wx.Platform == '__WXMSW__':
             menuItem.SetBitmap(Preferences.IS.load(bmp))
-    menu.AppendItem(menuItem)
+    menu.Append(menuItem)
 
 def getNotebookPage(notebook, name):
     for i in range(notebook.GetPageCount()):
@@ -904,18 +910,18 @@ def resetMinSize(parent, ignoreCtrls=(), ignoreClasses=()):
         size = wx.Size(textSize[0]+2,-1)
     else:
         size = wx.DefaultSize
-          
-    parent.SetMinSize(size)    
+
+    parent.SetMinSize(size)
     parent.SetSize(wx.Size(1, 1))
-    
+
     for child in parent.GetChildren():
         if child not in ignoreCtrls and not isinstance(child, ignoreClasses):
-            resetMinSize(child, ignoreCtrls, ignoreClasses) 
+            resetMinSize(child, ignoreCtrls, ignoreClasses)
 
 def wxPyExceptHook(type, value, trace):
     if wx and sys and traceback:
         exc = traceback.format_exception(type, value, trace)
-        for e in exc: 
+        for e in exc:
             wx.LogError(e)
         sys.__excepthook__(type, value, trace)
 
@@ -1007,7 +1013,7 @@ def stringToControl(s, safe=False):
         return s
 
 def safeDecode(s):
-    return s.decode(sys.getdefaultencoding(), 'replace')    
+    return s.decode(sys.getdefaultencoding(), 'replace')
 
 #-------------------------------------------------------------------------------
 

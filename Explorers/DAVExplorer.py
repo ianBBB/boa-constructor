@@ -9,7 +9,7 @@
 # Copyright:   (c) 2001 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Explorers.DAVExplorer'
+print('importing Explorers.DAVExplorer')
 
 import os, sys
 from xml.parsers import expat
@@ -17,7 +17,7 @@ from xml.parsers import expat
 import wx
 
 #sys.path.append('..')
-import ExplorerNodes
+from Explorers import ExplorerNodes
 from Models import Controllers, EditorHelper
 from ExternalLib.WebDAV import client
 import RTTI, Utils
@@ -40,10 +40,10 @@ class XMLListBuilder:
         try:
             xmlStart = data.find('<')
             if xmlStart == -1:
-                raise Exception, _('Invalid XML response: %s') %str(data)
+                raise Exception(_('Invalid XML response: %s') %str(data))
             xmlEnd = data.rfind('>')
             if xmlEnd == -1:
-                raise Exception, _('Invalid XML response: %s') %str(data)
+                raise Exception(_('Invalid XML response: %s') %str(data))
             self.status = parser.Parse(data[xmlStart:xmlEnd+1], 1)
         except:
             wx.MessageBox(Utils.html2txt(data), _('Error'), wx.ICON_ERROR)
@@ -231,7 +231,7 @@ class DAVItemNode(ExplorerNodes.ExplorerNode):
     def load(self, mode='rb'):
         try:
             return self.checkResp(self.resource.document_src.get()).body
-        except Exception, error:
+        except Exception as error:
             raise ExplorerNodes.TransportLoadError(error, self.resourcepath)
 
     def save(self, filename, data, mode='wb', overwriteNewer=False):
@@ -241,7 +241,7 @@ class DAVItemNode(ExplorerNodes.ExplorerNode):
             self.initResource()
         try:
             self.checkResp(self.resource.put(data))
-        except Exception, error:
+        except Exception as error:
             raise ExplorerNodes.TransportSaveError(error, self.resourcepath)
 
     def newFolder(self, name):
@@ -280,7 +280,7 @@ class DAVExpClipboard(ExplorerNodes.ExplorerClipboard):
 #---Companion classes-----------------------------------------------------------
 
 from Companions.BaseCompanions import HelperDTC
-from ExplorerNodes import ExplorerCompanion
+from Explorers.ExplorerNodes import ExplorerCompanion
 from PropEdit import PropertyEditors
 import RTTI
 import types
@@ -289,8 +289,8 @@ class DAVContConfPropEdit(PropertyEditors.ContainerConfPropEdit):
     def getSubCompanion(self):
         return DAVSubCompanion
 
-StringTypes = [types.StringType]
-try: StringTypes.append(types.UnicodeType)
+StringTypes = [bytes]
+try: StringTypes.append(str)
 except: pass
 
 class DAVPropReaderMixin:
@@ -329,7 +329,7 @@ class DAVCompanion(DAVPropReaderMixin, ExplorerCompanion):
         return items
 
     def SetProp(self, name, value):
-        raise Exception, _('Property editing not supported yet')
+        raise Exception(_('Property editing not supported yet'))
 
 # XXX Helper is already slightly contaminated by the Designer
 class DAVSubCompanion(DAVPropReaderMixin, HelperDTC):
@@ -340,7 +340,7 @@ class DAVSubCompanion(DAVPropReaderMixin, HelperDTC):
 
     def getPropList(self):
         propLst = []
-        if type(self.obj) is types.ListType:
+        if isinstance(self.obj, list):
             props = self.obj
         else:
             props = [self.obj]
@@ -356,7 +356,7 @@ class DAVSubCompanion(DAVPropReaderMixin, HelperDTC):
             if prop[0] == name: return prop[1]
 
     def SetProp(self, name, value):
-        raise Exception, _('Property editing not supported yet')
+        raise Exception(_('Property editing not supported yet'))
 
 #-------------------------------------------------------------------------------
 ExplorerNodes.register(DAVItemNode, clipboard=DAVExpClipboard,

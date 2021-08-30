@@ -1,7 +1,7 @@
 #Boa:FramePanel:ImageEditorPanel
 
 import os, math, tempfile
-from cStringIO import StringIO
+from io import StringIO
 
 import wx
 from wx.lib.anchors import LayoutAnchors
@@ -43,7 +43,7 @@ class ImageEditorPanel(wx.Panel):
         self.modeChoice = wx.Choice(choices=self.drawingModes,
               id=wxID_IMAGEEDITORPANELMODECHOICE, name='modeChoice',
               parent=self, pos=wx.Point(8, 7), size=wx.Size(64, 21), style=0)
-        self.modeChoice.SetToolTipString(_('Current drawing mode'))
+        self.modeChoice.SetToolTip(_('Current drawing mode'))
         self.modeChoice.Bind(wx.EVT_CHOICE, self.OnModeChoiceChoice,
               id=wxID_IMAGEEDITORPANELMODECHOICE)
 
@@ -51,7 +51,7 @@ class ImageEditorPanel(wx.Panel):
               name='FGColBtn', parent=self, pos=wx.Point(78, 5),
               size=wx.Size(24, 24), style=0)
         self.FGColBtn.SetBackgroundColour(wx.Colour(0, 0, 0))
-        self.FGColBtn.SetToolTipString(_('Pen colour'))
+        self.FGColBtn.SetToolTip(_('Pen colour'))
         self.FGColBtn.Bind(wx.EVT_BUTTON, self.OnFgcolbtnButton,
               id=wxID_IMAGEEDITORPANELFGCOLBTN)
 
@@ -59,7 +59,7 @@ class ImageEditorPanel(wx.Panel):
               name='spinButton3', parent=self, pos=wx.Point(106, 5),
               size=wx.Size(16, 24), style=wx.SP_VERTICAL)
         self.spinButton3.SetRange(0, 32)
-        self.spinButton3.SetToolTipString(_('Pen width'))
+        self.spinButton3.SetToolTip(_('Pen width'))
         self.spinButton3.Bind(wx.EVT_COMMAND_SCROLL,
               self.OnSpinbutton3CommandScroll,
               id=wxID_IMAGEEDITORPANELSPINBUTTON3)
@@ -68,7 +68,7 @@ class ImageEditorPanel(wx.Panel):
               name='spinButton2', parent=self, pos=wx.Point(122, 5),
               size=wx.Size(16, 24), style=wx.SP_VERTICAL)
         self.spinButton2.SetRange(0, 11)
-        self.spinButton2.SetToolTipString(_('Pen style'))
+        self.spinButton2.SetToolTip(_('Pen style'))
         self.spinButton2.Bind(wx.EVT_COMMAND_SCROLL,
               self.OnSpinbutton2CommandScroll,
               id=wxID_IMAGEEDITORPANELSPINBUTTON2)
@@ -76,14 +76,14 @@ class ImageEditorPanel(wx.Panel):
         self.penBrushWindow = wx.Window(id=wxID_IMAGEEDITORPANELPENBRUSHWINDOW,
               name='penBrushWindow', parent=self, pos=wx.Point(137, 5),
               size=wx.Size(32, 24), style=wx.SUNKEN_BORDER)
-        self.penBrushWindow.SetToolTipString(_('Pen / Brush preview'))
+        self.penBrushWindow.SetToolTip(_('Pen / Brush preview'))
         self.penBrushWindow.Bind(wx.EVT_PAINT, self.OnPenBrushWindowPaint)
 
         self.spinButton1 = wx.SpinButton(id=wxID_IMAGEEDITORPANELSPINBUTTON1,
               name='spinButton1', parent=self, pos=wx.Point(168, 5),
               size=wx.Size(16, 24), style=wx.SP_VERTICAL)
         self.spinButton1.SetRange(0, 7)
-        self.spinButton1.SetToolTipString(_('Brush style'))
+        self.spinButton1.SetToolTip(_('Brush style'))
         self.spinButton1.Bind(wx.EVT_COMMAND_SCROLL,
               self.OnSpinbutton1CommandScroll,
               id=wxID_IMAGEEDITORPANELSPINBUTTON1)
@@ -92,7 +92,7 @@ class ImageEditorPanel(wx.Panel):
               label='', name='brushColBtn', parent=self, pos=wx.Point(189, 5),
               size=wx.Size(24, 24), style=0)
         self.brushColBtn.SetBackgroundColour(wx.Colour(255, 255, 255))
-        self.brushColBtn.SetToolTipString(_('Brush colour'))
+        self.brushColBtn.SetToolTip(_('Brush colour'))
         self.brushColBtn.Bind(wx.EVT_BUTTON, self.OnBrushcolbtnButton,
               id=wxID_IMAGEEDITORPANELBRUSHCOLBTN)
 
@@ -100,14 +100,14 @@ class ImageEditorPanel(wx.Panel):
               name='BGColBtn', parent=self, pos=wx.Point(213, 5),
               size=wx.Size(24, 24), style=0)
         self.BGColBtn.SetBackgroundColour(wx.Colour(192, 192, 192))
-        self.BGColBtn.SetToolTipString(_('Background brush colour'))
+        self.BGColBtn.SetToolTip(_('Background brush colour'))
         self.BGColBtn.Bind(wx.EVT_BUTTON, self.OnBgcolbtnButton,
               id=wxID_IMAGEEDITORPANELBGCOLBTN)
 
         self.slider1 = wx.Slider(id=wxID_IMAGEEDITORPANELSLIDER1, maxValue=25,
               minValue=1, name='slider1', parent=self, point=wx.Point(244, 5),
               size=wx.Size(108, 24), style=wx.SL_HORIZONTAL, value=16)
-        self.slider1.SetToolTipString(_('Zoom factor'))
+        self.slider1.SetToolTip(_('Zoom factor'))
         self.slider1.Bind(wx.EVT_SCROLL, self.OnSlider1ScrollThumbtrack)
 
         self.editWindow = wx.ScrolledWindow(id=wxID_IMAGEEDITORPANELEDITWINDOW,
@@ -298,7 +298,7 @@ class ImageEditorPanel(wx.Panel):
 
     def setMemDCBmp(self, bmp):
         if not bmp or not bmp.Ok():
-            raise Exception, _('Invalid bitmap')
+            raise Exception(_('Invalid bitmap'))
         self.mDC.SelectObject(wx.NullBitmap)
         self.bmp = bmp
         self.mDC.SelectObject(self.bmp)
@@ -1025,7 +1025,7 @@ class BitmapEditorFileController(Controllers.PersistentController):
 
     def OnGotoEditView(self, event):
         model = self.getModel()
-        if not model.views.has_key('Edit'):
+        if 'Edit' not in model.views:
             modPge = self.editor.getActiveModulePage()
             for View, wid in modPge.adtViews:
                 if View == ImageEditorView:
@@ -1069,7 +1069,7 @@ class PyResourceImagesViewPlugin:
             if name:
                 viewName += ':'+name
 
-            if not self.model.views.has_key(viewName):
+            if viewName not in self.model.views:
                 modPge = self.model.editor.getActiveModulePage()
                 view = modPge.addView(CloseableImageEditorView, viewName)
                 view.tabName = view.viewName = viewName

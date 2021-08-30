@@ -118,18 +118,18 @@ class ArtProviderBrowser(wx.Dialog):
         self.clientId = wx.Choice(choices=self.clientIdChoices,
               id=wxID_ARTPROVIDERBROWSERCLIENTID, name='clientId', parent=self,
               pos=wx.Point(15, 360), size=wx.Size(177, 21), style=0)
-        self.clientId.SetToolTipString(_('Client id'))
+        self.clientId.SetToolTip(_('Client id'))
 
         self.artId = wx.TextCtrl(id=wxID_ARTPROVIDERBROWSERARTID, name='artId',
               parent=self, pos=wx.Point(15, 331), size=wx.Size(288, 21),
               style=0, value='')
-        self.artId.SetToolTipString(_('Art id for bitmap'))
+        self.artId.SetToolTip(_('Art id for bitmap'))
 
         self.imgSize = wx.ComboBox(choices=['wx.DefaultSize', '(16, 16)',
               '(32, 32)'], id=wxID_ARTPROVIDERBROWSERIMGSIZE, name='imgSize',
               parent=self, pos=wx.Point(200, 360), size=wx.Size(103, 21),
               style=0, value='wx.DefaultSize')
-        self.imgSize.SetToolTipString(_('Image size'))
+        self.imgSize.SetToolTip(_('Image size'))
 
         self._init_sizers()
 

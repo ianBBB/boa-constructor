@@ -22,4 +22,4 @@ def scramble(str):
 if __name__ == '__main__':
     import sys
     for passwd in sys.argv[1:]:
-        print(scramble(passwd))
+        print((scramble(passwd)))

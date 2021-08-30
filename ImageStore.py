@@ -52,7 +52,7 @@ class ImageStore:
             return wx.Icon(filename, wx.BITMAP_TYPE_ICO)
         elif ext == 'data':
             stream = io.StringIO(self.dataReg[filename])
-            bitmap = wx.BitmapFromImage(wx.ImageFromStream(stream))
+            bitmap = wx.Bitmap(wx.Image(stream))
             if filename[-3:].lower() == 'ico':
                 icon = wx.EmptyIcon()
                 icon.CopyFromBitmap(bitmap)

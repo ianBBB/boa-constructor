@@ -148,13 +148,13 @@ class FileSysController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControl
         # Check default option
         self.fileFilterMenu.Check(wxID_FSFILTERBOAMODULES, True)
 
-        self.menu.AppendMenu(wxID_FSFILTER, _('Filter'), self.fileFilterMenu)
+        self.menu.Append(wxID_FSFILTER, _('Filter'), self.fileFilterMenu)
 
         # XXX this should not be done here
         if 'cvs' in controllers:
-            self.menu.AppendMenu(wxID_FSCVS, 'CVS', controllers['cvs'].fileCVSMenu)
+            self.menu.Append(wxID_FSCVS, 'CVS', controllers['cvs'].fileCVSMenu)
         if 'svn' in controllers:
-            self.menu.AppendMenu(wxID_FSSVN, 'SVN', controllers['svn'].fileSVNMenu)
+            self.menu.Append(wxID_FSSVN, 'SVN', controllers['svn'].fileSVNMenu)
 
         self.toolbarMenus = [self.fileMenuDef]
 
@@ -166,7 +166,7 @@ class FileSysController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControl
         self.menu.Destroy()
 
     def OnTest(self, event):
-        print(self.list.node.clipboard.globClip.currentClipboard)
+        print((self.list.node.clipboard.globClip.currentClipboard))
 
     def OnFilterFSItems(self, event):
         evtid = event.GetId()
@@ -400,8 +400,11 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
             # We need to convert filesystem names
             # from local encoding to unicode
             if isinstance(self.resourcepath, str):
-                files = os.listdir(self.resourcepath.decode(
-                      sys.getfilesystemencoding()))
+                # files = os.listdir(self.resourcepath.decode(
+                #       sys.getfilesystemencoding()))
+                from pathlib import Path
+                files = os.listdir(
+                    Path(self.resourcepath))
             else: # unicode or other
                 files = os.listdir(self.resourcepath)
             #---------------------------------------- 

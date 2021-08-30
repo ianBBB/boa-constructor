@@ -114,7 +114,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
               True, True, False))
 
     def __init__(self, parent, message=_('Choose a file'), defaultDir='.',
-          defaultFile='', wildcard='', style=wx.OPEN, pos=wx.DefaultPosition):
+          defaultFile='', wildcard='', style=wx.FD_OPEN, pos=wx.DefaultPosition):
         self.htmlBackCol = wx.Colour(192, 192, 192)
         self.htmlBackCol = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)
 
@@ -358,7 +358,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
         if node and node.isFolderish():
             try:
                 self.lcFiles.refreshItems(self.modImages, node)
-            except ExplorerNodes.TransportError, v:
+            except ExplorerNodes.TransportError as v:
                 wx.MessageBox(str(v), _('Transport Error'),
                              wx.OK | wx.ICON_EXCLAMATION | wx.CENTRE)
                 return
@@ -491,14 +491,14 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             if catFile:
                 res = os.path.dirname(res)
             return Explorer.getTransport(prot, cat, res, self.transports)
-        except Explorer.TransportCategoryError, err:
+        except Explorer.TransportCategoryError as err:
             prot = string.split(uri, ':')[0]
             # bare protocol entered, route to right toplevel node
             if err.args[0] == _('Category not found') and err.args[1]==catFile:
                 if prot == 'root':
                     self.open(self.transports)
                     return self.transports
-                elif self.transportsByProtocol.has_key(prot):
+                elif prot in self.transportsByProtocol:
                     node = self.transportsByProtocol[prot]
                     self.open(node)
                     return node
@@ -506,7 +506,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
                     raise
             else:
                 raise
-        except Explorer.TransportError, err:
+        except Explorer.TransportError as err:
             #FileOpenDlg
             raise
 
@@ -594,7 +594,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
         self.style = style
     def SetWildcard(self, wildcard):
         self.wildcard = wildcard
-        if wildcard in self.filterMap.keys():
+        if wildcard in list(self.filterMap.keys()):
             self.chTypes.SetStringSelection(self.filterMap[wildcard][0])
             self.OnChtypesChoice()
 
@@ -632,7 +632,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             event.Skip()
 
     def openProtRoot(self, protocol):
-        if self.transportsByProtocol.has_key(protocol):
+        if protocol in self.transportsByProtocol:
             self.open(self.transportsByProtocol[protocol])
         else:
             self.open(self.transports)
@@ -682,7 +682,7 @@ class FileDlgFolderList(Explorer.BaseExplorerList):
                     transports.entries.append(catnode)
                     transportsByProtocol[protocol] = catnode
 
-        if ExplorerNodes.nodeRegByProt.has_key('sys.path'):
+        if 'sys.path' in ExplorerNodes.nodeRegByProt:
             syspathnode = ExplorerNodes.nodeRegByProt['sys.path'](
                   None, transports, None)
             transports.entries.append(syspathnode)

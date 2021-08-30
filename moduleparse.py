@@ -283,7 +283,7 @@ class Module:
                 elif not terminator:
                     contline = contline + line
                     return lineno, contline
-                elif line[-1] in string.digits+string.letters+'_':
+                elif line[-1] in string.digits+string.ascii_letters+'_':
                     contline = contline + line
                     lineno = lineno + 1
                     continue
@@ -352,7 +352,7 @@ class Module:
             elif rem[0] == '{': return 'dict'
             elif rem[0] == '[': return 'list'
             elif rem[0] == '(': return 'tuple'
-            elif rem[0] in string.letters+'_': return 'ref'
+            elif rem[0] in string.ascii_letters+'_': return 'ref'
             #else: print 'Unhandled objtype', rem
         return ''
 

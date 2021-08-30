@@ -9,7 +9,7 @@
 # Copyright:   (c) 2001 - 2005
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Explorers.PrefsExplorer'
+print('importing Explorers.PrefsExplorer')
 import os, sys, glob, pprint, imp
 import types
 
@@ -18,7 +18,7 @@ import wx
 import Preferences, Utils, Plugins
 from Utils import _
 
-import ExplorerNodes
+from . import ExplorerNodes
 from Models import EditorHelper
 from Views import STCStyleEditor
 import methodparse, relpath
@@ -146,7 +146,7 @@ class PreferenceCollectionNode(ExplorerNodes.ExplorerNode):
         return False
 
     def load(self):
-        raise Exception, _('Not implemented')
+        raise Exception(_('Not implemented'))
 
     def save(self, filename, data):
         pass
@@ -164,8 +164,8 @@ class STCStyleEditPrefsCollNode(PreferenceCollectionNode):
     def open(self, editor):
         # build list of all open STC's in the Editor
         openSTCViews = []
-        for modPge in editor.modules.values():
-            for view in modPge.model.views.values():
+        for modPge in list(editor.modules.values()):
+            for view in list(modPge.model.views.values()):
                 if isinstance(view, self.STCclass):
                     openSTCViews.append(view)
 
@@ -254,7 +254,7 @@ class SourceBasedPrefColNode(PreferenceCollectionNode):
 
         breaks = {}
         if self.showBreakLines: 
-            for k, v in module.break_lines.items():
+            for k, v in list(module.break_lines.items()):
                 breaks[k] = _(v)
 
         return (module.global_order, values, module.globals, comments, options,
@@ -366,7 +366,7 @@ class KeyDefConfPropEdit(PropertyEditors.ConfPropEdit):
     def getDisplayValue(self):
         try:
             return eval(self.value, {'wx': wx})[0][2]
-        except Exception, err:
+        except Exception as err:
             return str(err)
 
 
@@ -414,7 +414,7 @@ class PreferenceCompanion(ExplorerNodes.ExplorerCompanion):
         srcVal = aProp[1]
         opts = aProp[4]
 
-        if prop in self._breaks.values():
+        if prop in list(self._breaks.values()):
             return None
 
         if opts:
@@ -428,7 +428,7 @@ class PreferenceCompanion(ExplorerNodes.ExplorerCompanion):
 
         try:
             val = eval(srcVal, vars(Preferences))
-        except Exception, error:
+        except Exception as error:
             return PropertyEditors.StrConfPropEdit
 
         if isinstance(val, wx.Colour):
@@ -445,11 +445,11 @@ class PreferenceCompanion(ExplorerNodes.ExplorerCompanion):
         order, vals, props, comments, options, self._breaks = self.prefNode.load()
 
         # remove empty break lines (-----------------------)
-        for lineNo in self._breaks.keys():
+        for lineNo in list(self._breaks.keys()):
             if not self._breaks[lineNo]:
                 del self._breaks[lineNo]
 
-        breakLinenos = self._breaks.keys()
+        breakLinenos = list(self._breaks.keys())
         breakLinenos.sort()
         if len(breakLinenos):
             breaksIdx = 0
@@ -481,7 +481,7 @@ class PreferenceCompanion(ExplorerNodes.ExplorerCompanion):
         # XXX validate etc.
         try:
             eval(value, vars(Preferences))
-        except Exception, error:
+        except Exception as error:
             wx.LogError('Error: '+str(error))
             return False
         else:
@@ -490,7 +490,7 @@ class PreferenceCompanion(ExplorerNodes.ExplorerCompanion):
             return True
 
     def persistedPropVal(self, name, setterName):
-        if name in self._breaks.values():
+        if name in list(self._breaks.values()):
             return 'PROP_CATEGORY'
         else:
             return None
@@ -634,7 +634,7 @@ class PluginFilesGroupNode(PreferenceGroupNode):
                 imgIdx = EditorHelper.imgSystemObjDisabled
             else:
                 fn = filename.lower()
-                if Preferences.failedPlugins.has_key(fn):
+                if fn in Preferences.failedPlugins:
                     kind, msg = Preferences.failedPlugins[fn]
                     if kind == 'Skipped':
                         status = _('Skipped plug-in: %s')% msg
@@ -939,14 +939,14 @@ class TransportPluginsLoadOrderGroupNode(PreferenceGroupNode):
         conf = Utils.createAndReadConfig('Explorer')
 
         modules = eval(conf.get('explorer', 'installedtransports'), {})
-        assert isinstance(modules, types.ListType)
+        assert isinstance(modules, list)
 
         res = []
         for mod in modules:
             if mod in ExplorerNodes.installedModules:
                 status = _('Installed')
                 imgIdx = EditorHelper.imgSystemObjOrdered
-            elif mod in ExplorerNodes.failedModules.keys():
+            elif mod in list(ExplorerNodes.failedModules.keys()):
                 status = _('Broken: %s')%ExplorerNodes.failedModules[mod]
                 imgIdx = EditorHelper.imgSystemObjBroken
             else:
@@ -964,7 +964,7 @@ class TransportPluginsLoadOrderGroupNode(PreferenceGroupNode):
     def checkValidModulePath(self, name):
         try:
             Utils.find_dotted_module(name)
-        except ImportError, err:
+        except ImportError as err:
             #print str(err)
             return False
         else:
@@ -987,7 +987,7 @@ class TransportPluginsTreeDisplayOrderGroupNode(PreferenceGroupNode):
 
         res = []
         for prot in treeOrder:
-            if not ExplorerNodes.nodeRegByProt.has_key(prot):
+            if prot not in ExplorerNodes.nodeRegByProt:
                 status = _('Protocol not installed')
                 imgIdx = EditorHelper.imgSystemObjPending
             else:
@@ -1042,7 +1042,7 @@ class HelpConfigBooksPGN(PreferenceGroupNode):
         for bookPath in bookPaths:
             try:
                 res.append(HelpConfigBookNode(bookPath))
-            except IOError, err:
+            except IOError as err:
                 # too disruptive to display an error
                 pass
         return res

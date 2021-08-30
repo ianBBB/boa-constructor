@@ -9,7 +9,7 @@
 # Copyright:   (c) 2001 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Explorers.FTPExplorer'
+print('importing Explorers.FTPExplorer')
 
 import os
 
@@ -18,7 +18,7 @@ import wx
 import Preferences, Utils
 from Utils import _
 
-import ExplorerNodes
+from . import ExplorerNodes
 from Models import Controllers, EditorHelper
 import ftplib
 
@@ -144,7 +144,7 @@ class FTPItemNode(ExplorerNodes.ExplorerNode):
     def load(self, mode='rb'):
         try:
             return self.ftpConn.load(self.ftpObj)
-        except Exception, error:
+        except Exception as error:
             raise ExplorerNodes.TransportLoadError(error, self.ftpObj.whole_name())
 
     def save(self, filename, data, mode='wb', overwriteNewer=False):
@@ -153,7 +153,7 @@ class FTPItemNode(ExplorerNodes.ExplorerNode):
             self.ftpObj.name = os.path.basename(filename)
         try:
             self.ftpConn.save(self.ftpObj, data)
-        except Exception, error:
+        except Exception as error:
             raise ExplorerNodes.TransportSaveError(error, self.ftpObj.whole_name())
 
     def getNodeFromPath(self, respath):
@@ -212,8 +212,8 @@ class FTPConnectionNode(FTPItemNode):
                 self.ftpConn.connect(props['username'], props['passwd'],
                                      props['host'], props['port'],
                                      props['passive'])
-            except Exception, message:
-                wx.MessageBox(`message.args`, 'Error on connect')
+            except Exception as message:
+                wx.MessageBox(repr(message.args), 'Error on connect')
                 raise
             else:
                 self.connected = True

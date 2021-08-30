@@ -1073,7 +1073,7 @@ class ExploreView(wx.TreeCtrl, EditorView):
             if idx.IsOk():
                 srcView.focus()
                 self.model.editor.addBrowseMarker(srcView.GetCurrentLine())
-                dat = self.GetPyData(idx)
+                dat = self.GetItemData(idx)
                 if isinstance(dat, type([])):
                     srcView.gotoLine(dat[0].start -1)
                 else:

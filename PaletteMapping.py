@@ -30,9 +30,6 @@ from Utils import _
 
 import PaletteStore
 
-# keep until 2.5 upgrade complete
-#from wxPython.wx import *
-
 import wx
 
 if Preferences.csWxPythonSupport:
@@ -59,7 +56,7 @@ if Preferences.csWxPythonSupport:
     from Companions.UtilCompanions import *
     from Companions.DialogCompanions import *
 
-# Zope requires spesific support
+# Zope requires specific support
 if Plugins.transportInstalled('ZopeLib.ZopeExplorer'):
     from ZopeLib.ZopeCompanions import *
 
@@ -115,7 +112,7 @@ if Preferences.pluginPaths:
         filename = pluginFilename.lower()
         try:
             #exec(open(pluginFilename,'r'))
-            exec(open(pluginFilename.py).read())
+            exec(open(pluginFilename).read())
             succeeded.append(filename)
         except Plugins.SkipPluginSilently as msg:
             fails[filename] = ('Skipped', msg)

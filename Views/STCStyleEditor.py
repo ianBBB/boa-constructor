@@ -97,7 +97,7 @@ platformSettings = {'__WXMSW__': ('msw', 8),
  wxID_STCSTYLEEDITDLGTAITALICCB, wxID_STCSTYLEEDITDLGTAITALICDEFCB, 
  wxID_STCSTYLEEDITDLGTASIZEDEFCB, wxID_STCSTYLEEDITDLGTAUNDERLINEDCB, 
  wxID_STCSTYLEEDITDLGTAUNDERLINEDDEFCB, 
-] = [wx.NewId() for _init_ctrls in range(47)]
+] = [wx.NewIdRef() for _init_ctrls in range(47)]
 
 class STCStyleEditDlg(wx.Dialog):
     """ Style editor for the wxStyledTextCtrl """
@@ -137,14 +137,14 @@ class STCStyleEditDlg(wx.Dialog):
         self.addCommonItemBtn = wx.Button(id=wxID_STCSTYLEEDITDLGADDCOMMONITEMBTN,
               label=_('Add'), name='addCommonItemBtn', parent=self, pos=wx.Point(8,
               200), size=wx.Size(88, 17), style=0)
-        self.addCommonItemBtn.SetToolTipString(_('Add new Common definition'))
+        self.addCommonItemBtn.SetToolTip(_('Add new Common definition'))
         self.addCommonItemBtn.Bind(wx.EVT_BUTTON, self.OnAddsharebtnButton,
               id=wxID_STCSTYLEEDITDLGADDCOMMONITEMBTN)
 
         self.removeCommonItemBtn = wx.Button(id=wxID_STCSTYLEEDITDLGREMOVECOMMONITEMBTN,
               label=_('Remove'), name='removeCommonItemBtn', parent=self,
               pos=wx.Point(96, 200), size=wx.Size(88, 17), style=0)
-        self.removeCommonItemBtn.SetToolTipString(_('Remove the selected Common definition'))
+        self.removeCommonItemBtn.SetToolTip(_('Remove the selected Common definition'))
         self.removeCommonItemBtn.Bind(wx.EVT_BUTTON,
               self.OnRemovesharebtnButton,
               id=wxID_STCSTYLEEDITDLGREMOVECOMMONITEMBTN)
@@ -218,7 +218,7 @@ class STCStyleEditDlg(wx.Dialog):
               size=wx.Size(75, 23), style=0)
         self.okBtn.SetConstraints(LayoutAnchors(self.okBtn, False, False, True,
               True))
-        self.okBtn.SetToolTipString(_('Save changes to the config file'))
+        self.okBtn.SetToolTip(_('Save changes to the config file'))
         self.okBtn.Bind(wx.EVT_BUTTON, self.OnOkbtnButton,
               id=wxID_STCSTYLEEDITDLGOKBTN)
 
@@ -227,7 +227,7 @@ class STCStyleEditDlg(wx.Dialog):
               423), size=wx.Size(75, 23), style=0)
         self.cancelBtn.SetConstraints(LayoutAnchors(self.cancelBtn, False,
               False, True, True))
-        self.cancelBtn.SetToolTipString(_('Close dialog without saving changes'))
+        self.cancelBtn.SetToolTip(_('Close dialog without saving changes'))
         self.cancelBtn.Bind(wx.EVT_BUTTON, self.OnCancelbtnButton,
               id=wxID_STCSTYLEEDITDLGCANCELBTN)
 
@@ -238,7 +238,7 @@ class STCStyleEditDlg(wx.Dialog):
         self.fixedWidthChk = wx.CheckBox(id=wxID_STCSTYLEEDITDLGFIXEDWIDTHCHK,
               label='', name='fixedWidthChk', parent=self.panel1,
               pos=wx.Point(0, 23), size=wx.Size(16, 19), style=0)
-        self.fixedWidthChk.SetToolTipString(_('Check this for Fixed Width fonts'))
+        self.fixedWidthChk.SetToolTip(_('Check this for Fixed Width fonts'))
         self.fixedWidthChk.Bind(wx.EVT_CHECKBOX, self.OnFixedwidthchkCheckbox,
               id=wxID_STCSTYLEEDITDLGFIXEDWIDTHCHK)
 
@@ -453,7 +453,7 @@ class STCStyleEditDlg(wx.Dialog):
         for ctrl, chb, prop, wid in self.allCtrls:
             self.chbIdMap[wid] = ctrl, chb, prop, wid
             chb.Bind(wx.EVT_CHECKBOX, self.OnDefaultCheckBox, id=wid)
-            chb.SetToolTipString(_('Toggle defaults'))
+            chb.SetToolTip(_('Toggle defaults'))
 
         self.Center(wx.BOTH)
 
@@ -624,9 +624,9 @@ class STCStyleEditDlg(wx.Dialog):
         combo.Bind(wx.EVT_COMBOBOX, comboEvtMeth, id=combo.GetId())
         btn.Bind(wx.EVT_BUTTON, btnEvtMeth, id=btn.GetId())
         combo.Bind(wx.EVT_RIGHT_DCLICK, rdclickEvtMeth)
-        combo.SetToolTipString(_('Select from list or click "ok" button on the right to change a manual entry, right double-click \n'\
+        combo.SetToolTip(_('Select from list or click "ok" button on the right to change a manual entry, right double-click \n'\
             'the drop down button to select Common definition in the Style Editor (if applicable)'))
-        btn.SetToolTipString(_('Accept value'))
+        btn.SetToolTip(_('Accept value'))
 
     def populateCombosWithCommonDefs(self, fixedWidthOnly=None):
         self._blockUpdate = True
@@ -1055,7 +1055,7 @@ class STCStyleEditDlg(wx.Dialog):
 [wxID_COMMONDEFDLG, wxID_COMMONDEFDLGCANCELBTN, wxID_COMMONDEFDLGCOMDEFNAMETC, 
  wxID_COMMONDEFDLGOKBTN, wxID_COMMONDEFDLGPROPTYPERBX, 
  wxID_COMMONDEFDLGSTATICBOX1, 
-] = [wx.NewId() for _init_ctrls in range(6)]
+] = [wx.NewIdRef() for _init_ctrls in range(6)]
 
 class CommonDefDlg(wx.Dialog):
     def _init_ctrls(self, prnt):
@@ -1135,17 +1135,21 @@ def setEdgeColour(stc, style):
 
 def strToCol(strCol):
     assert len(strCol) == 7 and strCol[0] == '#', _('Not a valid colour string: %s')%strCol
-    return wx.Colour(string.atoi('0x'+strCol[1:3], 16),
-                    string.atoi('0x'+strCol[3:5], 16),
-                    string.atoi('0x'+strCol[5:7], 16))
+    return wx.Colour(int('0x'+strCol[1:3], 16),
+                    int('0x'+strCol[3:5], 16),
+                    int('0x'+strCol[5:7], 16))
 def colToStr(col):
-    return '#%s%s%s' % (string.zfill(string.upper(hex(col.Red())[2:]), 2),
-                        string.zfill(string.upper(hex(col.Green())[2:]), 2),
-                        string.zfill(string.upper(hex(col.Blue())[2:]), 2))
+    # return '#%s%s%s' % (string.zfill(string.upper(hex(col.Red())[2:]), 2),
+    #                     string.zfill(string.upper(hex(col.Green())[2:]), 2),
+    #                     string.zfill(string.upper(hex(col.Blue())[2:]), 2))
+    return '#%s%s%s' % (str.upper(hex(col.Red())[2:]).zfill(2),
+                        str.upper(hex(col.Green())[2:]).zfill(2),
+                        str.upper(hex(col.Blue())[2:]).zfill(2))
 
 def writeProp(num, style, lang):
     if num >= 0:
-        return 'style.%s.%s='%(lang, string.zfill(repr(num), 3)) + style
+        # return 'style.%s.%s='%(lang, string.zfill(repr(num), 3)) + style
+        return 'style.%s.%s=' % (lang, repr(num).zfill(3)) + style
     else:
         return 'setting.%s.%d='%(lang, num) + style
 
@@ -1337,7 +1341,7 @@ def initSTC(stc, config, lang):
 
 #-------------------------------------------------------------------------------
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
 
     provider = wx.SimpleHelpProvider()
     wx.HelpProvider.Set(provider)

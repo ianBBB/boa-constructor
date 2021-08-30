@@ -9,7 +9,7 @@
 # Copyright:   (c) 2001 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Explorers.SSHExplorer'
+print('importing Explorers.SSHExplorer')
 
 import os, sys
 
@@ -18,7 +18,7 @@ import wx
 import Preferences, Utils
 from Utils import _
 
-import ExplorerNodes
+from . import ExplorerNodes
 from Models import Controllers, EditorHelper
 from ProcessProgressDlg import ProcessProgressDlg
 
@@ -187,7 +187,7 @@ class SSHItemNode(ExplorerNodes.ExplorerNode):
         self.execCmd("echo \" \" > '%s'" % (self.resourcepath + '/' + name))
 
     def load(self, mode='rb'):
-        from FileExplorer import FileSysNode
+        from .FileExplorer import FileSysNode
         import tempfile
         fn = tempfile.mktemp()
         p, n = os.path.split(fn)
@@ -202,11 +202,11 @@ class SSHItemNode(ExplorerNodes.ExplorerNode):
             else:
                 raise ExplorerNodes.TransportLoadError(
                       _('File was not downloaded locally.'), self.resourcepath)
-        except Exception, error:
+        except Exception as error:
             raise ExplorerNodes.TransportLoadError(error, self.resourcepath)
 
     def save(self, filename, data, mode='wb', overwriteNewer=False):
-        from FileExplorer import FileSysNode
+        from .FileExplorer import FileSysNode
         import tempfile
         name = os.path.basename(self.resourcepath)
         fn = tempfile.mktemp()
@@ -222,7 +222,7 @@ class SSHItemNode(ExplorerNodes.ExplorerNode):
                 parentSSHNode.copyFromFS(FileSysNode('', fn, None, -1), name)
             finally:
                 os.remove(fn)
-        except Exception, error:
+        except Exception as error:
             raise ExplorerNodes.TransportSaveError(error, self.resourcepath)
 
 ##    def getNodeFromPath(self, respath):

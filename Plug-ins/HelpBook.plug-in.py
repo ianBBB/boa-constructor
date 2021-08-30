@@ -29,7 +29,7 @@ def createContentsDlg(parent, title, htmlTitle, location, anchors):
  wxID_HELPBOOKITEMDLGCBBANCHORS, wxID_HELPBOOKITEMDLGSTATICTEXT1, 
  wxID_HELPBOOKITEMDLGSTATICTEXT2, wxID_HELPBOOKITEMDLGTXTPAGE, 
  wxID_HELPBOOKITEMDLGTXTTITLE, 
-] = [wx.NewId() for _init_ctrls in range(9)]
+] = [wx.NewIdRef() for _init_ctrls in range(9)]
 
 class HelpBookItemDlg(wx.Dialog):
     def _init_ctrls(self, prnt):
@@ -133,7 +133,10 @@ class HelpBookItemDlg(wx.Dialog):
         else:
             return value
 
-import os, sys, htmllib, formatter
+# import os, sys, htmllib, formatter
+import os, sys, formatter
+from html.parser import HTMLParser
+
 
 if __name__ == '__main__':
     sys.path.append('..')
@@ -168,7 +171,7 @@ class HelpConfigParser:
 
     def generateConfigData(self):
         res = ['[OPTIONS]']
-        res.extend(['%s=%s'%(key, val) for key, val in self.options.items()])
+        res.extend(['%s=%s'%(key, val) for key, val in list(self.options.items())])
         res.append('')
         res.append('[WINDOWS]')
         # I have no idea what the magic numbers mean
@@ -186,10 +189,12 @@ class HelpConfigParser:
                              'Compiled file': name+'.chm',
                              'Index file': name+'.hhk'})
 
-class HelpBookParser(htmllib.HTMLParser):
-    def __init__(self, formatter, verbose=0):
-        htmllib.HTMLParser.__init__(self, formatter, verbose)
-
+# class HelpBookParser(HTMLParser):
+#     def __init__(self, formatter, verbose=0):
+#         htmllib.HTMLParser.__init__(self, formatter, verbose)
+class HelpBookParser(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
         self.indexes = None
         self.index = None
 
@@ -243,19 +248,25 @@ def writeHelpBook(items):
 
     return '\n'.join(res)
 
+# def parseHelpFile(data, Parser=HelpBookParser):
 def parseHelpFile(data, Parser=HelpBookParser):
-    w = formatter.NullWriter()
-    f = formatter.NullFormatter(w)
-    p = Parser(f)
+    # w = formatter.NullWriter()
+    # f = formatter.NullFormatter(w)
+    # p = Parser(f)
+    p = Parser()
     p.feed(data)
     return p
 
 
 class BreakOnTitle(Exception): pass
 
-class HtmlDocDetailParser(htmllib.HTMLParser):
-    def __init__(self, formatter, verbose=0, breakOnTitle=False):
-        htmllib.HTMLParser.__init__(self, formatter, verbose)
+# class HtmlDocDetailParser(htmllib.HTMLParser):
+#     def __init__(self, formatter, verbose=0, breakOnTitle=False):
+#         htmllib.HTMLParser.__init__(self, formatter, verbose)
+
+class HtmlDocDetailParser(HTMLParser):
+    def __init__(self, breakOnTitle=False):
+        HTMLParser.__init__(self)
         self.anchors = []
         self.title = ''
         self.breakOnTitle = breakOnTitle
@@ -278,7 +289,7 @@ class HtmlDocDetailParser(htmllib.HTMLParser):
             self.title = self.result[0] = data.strip()
 
             if self.breakOnTitle:
-                raise BreakOnTitle, self.title
+                raise BreakOnTitle(self.title)
 
 
     def do_param(self, attrs):
@@ -291,11 +302,11 @@ def _testHPP():
     #i = parseHelpFile(open('../Docs/boa/apphelp/apphelp.hhc').read())
     #print i
     ##writeHelpBook(i)
-    print parseHelpFile(open('../Docs/boa/apphelp/debugger.html').read(), Parser=HtmlDocDetailParser).result
+    print(parseHelpFile(open('../Docs/boa/apphelp/debugger.html').read(), Parser=HtmlDocDetailParser).result)
 
 def _testHCP():
     h = HelpConfigParser(open('../Docs/wxpython/wx/wx.hhp').readlines())
-    print h.options, h.windows, h.files
+    print(h.options, h.windows, h.files)
 
 
 if __name__ == '__main__':
@@ -314,7 +325,7 @@ from Explorers import Explorer, ExplorerNodes
 import ProcessProgressDlg
 
 import glob, zipfile
-from cStringIO import StringIO
+from io import StringIO
 
 
 class HelpBookModel(EditorModels.SourceModel):
@@ -382,9 +393,8 @@ class HelpBookModel(EditorModels.SourceModel):
         newDir, newName = os.path.split(filename)
         oldDir, oldName = os.path.split(self.filename)
         if self.savedAs and newDir != oldDir:
-            raise ExplorerNodes.TransportSaveError, \
-                  _('Once saved, help books files cannot be moved, only renamed.\n'\
-                  'Please move the entrire directory.')
+            raise ExplorerNodes.TransportSaveError(_('Once saved, help books files cannot be moved, only renamed.\n'\
+                  'Please move the entrire directory.'))
 
         if newName != oldName:
             self.config.updateFilenameOptions(os.path.splitext(newName)[0])
@@ -492,7 +502,7 @@ class HelpBookFilesView(EditorViews.VirtualListCtrlView):
                     except ExplorerNodes.TransportError: return ''
                     fmtr = formatter.NullFormatter(formatter.NullWriter())
                     try: HtmlDocDetailParser(fmtr, breakOnTitle=True).feed(data)
-                    except BreakOnTitle, title: return str(title)
+                    except BreakOnTitle as title: return str(title)
                     except: return ''
                     else: return ''
                 finally:
@@ -553,9 +563,9 @@ class HelpBookFilesView(EditorViews.VirtualListCtrlView):
 
     def updateOtherViews(self):
         views = self.model.views
-        if views.has_key('Contents'):
+        if 'Contents' in views:
             views['Contents'].files.refreshCtrl()
-        if views.has_key('Index'):
+        if 'Index' in views:
             views['Index'].files.refreshCtrl()
 
     def OnOpenFile(self, event):
@@ -575,7 +585,7 @@ class HelpBookFilesView(EditorViews.VirtualListCtrlView):
     def OnNormalisePaths(self, event):
         helpBookDir = os.path.dirname(self.model.localFilename())
         delidxs = []
-        for idx, filename in zip(range(len(self.model.config.files)),
+        for idx, filename in zip(list(range(len(self.model.config.files))),
                                  self.model.config.files):
             absfn = os.path.normpath(os.path.join(helpBookDir, filename))
             if absfn[:len(helpBookDir)] != helpBookDir:
@@ -798,7 +808,7 @@ class HelpBookContentsDropTarget(FileListDropTarget):
         if not item.Ok(): return
 
         name = self.tree.GetItemText(item)
-        value, items, children = self.tree.GetPyData(item)
+        value, items, children = self.tree.GetItemData(item)
 
         docsDir = os.path.dirname(self.tree.model.filename)
 
@@ -936,19 +946,19 @@ class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
 
     def OnTreeExpand(self, event):
         item = event.GetItem()
-        self.addTreeItems(self.GetPyData(item)[-1], item)
+        self.addTreeItems(self.GetItemData(item)[-1], item)
 
     def OnTreeSelChanged(self, event):
         item = event.GetItem()
         if item.Ok():
-            location = self.GetPyData(item)[0]
+            location = self.GetItemData(item)[0]
             self.model.editor.setStatus(location)
 
     def OnEditEntry(self, event):
         tree = self
         item = tree.GetSelection()
         name = tree.GetItemText(item)
-        value, items, children = tree.GetPyData(item)
+        value, items, children = tree.GetItemData(item)
 
         if item == tree.GetRootItem():
             options = self.model.config.options
@@ -1002,7 +1012,7 @@ class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
             return
 
         name = self.GetItemText(item)
-        value, items, children = self.GetPyData(item)
+        value, items, children = self.GetItemData(item)
 
         idx = items.index( (name, value, children) )
 
@@ -1024,7 +1034,7 @@ def visitDir(files_excludes, dirname, names):
             if os.path.isfile(filename):
                 files.append(filename)
 
-wxID_HP_X = wx.NewId()
+wxID_HP_X = wx.NewIdRef()
 class HelpBookController(Controllers.SourceController):
     Model = HelpBookModel
     DefaultViews = [HelpBookFilesView, HelpBookContentsView, HelpBookIndexView]

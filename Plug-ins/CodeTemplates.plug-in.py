@@ -14,7 +14,7 @@
 import wx
 import wx.stc
 
-import os, glob, ConfigParser
+import os, glob, configparser
 
 import Preferences, Utils, Plugins
 from Utils import _
@@ -60,7 +60,7 @@ class CodeTemplateManager:
                 files.extend([os.path.join(cp, f) 
                               for f in glob.glob(os.path.join(cp, '*.cfg'))])
 
-        self.conf = ConfigParser.SafeConfigParser()
+        self.conf = configparser.SafeConfigParser()
         self.conf.read(files)
     
     def getNames(self, language):
@@ -73,7 +73,7 @@ class CodeTemplateManager:
     def getTemplate(self, name):
         if self.conf.has_section(name):
             return self.conf.get(name, 'template')
-        raise Exception, _('Code Template: %s not found')%name
+        raise Exception(_('Code Template: %s not found')%name)
 
 codeTemplateManager = CodeTemplateManager()
 

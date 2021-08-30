@@ -693,7 +693,7 @@ class DebugStatusBar(wx.StatusBar):
         else:
             self.state.SetBackgroundColour(self.stateCols['info'])
         self.state.SetLabel(message)
-        self.state.SetToolTipString(message)
+        self.state.SetToolTip(message)
 
         self._setCtrlDims(self.state, self.GetFieldRect(1))
 

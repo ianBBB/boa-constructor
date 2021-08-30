@@ -225,7 +225,8 @@ def registerPreference(pluginName, prefName, defPrefValSrc, docs=[], info=''):
     lines = [l.rstrip() for l in open(pluginPrefs).readlines()]
     import moduleparse
     m = moduleparse.Module(pluginName, lines)
-    if not m.globals.has_key(prefName):
+    # if not m.globals.has_key(prefName):
+    if prefName not in m.globals:
         breakLineNames = m.break_lines.values()
         if pluginName not in breakLineNames:
             lineNo = addBlankLine(m, len(lines))
@@ -257,7 +258,7 @@ def registerPreference(pluginName, prefName, defPrefValSrc, docs=[], info=''):
         lineNo = addBlankLine(m, lineNo + 1)
 
         setattr(Preferences, prefName, value)
-        open(pluginPrefs, 'wb').write(os.linesep.join(m.source))
+        open(pluginPrefs, 'wb').write(str.encode(os.linesep.join(m.source)))
     else:
         raise PluginError(
             _('%s not in Preferences, but is defined in globals of '

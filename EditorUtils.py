@@ -16,8 +16,18 @@ class MyToolBar(wx.ToolBar):
         self.SetToolBitmapSize((16, 16))
 
     def AddTool(self, id, bitmap, toggleBitmap=wx.NullBitmap, shortHelpString='', isToggle=False):
-        wx.ToolBar.AddTool(self, id, bitmap, toggleBitmap, isToggle=isToggle,
-            shortHelpString=shortHelpString)
+        if isToggle==False:
+            wx.ToolBar.AddTool(self, id, '', bitmap,
+            shortHelpString,wx.ITEM_NORMAL)
+        else:
+            wx.ToolBar.AddTool(self, id, '', bitmap, toggleBitmap, toggleBitmap,wx.ITEM_NORMAL,
+                               shortHelpString, '', None)
+
+
+        # wx.ToolBar.AddTool(1, "New",wx.NullBitmap,
+        #                 wx.NullBitmap, wx.ITEM_NORMAL, 'New', "Long help for 'New'.", None)
+        # wx.ToolBar.AddTool(self, toolId=id, bitmap=bitmap, isbmpDisabled=toggleBitmap,
+        #     shortHelp=shortHelpString)
 
         self.toolLst.append(id)
         self.toolCount = self.toolCount + 1
@@ -36,7 +46,7 @@ class MyToolBar(wx.ToolBar):
         self.toolCount = self.toolCount - 1
 
     def ClearTools(self):
-        posLst = range(self.toolCount)
+        posLst = list(range(self.toolCount))
         posLst.reverse()
         for pos in posLst:
             self.DeleteToolByPos(pos)
@@ -74,14 +84,14 @@ class EditorToolBar(MyToolBar):
 
 
 # fields
-sbfIcon, sbfBrwsBtns, sbfStatus, sbfCrsInfo, sbfProgress = range(5)
+sbfIcon, sbfBrwsBtns, sbfStatus, sbfCrsInfo, sbfProgress = list(range(5))
 
 class EditorStatusBar(wx.StatusBar):
     """ Displays information about the current view. Also global stats/
         progress bar etc. """
     maxHistorySize = 250
     def __init__(self, *_args, **_kwargs):
-        wx.StatusBar.__init__(self, _kwargs['parent'], _kwargs['id'], style=wx.ST_SIZEGRIP)
+        wx.StatusBar.__init__(self, _kwargs['parent'], _kwargs['id'], style=wx.STB_SIZEGRIP)
         self.SetFieldsCount(6)
         if wx.Platform == '__WXGTK__':
             imgWidth = 21
@@ -106,10 +116,10 @@ class EditorStatusBar(wx.StatusBar):
               Preferences.IS.load('Images/Shared/NextSmall.png'),
               (rect.x+1+int(round(rect.width/2.0)), rect.y+1), (int(round(rect.width/2.0))-1, rect.height-2))
 
-        #self.historyBtns.SetToolTipString('Browse the Traceback/Error/Output window history.')
+        #self.historyBtns.SetToolTip('Browse the Traceback/Error/Output window history.')
         tip = _('Browse the Traceback/Error/Output window history.')
-        self.historyBtnBack.SetToolTipString(tip)
-        self.historyBtnFwd.SetToolTipString(tip)
+        self.historyBtnBack.SetToolTip(tip)
+        self.historyBtnFwd.SetToolTip(tip)
         #self.historyBtns.Bind(wx.EVT_SPIN_DOWN, self.OnErrOutHistoryBack, id=self.historyBtns.GetId())
         #self.historyBtns.Bind(wx.EVT_SPIN_UP, self.OnErrOutHistoryFwd, id=self.historyBtns.GetId())
         self.historyBtnBack.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryBack, id=self.historyBtnBack.GetId())
@@ -144,7 +154,7 @@ class EditorStatusBar(wx.StatusBar):
             del self.history[0]
 
         self.SetStatusText(hint, sbfStatus)
-        self.img.SetToolTipString(hint)
+        self.img.SetToolTip(hint)
         self.img.SetBitmap(self.images[msgType])
         if ringBell: wx.Bell()
 
@@ -160,7 +170,7 @@ class EditorStatusBar(wx.StatusBar):
 
     def linkProgressToStatusBar(self):
         rect = self.GetFieldRect(sbfProgress)
-        self.progress.SetDimensions(rect.x+1, rect.y+1, rect.width -2, rect.height -2)
+        self.progress.SetSize(rect.x+1, rect.y+1, rect.width -2, rect.height -2)
 
     def setColumnPos(self, value):
         self.SetStatusText(str(value), sbfCrsInfo)
@@ -179,7 +189,7 @@ def HistoryPopup(parent, hist, imgs):
     lc = wx.ListCtrl(f, style=wx.LC_REPORT | wx.LC_VRULES | wx.LC_NO_HEADER)
     lc.il = wx.ImageList(16, 16)
     idxs = {}
-    for tpe, img in imgs.items():
+    for tpe, img in list(imgs.items()):
         idxs[tpe] = lc.il.Add(img)
     lc.SetImageList(lc.il, wx.IMAGE_LIST_SMALL)
     lc.InsertColumn(0, _('Time'))
@@ -259,7 +269,7 @@ class ModulePage:
 
         self.viewMenu.Destroy()
 
-        for view in self.model.views.values():
+        for view in list(self.model.views.values()):
             if view:
                 view.close()
         self.notebook.DeleteAllPages()
@@ -302,7 +312,7 @@ class ModulePage:
         if idx is None: idx = self.notebook.GetSelection()
         if idx == -1: return None
 
-        for name, view in self.model.views.items():
+        for name, view in list(self.model.views.items()):
             if view.pageIdx == idx:
                 return view
 
@@ -337,14 +347,14 @@ class ModulePage:
                 self.editor.Disconnect(wId)
 
     def setActiveViewsMenu(self):
-        viewClss = [x.__class__ for x in self.model.views.values()]
+        viewClss = [x.__class__ for x in list(self.model.views.values())]
         for view, wId in self.adtViews:
             self.viewMenu.Check(wId, view in viewClss)
 
     def addView(self, View, viewName=''):
         """ Add a view to the model and display it as a page in the notebook
             of view instances."""
-        if not viewName: 
+        if not viewName:
             viewName = View.viewName
             viewTitle = Utils.getViewTitle(View)
         else:
@@ -404,7 +414,7 @@ class ModulePage:
             from Explorers.ExplorerNodes import TransportModifiedSaveError
             try:
                 model.save()
-            except TransportModifiedSaveError, err:
+            except TransportModifiedSaveError as err:
                 choice = wx.MessageBox(_('%s\nDo you want to overwrite these '
                   'changes (Yes), reload your file (No) or cancel this operation '
                   '(Cancel)?')%str(err), _('Overwrite newer file warning'),
@@ -496,13 +506,13 @@ class Listener(threading.Thread):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             s.bind((host, port))
-        except socket.error, err:
+        except socket.error as err:
             self.closed.set()
             return
 
         s.listen(5)
-        while 1:
-            while 1:
+        while True:
+            while True:
                 # Listen for 0.25 s, then check if closed is set. In that case,
                 # end thread by returning.
                 ready, dummy, dummy = select([s],[],[], selectTimeout)
@@ -514,7 +524,7 @@ class Listener(threading.Thread):
             # Accept a connection, read the data and put it into the queue.
             conn, addr = s.accept()
             l = []
-            while 1:
+            while True:
                 data = conn.recv(1024)
                 if not data: break
                 l.append(data)

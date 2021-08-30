@@ -462,7 +462,7 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
                   *(self.history[self.historyIdx]+(False,)))
 
     def OnErrorstacktcTreeItemActivated(self, event):
-        data = self.errorStackTC.GetPyData(event.GetItem())
+        data = self.errorStackTC.GetItemData(event.GetItem())
         if data is None:
             return
         if data.file.find('://') != -1 or os.path.isabs(data.file):
@@ -487,7 +487,7 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
         if self.vetoEvents: return
         selLine = self.errorStackTC.GetItemText(event.GetItem())
         if wx.Platform == '__WXGTK__':
-            self.errorStackTC.SetToolTipString(selLine)
+            self.errorStackTC.SetToolTip(selLine)
         self.statusBar.SetStatusText(selLine)
 
 ##    def OnErrorstacktcLeftDown(self, event):

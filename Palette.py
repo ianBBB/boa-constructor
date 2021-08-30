@@ -40,14 +40,26 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
     def _init_coll_toolBar_Tools(self, parent):
         # generated method, don't edit
 
-        parent.AddTool(bitmap=IS.load('Images/Shared/Inspector.png'),
-              id=wxID_BOAFRAMETOOLBARTOOLS0, isToggle=False, longHelpString='',
-              pushedBitmap=wx.NullBitmap,
-              shortHelpString=_('Brings the Inspector to the front'))
-        parent.AddTool(bitmap=IS.load('Images/Shared/Editor.png'),
-              id=wxID_BOAFRAMETOOLBARTOOLS1, isToggle=False, longHelpString='',
-              pushedBitmap=wx.NullBitmap,
-              shortHelpString=_('Brings the Editor to the front'))
+        # parent.AddTool(bitmap=IS.load('Images/Shared/Inspector.png'),
+        #       id=wxID_BOAFRAMETOOLBARTOOLS0, isToggle=False, # longHelpString='',
+        #       pushedBitmap=wx.NullBitmap,
+        #       shortHelpString=_('Brings the Inspector to the front'))    # ORIG
+        parent.AddTool(toolId=wxID_BOAFRAMETOOLBARTOOLS0, label="New", bitmap=IS.load('Images/Shared/Inspector.png'),
+                        bmpDisabled =wx.NullBitmap, kind=wx.ITEM_NORMAL,
+                       shortHelp=_('Brings the Inspector to the front'),
+                       longHelp='',clientData= None)
+
+
+
+        # parent.AddTool(bitmap=IS.load('Images/Shared/Editor.png'),
+        #       id=wxID_BOAFRAMETOOLBARTOOLS1, isToggle=False, longHelpString='',
+        #       pushedBitmap=wx.NullBitmap,
+        #       shortHelpString=_('Brings the Editor to the front'))
+        parent.AddTool(toolId=wxID_BOAFRAMETOOLBARTOOLS1, label="New", bitmap=IS.load('Images/Shared/Editor.png'),
+                        bmpDisabled =wx.NullBitmap, kind=wx.ITEM_NORMAL,
+                       shortHelp=_('Brings the Editor to the front'),
+                       longHelp='',clientData= None)
+
         self.Bind(wx.EVT_TOOL, self.OnInspectorToolClick,
               id=wxID_BOAFRAMETOOLBARTOOLS0)
         self.Bind(wx.EVT_TOOL, self.OnEditorToolClick,
@@ -200,16 +212,20 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
             palettePage = None
 
     def setDefaultDimensions(self):
-        self.SetDimensions(Preferences.screenX, Preferences.screenY + Preferences.topMenuHeight,
+        # self.SetDimensions(Preferences.screenX, Preferences.screenY + Preferences.topMenuHeight,
+        #     Preferences.screenWidth - Preferences.windowManagerSide * 2,
+        #     Preferences.paletteHeight)
+        self.SetSize(Preferences.screenX, Preferences.screenY + Preferences.topMenuHeight,
             Preferences.screenWidth - Preferences.windowManagerSide * 2,
             Preferences.paletteHeight)
 
     def addTool(self, filename, text, help, func, toggle = False):
         mID = wx.NewId()
-        self.toolBar.AddTool(mID, IS.load(filename+'.png'),
-          shortHelpString = text, isToggle = toggle)
+        self.toolBar.AddTool(mID,'', IS.load(filename+'.png'),
+          wx.NullBitmap, wx.ITEM_NORMAL,  text,'',None)
         self.Bind(wx.EVT_TOOL, func, id=mID)
         return mID
+
 
     def OnInspectorToolClick(self, event):
         self.inspector.restore()
@@ -410,7 +426,7 @@ class PanelPalettePage(wx.Panel, BasePalettePage):
 
         newButton.SetBezelWidth(1)
         newButton.SetUseFocusIndicator(0)
-        newButton.SetToolTipString(widgetName)
+        newButton.SetToolTip(widgetName)
         try:
             newButton.SetBitmapLabel(bmp, False)
         except TypeError:

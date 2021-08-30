@@ -413,7 +413,7 @@ class PropertyParse(PerLineParser):
             if len(segs) > 1:
                 lst = [segs[0]]
                 for s in segs[1:]:
-                    if s and s[0] in string.letters+string.digits+'_':
+                    if s and s[0] in string.ascii_letters+string.digits+'_':
                         lst[-1] = lst[-1] + s
                     else:
                         lst.append(s)

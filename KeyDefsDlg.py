@@ -122,7 +122,7 @@ class KeyDefsDialog(wx.Dialog):
         if not keyCode:
             raise InvalidValueError(_('Key code may not be blank'))
         if keyCode not in specialKeys.keys() + otherKeys1 + otherKeys2:
-            if len(keyCode) != 1 or keyCode not in string.letters+string.digits:
+            if len(keyCode) != 1 or keyCode not in string.ascII_letters+string.digits:
                 raise InvalidValueError(_('Key code must either be a single character (letter or digit) or an identifier selected from the combobox'))
             keyCode = "ord('%s')" % keyCode.upper()
 

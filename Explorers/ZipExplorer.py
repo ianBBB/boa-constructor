@@ -10,15 +10,15 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
-print 'importing Explorers.ZipExplorer'
+print('importing Explorers.ZipExplorer')
 import os, zipfile, gzip, time
-from cStringIO import StringIO
+from io import StringIO
 
 import wx
 
 from Utils import _
 
-import ExplorerNodes, FileExplorer
+from . import ExplorerNodes, FileExplorer
 from Models import EditorModels, EditorHelper
 
 from ExternalLib import tarfile
@@ -123,7 +123,8 @@ class ZipItemNode(ExplorerNodes.ExplorerNode):
         else:
             return os.path.dirname(self.resourcepath)
 
-    def walkFS(self, (files, excludes), dirname, names):
+    def walkFS(self, xxx_todo_changeme, dirname, names):
+        (files, excludes) = xxx_todo_changeme
         for name in names:
             if name not in excludes:
                 filename = os.path.join(dirname, name)
@@ -329,7 +330,7 @@ class ZipFileNode(ZipItemNode):
             if filename[-1] == '/':
                 # don't build if zip has folder entries
                 break
-            while 1:
+            while True:
                 filename = os.path.dirname(filename)
                 path = filename +'/'
                 if path == '/':

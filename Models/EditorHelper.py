@@ -79,9 +79,8 @@ def addPluginImgs(imgPath):
  imgSystemObjOrdered, imgSystemObjBroken, imgSystemObjPending, imgSystemObjDisabled,
  imgZopeConnection, imgBoaLogo, imgFSDrive, imgNetDrive, imgFolderBookmark,
  imgOpenEditorModels, imgPrefsFolder, imgPrefsSTCStyles, imgRecentFiles,
- imgShell, imgExplorer, imgHelpBook,
-
- imgTextModel, imgBitmapFileModel, imgUnknownFileModel, imgInternalFileModel,
+ imgShell, imgExplorer, imgHelpBook, imgTextModel, imgBitmapFileModel,
+ imgUnknownFileModel, imgInternalFileModel
 ) = imgIdxRange(25)
 
 # List of name, func tuples that will be installed under the Tools menu.
@@ -108,5 +107,6 @@ def getBinaryFiles():
 def initExtMap():
     # All non python files identified by extension
     for mod in modelReg.values():
-        if mod.ext not in ['.*', '.intfile', '.pybin'] +inspectableFilesReg.keys():
+        # if mod.ext not in ['.*', '.intfile', '.pybin'] +inspectableFilesReg.keys():
+        if mod.ext not in ['.*', '.intfile', '.pybin'] + list(inspectableFilesReg.keys()):
             extMap[mod.ext] = mod

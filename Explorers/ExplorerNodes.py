@@ -112,7 +112,7 @@ class Controller:
                 if type(method) in (type(()), type([])):
                     subMenu = wx.Menu()
                     self.setupMenu(subMenu, win, method)
-                    menu.AppendMenu(wId, help, subMenu)
+                    menu.Append(wId, help, subMenu)
                 else:
                     menu.Append(wId, help, '', canCheck)
                     win.Bind(wx.EVT_MENU, method, id=wId)

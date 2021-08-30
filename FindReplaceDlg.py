@@ -55,7 +55,7 @@ def findAgain(parent, finder, view, invertFinderReverse = False):
     else:
         try:
             finder.findNextInSource(view)
-        except FindError, err:
+        except FindError as err:
             wx.MessageBox(str(err), _('Find/Replace'), wx.OK | wx.ICON_INFORMATION, view)
     finder.reverse = oldFinderReverse 
 
@@ -220,7 +220,7 @@ class FindReplaceDlg(wx.Dialog):
               id=wxID_FINDREPLACEDLGCMBFOLDER, name='cmbFolder', parent=self,
               pos=wx.Point(93, 99), size=wx.Size(354, 21), style=0, value='')
         self.cmbFolder.SetLabel('')
-        self.cmbFolder.SetToolTipString(_('Insert a path to find in files'))
+        self.cmbFolder.SetToolTip(_('Insert a path to find in files'))
 
         self.staticText3 = wx.StaticText(id=wxID_FINDREPLACEDLGSTATICTEXT3,
               label=_('Files to find in'), name='staticText3', parent=self,
@@ -231,7 +231,7 @@ class FindReplaceDlg(wx.Dialog):
               parent=self, pos=wx.Point(93, 65), size=wx.Size(327, 21), style=0,
               value='*.py')
         self.cmbFileFilter.SetLabel('*.py')
-        self.cmbFileFilter.SetToolTipString(_('Files that will be included in search'))
+        self.cmbFileFilter.SetToolTip(_('Files that will be included in search'))
 
         self.staticText4 = wx.StaticText(id=wxID_FINDREPLACEDLGSTATICTEXT4,
               label=_('File filter'), name='staticText4', parent=self,
@@ -336,14 +336,14 @@ class FindReplaceDlg(wx.Dialog):
         self.btnBuildInFind = wx.Button(id=wxID_FINDREPLACEDLGBTNBUILDINFIND,
               label='...', name='btnBuildInFind', parent=self, pos=wx.Point(423,
               5), size=wx.Size(24, 29), style=wx.BU_EXACTFIT)
-        self.btnBuildInFind.SetToolTipString(_('Build-in ready to run searches'))
+        self.btnBuildInFind.SetToolTip(_('Build-in ready to run searches'))
         self.btnBuildInFind.Bind(wx.EVT_BUTTON, self.OnBuildInFind,
               id=wxID_FINDREPLACEDLGBTNBUILDINFIND)
 
         self.btnBrowse = wx.Button(id=wxID_FINDREPLACEDLGBTNBROWSE, label='...',
               name='btnBrowse', parent=self, pos=wx.Point(423, 65),
               size=wx.Size(24, 29), style=wx.BU_EXACTFIT)
-        self.btnBrowse.SetToolTipString(_('Folders tree'))
+        self.btnBrowse.SetToolTip(_('Folders tree'))
         self.btnBrowse.Bind(wx.EVT_BUTTON, self.OnBrowse,
               id=wxID_FINDREPLACEDLGBTNBROWSE)
 
@@ -491,7 +491,7 @@ class FindReplaceDlg(wx.Dialog):
                 self.EndModal(wx.ID_OK)
             else:
                 self._checkSelectionDlgOverlap()
-        except FindError, err:
+        except FindError as err:
             wx.MessageBox(str(err), _('Find/Replace'), wx.OK | wx.ICON_INFORMATION, self)
 
     def findAll(self):
@@ -512,7 +512,7 @@ class FindReplaceDlg(wx.Dialog):
             self.engine.replaceInSource(self.view, pattern, replacement)
             self._checkSelectionDlgOverlap()
             self.setComboBoxes('replace')
-        except FindError, err:
+        except FindError as err:
             wx.MessageBox(str(err), _('Find/Replace'), wx.OK | wx.ICON_INFORMATION, self)
 
     def replaceAll(self):
@@ -660,7 +660,7 @@ class FindReplaceDlg(wx.Dialog):
         event.Skip()
 
     def OnBuildInFind(self, event):
-        dlg = wx.SingleChoiceDialog(self, _('Find'), _('Build in finds'), self._mapBuildInFinds.keys())
+        dlg = wx.SingleChoiceDialog(self, _('Find'), _('Build in finds'), list(self._mapBuildInFinds.keys()))
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 selected = dlg.GetStringSelection()

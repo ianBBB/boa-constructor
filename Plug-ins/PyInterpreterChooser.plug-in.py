@@ -25,7 +25,7 @@ PyCoreRegPath = 'SOFTWARE\\Python\\Pythoncore'
  wxID_PYINTERPRETERCHOOSERDLGSTATICTEXT1, 
  wxID_PYINTERPRETERCHOOSERDLGSTATICTEXT2, 
  wxID_PYINTERPRETERCHOOSERDLGTXTPYINTPPATH, 
-] = [wx.NewId() for _init_ctrls in range(8)]
+] = [wx.NewIdRef() for _init_ctrls in range(8)]
 
 class PyInterpreterChooserDlg(wx.Dialog):
     def _init_coll_browserSizer_Items(self, parent):
@@ -105,10 +105,15 @@ class PyInterpreterChooserDlg(wx.Dialog):
               size=wx.Size(242, 146),
               style=wx.DIRCTRL_SHOW_FILTERS | wx.DIRCTRL_3D_INTERNAL | wx.NO_BORDER)
 
-        self.lcInstallations = wx.ListView(id=wxID_PYINTERPRETERCHOOSERDLGLCINSTALLATIONS,
+        # self.lcInstallations = wx.ListView(id=wxID_PYINTERPRETERCHOOSERDLGLCINSTALLATIONS,
+        #       name='lcInstallations', parent=self, pos=wx.Point(10, 52),
+        #       size=wx.Size(242, 146), style=wx.SUNKEN_BORDER | wx.LC_REPORT,
+        #       validator=wx.DefaultValidator)
+        self.lcInstallations = wx.ListView(winid=wxID_PYINTERPRETERCHOOSERDLGLCINSTALLATIONS,
               name='lcInstallations', parent=self, pos=wx.Point(10, 52),
               size=wx.Size(242, 146), style=wx.SUNKEN_BORDER | wx.LC_REPORT,
               validator=wx.DefaultValidator)
+
         self._init_coll_lcInstallations_Columns(self.lcInstallations)
         self.lcInstallations.Bind(wx.EVT_LIST_ITEM_ACTIVATED,
               self.OnLcinstallationsListItemActivated,
@@ -153,7 +158,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
 
     def populateFoundInstallations(self):
         paths = self.installedPaths = self.getInstallations()
-        for idx, (version, path) in zip(range(len(paths)), paths):
+        for idx, (version, path) in zip(list(range(len(paths))), paths):
             self.lcInstallations.InsertStringItem(idx, version)
             self.lcInstallations.SetStringItem(idx, 1, path)
 
@@ -179,7 +184,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
         # XXX search common locations on Linux and Mac?
 
         try:
-            import _winreg as winreg
+            import winreg as winreg
         except ImportError:
             return res
 
@@ -254,7 +259,8 @@ class PyInterpreterChooserDlg(wx.Dialog):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    # app = wx.PySimpleApp()
+    app = wx.App()
     dlg = PyInterpreterChooserDlg(None)
     try:
         dlg.ShowModal()

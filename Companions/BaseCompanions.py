@@ -670,7 +670,7 @@ class ControlDTC(DesignTimeCompanion):
                 for ctrl in self.control.GetChildren():
                     ctrl.SetName(self.name)
                     ctrl._composite_child = 1
-            self.control.SetToolTipString(self.name)
+            self.control.SetToolTip(self.name)
             # Disabled controls do not pass thru mouse clicks to their parents on GTK :(
             if wx.Platform != '__WXGTK__' and self.ctrlDisabled:
                 self.control.Enable(False)
@@ -872,7 +872,7 @@ class WindowDTC(WindowConstr, ControlDTC):
     def properties(self):
         return {'Shown': ('CompnRoute', self.GetShown, self.Show),
                 'Enabled': ('CompnRoute', self.GetEnabled, self.Enable),
-                'ToolTipString': ('CompnRoute', self.GetToolTipString, self.SetToolTipString),
+                'ToolTipString': ('CompnRoute', self.GetToolTipString, self.SetToolTip),
                 'Anchors': ('CompnRoute', self.GetAnchors, self.SetConstraints),
                 'SizeHints': ('CompnRoute', self.GetSizeHints, self.SetSizeHints),
                 'Cursor': ('CompnRoute', self.GetCursor, self.SetCursor),
@@ -959,8 +959,8 @@ class WindowDTC(WindowConstr, ControlDTC):
     def GetToolTipString(self, blah):
         return self.control.GetToolTip().GetTip()
 
-    def SetToolTipString(self, value):
-        self.control.SetToolTipString(value)
+    def SetToolTip(self, value):
+        self.control.SetToolTip(value)
 
 #---Anchors---------------------------------------------------------------------
     from wx.lib.anchors import LayoutAnchors

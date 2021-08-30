@@ -45,7 +45,7 @@ class PyDocHelpPage(wx.Panel):
               size=wx.Size(231, 21), style=0, value='')
         self.txtSearch.SetConstraints(LayoutAnchors(self.txtSearch, True, True,
               True, False))
-        self.txtSearch.SetToolTipString(_('Enter name to search for'))
+        self.txtSearch.SetToolTip(_('Enter name to search for'))
         self.txtSearch.Bind(wx.EVT_TEXT_ENTER, self.OnTxtsearchTextEnter, id=wxID_PYDOCHELPPAGETXTSEARCH)
 
         self.boxResults =wx.ListBox(choices=[], id=wxID_PYDOCHELPPAGEBOXRESULTS,

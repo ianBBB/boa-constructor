@@ -166,7 +166,7 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
 
         try:
             ro = re.compile(regex, flags)
-        except Exception, err:
+        except Exception as err:
             self.statusBar.SetStatusText(_('Error: %s: %s')%(err.__class__, err), 1)
             self.sbImage.SetBitmap(self.statusImages[0])
             return
@@ -188,7 +188,7 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
             # so lets get the index, name and group into a list of tuples and
             # sort the list
             namedGroups = []
-            for name, idx in ro.groupindex.items():
+            for name, idx in list(ro.groupindex.items()):
                 namedGroups += [(idx, name, mo.group(name))]
             namedGroups.sort()
 

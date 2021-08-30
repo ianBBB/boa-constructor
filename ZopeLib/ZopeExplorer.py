@@ -9,10 +9,10 @@
 # Copyright:   (c) 2001 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing ZopeLib.ZopeExplorer'
+print('importing ZopeLib.ZopeExplorer')
 
-import os, urllib, urlparse, time, socket
-from thread import start_new_thread
+import os, urllib.request, urllib.parse, urllib.error, urllib.parse, time, socket
+from _thread import start_new_thread
 
 import wx
 
@@ -24,8 +24,8 @@ import Utils, Preferences
 import Views, Views.SourceViews, Views.PySourceView
 import PaletteStore
 
-import ZopeEditorModels, ZopeViews, Client, ExtMethDlg
-from ZopeCompanions import ZopeConnection, ZopeCompanion, FolderZC
+from . import ZopeEditorModels, ZopeViews, Client, ExtMethDlg
+from .ZopeCompanions import ZopeConnection, ZopeCompanion, FolderZC
 
 # XXX Add owner property
 
@@ -126,7 +126,7 @@ class ZopeItemNode(ExplorerNodes.ExplorerNode):
         return '%s://%s/<%s>%s'%(self.protocol, self.category, self.metatype, self.getTitle())
 
     def buildUrl(self):
-        path = urllib.quote(self.resourcepath)
+        path = urllib.parse.quote(self.resourcepath)
         if path:
             if path == '/':
                 path = '//'
@@ -185,8 +185,8 @@ class ZopeItemNode(ExplorerNodes.ExplorerNode):
             url = url[:-1]
         self.server = self.getResource(url)
         try:
-            self.entries, self.entryIds = self.server.zoa.items()
-        except xmlrpclib.Fault, error:
+            self.entries, self.entryIds = list(self.server.zoa.items())
+        except xmlrpclib.Fault as error:
             #print str(error)
             # see if zoa object is installed
             try:
@@ -199,14 +199,14 @@ class ZopeItemNode(ExplorerNodes.ExplorerNode):
                   'Do you want to install it?', 'Install zoa',
                   wx.YES_NO | wx.ICON_QUESTION) == wx.YES:
 
-                    import ZoaClient
+                    from . import ZoaClient
                     conninfo = ('http://%s'%self.buildUrl(),
                          self.properties['username'], self.properties['passwd'])
                     ZoaClient.installFromFS(conninfo,
                           os.path.join(Preferences.pyPath, 'ZopeLib', 'zoa', ))
 
                     # try again, if this fails the real error should break thru
-                    self.entries, self.entryIds = self.server.zoa.items()
+                    self.entries, self.entryIds = list(self.server.zoa.items())
 
             else:
                 err = error.faultString
@@ -250,7 +250,7 @@ class ZopeItemNode(ExplorerNodes.ExplorerNode):
         return res
 
     def listImportFiles(self):
-        if self.properties.has_key('localpath') and self.properties['localpath']:
+        if 'localpath' in self.properties and self.properties['localpath']:
             from Explorers import Explorer
             return Explorer.listdirEx(self.properties['localpath']+'/import', '.zexp')
         else:
@@ -259,14 +259,14 @@ class ZopeItemNode(ExplorerNodes.ExplorerNode):
     def importObj(self, name):
         try:
             mime, res = self.clipboard.zc.call(self.resourcepath, 'manage_importObject', file = name)
-        except Exception, message:
-            wx.MessageBox(`message.args`, 'Error on import')
+        except Exception as message:
+            wx.MessageBox(repr(message.args), 'Error on import')
             #raise
 
     def newItem(self, name, Compn, getNewValidName = True):
         props = self.properties
         if getNewValidName:
-            name = Utils.getValidName(self.cache.keys(), name)
+            name = Utils.getValidName(list(self.cache.keys()), name)
         cmp = Compn(name, self.resourcepath, props.get('localpath', ''))
         cmp.connect(props['host'], props['httpport'],
                     props['username'], props['passwd'])
@@ -302,7 +302,7 @@ class ZopeItemNode(ExplorerNodes.ExplorerNode):
     def newBlankDocument(self, name=''):
         try:
             self.getResource().manage_addDTMLDocument(name)
-        except xmlrpclib.ProtocolError, error:
+        except xmlrpclib.ProtocolError as error:
             if error.errcode != 302:
                 raise
 
@@ -375,7 +375,7 @@ class ZopeCatController(ExplorerNodes.CategoryController):
                     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     try:
                         s.connect( (props['host'], props['httpport']) )
-                    except socket.error, err:
+                    except socket.error as err:
                         if err[0] == 10061:
                             # not running
                             res = self.err_zopeNotRunning
@@ -436,7 +436,7 @@ class ZopeCatController(ExplorerNodes.CategoryController):
                     self.editor.setStatus(resp)
                 else:
                     self.editor.setStatus(resp, 'Warning')
-            except Exception, error:
+            except Exception as error:
                 wx.LogError('Restart not supported for '+node.treename+'\n'+str(error))
 
     def OnShutdown(self, event):
@@ -464,7 +464,7 @@ class ZopeCatController(ExplorerNodes.CategoryController):
         if len(node):
             node = node[0]
         else:
-            print 'Nothing selected'
+            print('Nothing selected')
 
         props = node.properties
         if props['localpath']:
@@ -632,7 +632,7 @@ class ZopeController(ExplorerNodes.Controller, ExplorerNodes.ClipboardController
             if zopeItem:
                 model, cntrlr = self.editor.openOrGotoZopeDocument(zopeItem)
                 viewName = ZopeViews.ZopeSecurityView.viewName
-                if not model.views.has_key(viewName):
+                if viewName not in model.views:
                     resultView = self.editor.addNewView(viewName,
                           ZopeViews.ZopeSecurityView)
                 else:
@@ -646,7 +646,7 @@ class ZopeController(ExplorerNodes.Controller, ExplorerNodes.ClipboardController
             if zopeItem and ZopeViews.ZopeUndoView in zopeItem.additionalViews:
                 model, cntrlr = self.editor.openOrGotoZopeDocument(zopeItem)
                 viewName = ZopeViews.ZopeUndoView.viewName
-                if not model.views.has_key(viewName):
+                if viewName not in model.views:
                     resultView = self.editor.addNewView(viewName,
                           ZopeViews.ZopeUndoView)
                 else:
@@ -660,12 +660,12 @@ class ZopeController(ExplorerNodes.Controller, ExplorerNodes.ClipboardController
                 zopeItem = self.list.getSelection()
 
             if not zopeItem:
-                raise Exception, 'No item selected'
+                raise Exception('No item selected')
             try:
                 import webbrowser
                 webbrowser.open('http://%s%s'%(zopeItem.buildUrl(), addToUrl))
             except ImportError:
-                raise Exception, 'Python 2.0 or higher required'
+                raise Exception('Python 2.0 or higher required')
 
     def OnViewInBrowser(self, event):
         self.openSelItemInBrowser()
@@ -682,7 +682,7 @@ class ZopeController(ExplorerNodes.Controller, ExplorerNodes.ClipboardController
     def OnFindZopeItems(self, event):
         node = self.list.node
         if node:
-            from ZopeFindDlg import ZopeFindDlg
+            from .ZopeFindDlg import ZopeFindDlg
             dlg = ZopeFindDlg(self.editor)
             try:
                 if dlg.ShowModal() == wx.ID_OK:
@@ -747,7 +747,7 @@ class DirNode(ZopeItemNode): pass
 
 class UserFolderNode(ZopeItemNode):
     def deleteItems(self, names):
-        print 'User Folder delete: %s'%names
+        print('User Folder delete: %s'%names)
 #        mime, res = self.clipboard.zc.call(self.resourcepath,
 #              'manage_delObjects', ids = names)
 
@@ -755,7 +755,7 @@ class ZopeUserNode(ZopeNode):
     def isFolderish(self):
         return False
     def open(self, editor):
-        print 'Should inspect'
+        print('Should inspect')
         #editor.openOrGotoZopeDocument(self)
 
 class ControlNode(DirNode):
@@ -810,11 +810,11 @@ class ZSQLNode(ZopeNode):
             arguments = self.getParams(data)
             template = self.getBody(data)
             self.getResource().manage_edit(title, connection_id, arguments, template)
-        except xmlrpclib.ProtocolError, error:
+        except xmlrpclib.ProtocolError as error:
             # Getting a zero content warning is not an error
             if error.errcode != 204:
                 raise ExplorerNodes.TransportSaveError(error, filename)
-        except Exception, error:
+        except Exception as error:
             raise ExplorerNodes.TransportSaveError(error, filename)
 
 class PythonNode(ZopeNode):
@@ -851,7 +851,7 @@ class PythonScriptNode(PythonNode):
         tmp2=[]
         h=1
         for l in tmp:
-            if l[:2] <> '##' :
+            if l[:2] != '##' :
                 h=0
             if l[:12] == '##parameters':
                 params = l[l.find('=')+1:]

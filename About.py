@@ -403,8 +403,6 @@ class StaticTextPF(Utils.PseudoFile):
         # ###############
         # if not wx.Thread_IsMain():
         #     locker = wx.MutexGuiLocker()
-        pass
-
 
         res = prog_update.search(s)
         if res:

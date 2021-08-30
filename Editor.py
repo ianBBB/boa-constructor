@@ -15,10 +15,10 @@
 """ The main IDE frame containing the Shell, Explorer and the ability to host
 Models and their Views on ModulePages"""
 
-print 'importing Editor'
+print('importing Editor')
 
 import os, sys, pprint
-import Queue
+import queue
 
 import wx
 
@@ -45,7 +45,7 @@ addTool = Utils.AddToolButtonBmpIS
 
 class CancelClose(Exception): pass
 
-(mmFile, mmEdit, mmViews, mmWindows, mmHelp) = range(5)
+(mmFile, mmEdit, mmViews, mmWindows, mmHelp) = list(range(5))
 
 [wxID_EDITORFRAME, wxID_EDITORFRAMESTATUSBAR, wxID_EDITORFRAMETABS, 
  wxID_EDITORFRAMETABSSPLITTER, wxID_EDITORFRAMETOOLBAR, 
@@ -176,7 +176,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         # Shell
         shl = Preferences.psPythonShell
         self.shell, self.shellPageIdx = None, -1
-        if ShellEditor.shellReg.has_key(shl):
+        if shl in ShellEditor.shellReg:
             Shell, imgIdx = ShellEditor.shellReg[shl]
 
             self.shell, self.shellPageIdx = self.addShellPage(shl, Shell, imgIdx)
@@ -250,7 +250,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
               _('Next page'), keyDefs['NextPage'], '-',
               _('Switch to the next page of the main notebook'))
         self.winMenu.AppendSeparator()
-        self.winMenu.AppendMenu(EditorHelper.wxID_EDITORWINDIMS,
+        self.winMenu.Append(EditorHelper.wxID_EDITORWINDIMS,
               _('All window dimensions'), self.winDimsMenu,
               _('Load, save or restore IDE windows dimensions'))
         self.winMenu.Append(EditorHelper.wxID_EDITORHIDEPALETTE,
@@ -343,13 +343,13 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         # already a server running, but don't connect idle if not necessary
         if self.closed:
             if self.closed.isSet():
-                print 'Not running in server mode'
+                print('Not running in server mode')
 
     def __repr__(self):
         return '<EditorFrame (Boa IDE) instance at %d>'%id(self)
 
     def setDefaultDimensions(self):
-        self.SetDimensions(Preferences.inspWidth + Preferences.windowManagerSide*2 +\
+        self.SetSize(Preferences.inspWidth + Preferences.windowManagerSide*2 +\
               Preferences.screenX, Preferences.underPalette + Preferences.screenY, 
               Preferences.edWidth, Preferences.bottomHeight)
         #if not self.palette.IsShown():
@@ -384,21 +384,21 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         allImages = {}
         for img in EditorHelper.builtinImgs:
             allImages[len(allImages)] = img
-        for mod in EditorHelper.modelReg.values():
+        for mod in list(EditorHelper.modelReg.values()):
             allImages[mod.imgIdx] = 'Images/Modules/'+mod.bitmap
         # XXX move ZOAImages/Icons into EditorHelper.extraImages updated from ZopeEditorModels
         if Plugins.transportInstalled('ZopeLib.ZopeExplorer'):
             from ZopeLib import ZopeEditorModels
             for metatype, filename in ZopeEditorModels.ZOAImages:
                 idx = ZopeEditorModels.ZOAIcons[metatype]
-                if allImages.has_key(idx) and filename != allImages[idx]:
-                    print 'ImgIdx clash:', idx, filename, 'clashes with', allImages[idx]
+                if idx in allImages and filename != allImages[idx]:
+                    print('ImgIdx clash:', idx, filename, 'clashes with', allImages[idx])
                 allImages[idx] = filename
         for imgIdx, name in EditorHelper.pluginImgs:
             allImages[imgIdx] = name
 
         # Populate imagelist
-        imgIdxs = allImages.keys()
+        imgIdxs = list(allImages.keys())
         imgIdxs.sort()
         for idx in imgIdxs:
             try:
@@ -406,7 +406,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             except IS.Error: 
                 midx = -1
             if idx != midx:
-                print 'Image index mismatch', idx, midx, allImages[idx]
+                print('Image index mismatch', idx, midx, allImages[idx])
 
         self.tabs.SetImageList(self.modelImageList)
 
@@ -436,7 +436,9 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         # primary option: open a module
         fileMenu = wx.Menu()
         if self.palette.palettePages and Preferences.edShowFileNewMenu:
-            fileMenu.AppendMenu(wx.NewId(), _('New'),
+            # fileMenu.AppendMenu(wx.NewId(), _('New'),
+            #       Utils.duplicateMenu(self.palette.palettePages[0].menu))
+            fileMenu.Append(wx.NewId(), _('New'),
                   Utils.duplicateMenu(self.palette.palettePages[0].menu))
         Utils.appendMenuItem(fileMenu, EditorHelper.wxID_EDITOROPEN, _('Open'),
               keyDefs['Open'], self.openBmp, _('Open a module'))
@@ -598,9 +600,9 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         n = 1
         #Obfuscated one-liner to check if such a name exists as a basename
         #in a the dict keys of self.module
-        while filter(lambda key, name=tryName(className, modelClass.ext, n): \
+        while list(filter(lambda key, name=tryName(className, modelClass.ext, n): \
               os.path.basename(key) == os.path.basename(name),
-              self.modules.keys() + moreUsedNames):
+              list(self.modules.keys()) + moreUsedNames)):
             n = n + 1
 
         return tryName(className, modelClass.ext, n)
@@ -615,12 +617,12 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             modulePage = ModulePage(notebook, model, defViews, views, spIdx, self)
 
             # notify pages for idx adjustments
-            for modPge in self.modules.values():
+            for modPge in list(self.modules.values()):
                 modPge.addedPage(spIdx)
 
-            if self.modules.has_key(moduleName):
+            if moduleName in self.modules:
                 # XXX raise here
-                print 'module %s exists'%moduleName
+                print('module %s exists'%moduleName)
             self.modules[moduleName] = modulePage
             notebook.InsertPage(spIdx, modulePage.notebook, modulePage.pageName, True, imgIdx)
 
@@ -652,7 +654,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
                     self.updateTitle()
                     self.setupToolBar()
                     return
-            except TransportSaveError, error:
+            except TransportSaveError as error:
                 if shutdown: raise
                 else:
                     wx.LogError(str(error))
@@ -680,7 +682,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             page = self.tabs.GetSelection()
         # this excludes shell
         if page >= self.numFixedPages:
-            for mod in self.modules.values():
+            for mod in list(self.modules.values()):
                 if mod.tIdx == page:
                     return mod
         # XXX raise on not found ?
@@ -696,13 +698,13 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
     def activeApp(self):
         actMod = self.getActiveModulePage()
         if actMod and actMod.model.modelIdentifier in Controllers.appModelIdReg \
-              and actMod.model.data <> '':
+              and actMod.model.data != '':
             return actMod
         else:
             return None
 
     def getController(self, Controller, *args):
-        if not self.controllers.has_key(Controller):
+        if Controller not in self.controllers:
             self.controllers[Controller] = Controller(*((self,) + args))
 
         return self.controllers[Controller]
@@ -732,18 +734,18 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
     def getAppModules(self):
         """ Return a list of all open Application modules """
         apps = []
-        for modPage in self.modules.values():
+        for modPage in list(self.modules.values()):
             if modPage.model.modelIdentifier in Controllers.appModelIdReg:
                 apps.append(modPage.model)
         return apps
 
     def getControllerFromModel(self, model):
         ModClass = model.__class__
-        if Controllers.modelControllerReg.has_key(ModClass):
+        if ModClass in Controllers.modelControllerReg:
             Controller = Controllers.modelControllerReg[ModClass]
-            if self.controllers.has_key(Controller):
+            if Controller in self.controllers:
                 return self.controllers[Controller]
-            elif self.controllers.has_key(ModClass):
+            elif ModClass in self.controllers:
                 return self.controllers[ModClass]
         return None
 
@@ -768,26 +770,26 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
         controller = None
         name = Explorer.splitURI(name)[-1]
-        if self.modules.has_key(name):
+        if name in self.modules:
             self.modules[name].focus()
             model = self.modules[name].model
             controller = self.getControllerFromModel(model)
         else:
             # Check non case sensitive (fix for breakpoints)
-            lst = self.modules.keys()
+            lst = list(self.modules.keys())
             assos = {}
             for keyIdx in range(len(lst)):
                 assos[os.path.normcase(os.path.abspath(lst[keyIdx]))] = lst[keyIdx]
 
             a_name = os.path.normcase(os.path.abspath(name))
-            if assos.has_key(a_name):
+            if a_name in assos:
                 self.modules[assos[a_name]].focus()
                 model = self.modules[assos[a_name]].model
                 controller = self.getControllerFromModel(model)
             else:
                 model, controller = self.openModule(name, app, transport, notebook)
 
-        if lineno != -1 and model.views.has_key('Source'):
+        if lineno != -1 and 'Source' in model.views:
             model.views['Source'].GotoLine(lineno)
 
         if controller is None:
@@ -812,7 +814,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         # Get transport based on filename
         prot, category, respath, filename = Explorer.splitURI(filename)
 
-        assert not self.modules.has_key(filename), _('File already open.')
+        assert filename not in self.modules, _('File already open.')
 
         if prot == 'zope':
             if transport is None:
@@ -876,7 +878,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         return model, controller
 
     def getZopeController(self, Model):
-        if not self.controllers.has_key(Model):
+        if Model not in self.controllers:
             self.controllers[Model] = \
                   Controllers.modelControllerReg[Model](self, Model)
         return self.controllers[Model]
@@ -884,7 +886,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
     # XXX Unify with the rest of the explorers
     def openOrGotoZopeDocument(self, zopeObj):
         wholename=zopeObj.getURI()
-        if self.modules.has_key(wholename):
+        if wholename in self.modules:
             self.modules[wholename].focus()
             controller = self.getZopeController(zopeObj.Model)
             return self.modules[wholename].model, controller
@@ -909,13 +911,13 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             self.updateTitle()
             return model, controller
         else:
-            wx.LogWarning(_('Zope Object %s not supported') % `zopeObj`)
+            wx.LogWarning(_('Zope Object %s not supported') % repr(zopeObj))
             return None, None
 
     def addNewView(self, name, viewClass):
         module = self.getActiveModulePage()
         if module:
-            if not module.model.views.has_key(name):
+            if name not in module.model.views:
                 return module.addView(viewClass, name)
             else:
                 return module.model.views[name]
@@ -990,8 +992,8 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         idx = modulePage.tIdx
         model = modulePage.model
         name = model.filename
-        if self.modules.has_key(name):
-            if model.views.has_key('Designer'):
+        if name in self.modules:
+            if 'Designer' in model.views:
                 model.views['Designer'].close()
 
             insp = self.inspector
@@ -1036,7 +1038,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             modulePage.destroy()
 
             # notify pages for idx adjustments
-            for modPge in self.modules.values():
+            for modPge in list(self.modules.values()):
                 modPge.removedPage(idx)
 
 
@@ -1080,8 +1082,8 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
     # XXX this looks like overkill
     def clearAllStepPoints(self):
-        for mod in self.modules.values():
-            if mod.model.views.has_key('Source'):
+        for mod in list(self.modules.values()):
+            if 'Source' in mod.model.views:
                 mod.model.views['Source'].setStepPos(0)
 
     def setStatus(self, hint, msgType='Info', ringBell=False):
@@ -1103,7 +1105,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         if self.explorer: self.explorer.editorUpdateNotify()
 
     def explorerRenameNotify(self, oldURI, newNode):
-        if self.modules.has_key(oldURI):
+        if oldURI in self.modules:
             modulePage = self.modules[oldURI]
             modulePage.model.transport = newNode
             modulePage.model.updateNameFromTransport()
@@ -1113,11 +1115,11 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             self.updateModulePage(modulePage.model, newURI)
 
     def explorerDeleteNotify(self, uri):
-        if self.modules.has_key(uri):
+        if uri in self.modules:
             self.closeModulePage(self.modules[uri])
 
     def explorerModifyNotify(self, uri):
-        if self.modules.has_key(uri):
+        if uri in self.modules:
             model = self.modules[uri].model
 
             model.load()
@@ -1134,7 +1136,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
             if self.explorer:
                 tree = self.explorer.tree
-                node = tree.GetPyData(tree.GetSelection())
+                node = tree.GetItemData(tree.GetSelection())
                 if node and node.protocol == 'recent.files':
                     self.explorer.list.refreshCurrent()
 
@@ -1209,7 +1211,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             evtId = event.GetId()
         mod = self.getActiveModulePage()
         if mod:
-            modVwClss = [v.__class__ for v in mod.model.views.values()]
+            modVwClss = [v.__class__ for v in list(mod.model.views.values())]
             #Find view class associated with this id
             for viewCls, wId in mod.adtViews:
                 if wId == evtId:
@@ -1234,7 +1236,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
                             else:
                                 view.focus()
                         else:
-                            print 'Add: View already exists'
+                            print('Add: View already exists')
                     else:
                         #Should be removed, but check that it does exist
                         if viewCls in modVwClss:
@@ -1247,7 +1249,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
                             self.mainMenu.Check(evtId, False)
                             return
                         else:
-                            print 'Remove: View already exists'
+                            print('Remove: View already exists')
                     break
 
     def OnSwitchedToView(self, event):
@@ -1257,7 +1259,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 #---Switching to different windows----------------------------------------------
     def OnGotoModulePage(self, event):
         wId = event.GetId()
-        for mod in self.modules.values():
+        for mod in list(self.modules.values()):
             if mod.windowId == wId:
                 self.tabs.SetSelection(mod.tIdx)
 
@@ -1345,21 +1347,21 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
                 finally:
                     try:
                         Utils.writeConfig(conf)
-                    except Exception, error:
+                    except Exception as error:
                         wx.LogError(_('Could not update config.'))
                 try:
                     cnt = 0
                     for file in files:
                         try:
-                            print 'opening in Editor: %s <<%d/%d>>' % (
+                            print('opening in Editor: %s <<%d/%d>>' % (
                                   os.path.basename(file).split('::')[0], cnt,
-                                  len(files))
+                                  len(files)))
 
                             self.openOrGotoModule(file)
                             cnt = cnt + 1
-                        except (IOError, TransportError), error:
+                        except (IOError, TransportError) as error:
                             wx.LogWarning(str(error))
-                        except Exception, error:
+                        except Exception as error:
                             wx.LogError(str(error))
                             if Preferences.debugMode == 'development':
                                 raise
@@ -1376,16 +1378,16 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
                     conf.remove_option('editor', 'openingfiles')
                     try:
                         Utils.writeConfig(conf)
-                    except Exception, error:
+                    except Exception as error:
                         wx.LogError(_('Could not update config.'))
 
     def persistEditorState(self):
         # Save list of open files to config
         if Preferences.rememberOpenFiles:
             modOrder = []
-            for mod, modPage in self.modules.items():
+            for mod, modPage in list(self.modules.items()):
                 if modPage.model.savedAs:
-                    if modPage.model.views.has_key('Source'):
+                    if 'Source' in modPage.model.views:
                         mod = '%s::%d' %(mod,
                               modPage.model.views['Source'].GetCurrentLine()+1)
                     modOrder.append( (modPage.tIdx, mod) )
@@ -1401,7 +1403,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             conf.set('editor', 'activepage', str(self.tabs.GetSelection()))
             try:
                 Utils.writeConfig(conf)
-            except Exception, error:
+            except Exception as error:
                 wx.LogError(_('Could not save open file list: ')+str(error))
 
 #---Misc events-----------------------------------------------------------------
@@ -1446,7 +1448,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
             modPageList = []
             modPageAppList = []
-            for name, modPage in self.modules.items():
+            for name, modPage in list(self.modules.items()):
                 if modPage.model.modelIdentifier in Controllers.appModelIdReg:
                     # move application files to the end of the list because
                     # other files could modify them on being saved
@@ -1462,7 +1464,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
                 except CancelClose:
                     self.palette.destroying = False
                     return
-                except TransportSaveError, error:
+                except TransportSaveError as error:
                     self.palette.destroying = False
                     wx.LogError(str(error))
                     return

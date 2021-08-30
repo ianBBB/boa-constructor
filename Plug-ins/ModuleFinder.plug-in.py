@@ -3,7 +3,7 @@
 import sys, imp
 
 import wx
-
+import os
 import Preferences
 import Utils
 from Utils import _, resetMinSize
@@ -94,7 +94,7 @@ def openModuleFinder(editor):
             try:
                 f, filename, (ext, mode, type) = \
                       Utils.find_dotted_module(modName)#, sys.path)
-            except ImportError, err:
+            except ImportError as err:
                 wx.LogError(_('%s not found on sys.path (%s).')%(modName, str(err)))
             else:
                 if f is not None:

@@ -57,11 +57,11 @@ class FindResults(ListCtrlView, CloseableViewMix):
             ListCtrlView.refreshCtrl(self)
             i = 0
             self.listResultIdxs = []
-            for mod in self.results.keys():
+            for mod in list(self.results.keys()):
                 for result in self.results[mod]:
                     self.listResultIdxs.append((mod, result))
-                    i = self.addReportItems(i, (os.path.basename(mod), `result[0]`,
-                      `result[1]`, result[2].strip()) )
+                    i = self.addReportItems(i, (os.path.basename(mod), repr(result[0]),
+                      repr(result[1]), result[2].strip()) )
 
             self.model.editor.statusBar.setHint(_('%d matches of "%s".')%(i, self.findPattern))
             self.pastelise()
@@ -93,7 +93,7 @@ class FindResults(ListCtrlView, CloseableViewMix):
                 srcView.lastMatchPosition = self.results[modName].index(foundInfo)
             except:
                 srcView.lastMatchPosition = 0
-                print 'foundInfo not found'
+                print('foundInfo not found')
             srcView.selectSection(foundInfo[0]-1, foundInfo[1]-1, self.findPattern)
             self.model.prevSwitch = self
 

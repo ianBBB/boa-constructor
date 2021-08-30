@@ -147,7 +147,7 @@ class Frame1(wx.Frame):
               name='scrolledWindow1', parent=self.splitterWindow1,
               pos=wx.Point(2, 2), size=wx.Size(98, 96),
               style=wx.SUNKEN_BORDER | wx.TAB_TRAVERSAL)
-        self.scrolledWindow1.SetToolTipString('wxScrolledWindow')
+        self.scrolledWindow1.SetToolTip('wxScrolledWindow')
 
         self.sashWindow1 = wx.SashWindow(id=wxID_FRAME1SASHWINDOW1,
               name='sashWindow1', parent=self.splitterWindow1, pos=wx.Point(107,
