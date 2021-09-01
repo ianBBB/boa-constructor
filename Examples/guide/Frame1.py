@@ -13,7 +13,7 @@ def create(parent):
  wxID_FRAME1MENUFILESAVE, wxID_FRAME1MENUFILESAVEAS, 
 ] = [wx.NewId() for _init_coll_menuFile_Items in range(5)]
 
-[wxID_FRAME1MENUHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
+[wxID_FRAME1MENUHELPABOUT] = [wx.NewIdRef() for _init_coll_menuHelp_Items in range(1)]
 
 class Frame1(wx.Frame):
     def _init_coll_menuBar1_Menus(self, parent):

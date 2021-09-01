@@ -481,7 +481,7 @@ class SelectionTag(wx.Panel):
         wx.Panel.__init__(self, parent, -1, size = wx.Size(tagSize, tagSize), style = pnlStyle)
         self.Hide()
         self.group = group
-        self.SetCursor(wx.StockCursor(cursor))
+        self.Cursor(wx.StockCursor(cursor))
         self.selection = None
         self.position = wx.Size(0, 0)
         self.setAnchor(None)

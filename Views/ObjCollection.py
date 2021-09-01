@@ -141,7 +141,8 @@ class ObjectCollection:
     def setupList(self, list):
         dict = {}
         for item in list:
-            if not dict.has_key(item.comp_name):
+            # if not dict.has_key(item.comp_name):
+            if not (item.comp_name in dict.keys()):
                 dict[item.comp_name] = []
             dict[item.comp_name].append(item)
         return dict

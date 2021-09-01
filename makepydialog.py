@@ -89,7 +89,7 @@ class MakePyDialog(wx.Dialog):
         # there could be multiple selected, should decide what to do then...
         if index != -1:
             self.generatedFilename = self.Generate( self.libraryList[index] )
-            print 'generated to filename', self.generatedFilename
+            print('generated to filename', self.generatedFilename)
         return self.EndModal(wx.ID_OK)
 
     def Generate( self, typeLibrary):
@@ -105,7 +105,7 @@ class MakePyDialog(wx.Dialog):
             )
             filename =progress.filename
             progress.Destroy()
-        except Exception, error:
+        except Exception as error:
             traceback.print_exc()
             errorMessage =wx.MessageDialog( self, str(error), "Generation Failure!", style=wx.OK)
             progress.Destroy()
@@ -141,10 +141,10 @@ class MakePyDialog(wx.Dialog):
                     librarySpecification = self.libraryList[index]
                     try:
                         value = getattr( librarySpecification, attribute)
-                        if value and type(value) == types.StringType:
+                        if value and isinstance(value, bytes):
                             if finder.search( value ):
                                 items.append( (index, librarySpecification))
-                    except Exception, error:
+                    except Exception as error:
                         pass
 ##                    print error, librarySpecification, attribute, repr(getattr( librarySpecification, attribute))
         finally:
@@ -220,5 +220,5 @@ if __name__ == "__main__":
     def test( ):
         app = DemoApp(0)
         app.MainLoop()
-    print 'Creating dialog'
+    print('Creating dialog')
     test( )

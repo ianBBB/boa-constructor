@@ -21,7 +21,7 @@ from Utils import _
 try:
     imp.find_module('Pyrex')
 except ImportError:
-    raise Plugins.SkipPlugin, _('Pyrex is not installed')
+    raise Plugins.SkipPlugin(_('Pyrex is not installed'))
 
 from Models import Controllers, EditorHelper, EditorModels, PythonEditorModels, PythonControllers
 from Views import SourceViews, StyledTextCtrls
@@ -73,7 +73,7 @@ class PyrexController(Controllers.SourceController):
         model = self.getModel()
         try:
             result = Main.compile(model.localFilename(), c_only=1)
-        except Errors.PyrexError, err:
+        except Errors.PyrexError as err:
             wx.LogError(str(err))
             msg = 'Error'
         else:
@@ -140,7 +140,7 @@ style.pyrex.037=
 [style.pyrex.default]
 
 [pyrex]
-displaysrc='''+`pyrexSource`[1:-1]+'''
+displaysrc='''+repr(pyrexSource)[1:-1]+'''
 braces={}
 styleidnames={wx.stc.STC_P_DEFAULT: 'Default', wx.stc.STC_P_COMMENTLINE: 'Comment', wx.stc.STC_P_NUMBER : 'Number', wx.stc.STC_P_STRING : 'String', wx.stc.STC_P_CHARACTER: 'Single quoted string', wx.stc.STC_P_WORD: 'Keyword', wx.stc.STC_P_TRIPLE:'Triple quotes', wx.stc.STC_P_TRIPLEDOUBLE: 'Triple double quotes', wx.stc.STC_P_CLASSNAME: 'Class definition', wx.stc.STC_P_DEFNAME: 'Function or method', wx.stc.STC_P_OPERATOR: 'Operators', wx.stc.STC_P_IDENTIFIER: 'Identifiers', wx.stc.STC_P_COMMENTBLOCK: 'Comment blocks', wx.stc.STC_P_STRINGEOL: 'EOL unclosed string'}
 lexer=wx.stc.STC_LEX_PYTHON

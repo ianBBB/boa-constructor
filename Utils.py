@@ -132,8 +132,8 @@ def duplicateMenu(source):
         if menu.IsSeparator():
             dest.AppendSeparator()
         else:
-            # dest.Append(menu.GetId(), menu.GetText(), menu.GetHelp(), menu.IsCheckable())
-            dest.Append(menu)
+            dest.Append(menu.GetId(), menu.GetItemLabelText(), menu.GetHelp(), menu.IsCheckable())  # wascommented out. don't know y.
+            #dest.Append(menu)
             mi = dest.FindItemById(menu.GetId())
             if menu.IsCheckable() and menu.IsChecked():
                 mi.Check(True)

@@ -188,8 +188,9 @@ class DialogDTC(FramesConstr, BaseFrameDTC):
     def __init__(self, name, designer, frameCtrl):
         BaseFrameDTC.__init__(self, name, designer, frameCtrl)
         self.windowStyles += ['wx.CAPTION', 'wx.DEFAULT_DIALOG_STYLE',
-              'wx.RESIZE_BORDER', 'wx.STAY_ON_TOP',
+              'wx.RESIZE_BORDER',  'wx.STAY_ON_TOP',
               'wx.DIALOG_NO_PARENT', 'wx.SYSTEM_MENU', 'wx.CLOSE_BOX']
+
 
 # ##############################
 # The current version of wx does not have any of these attributes

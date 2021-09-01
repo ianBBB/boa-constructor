@@ -1,4 +1,4 @@
-#----------------------------------------------------------------------
+-4#----------------------------------------------------------------------
 # Name:        Preferences.py
 # Purpose:     Global settings. Populated by resource files *.rc.py
 #
@@ -90,9 +90,14 @@ else:
     else:
         rcPath = os.path.join(pyPath, prefsDirName)
 
-# fall back to defaults in Config root if .boa-constructor is not available.
-if not os.path.isdir(rcPath):
-    rcPath = os.path.join(pyPath, 'Config')
+# # fall back to defaults in Config root if .boa-constructor is not available.
+# if not os.path.isdir(rcPath):
+#     rcPath = os.path.join(pyPath, 'Config')
+# If there is a Config path, then use it, else fallback to .boa-constructor
+path = os.path.join(pyPath, 'Config')
+if os.path.isdir(path):
+    rcPath=path
+
 
 # no editors for these settings yet, can be redefined in prefs.rc.py if needed
 # e.g. wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, 'Courier New')
@@ -129,7 +134,7 @@ if thisPlatform == 'gtk': from Config.prefs_gtk_rc import *
 if thisPlatform == 'mac': from Config.prefs_mac_rc import *
 from Config.prefs_keys_rc import *
 from Config.prefs_plugins_rc import *
-
+my_keydef = keyDefs
 # upgrade if needed and exec in our namespace
 for prefsFile, version in (('prefs_rc.py', 18),
                            ('prefs_%s_rc.py'%thisPlatform, 9),

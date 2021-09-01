@@ -164,7 +164,7 @@ def getPropList(obj, cmp):
                       constrNames, propLst, constrLst)
                 except: pass
 
-        propLst.sort()
+        # propLst.sort()   # Need to sort out why this is necessary.
         constrLst.sort()
     else:
         if cmp:

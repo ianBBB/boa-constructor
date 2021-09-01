@@ -521,7 +521,7 @@ class BaseExplorerList(wx.ListCtrl, Utils.ListCtrlSelectionManagerMix):
                 recentFiles.add(mod.filename)
 
     def OnItemSelect(self, event):
-        self.selected = event.m_itemIndex
+        self.selected = event.Index
         event.Skip()
 
     def OnItemDeselect(self, event):
@@ -645,7 +645,9 @@ class BaseExplorerSplitter(wx.SplitterWindow):
         # XXX this is ugly :(
         # only update toolbar when the explorer is active
         if self.editor.tabs.GetSelection() == 1:
-            self.editor.setupToolBar(1)
+            # todo commenting for now
+            #self.editor.setupToolBar(1)
+            pass
 
     def OnSelecting(self, event):
         self.selecting = True

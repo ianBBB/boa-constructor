@@ -482,7 +482,7 @@ class ModulePage:
         self.editor.modules[newName] = self
 
         item = self.editor.winMenu.FindItemById(self.windowId)
-        item.SetText(self.getMenuLabel())
+        item.SetItemLabel(self.getMenuLabel())
         self.editor.editorUpdateNotify()
 
     def getMenuLabel(self):

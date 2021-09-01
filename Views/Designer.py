@@ -1700,10 +1700,12 @@ class DesignerControlsEvtHandler(wx.EvtHandler):
         dc.SetPen(pen1)
         dc.SetLogicalFunction(loglFunc)
         lines = []
-        for y in range(sze.y / sg + 1):
+        # for y in range(sze.y / sg + 1):
+        for y in range(int(sze.y / sg) + 1):
             lines.append( (0, y * sg, sze.x, y * sg) )
 
-        for x in range(sze.x / sg + 1):
+        # for x in range(sze.x / sg + 1):
+        for x in range(int(sze.x / sg) + 1):
             lines.append( (x * sg, 0, x * sg, sze.y) )
 
         dc.DrawLineList(lines)
@@ -1795,7 +1797,7 @@ class DesignerControlsEvtHandler(wx.EvtHandler):
 
             drawGrid = self.drawGridMethods[Preferences.drawGridMethod]
 
-            dc.BeginDrawing()
+            # dc.BeginDrawing()   # Not longer required
             try:
                 if Preferences.drawDesignerGrid:
                     drawGrid(dc, sze, sg)
@@ -1805,7 +1807,8 @@ class DesignerControlsEvtHandler(wx.EvtHandler):
                     self.drawSizerInfo(dc, sizer, yoffset)
 
             finally:
-                dc.EndDrawing()
+                # dc.EndDrawing()     # Not longer required
+                pass
 
 
         event.Skip()

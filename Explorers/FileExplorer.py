@@ -513,7 +513,7 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
                 raise ExplorerNodes.TransportModifiedSaveError(_('This file has '
                   'been saved by someone else since it was loaded'),
                   self.resourcepath)
-            open(self.resourcepath, mode).write(data)
+            open(self.resourcepath, mode).write(bytes(data,'ascii'))
         except IOError as error:
             raise ExplorerNodes.TransportSaveError(error, self.resourcepath)
         self.updateStdAttrs()

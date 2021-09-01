@@ -10,3 +10,15 @@
 
 import wx
 
+
+
+#-HelpBook----------------------------------------------------------------------
+
+# Should the document title be parsed from HTML and displayed under "Files".
+hbShowDocumentTitles = True
+
+
+#-PyInterpreterChooser----------------------------------------------------------
+
+# Additional locations to choose the Python Interpreter Path from.
+picExtraPaths = []

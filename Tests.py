@@ -60,7 +60,7 @@ def test_wxFrame(palette):
 
         model.views['Designer'].Close()
     except:
-        wx.MessageBox('Test failed\n'+`sys.exc_info()`)
+        wx.MessageBox('Test failed\n'+repr(sys.exc_info()))
     else:
         #if model.data == frame_answer:
         wx.MessageBox('Test succeeded')

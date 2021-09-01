@@ -162,14 +162,14 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
             self._blockUpdate = False
 
         if self.eol is None:
-            self.eol = Utils.getEOLMode(newData, self.defaultEOL)
+            self.eol = Utils.getEOLMode(str(newData), self.defaultEOL)
 
             self.SetEOLMode({'\r\n': wx.stc.STC_EOL_CRLF,
                              '\r':   wx.stc.STC_EOL_CR,
                              '\n':   wx.stc.STC_EOL_LF}[self.eol])
 
         if not self.eolsChecked:
-            if Utils.checkMixedEOLs(newData):
+            if Utils.checkMixedEOLs(str(newData)):
                 wx.LogWarning(_('Mixed EOLs detected in %s, please use '
                              'Edit->Convert... to fix this problem.')\
                              %os.path.basename(self.model.filename))

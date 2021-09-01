@@ -338,7 +338,7 @@ def identifyFile(filename, source=None, localfs=True):
     elif lext in list(EditorHelper.inspectableFilesReg.keys()):
         BaseModel = EditorHelper.inspectableFilesReg[lext]
         if source is not None:
-            return identifySource[lext](source.split('\n'))
+            return identifySource[lext](str(source).split('\n'))
         elif not Preferences.exInspectInspectableFiles:
             return BaseModel, ''
         if os.path.exists(filename):
@@ -348,8 +348,9 @@ def identifyFile(filename, source=None, localfs=True):
                     line = f.readline()
                     if not line: break
                     line = line.strip()
-                    if line.startswith(codecs.BOM_UTF8):
-                        line = line[len(codecs.BOM_UTF8):]
+                    # should be be no need to test for UTF in pytohn 3 strings
+                    #if line.startswith(codecs.BOM_UTF8):
+                        # line = line[len(codecs.BOM_UTF8):]
                     if line and lext in headerStartChar:
                         if line[0] != headerStartChar[lext]:
                             return BaseModel, ''

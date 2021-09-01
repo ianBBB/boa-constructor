@@ -192,8 +192,8 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
     _block_selected = False
     def OnObjectSelect(self, event):
         if not self._block_selected:
-            self.selected = event.m_itemIndex
-            self.collEditView.selectObject(event.m_itemIndex)
+            self.selected = event.Index
+            self.collEditView.selectObject(event.Index)
 
     def OnObjectDeselect(self, event):
         if not self._block_selected:

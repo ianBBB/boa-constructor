@@ -285,9 +285,11 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         if wx.Platform == '__WXMAC__':
             helpMenuTitleName = _('&Help')
             self.mainMenu.Append(self.helpMenu, helpMenuTitleName)
-            wx.App.SetMacExitMenuItemId(EditorHelper.wxID_EDITOREXITBOA)
-            wx.App.SetMacAboutMenuItemId(EditorHelper.wxID_EDITORHELPABOUT)
-            wx.App.SetMacPreferencesMenuItemId(EditorHelper.wxID_EDITORSWITCHPREFS)
+            # The following methods are not long available in wx.
+            # wx.App.SetMacExitMenuItemId(EditorHelper.wxID_EDITOREXITBOA)
+            # wx.App.SetMacAboutMenuItemId(EditorHelper.wxID_EDITORHELPABOUT)
+            # wx.App.SetMacPreferencesMenuItemId(EditorHelper.wxID_EDITORSWITCHPREFS)
+
         else:
             helpMenuTitleName = _('Help')
             self.mainMenu.Append(self.helpMenu, helpMenuTitleName)
@@ -438,7 +440,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         if self.palette.palettePages and Preferences.edShowFileNewMenu:
             # fileMenu.AppendMenu(wx.NewId(), _('New'),
             #       Utils.duplicateMenu(self.palette.palettePages[0].menu))
-            fileMenu.Append(wx.NewId(), _('New'),
+            fileMenu.Append(wx.NewIdRef(), _('New'),
                   Utils.duplicateMenu(self.palette.palettePages[0].menu))
         Utils.appendMenuItem(fileMenu, EditorHelper.wxID_EDITOROPEN, _('Open'),
               keyDefs['Open'], self.openBmp, _('Open a module'))
@@ -950,7 +952,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             curdir = self.getOpenFromHereDir()
 
         from FileDlg import wxFileDialog
-        dlg = wxFileDialog(self, _('Choose a file'), curdir, curfile, filter, wx.OPEN)
+        dlg = wxFileDialog(self, _('Choose a file'), curdir, curfile, filter, wx.FD_OPEN)
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 return dlg.GetPath()
@@ -970,7 +972,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
         from FileDlg import wxFileDialog
         dlg = wxFileDialog(self, _('Save as...'), dir, name, filter,
-              wx.SAVE | wx.OVERWRITE_PROMPT)
+              wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         #dlg.dont_pop = dont_pop
         try:
             if dlg.ShowModal() == wx.ID_OK:

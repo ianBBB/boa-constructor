@@ -406,8 +406,8 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
 
     def checkProcesses(self):
         if self.processesPage:
-            idxs = range(self.processesPage.GetItemCount())
-            idxs.reverse()
+            idxs = range(self.processesPage.GetItemCount(),0,-1)
+            # idxs.reverse()
             for idx in idxs:
                 pid = self.processesPage.GetItemData(idx)
                 if not wx.Process.Exists(pid):

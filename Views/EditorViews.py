@@ -134,7 +134,7 @@ class EditorView:
         self.methodsIds = []
         for name, meth, bmp, accl in self.actions:
             if name != '-':
-                self.methodsIds.append( (wx.NewId(), meth) )
+                self.methodsIds.append( (wx.NewIdRef(), meth) )
 
     def buildMenuDefn(self):
         self.accelLst = []
@@ -652,7 +652,8 @@ class ListCtrlView(wx.ListView, EditorView, Utils.ListCtrlSelectionManagerMix):
     def addReportItems(self, index, list, imgIdx = None):
         if list:
             if imgIdx is not None:
-                self.InsertImageStringItem(index, list[0], imgIdx)
+                # self.InsertImageStringItem(index, list[0], imgIdx)
+                self.InsertItem(index, list[0], imgIdx)
             else:
                 self.InsertStringItem(index, list[0])
             self.SetItemData(index, index)
@@ -660,7 +661,7 @@ class ListCtrlView(wx.ListView, EditorView, Utils.ListCtrlSelectionManagerMix):
             col = 1
             if len(list) > 1:
                 for text in list[1:]:
-                    self.SetStringItem(index, col, str(text))
+                    self.SetItem(index, col, str(text))
                     col = col + 1
         return index + 1
 
@@ -708,7 +709,7 @@ class ListCtrlView(wx.ListView, EditorView, Utils.ListCtrlSelectionManagerMix):
         event.Skip()
 
     def OnItemSelect(self, event):
-        self.selected = event.m_itemIndex
+        self.selected = event.Index
 
     def OnItemDeselect(self, event):
         self.selected = -1
@@ -1346,7 +1347,7 @@ class DistUtilManifestView(ListCtrlView):
             manifest = openEx(manifestPath).load()
         except TransportError as err:
             self.InsertStringItem(0, _('Error'))
-            self.SetStringItem(0, 1, str(err))
+            self.SetItem(0, 1, str(err))
             self.manifest = None
         else:
             self.manifest = []
@@ -1359,7 +1360,7 @@ class DistUtilManifestView(ListCtrlView):
                 self.manifest.append(path)
                 name = os.path.basename(path)
                 self.InsertStringItem(idx, name)
-                self.SetStringItem(idx, 1, path)
+                self.SetItem(idx, 1, path)
 
         self.pastelise()
 
@@ -1402,8 +1403,8 @@ class CVSConflictsView(ListCtrlView):
         confCnt = 0
         for rev, lineNo, size in self.conflicts:
             self.InsertStringItem(confCnt, rev)
-            self.SetStringItem(confCnt, 1, repr(lineNo))
-            self.SetStringItem(confCnt, 2, repr(size))
+            self.SetItem(confCnt, 1, repr(lineNo))
+            self.SetItem(confCnt, 2, repr(size))
             confCnt = confCnt + 1
 
 
