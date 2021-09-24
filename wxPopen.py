@@ -35,8 +35,9 @@ class ProcessRunnerMix:
         self.process.Redirect()
 
         # self.pid = wx.Execute(cmd, wx.EXEC_NOHIDE, self.process)
-        self.pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
+        # self.pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
         # self.pid = wx.Execute(cmd)
+        self.pid = wx.Execute('C:\\Python\\Python_3_9_6\\python.exe App1.py', wx.EXEC_ASYNC, self.process)
 
         self.inputStream = self.process.GetOutputStream()
         self.errorStream = self.process.GetErrorStream()

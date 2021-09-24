@@ -457,7 +457,12 @@ class PreferenceCompanion(ExplorerNodes.ExplorerCompanion):
             breaksIdx = None
 
         res = []
-        for name, value, comment, option in map(None, order, vals, comments, options):
+
+        def local_None(order, val, comment, option):
+            return [order,val, comment, option]
+
+        # for name, value, comment, option in map(None, order, vals, comments, options):
+        for name, value, comment, option in map(local_None, order, vals, comments, options):
             if breaksIdx is not None:
                 # find closest break above property
                 while breaksIdx < len(breakLinenos)-1 and \

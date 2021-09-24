@@ -367,7 +367,8 @@ class LanguageListCtrl(wx.ListCtrl):
         self.ClearAll()
         self.InsertColumn(0, '', width=175)
         for i in range(len(self.choices)):
-            self.InsertImageStringItem(i, self.choices[i], i)
+            # self.InsertImageStringItem(i, self.choices[i], i)
+            self.InsertItem(i, self.choices[i], i)
 
         self.SetLanguage(lang)
 
