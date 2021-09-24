@@ -12,6 +12,7 @@
 import string, os, sys, glob, pprint, types, re, traceback
 
 import wx
+from wx import adv
 
 import Preferences
 from Preferences import IS
@@ -163,7 +164,7 @@ def winIdRange(count):
 wxNewIds = winIdRange
 
 def methodLooksLikeEvent(method):
-    return len(method) >= 3 and method[:2] == 'On' and method[2] in string.uppercase
+    return len(method) >= 3 and method[:2] == 'On' and method[2] in string.ascii_uppercase
 
 def startswith(str, substr):
     return len(str) >= len(substr) and str[:len(substr)] == substr
@@ -295,8 +296,8 @@ def showTip(frame, forceShow=0):
             if not os.path.exists(tipsFile):
                 tipsFile = toPyPath('Docs/tips.txt')
 
-        tp = wx.CreateFileTipProvider(tipsFile, index)
-        showTip = wx.ShowTip(frame, tp, showTip)
+        tp = wx.adv.CreateFileTipProvider(tipsFile, index)
+        showTip = wx.adv.ShowTip(frame, tp, showTip)
         index = tp.GetCurrentTip()
         if conf:
             conf.set('tips', 'showonstartup', showTip and 'true' or 'false')
@@ -556,7 +557,7 @@ def getEntireWxNamespace():
     return namespace
 
 class FrameRestorerMixin:
-    """ Used by top level windows to restore from gidden or iconised state
+    """ Used by top level windows to restore from hidden or iconised state
     and to load and persist window dimensions
 
     Classes using the mixin must define self.setDefaultDimensions()
@@ -580,7 +581,7 @@ class FrameRestorerMixin:
             else:
                 self.SetPosition(tuple(dims[:-1]))
         else:
-            self.SetDimensions(*dims)
+            self.setDimensions(*dims)
 
     def getDimensions(self):
         pos = self.GetPosition().Get()

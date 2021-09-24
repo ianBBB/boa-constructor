@@ -1642,7 +1642,8 @@ class DesignerControlsEvtHandler(wx.EvtHandler):
 
                     if c == 1:
                         s = dsgn.GetClientSize()
-                        ctrl.SetDimensions(0, 0, s.x, s.y)
+                        # ctrl.SetDimensions(0, 0, s.x, s.y)
+                        ctrl.SetSize(0, 0, s.x, s.y)
 
             if dsgn.selection:
                 s, p = dsgn.selection.size, dsgn.selection.position

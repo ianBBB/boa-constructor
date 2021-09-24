@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------
 # Name:        InspectableViews.py
-# Purpose:     View base class for GUI builder designer classes than can be
+# Purpose:     View base class for GUI builder designer classes that can be
 #              inspected and edited in the object inspector.
 #              Currently: frame designer, data view and collection editors
 #

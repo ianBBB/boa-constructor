@@ -19,7 +19,7 @@ import os, glob, configparser
 import Preferences, Utils, Plugins
 from Utils import _
 
-[wxID_CODETEMPLATEMANAGERDLG] = [wx.NewId() for _init_ctrls in range(1)]
+[wxID_CODETEMPLATEMANAGERDLG] = [wx.NewIdRef() for _init_ctrls in range(1)]
 
 class CodeTemplateManagerDlg(wx.Dialog):
     def _init_ctrls(self, prnt):

@@ -202,7 +202,7 @@ def importTransport(moduleName):
     except ImportError as error:
         if Preferences.pluginErrorHandling == 'raise':
             raise
-        wx.LogWarning(_('%s not installed: %s') %(moduleName, str(error)))
+        wx.LogWarning(_('%s not my installed: %s') %(moduleName, str(error)))
         ExplorerNodes.failedModules[moduleName] = str(error)
         return True
     else:
@@ -645,8 +645,7 @@ class BaseExplorerSplitter(wx.SplitterWindow):
         # XXX this is ugly :(
         # only update toolbar when the explorer is active
         if self.editor.tabs.GetSelection() == 1:
-            # todo commenting for now
-            #self.editor.setupToolBar(1)
+            self.editor.setupToolBar(1)
             pass
 
     def OnSelecting(self, event):

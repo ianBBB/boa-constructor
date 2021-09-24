@@ -226,11 +226,11 @@ class DesignTimeCompanion(Companion):
         pass
 
     def getPropEditor(self, prop):
-        if prop in self.editors: return self.editors[prop]
+        if prop in self.editors.keys(): return self.editors[prop]
         else: return None
 
     def getPropOptions(self, prop):
-        if prop in self.options: return self.options[prop]
+        if prop in self.options.keys(): return self.options[prop]
         else: return None
 
     def getPropNames(self, prop):

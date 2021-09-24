@@ -41,3 +41,4 @@ elif isinstance(filetype, IOBase) and hasattr(filetype,'read'):
 # return cmp(self.value, other)
 return (self.value > other) - (self.value < other)
 
+^(class|    def)

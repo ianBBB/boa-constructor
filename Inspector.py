@@ -45,9 +45,9 @@ IECWidthFudge = 3
 [wxID_INSPECTORFRAME, wxID_INSPECTORFRAMECONSTR, wxID_INSPECTORFRAMEEVENTS, 
  wxID_INSPECTORFRAMEPAGES, wxID_INSPECTORFRAMEPROPS, 
  wxID_INSPECTORFRAMESTATUSBAR, wxID_INSPECTORFRAMETOOLBAR, 
-] = [wx.NewId() for _init_ctrls in range(7)]
+] = [wx.NewIdRef() for _init_ctrls in range(7)]
 
-[wxID_INSPECTORFRAMETOOLBARTOOLS0] = [wx.NewId() for _init_coll_toolBar_Tools in range(1)]
+[wxID_INSPECTORFRAMETOOLBARTOOLS0] = [wx.NewIdRef() for _init_coll_toolBar_Tools in range(1)]
 
 class InspectorFrame(wx.Frame, Utils.FrameRestorerMixin):
     """ Main Inspector frame, mainly does frame initialisation and handles
@@ -112,7 +112,7 @@ class InspectorFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.statusBar = wx.StatusBar(id=wxID_INSPECTORFRAMESTATUSBAR,
               name='statusBar', parent=self, style=wx.STB_SIZEGRIP)
         self.statusBar.SetFont(wx.Font(Preferences.inspStatBarFontSize,
-              wx.DEFAULT, wx.NORMAL, wx.BOLD, False, ''))
+              wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, ''))
         self._init_coll_statusBar_Fields(self.statusBar)
         self.SetStatusBar(self.statusBar)
 
@@ -474,8 +474,8 @@ class InspectorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
 
 
-wxID_PARENTTREE = wx.NewId()
-wxID_PARENTTREESELECTED = wx.NewId()
+wxID_PARENTTREE = wx.NewIdRef()
+wxID_PARENTTREESELECTED = wx.NewIdRef()
 class ParentTree(wx.TreeCtrl):
     """ Specialised tree ctrl that displays parent child relationship of
         controls on the frame """
@@ -598,7 +598,7 @@ class NameValue:
 
             # check if it's expandable
             if PropertyEditors.esExpandable in self.propEditor.getStyle():
-                mID = wx.NewId()
+                mID = wx.NewIdRef()
                 self.expander = wx.CheckBox(nameParent, mID, '',
                   wx.Point(8 * self.indent, self.idx * oiLineHeight +2),
                   wx.Size(13, 14))
@@ -705,7 +705,7 @@ class NameValue:
     def enboldenCtrl(self, ctrl, bold = True):
         fnt = ctrl.GetFont()
         ctrl.SetFont(wx.Font(fnt.GetPointSize(),
-          fnt.GetFamily(), fnt.GetStyle(), bold and wx.BOLD or wx.NORMAL,
+          fnt.GetFamily(), fnt.GetStyle(), wx.FONTWEIGHT_BOLD | wx.FONTSTYLE_NORMAL,
           fnt.GetUnderlined(), fnt.GetFaceName()))
 
     def updateDisplayValue(self):
@@ -867,8 +867,8 @@ class ZopePropNameValue(NameValue):
     def initFromComponent(self):
         pass
 
-wxID_EVTCATS = wx.NewId()
-wxID_EVTMACS = wx.NewId()
+wxID_EVTCATS = wx.NewIdRef()
+wxID_EVTMACS = wx.NewIdRef()    # Really? twice?
 class EventsWindow(wx.SplitterWindow):
     """ Window that hosts event name values and event category selection """
     def __init__(self, *_args, **_kwargs):
@@ -914,7 +914,8 @@ class EventsWindow(wx.SplitterWindow):
 
         # List available categories
         for catCls in self.inspector.selCmp.events():
-            self.categoryClasses.InsertStringItem(0, catCls)
+            # self.categoryClasses.InsertStringItem(0, catCls)
+            self.categoryClasses.InsertItem(0, catCls)
 
         self.definitions.readObject()
 
@@ -1112,7 +1113,7 @@ class NameValueEditorScrollWin(wx.ScrolledWindow):
         return res
 
     def initFromComponent(self, name):
-        """ Update a property and it's sub properies from the underlying
+        """ Update a property and it's sub properties from the underlying
             control """
 
         nv = self.getNameValue(name)
@@ -1153,7 +1154,7 @@ class InspectorScrollWin(NameValueEditorScrollWin):
         self.Bind(wx.EVT_MENU, self.OnOpenItem, id=wxID_OPENITEM)
         self.Bind(wx.EVT_MENU, self.OnCloseItem, id=wxID_CLOSEITEM)
 
-        self.SetAcceleratorTable(wx.AcceleratorTable([\
+        self.SetAcceleratorTable(wx.AcceleratorTable([
           (0, wx.WXK_RETURN, wxID_ENTER),
           (0, wx.WXK_ESCAPE, wxID_UNDOEDIT),
           (keyDefs['ContextHelp'][0], keyDefs['ContextHelp'][1], wxID_CONTEXTHELP),

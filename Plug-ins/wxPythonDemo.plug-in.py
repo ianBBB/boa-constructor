@@ -41,8 +41,8 @@ def importFromWxPyDemo(name):
         finally:
             os.chdir(cwd)
             del sys.path[0]
-    except Exception, err:
-        print str(err)
+    except Exception as err:
+        print(str(err))
         return None
         
 
@@ -137,7 +137,7 @@ class wxPythonDemoNode(FileExplorer.FileSysNode):
         if model.demoModule and (model, cntrl) != (None, None): 
             for View, focus in ((wxPythonDemoOverView, False), 
                                 (wxPythonDemoView, True)):
-                if model.views.has_key(View.viewName):
+                if View.viewName in model.views:
                     view = model.views[View.viewName]
                     view.updateDemoCtrl()
                 else:

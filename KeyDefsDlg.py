@@ -85,7 +85,7 @@ class KeyDefsDialog(wx.Dialog):
         flags, keyCode, shortcut = eval(accelEntry, {'wx': wx})[0]
 
         self.preDefKeys = []
-        self.preDefKeys = specialKeys.keys() + otherKeys1 + otherKeys2
+        self.preDefKeys = list(specialKeys.keys()) + otherKeys1 + otherKeys2
         self.entryTitle = 'Key binding definition:'
         self.entryTitle = _('Key binding definition: %s') % entryName
 
@@ -101,7 +101,7 @@ class KeyDefsDialog(wx.Dialog):
         for ctrl, flag in self.flagCtrls:
             ctrl.SetValue((flags & flag) == flag)
 
-        if valNameMap.has_key(keyCode):
+        if keyCode in valNameMap:
             self.keyCodeCbb.SetValue(valNameMap[keyCode])
         else:
             self.keyCodeCbb.SetValue(chr(keyCode))
@@ -121,7 +121,7 @@ class KeyDefsDialog(wx.Dialog):
         keyCode = self.keyCodeCbb.GetValue()
         if not keyCode:
             raise InvalidValueError(_('Key code may not be blank'))
-        if keyCode not in specialKeys.keys() + otherKeys1 + otherKeys2:
+        if keyCode not in list(specialKeys.keys()) + otherKeys1 + otherKeys2:
             if len(keyCode) != 1 or keyCode not in string.ascII_letters+string.digits:
                 raise InvalidValueError(_('Key code must either be a single character (letter or digit) or an identifier selected from the combobox'))
             keyCode = "ord('%s')" % keyCode.upper()
@@ -147,7 +147,7 @@ class KeyDefsDialog(wx.Dialog):
     def OnOkbtnButton(self, event):
         try:
             self.result = self.validateCtrls()
-        except InvalidValueError, err:
+        except InvalidValueError as err:
             wx.MessageBox(str(err), _('Invalid value error'), wx.OK | wx.ICON_ERROR, self)
         else:
             self.EndModal(wx.ID_OK)
@@ -198,7 +198,7 @@ otherKeys2 = ['wx.WXK_CONTROL', 'wx.WXK_MENU', 'wx.WXK_PAUSE',
 
 # build reverse mapping
 valNameMap = {}
-for name, val in specialKeys.items():
+for name, val in list(specialKeys.items()):
     valNameMap[val] = name
 val = 300
 for name in otherKeys1:
@@ -216,7 +216,7 @@ if __name__ == '__main__':
     dlg = KeyDefsDialog(None, 'ContextHelp', "(wx.ACCEL_NORMAL, wx.WXK_F1, 'F1'),")
     try:
         if dlg.ShowModal() == wx.ID_OK:
-            print dlg.result
+            print(dlg.result)
     finally:
         dlg.Destroy()
     app.MainLoop()

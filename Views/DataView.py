@@ -32,7 +32,7 @@ class DataView(wx.ListView, InspectableObjectView):
     postBmp = 'Images/Inspector/Post.png'
     cancelBmp = 'Images/Inspector/Cancel.png'
     def __init__(self, parent, inspector, model, compPal):
-        [self.wxID_DATAVIEW] = [wx.NewId() for _init_ctrls in range(1)]
+        [self.wxID_DATAVIEW] = [wx.NewIdRef() for _init_ctrls in range(1)]
         wx.ListView.__init__(self, parent, self.wxID_DATAVIEW, size=(0,0),
               style=Preferences.dataViewListStyle | wx.SUNKEN_BORDER)
 

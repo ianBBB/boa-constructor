@@ -278,7 +278,7 @@ class SelectionGroup:
         if self.selCompn: self.selCompn.beforeResize()
 
         try:
-            self.selection.SetDimensions(self.position.x, self.position.y,
+            self.selection.SetSize(self.position.x, self.position.y,
                                          self.size.x, self.size.y)
         finally:
             if self.selCompn: self.selCompn.afterResize()
@@ -330,15 +330,15 @@ class SelectionGroup:
                 trSze = wx.Size(granularise(size.x + position.x, sz.x + ps.x) - trPos.x,
                                granularise(size.y + position.y, sz.y + ps.y) - trPos.y)
 
-            self.stTL.SetDimensions(trPos.x -offsetO, trPos.y -offsetO, tagSize, tagSize)
-            self.stTR.SetDimensions(trPos.x -offsetI + trSze.x, trPos.y -offsetO, tagSize, tagSize)
-            self.stBR.SetDimensions(trPos.x -offsetI + trSze.x, trPos.y -offsetI + trSze.y, tagSize, tagSize)
-            self.stBL.SetDimensions(trPos.x -offsetO, trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stTL.SetSize(trPos.x -offsetO, trPos.y -offsetO, tagSize, tagSize)
+            self.stTR.SetSize(trPos.x -offsetI + trSze.x, trPos.y -offsetO, tagSize, tagSize)
+            self.stBR.SetSize(trPos.x -offsetI + trSze.x, trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stBL.SetSize(trPos.x -offsetO, trPos.y -offsetI + trSze.y, tagSize, tagSize)
 
-            self.stT.SetDimensions(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetO, tagSize, tagSize)
-            self.stB.SetDimensions(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetI + trSze.y, tagSize, tagSize)
-            self.stL.SetDimensions(trPos.x -offsetO, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
-            self.stR.SetDimensions(trPos.x -offsetI +trSze.x, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
+            self.stT.SetSize(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetO, tagSize, tagSize)
+            self.stB.SetSize(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stL.SetSize(trPos.x -offsetO, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
+            self.stR.SetSize(trPos.x -offsetI +trSze.x, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
 
         else:
             # Moving
@@ -348,25 +348,25 @@ class SelectionGroup:
             if dbgInfo: InspDbgInfo(self.inspector, repr(trPos), 0)
             trSze = wx.Size(sz.x, sz.y)
 
-        self.slT.SetDimensions(trPos.x -frmWid, trPos.y -frmWid, trSze.x +frmWid, frmWid)
-        self.slR.SetDimensions(trPos.x + trSze.x, trPos.y -frmWid, frmWid, trSze.y+frmWid*2)
-        self.slB.SetDimensions(trPos.x -frmWid, trPos.y + trSze.y, trSze.x +frmWid*2, frmWid)
-        self.slL.SetDimensions(trPos.x -frmWid, trPos.y-frmWid, frmWid, trSze.y +frmWid)
+        self.slT.SetSize(trPos.x -frmWid, trPos.y -frmWid, trSze.x +frmWid, frmWid)
+        self.slR.SetSize(trPos.x + trSze.x, trPos.y -frmWid, frmWid, trSze.y+frmWid*2)
+        self.slB.SetSize(trPos.x -frmWid, trPos.y + trSze.y, trSze.x +frmWid*2, frmWid)
+        self.slL.SetSize(trPos.x -frmWid, trPos.y-frmWid, frmWid, trSze.y +frmWid)
 
         if finishDragging:
             self.dragging = False
             self.startPos = trPos
             self.startSize = trSze
 
-            self.stTL.SetDimensions(trPos.x -offsetO, trPos.y -offsetO, tagSize, tagSize)
-            self.stTR.SetDimensions(trPos.x -offsetI + trSze.x, trPos.y -offsetO, tagSize, tagSize)
-            self.stBR.SetDimensions(trPos.x -offsetI + trSze.x, trPos.y -offsetI + trSze.y, tagSize, tagSize)
-            self.stBL.SetDimensions(trPos.x -offsetO, trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stTL.SetSize(trPos.x -offsetO, trPos.y -offsetO, tagSize, tagSize)
+            self.stTR.SetSize(trPos.x -offsetI + trSze.x, trPos.y -offsetO, tagSize, tagSize)
+            self.stBR.SetSize(trPos.x -offsetI + trSze.x, trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stBL.SetSize(trPos.x -offsetO, trPos.y -offsetI + trSze.y, tagSize, tagSize)
 
-            self.stT.SetDimensions(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetO, tagSize, tagSize)
-            self.stB.SetDimensions(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetI + trSze.y, tagSize, tagSize)
-            self.stL.SetDimensions(trPos.x -offsetO, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
-            self.stR.SetDimensions(trPos.x -offsetI +trSze.x, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
+            self.stT.SetSize(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetO, tagSize, tagSize)
+            self.stB.SetSize(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stL.SetSize(trPos.x -offsetO, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
+            self.stR.SetSize(trPos.x -offsetI +trSze.x, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
 
         self.position  = trPos
         self.size = trSze
@@ -481,17 +481,18 @@ class SelectionTag(wx.Panel):
         wx.Panel.__init__(self, parent, -1, size = wx.Size(tagSize, tagSize), style = pnlStyle)
         self.Hide()
         self.group = group
-        self.Cursor(wx.StockCursor(cursor))
+        # self.SetCursor(wx.StockCursor(cursor))
+        self.SetCursor(wx.Cursor(cursor))
         self.selection = None
         self.position = wx.Size(0, 0)
         self.setAnchor(None)
         self.hasSizer = False
         self.inSizer = False
 
-        self.wxID_ANCHORED = wx.NewId()
+        self.wxID_ANCHORED = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnAnchorToggle, id=self.wxID_ANCHORED)
 
-        self.wxID_SIZERED = wx.NewId()
+        self.wxID_SIZERED = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnSelectSizer, id=self.wxID_SIZERED)
 
         self.Bind(wx.EVT_LEFT_DOWN, group.OnSizeBegin)

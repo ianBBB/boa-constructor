@@ -9,23 +9,26 @@ def create(parent):
 
 [wxID_STRINGEDITDLG, wxID_STRINGEDITDLGBUTTON1, wxID_STRINGEDITDLGBUTTON2, 
  wxID_STRINGEDITDLGI18NCB, wxID_STRINGEDITDLGSTRINGTC, 
-] = [wx.NewId() for _init_ctrls in range(5)]
+] = [wx.NewIdRef() for _init_ctrls in range(5)]
 
 class StringEditDlg(wx.Dialog):
     def _init_coll_boxSizer1_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.stringTC, 1, border=10, flag=wx.GROW | wx.ALL)
-        parent.AddSizer(self.boxSizer2, 0, border=10, flag=wx.ALL | wx.GROW)
+        # parent.AddWindow(self.stringTC, 1, border=10, flag=wx.GROW | wx.ALL)
+        parent.Add(self.stringTC, 1, border=10, flag=wx.GROW | wx.ALL)
+        parent.Add(self.boxSizer2, 0, border=10, flag=wx.ALL | wx.GROW)
 
     def _init_coll_boxSizer2_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.i18nCB, 1, border=0, flag=wx.ALL | wx.GROW)
-        parent.AddSpacer(wx.Size(8, 8), border=0, flag=wx.ALL | wx.GROW)
-        parent.AddWindow(self.button1, 0, border=0, flag=wx.ALIGN_RIGHT)
-        parent.AddSpacer(wx.Size(8, 8), border=10, flag=0)
-        parent.AddWindow(self.button2, 0, border=0, flag=wx.ALIGN_RIGHT)
+        parent.Add(self.i18nCB, 1, border=0, flag=wx.ALL | wx.GROW)
+        # parent.AddSpacer(wx.Size(8, 8), border=0, flag=wx.ALL | wx.GROW)
+        parent.AddSpacer(8)
+        parent.Add(self.button1, 0, border=0, flag=wx.ALIGN_RIGHT)
+        # parent.AddSpacer(wx.Size(8, 8), border=10, flag=0)
+        parent.AddSpacer(8)
+        parent.Add(self.button2, 0, border=0, flag=wx.ALIGN_RIGHT)
 
     def _init_sizers(self):
         # generated method, don't edit
@@ -72,7 +75,7 @@ class StringEditDlg(wx.Dialog):
         self.stringTC.SetValue(companion.eval(strSrc))
 
     def getStrSrc(self):
-        strSrc = `self.stringTC.GetValue()`
+        strSrc = repr(self.stringTC.GetValue())
         if self.i18nCB.GetValue():
             return'_(%r)'%self.stringTC.GetValue()
         else:
@@ -81,7 +84,8 @@ class StringEditDlg(wx.Dialog):
         
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    # app = wx.PySimpleApp()
+    app = wx.App()
 
     dlg = create(None)
     try:

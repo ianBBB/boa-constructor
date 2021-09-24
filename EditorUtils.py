@@ -1,3 +1,4 @@
+import math
 import os, time, threading, socket
 
 import wx
@@ -107,16 +108,16 @@ class EditorStatusBar(wx.StatusBar):
         self.img.Bind(wx.EVT_LEFT_DCLICK, self.OnShowHistory)
 
         rect = self.GetFieldRect(sbfBrwsBtns)
-        #self.historyBtns = wx.SpinButton(self, -1, (rect.x+1, rect.y+1),
-#                                                  (rect.width-2, rect.height-2))
+        self.historyBtns = wx.SpinButton(self, -1, (rect.x+1, rect.y+1),
+                                                 (rect.width-2, rect.height-2))
         self.historyBtnBack = wx.BitmapButton(self, -1,
               Preferences.IS.load('Images/Shared/PreviousSmall.png'),
-              (rect.x+1, rect.y+1), (int(round(rect.width/2.0))-1, rect.height-2))
+              (rect.x+1, rect.y+1), (int(math.ceil(rect.width/2.0))-1, rect.height-2))
         self.historyBtnFwd = wx.BitmapButton(self, -1,
               Preferences.IS.load('Images/Shared/NextSmall.png'),
-              (rect.x+1+int(round(rect.width/2.0)), rect.y+1), (int(round(rect.width/2.0))-1, rect.height-2))
+              (rect.x+1+int(round(rect.width/2.0)), rect.y+1), (int(math.ceil(rect.width/2.0))-1, rect.height-2))
 
-        #self.historyBtns.SetToolTip('Browse the Traceback/Error/Output window history.')
+        self.historyBtns.SetToolTip('Browse the Traceback/Error/Output window history.')
         tip = _('Browse the Traceback/Error/Output window history.')
         self.historyBtnBack.SetToolTip(tip)
         self.historyBtnFwd.SetToolTip(tip)

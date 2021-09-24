@@ -69,7 +69,7 @@ class ObjectCollection:
             else:
                 i = i + 1
 
-        if self.collectionsByName.has_key(name):
+        if name in self.collectionsByName:
             namedColls = self.collectionsByName[name]
 
             i = 0
@@ -88,7 +88,7 @@ class ObjectCollection:
                 i = i + 1
 
         i = 0
-        if self.propertiesByName.has_key(name):
+        if name in self.propertiesByName:
             props = self.propertiesByName[name]
             while i < len(props):
                 prop = props[i]
@@ -102,7 +102,7 @@ class ObjectCollection:
             item.renameCompName2(name, new_name)
 
         # keep named colls in sync
-        if dict.has_key(name):
+        if name in dict:
             dict[new_name] = dict[name]
             del dict[name]
 
@@ -135,14 +135,15 @@ class ObjectCollection:
 
     def reparent(self, oldParent, newParent):
         for crt in self.creators:
-            if crt.params.has_key('parent') and crt.params['parent'] == oldParent:
+            # if crt.params.has_key('parent') and crt.params['parent'] == oldParent:
+            if 'parent' in crt.params and crt.params['parent'] == oldParent:
                 crt.params['parent'] = newParent
 
     def setupList(self, list):
         dict = {}
         for item in list:
             # if not dict.has_key(item.comp_name):
-            if not (item.comp_name in dict.keys()):
+            if (item.comp_name not in dict.keys()):
                 dict[item.comp_name] = []
             dict[item.comp_name].append(item)
         return dict

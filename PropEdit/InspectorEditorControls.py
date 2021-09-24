@@ -26,7 +26,7 @@ class InspectorEditorControl:
     def __init__(self, propEditor, value):
         self.propEditor = propEditor
         self.editorCtrl = None
-        self.wID = wx.NewId()
+        self.wID = wx.NewIdRef()
         self.value = value
 
     def createControl(self):
@@ -131,7 +131,7 @@ class SpinCtrlIEC(InspectorEditorControl):
               (-2, idx*Preferences.oiLineHeight -2),
               (sizeX, Preferences.oiLineHeight+3), style=wx.SP_VERTICAL,
               # max=2L**31-1, min=-(2L**31-1))
-              max=sys.maxint, min=-sys.maxint)
+              max=sys.maxsize, min=-sys.maxsize)
         parent.Bind(wx.EVT_TEXT_ENTER, self.OnSelect, id=self.wID)
         parent.Bind(wx.EVT_SPINCTRL, self.OnSelect, id=self.wID)
         InspectorEditorControl.createControl(self)
@@ -156,7 +156,7 @@ class ChoiceIEC(InspectorEditorControl):
          wx.Size(sizeX, Preferences.oiLineHeight+3),
          self.propEditor.getValues())
         self.editorCtrl.Bind(wx.EVT_CHOICE, self.OnSelect, id=self.wID)
-        InspectorEditorControl.createControl(self);
+        InspectorEditorControl.createControl(self)
     def getValue(self):
         if self.editorCtrl:
             return self.editorCtrl.GetStringSelection()
@@ -174,7 +174,7 @@ class ComboIEC(InspectorEditorControl):
         self.editorCtrl = wx.ComboBox(parent, self.wID, self.value,
          wx.Point(-2, idx*Preferences.oiLineHeight -1), wx.Size(sizeX, Preferences.oiLineHeight+3),
          self.propEditor.getValues())
-        InspectorEditorControl.createControl(self);
+        InspectorEditorControl.createControl(self)
     def getValue(self):
         if self.editorCtrl:
             return self.editorCtrl.GetStringSelection()
@@ -214,7 +214,7 @@ class ButtonIEC(BevelIEC):
               Preferences.oiLineHeight-2)
             self.propValLabel.SetDimensions(
               self.propValLabel.GetPosition().x,
-              idx*Preferences.oiLineHeight +1, self.propValueLabel.GetSize().x,
+              idx*Preferences.oiLineHeight +1, self.propValLabel.GetSize().x,
               Preferences.oiLineHeight-3)
 
         BevelIEC.setIdx(self, idx)
@@ -234,7 +234,7 @@ class TextCtrlButtonIEC(BevelIEC):
     def createControl(self, parent, idx, sizeX, editMeth):
         bmp = Preferences.IS.load('Images/Shared/ellipsis.png')
         value = self.propEditor.valueToIECValue()
-        self.wID2 = wx.NewId()
+        self.wID2 = wx.NewIdRef()
         self.editorCtrl = [
               wx.TextCtrl(parent, self.wID, value,
                (-2, idx*Preferences.oiLineHeight -2),
@@ -295,7 +295,7 @@ class TextCtrlButtonIEC(BevelIEC):
 
 class CheckBoxIEC2(InspectorEditorControl):
     def createControl(self, parent, idx, sizeX):
-        self.editorCtrl = wx.Window(parent, wx.NewId(),
+        self.editorCtrl = wx.Window(parent, wx.NewIdRef(),
               style=wx.TAB_TRAVERSAL | wx.SUNKEN_BORDER)
         self.editorCtrl.SetDimensions(-2, idx*Preferences.oiLineHeight-2,
               sizeX, Preferences.oiLineHeight+3)

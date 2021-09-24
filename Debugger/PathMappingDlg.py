@@ -6,7 +6,7 @@ import wx
 
 from Utils import _
 
-from PathsPanel import PathsPanel
+from .PathsPanel import PathsPanel
 
 def create(parent):
     return PathsMappingDlg(parent)
@@ -74,5 +74,5 @@ def showPathsMappingDlg(parent, paths):
 if __name__ == '__main__':
     app = wx.PySimpleApp()
     wx.InitAllImageHandlers()
-    print showPathsMappingDlg(None, [('1', '2'), ('3', '4')])
+    print(showPathsMappingDlg(None, [('1', '2'), ('3', '4')]))
     app.MainLoop()

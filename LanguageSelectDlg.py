@@ -19,21 +19,21 @@ class LanguageSelectDlg(wx.Dialog):
     def _init_coll_mainSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.staticText1, 0, border=8, flag=wx.ALL)
-        parent.AddSizer(self.middleSizer, 1, border=8, flag=wx.ALL | wx.EXPAND)
-        parent.AddSizer(self.buttonSizer, 0, border=0, flag=wx.ALIGN_RIGHT)
+        parent.Add(self.staticText1, 0, border=8, flag=wx.ALL)
+        parent.Add(self.middleSizer, 1, border=8, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.buttonSizer, 0, border=0, flag=wx.ALIGN_RIGHT)
 
     def _init_coll_buttonSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.okBtn, 0, border=8, flag=wx.ALL)
-        parent.AddWindow(self.button2, 0, border=8, flag=wx.ALL)
+        parent.Add(self.okBtn, 0, border=8, flag=wx.ALL)
+        parent.Add(self.button2, 0, border=8, flag=wx.ALL)
 
     def _init_coll_middleSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.langCtrlContainer, 1, border=0, flag=wx.EXPAND)
-        parent.AddWindow(self.langFilterRB, 0, border=8, flag=wx.LEFT)
+        parent.Add(self.langCtrlContainer, 1, border=0, flag=wx.EXPAND)
+        parent.Add(self.langFilterRB, 0, border=8, flag=wx.LEFT)
 
     def _init_sizers(self):
         # generated method, don't edit

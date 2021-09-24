@@ -10,7 +10,9 @@
 # Licence:     GPL
 #----------------------------------------------------------------------
 
-import sys, warnings
+import sys
+import warnings
+import inspect
 
 from types import *
 import wx
@@ -56,7 +58,8 @@ class PropertyWrapper:
 
     def getValue(self, *params):
         if self.routeType == 'CtrlRoute' and self.ctrl:
-            return self.getter(self.ctrl)
+            # return self.getter(self.ctrl)
+            return self.getter()
         elif self.routeType == 'CompnRoute' and self.compn:
             return self.getter(self.compn)
         elif self.routeType == 'EventRoute' and self.compn and len(params):
@@ -72,7 +75,8 @@ class PropertyWrapper:
 
     def setValue(self, value, *params):
         if self.routeType == 'CtrlRoute' and self.ctrl:
-            self.setter(self.ctrl, value)
+            # self.setter(self.ctrl, value)
+            self.setter(value)
         elif self.routeType == 'CompnRoute' and self.compn:
             self.setter(value)
         elif self.routeType == 'EventRoute' and self.compn and len(params):
@@ -91,9 +95,14 @@ class PropertyWrapper:
         if self.setter:
             if self.setterName:
                 return self.setterName
-            if isinstance(self.setter, FunctionType):
+            # if isinstance(self.setter, FunctionType):
+            #     return self.setter.__name__
+            # if isinstance(self.setter, MethodType):
+            #     return self.setter.__func__.__name__
+
+            if isinstance(self.setter, BuiltinFunctionType):
                 return self.setter.__name__
-            if isinstance(self.setter, MethodType):
+            if isinstance(self.setter, BuiltinMethodType):
                 return self.setter.__func__.__name__
             else:
                 return ''
@@ -164,8 +173,14 @@ def getPropList(obj, cmp):
                       constrNames, propLst, constrLst)
                 except: pass
 
-        # propLst.sort()   # Need to sort out why this is necessary.
-        constrLst.sort()
+        # propLst.sort()
+        def prop_sort_key(prop_prop_obj):
+            return prop_prop_obj.name
+        propLst.sort(key=prop_sort_key)
+
+        def constr_sort_key(constr_prop_obj):
+            return constr_prop_obj.name
+        constrLst.sort(key=constr_sort_key)
     else:
         if cmp:
             constrNames = cmp.constructor()
@@ -181,7 +196,7 @@ def getPropList(obj, cmp):
                 #    print 'prop error', sys.exc_info()
         else:
             pass #print 'Empty object', obj, cmp
-
+    a=0
     return {'constructor': constrLst, 'properties': propLst}
 
 def getMethodType(method, obj, Class):
@@ -192,13 +207,16 @@ def getMethodType(method, obj, Class):
     try:
         meth = getattr(obj, method)
     except TypeError:
+        print( obj,'\n',method , '\n', 'Type error.\n')
         return result
     except Exception:
-        #print obj, method
+        print( obj,'\n',method , '\n', 'Attribute not in object\n')
         return result
 
-    if (isinstance(meth, MethodType)):
-        func = meth.__func__
+    # if (isinstance(meth, MethodType)):
+    #     func = meth.__func__
+    if inspect.isbuiltin(meth):
+        func = meth
         result = ('Methods', method, func, func)
         prefix = method[:3]
         property = method[3:]
@@ -210,30 +228,35 @@ def getMethodType(method, obj, Class):
                 result = ('Built-ins', method, func, func)
             elif (prefix == 'Get') and hasattr(obj, setname) and property:
                 #see if getter breaks
-                v = func(obj)
-                result = ('Properties', property, func, getattr(obj, setname).__func__)
+                getter = getattr(obj,getname)
+                v=getter()
+                result = ('Properties', property, getter, getattr(obj, setname))
             elif (prefix == 'Set') and hasattr(obj, getname) and property:
                 #see if getter breaks
-                getter = getattr(obj, getname).__func__
-                v = getter(obj)
-                result = ('Properties', property, getter, func)
+                getter = getattr(obj,getname)
+                v=getter()
+                # result = ('Properties', property, getter, func)
+                result = ('Properties', property, getter, getattr(obj, setname))
         except Exception as err:
             pass
     return result
 
 def traverseAndBuildProps(props, vetoes, obj, Class):
-    for m in list(Class.__dict__.keys()):
+    for m in Class.__dict__.keys():
         if m not in vetoes:
             cat, name, methGetter, methSetter = \
               getMethodType(m, obj, Class.__dict__)
 
-            if name not in props[cat]:
+            if name not in props[cat].keys():
                 props[cat][name] = (methGetter, methSetter)
 
+    # for Cls in Class.__bases__:
     for Cls in Class.__bases__:
         traverseAndBuildProps(props, vetoes, obj, Cls)
 
+    a=0
 if __name__ == '__main__':
+    # wx.PySimpleApp()
     wx.PySimpleApp()
     f = wx.Frame(None, -1, 'asd')
     c = wx.ComboBox(f, -1)

@@ -173,7 +173,7 @@ def processArgs(argv):
             print("\tDon't transfer command line options to a running Boa, start a ")
             print('\tnew instance.')
             print('-U encoding, --UnicodeEncoding encoding:')
-            print('\tSpecify a spesific encoding to use.')
+            print('\tSpecify a specific encoding to use.')
             print('-W version, --wxVersionSelect version:')
             print('\tSpecify a spesific version of wxPython to use.')
             print('-H, --Help, -h, --help:')

@@ -67,7 +67,12 @@ class EditorModel:
                 view.pageIdx = view.pageIdx - 1
 
     def getDataAsLines(self):
-        return StringIO(self.data).readlines()
+        if type(self.data) == str:
+            return StringIO(self.data).readlines()
+        else:
+            # return (self.data).decode('uft-8').readlines()
+            converted_string= str(self.data)
+            return StringIO(converted_string).readlines()
 
     def setDataFromLines(self, lines):
         data = self.data

@@ -390,7 +390,7 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
             idx = self.processesPage.GetItemCount()
             if script:
                 name = '%s (%s)'%(name, script)
-            self.processesPage.InsertStringItem(idx, '%s : %s'%(name, pid))
+            self.processesPage.InsertItem(idx, '%s : %s'%(name, pid))
             self.processesPage.SetItemData(idx, pid)
 
             self.checkProcesses()

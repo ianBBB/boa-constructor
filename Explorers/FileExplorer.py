@@ -504,7 +504,8 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
         except IOError as error:
             raise ExplorerNodes.TransportLoadError(error, self.resourcepath)
 
-    def save(self, filename, data, mode='wb', overwriteNewer=False):
+    # def save(self, filename, data, mode='wb', overwriteNewer=False):
+    def save(self, filename, data, mode='w', overwriteNewer=False):
         if self.resourcepath != filename:
             self.resourcepath = filename
             self.name = os.path.basename(self.resourcepath)
@@ -513,7 +514,8 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
                 raise ExplorerNodes.TransportModifiedSaveError(_('This file has '
                   'been saved by someone else since it was loaded'),
                   self.resourcepath)
-            open(self.resourcepath, mode).write(bytes(data,'ascii'))
+            # open(self.resourcepath, mode).write(bytes(data,'ascii'))
+            open(self.resourcepath, mode).write(data.encode('ascii'))
         except IOError as error:
             raise ExplorerNodes.TransportSaveError(error, self.resourcepath)
         self.updateStdAttrs()

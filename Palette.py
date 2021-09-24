@@ -13,13 +13,13 @@
 
 print('importing Palette')
 
-import os, sys
+import sys
 
 import wx
 
 import PaletteStore
 import Help, Preferences, Utils, Plugins
-from Preferences import IS, flatTools
+from Preferences import IS
 from Utils import _
 
 import wx.lib.buttons
@@ -28,10 +28,10 @@ currentMouseOverTip = ''
 
 
 [wxID_BOAFRAME, wxID_BOAFRAMEPALETTE, wxID_BOAFRAMETOOLBAR, 
-] = [wx.NewId() for _init_ctrls in range(3)]
+] = [wx.NewIdRef() for _init_ctrls in range(3)]
 
 [wxID_BOAFRAMETOOLBARTOOLS0, wxID_BOAFRAMETOOLBARTOOLS1, 
-] = [wx.NewId() for _init_coll_toolBar_Tools in range(2)]
+] = [wx.NewIdRef() for _init_coll_toolBar_Tools in range(2)]
 
 class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
 
@@ -73,7 +73,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
               #style=wx.SYSTEM_MENU | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX,
               id=wxID_BOAFRAME, name='', parent=prnt, pos=wx.Point(116, 275),
               size=wx.Size(645, 74),
-              style=wx.DEFAULT_FRAME_STYLE& ~wx.MAXIMIZE_BOX,
+              style=wx.DEFAULT_FRAME_STYLE | wx.MAXIMIZE_BOX,
               title=self.frameTitle)
         self.SetClientSize(wx.Size(637, 47))
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
@@ -85,7 +85,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.SetToolBar(self.toolBar)
 
         self.palette = wx.Notebook(id=wxID_BOAFRAMEPALETTE, name='palette',
-              parent=self, pos=wx.Point(0, 24), size=wx.Size(637, 23), style=0)
+                                   parent=self, pos=wx.Point(0, 24), size=wx.Size(637, 23), style=0)
 
         self._init_coll_toolBar_Tools(self.toolBar)
 
@@ -136,7 +136,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
         customHelpItems = eval(conf.get('help', 'customhelp'), {})
         self.customHelpItems = {}
         for caption, helpFile in list(customHelpItems.items()):
-            mID = wx.NewId()
+            mID = wx.NewIdRef()
             self.toolBar.AddTool(mID, IS.load('Images/Shared/CustomHelp.png'),
               shortHelpString = caption)
             self.Bind(wx.EVT_TOOL, self.OnCustomHelpToolClick, id=mID)
@@ -177,7 +177,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
             for palette in PaletteStore.palette:
                 palettePage = PalettePage(self.palette, palette[0],
                       'Images/Palette/', self, self.widgetSet,
-                      self.componentSB, self)
+                                          self.componentSB, self)
                 palettePage.addToggleBitmaps(palette[2], None, None)
                 self.palettePages.append(palettePage)
                 if mb: mb.Append(menu=palettePage.menu, title=palette[0])
@@ -201,8 +201,8 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
             # Zope page
             if Plugins.transportInstalled('ZopeLib.ZopeExplorer'):
                 self.zopePalettePage = ZopePalettePage(self.palette,
-                      PaletteStore.zopePalette[0], 'Images/Palette/',
-                      self, self.widgetSet, self.componentSB, self)
+                                                       PaletteStore.zopePalette[0], 'Images/Palette/',
+                                                       self, self.widgetSet, self.componentSB, self)
                 self.zopePalettePage.addToggleBitmaps(
                       PaletteStore.zopePalette[2], None, None)
                 self.palettePages.append(self.zopePalettePage)
@@ -220,7 +220,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
             Preferences.paletteHeight)
 
     def addTool(self, filename, text, help, func, toggle = False):
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
         self.toolBar.AddTool(mID,'', IS.load(filename+'.png'),
           wx.NullBitmap, wx.ITEM_NORMAL,  text,'',None)
         self.Bind(wx.EVT_TOOL, func, id=mID)
@@ -306,7 +306,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.componentSB.selectNone()
 
     def OnTest(self, event):
-        import Tests
+        from TestArea import Tests
         Tests.test_wxFrame(self)
 
     def OnCreateNew(self, name, controller):
@@ -329,7 +329,7 @@ class ComponentSelection:
     """ Controls the selection of the palette and access to associated
         palette mapping structures. Accessed by the Designer """
     def __init__(self, palette):
-        wID = wx.NewId()
+        wID = wx.NewIdRef()
         self.selComp = wx.CheckBox(palette.toolBar, wID, '  '+_('(Nothing selected)'),
               size =wx.Size(180, 20))
         self.selComp.Enable(False)
@@ -407,7 +407,7 @@ class PanelPalettePage(wx.Panel, BasePalettePage):
 
     def addButton(self, widgetName, wxClass, constrClass, clickEvt, hintFunc, 
                   hintLeaveFunc, btnType):
-        mID = wx.NewId()
+        mID = wx.NewIdRef()
 
         self.menu.Append(mID, widgetName, '', self.menusCheckable)
         self.palette.Bind(wx.EVT_MENU, clickEvt, id=mID)
@@ -533,7 +533,8 @@ class ZopePalettePage(PalettePage):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    # app = wx.PySimpleApp()
+    app = wx.App()
     palette = BoaFrame(None, -1, app)
     palette.Show()
     palette.palette.AddPage(wx.Panel(palette.palette, -1), 'test')

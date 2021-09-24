@@ -33,10 +33,10 @@ class LinkAppModel(PythonEditorModels.PyAppModel):
 #        return sourceconst.defSig %{'modelIdent':self.modelIdentifier, 'main': ''}
 
     def findAppInModules(self, args):
-        for name, Model in self.moduleModels.items():
+        for name, Model in list(self.moduleModels.items()):
             if Model.modelIdentifier in Controllers.appModelIdReg:
                 filepath = self.moduleFilename(name)
-                if self.editor.modules.has_key(filepath):
+                if filepath in self.editor.modules:
                     model = self.editor.modules[filepath].model
                 else:
                     model = Model('', filepath, '', self.editor, 0, {})

@@ -1202,7 +1202,7 @@ def identifySource(source):
         The logic is a copy paste from above func """
     for line in source:
         if line:
-            # should be be no need to test for UTF in pytohn 3 strings
+            # should be no need to test for UTF in pytohn 3 strings
             # line_start=line[:3]
             # if line_start == (codecs.BOM_UTF8):
             #     line = line[len(codecs.BOM_UTF8):]

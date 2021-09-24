@@ -51,7 +51,7 @@ def getNextDefaultPos():
     return pos
 
 [wxID_COLLECTIONEDITOR, wxID_COLLECTIONEDITORTOOLBAR,
- wxID_COLLECTIONEDITORITEMLIST] = [wx.NewId() for _init_ctrls in range(3)]
+ wxID_COLLECTIONEDITORITEMLIST] = [wx.NewIdRef() for _init_ctrls in range(3)]
 
 class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
     def _init_ctrls(self, prnt):
@@ -122,11 +122,11 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
         acclst.append( (keyDefs['Refresh'][0], keyDefs['Refresh'][1], wId) )
         self.toolLst.append(wId)
 
-        wId = wx.NewId()
+        wId = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnSwitchToInspector, id=wId)
         acclst.append( (keyDefs['Inspector'][0], keyDefs['Inspector'][1], wId) )
 
-        wId = wx.NewId()
+        wId = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnSwitchToDesigner, id=wId)
         acclst.append( (keyDefs['Designer'][0], keyDefs['Designer'][1], wId) )
 
@@ -262,7 +262,7 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
             if item == '-':
                 menu.AppendSeparator()
             else:
-                wId = wx.NewId()
+                wId = wx.NewIdRef()
                 self.additIds[wId] = meth
                 self.Bind(wx.EVT_MENU, self.OnMoreNewItemClick, id=wId)
                 menu.Append(wId, item)

@@ -7,7 +7,7 @@ def create(parent):
     return Frame1(parent)
 
 [wxID_FRAME1, wxID_FRAME1STATUSBAR1, wxID_FRAME1TEXTEDITOR, 
-] = [wx.NewId() for _init_ctrls in range(3)]
+] = [wx.NewIdRef() for _init_ctrls in range(3)]
 
 [wxID_FRAME1MENUFILECLOSE, wxID_FRAME1MENUFILEEXIT, wxID_FRAME1MENUFILEOPEN, 
  wxID_FRAME1MENUFILESAVE, wxID_FRAME1MENUFILESAVEAS, 

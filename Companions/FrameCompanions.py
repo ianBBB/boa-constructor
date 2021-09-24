@@ -63,7 +63,7 @@ class BaseFrameDTC(ContainerDTC):
     def generateWindowId(self):
         if self.designer:
             self.id = Utils.windowIdentifier(self.designer.GetName(), '')
-        else: self.id = repr(wx.NewId())
+        else: self.id = repr(wx.NewIdRef())
 
     def events(self):
         return ContainerDTC.events(self) + ['FrameEvent']

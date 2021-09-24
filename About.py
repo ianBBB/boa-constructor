@@ -399,7 +399,7 @@ class AboutBoxSplash(AboutBoxMixin, wx.Frame):
 class StaticTextPF(Utils.PseudoFile):
     def write(self, s):
         # ###############
-        # Cannot work out why thus us her, what its supposed to do or what should replace it.
+        # Cannot work out why this us here, what its supposed to do or what should replace it.
         # ###############
         # if not wx.Thread_IsMain():
         #     locker = wx.MutexGuiLocker()
