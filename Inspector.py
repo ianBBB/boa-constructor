@@ -704,9 +704,14 @@ class NameValue:
 
     def enboldenCtrl(self, ctrl, bold = True):
         fnt = ctrl.GetFont()
-        ctrl.SetFont(wx.Font(fnt.GetPointSize(),
-          fnt.GetFamily(), fnt.GetStyle(), wx.FONTWEIGHT_BOLD | wx.FONTSTYLE_NORMAL,
-          fnt.GetUnderlined(), fnt.GetFaceName()))
+        if bold:
+            ctrl.SetFont(wx.Font(fnt.GetPointSize(),
+              fnt.GetFamily(), fnt.GetStyle(), wx.FONTWEIGHT_BOLD,
+              fnt.GetUnderlined(), fnt.GetFaceName()))
+        else:
+            ctrl.SetFont(wx.Font(fnt.GetPointSize(),
+              fnt.GetFamily(), fnt.GetStyle(), wx.FONTWEIGHT_NORMAL,
+              fnt.GetUnderlined(), fnt.GetFaceName()))
 
     def updateDisplayValue(self):
         dispVal = self.propEditor.getDisplayValue()
@@ -968,7 +973,7 @@ class EventsWindow(wx.SplitterWindow):
         catClass = EventCollections.EventCategories[\
               self.categoryClasses.GetItemText(self.selCatClass)]
         for catMac in catClass:
-            self.categoryMacros.InsertStringItem(0, catMac)
+            self.categoryMacros.InsertItem(0, catMac)
 
     def OnCatClassDeselect(self, event):
         self.selCatClass = -1

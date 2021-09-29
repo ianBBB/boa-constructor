@@ -25,6 +25,7 @@ class MyToolBar(wx.ToolBar):
                                shortHelpString, '', None)
 
 
+
         # wx.ToolBar.AddTool(1, "New",wx.NullBitmap,
         #                 wx.NullBitmap, wx.ITEM_NORMAL, 'New', "Long help for 'New'.", None)
         # wx.ToolBar.AddTool(self, toolId=id, bitmap=bitmap, isbmpDisabled=toggleBitmap,
@@ -121,10 +122,10 @@ class EditorStatusBar(wx.StatusBar):
         tip = _('Browse the Traceback/Error/Output window history.')
         self.historyBtnBack.SetToolTip(tip)
         self.historyBtnFwd.SetToolTip(tip)
-        #self.historyBtns.Bind(wx.EVT_SPIN_DOWN, self.OnErrOutHistoryBack, id=self.historyBtns.GetId())
-        #self.historyBtns.Bind(wx.EVT_SPIN_UP, self.OnErrOutHistoryFwd, id=self.historyBtns.GetId())
-        self.historyBtnBack.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryBack, id=self.historyBtnBack.GetId())
-        self.historyBtnFwd.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryFwd, id=self.historyBtnFwd.GetId())
+        self.historyBtns.Bind(wx.EVT_SPIN_DOWN, self.OnErrOutHistoryBack, id=self.historyBtns.GetId())
+        self.historyBtns.Bind(wx.EVT_SPIN_UP, self.OnErrOutHistoryFwd, id=self.historyBtns.GetId())
+        # self.historyBtnBack.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryBack, id=self.historyBtnBack.GetId())
+        # self.historyBtnFwd.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryFwd, id=self.historyBtnFwd.GetId())
 
         self.erroutFrm = None
 

@@ -102,7 +102,7 @@ class PropertyWrapper:
 
             if isinstance(self.setter, BuiltinFunctionType):
                 return self.setter.__name__
-            if isinstance(self.setter, BuiltinMethodType):
+            if isinstance(self.setter, MethodType):
                 return self.setter.__func__.__name__
             else:
                 return ''

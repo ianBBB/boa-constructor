@@ -438,8 +438,6 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         # primary option: open a module
         fileMenu = wx.Menu()
         if self.palette.palettePages and Preferences.edShowFileNewMenu:
-            # fileMenu.AppendMenu(wx.NewId(), _('New'),
-            #       Utils.duplicateMenu(self.palette.palettePages[0].menu))
             fileMenu.Append(wx.NewIdRef(), _('New'),
                   Utils.duplicateMenu(self.palette.palettePages[0].menu))
         Utils.appendMenuItem(fileMenu, EditorHelper.wxID_EDITOROPEN, _('Open'),
@@ -841,7 +839,8 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
         assert transport, _('Cannot open, no transport defined.')
 
-        mode = 'rb'
+        # mode = 'rb'
+        mode = 'r'
 
         wx.BeginBusyCursor()
         try: source = transport.load(mode)

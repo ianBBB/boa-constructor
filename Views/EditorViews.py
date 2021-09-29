@@ -322,7 +322,8 @@ class EditorView:
 
     def OnRightClick(self, event):
         menu = self.generateMenu()
-        event.GetEventObject().PopupMenuXY(menu, event.GetX(), event.GetY())
+        # event.GetEventObject().PopupMenu(menu, event.GetX(), event.GetY())
+        event.GetEventObject().PopupMenu(menu, wx.Point(event.GetX(), event.GetY()))
         menu.Destroy()
 
 class TestView(wx.TextCtrl, EditorView):
@@ -1013,6 +1014,7 @@ class ExploreView(wx.TreeCtrl, EditorView):
         self.DeleteAllItems()
         rootItem = self.AddRoot(self.model.moduleName, 5, -1,
               wx.TreeItemData(CodeBlock('', 0, 0)))
+              # wx.Tree(CodeBlock('', 0, 0)))
         if module.imports or module.from_imports_names:
             importsItem = self.AppendItem(rootItem, 'Imports', 8, data=wx.TreeItemData(CodeBlock('', 0, 0)))
             for i in module.imports:

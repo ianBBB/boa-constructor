@@ -718,7 +718,7 @@ class UMLView(PersistentOGLView, SortedUMLViewMix):
         x, y = self.CalcScrolledPosition(x, y)
         if not hit:
             menu = self.generateMenu()
-            self.PopupMenuXY(menu, x, y)
+            self.PopupMenu(menu, x, y)
             menu.Destroy()
             return
         # If we reach this point, then we have a selected shape.

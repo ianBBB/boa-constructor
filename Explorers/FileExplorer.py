@@ -499,6 +499,8 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
     def load(self, mode='rb'):
         try:
             data = open(self.resourcepath, mode).read()
+            if type(data) == 'bytes' :
+                data = data.decode('UTF-8')
             self.updateStdAttrs()
             return data
         except IOError as error:

@@ -42,3 +42,9 @@ elif isinstance(filetype, IOBase) and hasattr(filetype,'read'):
 return (self.value > other) - (self.value < other)
 
 ^(class|    def)
+
+Is it OK to add/change code to code that has been released under XXX copyright.
+What about the copyright notices for included software. Will that still be OK?
+What copyright should I use if I want to mke it available as a project on Github. Is there anything better/newer
+ I should use?
+How important is PEP.

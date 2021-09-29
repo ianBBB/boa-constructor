@@ -32,14 +32,14 @@ t1 = time.time()
 # already running instance of Boa. There is another flag under Preferences
 # which determines if Boa should create and listen on the socket.
 server_mode = 1
-
+trace_mode_paused = True
 main_script = 'Boa.py'
 
 trace_mode = 'functions' # 'lines'
 trace_save = 'all'#'lastline' # 'all'
 def trace_func(frame, event, arg):
     """ Callback function when Boa runs in tracing mode"""
-    if frame and tracefile:
+    if frame and tracefile and (not(trace_mode_paused)):
         info = '%s|%d|%d|%s|\n' % (frame.f_code.co_filename, frame.f_lineno,
               id(frame), event)
         if trace_save == 'lastline':

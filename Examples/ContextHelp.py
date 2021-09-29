@@ -7,7 +7,7 @@ def create(parent):
 
 [wxID_WXFRAME2, wxID_WXFRAME2CONTEXTHELPBUTTON1, wxID_WXFRAME2PANEL1, 
  wxID_WXFRAME2TEXTCTRL1, 
-] = [wx.NewId() for _init_ctrls in range(4)]
+] = [wx.NewIdRef() for _init_ctrls in range(4)]
 
 class wxFrame2(wx.Frame):
     def _init_ctrls(self, prnt):

@@ -462,7 +462,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
 
         s = self.GetClientSize()
 
-        self.PopupMenuXY(menu, s.x/2, s.y/2)
+        self.PopupMenu(menu, s.x/2, s.y/2)
         menu.Destroy()
 
     def OnSTCSettingsWhiteSpace(self, event):
@@ -493,7 +493,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
 
         s = self.GetClientSize()
 
-        self.PopupMenuXY(menu, s.x/2, s.y/2)
+        self.PopupMenu(menu, s.x/2, s.y/2)
         menu.Destroy()
 
     def OnConvertEols(self, event):

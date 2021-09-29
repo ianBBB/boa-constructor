@@ -32,12 +32,14 @@ class ProcessRunnerMix:
 
     def execute(self, cmd):
         self.process = wx.Process(self.handler)
-        self.process.Redirect()
+        # self.process.Redirect() # TODO testing purposes
 
         # self.pid = wx.Execute(cmd, wx.EXEC_NOHIDE, self.process)
-        # self.pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
-        # self.pid = wx.Execute(cmd)
-        self.pid = wx.Execute('C:\\Python\\Python_3_9_6\\python.exe App1.py', wx.EXEC_ASYNC, self.process)
+        self.pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
+        # self.pid = wx.Execute(cmd, wx.EXEC_ASYNC)
+
+        print(self.pid) # TODO testing purposes
+
 
         self.inputStream = self.process.GetOutputStream()
         self.errorStream = self.process.GetErrorStream()

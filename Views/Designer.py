@@ -1592,6 +1592,8 @@ class DesignerControlsEvtHandler(wx.EvtHandler):
 
     def OnControlSelect(self, event):
         """ Control is clicked. Either select it or add control from palette """
+        global trace_mode_paused
+        trace_mode_paused = False
         dsgn = self.designer
         ctrl, pos = self.getCtrlAndPosFromEvt(event)
         dsgn.selectControlByPos(ctrl, pos, event.ShiftDown())

@@ -25,10 +25,11 @@ class StringEditDlg(wx.Dialog):
         parent.Add(self.i18nCB, 1, border=0, flag=wx.ALL | wx.GROW)
         # parent.AddSpacer(wx.Size(8, 8), border=0, flag=wx.ALL | wx.GROW)
         parent.AddSpacer(8)
-        parent.Add(self.button1, 0, border=0, flag=wx.ALIGN_RIGHT)
+        parent.Add(self.button1, 0, border=0, flag=0)
         # parent.AddSpacer(wx.Size(8, 8), border=10, flag=0)
         parent.AddSpacer(8)
-        parent.Add(self.button2, 0, border=0, flag=wx.ALIGN_RIGHT)
+        # parent.Add(self.button2, 0, border=0, flag=wx.ALIGN_RIGHT)
+        parent.Add(self.button2, 0, border=0, flag=0)
 
     def _init_sizers(self):
         # generated method, don't edit

@@ -400,11 +400,14 @@ class wxHelpFrameEx:
         if self.toolbar.FindById(wxID_COPYTOCLIP) is None:
             self.toolbar.AddSeparator()
             self.copyToClipId = wxID_COPYTOCLIP
-            self.toolbar.AddTool(id = self.copyToClipId, isToggle=0,
+            # self.toolbar.AddTool(id = self.copyToClipId, isToggle=0,
+            #     bitmap=Preferences.IS.load('Images/Shared/CopyHelp.png'),
+            #     pushedBitmap=wx.NullBitmap,
+            #     shortHelpString=_('Copy contents as text to clipboard'),
+            #     longHelpString='')
+            self.toolbar.AddTool(toolId = self.copyToClipId,
                 bitmap=Preferences.IS.load('Images/Shared/CopyHelp.png'),
-                pushedBitmap=wx.NullBitmap,
-                shortHelpString=_('Copy contents as text to clipboard'),
-                longHelpString='')
+                shortHelp=_('Copy contents as text to clipboard'))
             self.frame.Bind(wx.EVT_TOOL, self.OnCopyPage, id=self.copyToClipId)
             self.toolbar.Realize()
 

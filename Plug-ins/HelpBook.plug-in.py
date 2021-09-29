@@ -740,7 +740,7 @@ class HelpBookIndexListView(EditorViews.VirtualListCtrlView):
     def OnRightClick(self, event):
         if self.parentView:
             menu = self.parentView.generateMenu()
-            event.GetEventObject().PopupMenuXY(menu, event.GetX(), event.GetY())
+            event.GetEventObject().PopupMenu(menu, event.GetX(), event.GetY())
             menu.Destroy()
 
     def OnAddIndex(self, event):
@@ -941,7 +941,7 @@ class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
     def OnRightClick(self, event):
         if self.parentView:
             menu = self.parentView.generateMenu()
-            event.GetEventObject().PopupMenuXY(menu, event.GetX(), event.GetY())
+            event.GetEventObject().PopupMenu(menu, event.GetX(), event.GetY())
             menu.Destroy()
 
     def OnTreeExpand(self, event):

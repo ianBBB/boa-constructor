@@ -202,7 +202,7 @@ def importTransport(moduleName):
     except ImportError as error:
         if Preferences.pluginErrorHandling == 'raise':
             raise
-        wx.LogWarning(_('%s not my installed: %s') %(moduleName, str(error)))
+        wx.LogWarning(_('%s not installed: %s') %(moduleName, str(error)))
         ExplorerNodes.failedModules[moduleName] = str(error)
         return True
     else:

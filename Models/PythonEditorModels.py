@@ -191,10 +191,10 @@ class ModuleModel(SourceModel):
                 cmd = '"%s" %s %s'%(interp, basename, args)
     
                 from ModRunner import wxPopenModuleRunner
-    
+
                 runner = wxPopenModuleRunner(self.editor.erroutFrm, newCwd)
                 runner.run(cmd, inpLines, execFinish)
-                
+
                 execStart(runner.pid, os.path.basename(interp), basename)
 
             finally:
@@ -1202,10 +1202,9 @@ def identifySource(source):
         The logic is a copy paste from above func """
     for line in source:
         if line:
-            # should be no need to test for UTF in pytohn 3 strings
-            # line_start=line[:3]
-            # if line_start == (codecs.BOM_UTF8):
-            #     line = line[len(codecs.BOM_UTF8):]
+            line_start=line[:3]
+            if line_start == (codecs.BOM_UTF8):
+                line = line[len(codecs.BOM_UTF8):]
 
             if line[0] != '#':
                 return ModuleModel, ''
