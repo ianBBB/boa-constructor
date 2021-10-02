@@ -107,7 +107,7 @@ suSocketFileOpenServer = True
 eoErrOutDockWindow = 'editor'
 # When docked in the Editor, percentage wise, how high should the default
 # Error/Output window be?
-eoErrOutWindowHeightPerc = 5
+eoErrOutWindowHeightPerc = 20
 
 # Arguments for Debug Server
 # e.g. '--zope' for PythonScript and PageTemplate debugging support

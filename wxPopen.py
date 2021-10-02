@@ -36,10 +36,6 @@ class ProcessRunnerMix:
 
         # self.pid = wx.Execute(cmd, wx.EXEC_NOHIDE, self.process)
         self.pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
-        # self.pid = wx.Execute(cmd, wx.EXEC_ASYNC)
-
-        print(self.pid) # TODO testing purposes
-
 
         self.inputStream = self.process.GetOutputStream()
         self.errorStream = self.process.GetErrorStream()

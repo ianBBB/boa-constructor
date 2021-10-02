@@ -207,10 +207,25 @@ def getMethodType(method, obj, Class):
     try:
         meth = getattr(obj, method)
     except TypeError:
-        print( obj,'\n',method , '\n', 'Type error.\n')
+        # print( obj,'\n',method , '\n', 'Type error.\n')
         return result
+
+        # # ================================================================
+        # # Decided not to do this for now
+        # # ================================================================
+        # # some Getters require a parameter to be passed to them ( EG wx.StatusBar.GetRectFiled(x) needs an int to
+        # # select which). Need to block error message for this case and continue on to the rest of this method.
+        # type, value, traceback = sys.exc_info()
+        # er_str=str(value)
+        # er_mess = er_str.split(':')[-1].strip()
+        # if (er_mess == 'not enough arguments'):
+        #     pass
+        # # ================================================================
+        # else:
+        #     print( obj,'\n',method , '\n', 'Type error.\n')
+        #     return result
     except Exception:
-        print( obj,'\n',method , '\n', 'Attribute not in object\n')
+        # print( obj,'\n',method , '\n', 'Attribute not in object\n')
         return result
 
     # if (isinstance(meth, MethodType)):
