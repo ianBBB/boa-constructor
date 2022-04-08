@@ -836,7 +836,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                                SelectionTags.granularise(pos.y))
 
                 CtrlClass, CtrlCompanion = self.compPal.selection[1:3]
-                
+
                 destSizer, destSizerCmpn = None, None
                 parentSzr = parent.GetSizer()
                 if parentSzr:
@@ -875,7 +875,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                     if ctrlName is not None:
                         compn, sizer = view.objects[ctrlName][:2]
                         ctrlSzr = selCompn.GetSizer(None)
-                        
+
                         if destSizer is not None:
                             # sizer dropped on sizer item
                             if isinstance(destSizerCmpn, type(())):
@@ -888,9 +888,9 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                                     destSizerCmpn.recreateSizers()
 
                                     collEditView = SelectionTags.openCollEditorForSizerItems(
-                                        self.inspector, destSizerCmpn.parentCompanion, 
+                                        self.inspector, destSizerCmpn.parentCompanion,
                                         destSizerCmpn.designer, destSizerCmpn.parentCompanion.control)
-                                    if collEditView is not None:    
+                                    if collEditView is not None:
                                         collEditView.refreshCtrl()
                                         if collEditView.frame:
                                             collEditView.frame.selectObject(sizerItemIdx)
@@ -898,11 +898,11 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                                     return
                                 else:
                                     collEditView = SelectionTags.openCollEditorForSizerItems(
-                                        self.inspector, destSizerCmpn.parentCompanion, 
+                                        self.inspector, destSizerCmpn.parentCompanion,
                                         destSizerCmpn.designer, destSizerCmpn.parentCompanion.control)
-                                    if collEditView is not None:    
+                                    if collEditView is not None:
                                         ci = collEditView.companion.appendItem(
-                                              method='AddSizer', 
+                                              method='AddSizer',
                                               srcParams={0: 'self.%s'%ctrlName})
                                         collEditView.refreshCtrl()
                                         collEditView.selectObject(
@@ -912,37 +912,37 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                             # sizer dropped on sizer
                             else:
                                 collEditView = SelectionTags.openCollEditorForSizerItems(
-                                    self.inspector, destSizerCmpn, 
+                                    self.inspector, destSizerCmpn,
                                     destSizerCmpn.designer, destSizer)
-                                if collEditView is not None:    
+                                if collEditView is not None:
                                     ci = collEditView.companion.appendItem(
-                                          method='AddSizer', 
+                                          method='AddSizer',
                                           srcParams={0: 'self.%s'%ctrlName})
                                     collEditView.refreshCtrl()
                                     collEditView.selectObject(
                                           collEditView.frame.itemList.GetItemCount() -1)
                                     return
-                            
-                        
+
+
                         # no sizer on the parent ctrl, link this new sizer to it
                         if ctrlSzr is None:
                             selCompn.SetSizer(sizer)
                             selCompn.persistProp('Sizer', 'SetSizer', 'self.%s'%compn.name)
-                            return 
+                            return
 
                         # parent control already has a sizer, add this sizer as a sizer item
                         else:
                             collEditView = SelectionTags.openCollEditorForSizerItems(
                                 self.inspector, selCompn)
-                            if collEditView is not None:    
+                            if collEditView is not None:
                                 ci = collEditView.companion.appendItem(
-                                      method='AddSizer', 
+                                      method='AddSizer',
                                       srcParams={0: 'self.%s'%ctrlName})
                                 collEditView.refreshCtrl()
                                 collEditView.selectObject(
                                       collEditView.frame.itemList.GetItemCount() -1)
                                 return
-                    
+
                 if CtrlCompanion.host in ('Data', 'Sizers'):
                     view = self.model.views[CtrlCompanion.host]
                     view.focus()
@@ -968,9 +968,9 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                             destSizerCmpn.recreateSizers()
 
                             collEditView = SelectionTags.openCollEditorForSizerItems(
-                                self.inspector, destSizerCmpn.parentCompanion, 
+                                self.inspector, destSizerCmpn.parentCompanion,
                                 destSizerCmpn.designer, destSizerCmpn.parentCompanion.control)
-                            if collEditView is not None:    
+                            if collEditView is not None:
                                 collEditView.refreshCtrl()
                                 collEditView.selectObject(sizerItemIdx)
 
@@ -978,9 +978,9 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
 
                         # ctrl dropped on sizer
                         collEditView = SelectionTags.openCollEditorForSizerItems(
-                            self.inspector, destSizerCmpn, 
+                            self.inspector, destSizerCmpn,
                             destSizerCmpn.designer, destSizer)
-                        if collEditView is not None:    
+                        if collEditView is not None:
                             ci = collEditView.companion.appendItem(
                                   srcParams={0: 'self.%s'%ctrlName})
                             collEditView.refreshCtrl()
@@ -990,7 +990,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
 
                     collEditView = SelectionTags.openCollEditorForSizerItems(
                         self.inspector, selCompn)
-                    if collEditView is not None:    
+                    if collEditView is not None:
                         ci = collEditView.companion.appendItem(srcParams={0: 'self.%s'%ctrlName})
                         collEditView.refreshCtrl()
                         collEditView.selectObject(collEditView.frame.itemList.GetItemCount() -1)
@@ -1002,9 +1002,9 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                             if isinstance(destSizerCmpn, type(())):
                                 destSizerCmpn, sizerItemIdx = destSizerCmpn
                                 collEditView = SelectionTags.openCollEditorForSizerItems(
-                                    self.inspector, destSizerCmpn.parentCompanion, 
+                                    self.inspector, destSizerCmpn.parentCompanion,
                                     destSizerCmpn.designer, prntCtrlSzr)#destSizer)
-                                if collEditView is not None:    
+                                if collEditView is not None:
                                     ci = collEditView.companion.appendItem(
                                           srcParams={0: 'self.%s'%ctrlName})
                                     collEditView.refreshCtrl()
@@ -1012,8 +1012,8 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                                           collEditView.frame.itemList.GetItemCount() -1)
                                 return
 
-                    
-                
+
+
                 if self.selection:
                     ctrl = self.objects[ctrlName][1]
                     self.selection.selectCtrl(ctrl, self.objects[ctrlName][0])
@@ -1090,6 +1090,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                         return
         finally:
             self.vetoResize = False
+
 
     def OnFramePos(self, event):
         """ Called when frame is repositioned """
@@ -1592,8 +1593,6 @@ class DesignerControlsEvtHandler(wx.EvtHandler):
 
     def OnControlSelect(self, event):
         """ Control is clicked. Either select it or add control from palette """
-        global trace_mode_paused
-        trace_mode_paused = False
         dsgn = self.designer
         ctrl, pos = self.getCtrlAndPosFromEvt(event)
         dsgn.selectControlByPos(ctrl, pos, event.ShiftDown())

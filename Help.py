@@ -29,7 +29,8 @@ from Utils import _
 class PyDocHelpPage(wx.Panel):
     def _init_utils(self):
         # generated method, don't edit
-        self.scrBrowse =wx.StockCursor(id=wx.CURSOR_HAND)
+        # self.scrBrowse =wx.StockCursor(id=wx.CURSOR_HAND)
+        self.scrBrowse =wx.Cursor(wx.CURSOR_HAND)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
@@ -42,10 +43,11 @@ class PyDocHelpPage(wx.Panel):
 
         self.txtSearch =wx.TextCtrl(id=wxID_PYDOCHELPPAGETXTSEARCH,
               name='txtSearch', parent=self, pos=wx.Point(10, 10),
-              size=wx.Size(231, 21), style=0, value='')
+              size=wx.Size(231, 21), style=wx.TE_PROCESS_ENTER, value='')
         self.txtSearch.SetConstraints(LayoutAnchors(self.txtSearch, True, True,
               True, False))
         self.txtSearch.SetToolTip(_('Enter name to search for'))
+
         self.txtSearch.Bind(wx.EVT_TEXT_ENTER, self.OnTxtsearchTextEnter, id=wxID_PYDOCHELPPAGETXTSEARCH)
 
         self.boxResults =wx.ListBox(choices=[], id=wxID_PYDOCHELPPAGEBOXRESULTS,
@@ -406,6 +408,7 @@ class wxHelpFrameEx:
             #     shortHelpString=_('Copy contents as text to clipboard'),
             #     longHelpString='')
             self.toolbar.AddTool(toolId = self.copyToClipId,
+                label = "Copy",
                 bitmap=Preferences.IS.load('Images/Shared/CopyHelp.png'),
                 shortHelp=_('Copy contents as text to clipboard'))
             self.frame.Bind(wx.EVT_TOOL, self.OnCopyPage, id=self.copyToClipId)

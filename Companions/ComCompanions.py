@@ -1,6 +1,6 @@
-from BaseCompanions import WindowDTC, UtilityDTC
-from Constructors import EmptyConstr
-from EventCollections import *
+from .BaseCompanions import WindowDTC, UtilityDTC
+from .Constructors import EmptyConstr
+from .EventCollections import *
 import PaletteStore
 
 PaletteStore.paletteLists['COM'] = []
@@ -66,8 +66,8 @@ class ComCtrlDTC(WindowDTC):
 # Acrobat PDF control
 try:
     from wx.lib.bcrtl.activex.acrobat import wxComPdf
-except ImportError, error:
-    print 'Acrobat not registered', error
+except ImportError as error:
+    print('Acrobat not registered', error)
 else:
     class PdfComCDTC(ComCtrlDTC):
         GUID = '{CA8A9783-280D-11CF-A24D-444553540000}'
@@ -81,8 +81,8 @@ else:
 try:
     #from wx.lib.bcrtl.activex.IE import *
     from bcrtl.activex.IE import *
-except ImportError, error:
-    print 'Internet Explorer not registered', error
+except ImportError as error:
+    print('Internet Explorer not registered', error)
 else:
     EventCategories['WebBrowserEvent'] = (EVT_CWB_BEFORENAVIGATE,
      EVT_CWB_TITLECHANGE, EVT_CWB_DOWNLOADBEGIN, EVT_CWB_PROPERTYCHANGE,

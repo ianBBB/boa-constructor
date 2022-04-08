@@ -93,8 +93,10 @@ class BaseFrameDTC(ContainerDTC):
 
 class FramesConstr(Constructors.PropertyKeywordConstructor):
     def constructor(self):
+        # return {'Title': 'title', 'Position': 'pos', 'Size': 'size',
+        #         'Style': 'style', 'Name': 'name'}
         return {'Title': 'title', 'Position': 'pos', 'Size': 'size',
-                'Style': 'style', 'Name': 'name'}
+                'Style': 'style', 'Name': 'name', 'Text': 'text'}
 
 class FrameDTC(FramesConstr, BaseFrameDTC):
     def __init__(self, name, designer, frameCtrl):

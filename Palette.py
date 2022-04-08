@@ -472,7 +472,7 @@ class NewPalettePage(PanelPalettePage):
 
     def OnClickTrap(self, event):
         modPageInfo = self.widgets[event.GetId()]
-        wx.CallAfter(self.palette.OnCreateNew, name=modPageInfo[0], 
+        wx.CallAfter(self.palette.OnCreateNew, name=modPageInfo[0],
               controller=modPageInfo[1])
 
 class PalettePage(PanelPalettePage):

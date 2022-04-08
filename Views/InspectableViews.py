@@ -605,7 +605,8 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                 newNames.append(name)
                 oldNames.append(name)
 
-        for oldName, newName in map(None, oldNames, newNames):
+        # for oldName, newName in map(None, oldNames, newNames):
+        for oldName, newName in zip( oldNames, newNames):
             if newName != oldName:
                 objCol.renameCtrl(oldName, newName)
                 pastedCtrls.append(newName)
@@ -839,7 +840,8 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         from .CreationOrdDlg import CreationOrderDlg
         dlg = CreationOrderDlg(self, sibs, allSibs)
         if dlg.ShowModal() == wx.ID_OK:
-            for idx, name in map(None, dlg.allCtrlIdxs, dlg.allCtrlNames):
+            # for idx, name in map(None, dlg.allCtrlIdxs, dlg.allCtrlNames):
+            for idx, name in zip(dlg.allCtrlIdxs, dlg.allCtrlNames):
                 self.objectOrder[idx] = name
 
 from . import CollectionEdit

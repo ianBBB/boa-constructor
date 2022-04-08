@@ -226,11 +226,11 @@ class DesignTimeCompanion(Companion):
         pass
 
     def getPropEditor(self, prop):
-        if prop in self.editors.keys(): return self.editors[prop]
+        if prop in list(self.editors.keys()): return self.editors[prop]
         else: return None
 
     def getPropOptions(self, prop):
-        if prop in self.options.keys(): return self.options[prop]
+        if prop in list(self.options.keys()): return self.options[prop]
         else: return None
 
     def getPropNames(self, prop):
@@ -263,6 +263,17 @@ class DesignTimeCompanion(Companion):
         # XXX Is frame name initialised ???
         self.textConstr = methodparse.ConstructorParse('self.%s = %s(%s)' %(
               self.name, className, ', '.join(paramStrs)))
+
+        # if className == 'wx.StatusBar':
+        #     self.textConstr = methodparse.ConstructorParse('self.%s = %s(%s)' %(
+        #           self.name, className, ', '.join(paramStrs)) + '\nself.SetStatusBar(self.%s)'%(self.name))
+        #
+        #     a=0
+        # else:
+        #     self.textConstr = methodparse.ConstructorParse('self.%s = %s(%s)' %(
+        #           self.name, className, ', '.join(paramStrs)))
+        # a=0
+
 
         self.designer.addCtrlToObjectCollection(self.textConstr)
 
@@ -440,7 +451,7 @@ class DesignTimeCompanion(Companion):
         try:
             return PaletteMapping.evalCtrl(expr, self.designer.model.specialAttrs)
         except Exception as err:
-            print(_('Illegal expression: %s')%expr)
+            print((_('Illegal expression: %s')%expr))
             raise
 
     def defaultAction(self):
@@ -1241,9 +1252,13 @@ class CollectionDTC(DesignTimeCompanion):
         self.textConstrLst.append(collItemInit)
         self.setConstr(collItemInit)
 
-        self.applyDesignTimeDefaults(collItemInit.params, method)
+        #self.applyDesignTimeDefaults(collItemInit.params, method)
+        # Removing text field from dic to match wx append call.
+        intermediate_dic = collItemInit.params.copy()
+        intermediate_dic.pop('text')
+        self.applyDesignTimeDefaults(intermediate_dic, method)
 
-        return collItemInit
+        return intermediate_dic
 
     def deleteItem(self, idx):
         # remove from ctrl

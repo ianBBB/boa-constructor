@@ -92,7 +92,17 @@ def split_seq(seq, pivot, transformFunc = None):
     result = []
     cur_sect = []
     for itm in seq:
-        if transformFunc and transformFunc(itm) == pivot or itm == pivot:
+        # if transformFunc and transformFunc(itm) == pivot or itm == pivot:
+        #     result.append(cur_sect)
+        #     cur_sect = []
+        # else:
+        #     cur_sect.append(itm)
+        if transformFunc:
+            transformResult = eval("itm."+transformFunc)
+        else:
+            transformResult=None
+
+        if transformFunc and transformResult == pivot or itm == pivot:
             result.append(cur_sect)
             cur_sect = []
         else:

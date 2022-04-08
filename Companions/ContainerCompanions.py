@@ -1034,7 +1034,8 @@ class StatusBarDTC(ContainerDTC):
 class StatusBarFieldsCDTC(CollectionDTC):
     propName = 'Fields'
     displayProp = 'text'
-    indexProp = 'number'
+    # indexProp = 'number'
+    indexProp = 'i'
     insertionMethod = 'SetStatusText'
     deletionMethod = '(None)'
 
@@ -1046,7 +1047,8 @@ class StatusBarFieldsCDTC(CollectionDTC):
         self.widths = []
 
     def constructor(self):
-        return {'Number': 'number', 'Text': 'text', 'Width': 'width'}
+        # return {'Number': 'number', 'Text': 'text', 'Width': 'width'}
+        return {'Number': 'i', 'Text': 'text', 'Width': 'width'}
 
     def properties(self):
         props = CollectionDTC.properties(self)
@@ -1056,7 +1058,9 @@ class StatusBarFieldsCDTC(CollectionDTC):
         return props
 
     def designTimeSource(self, wId, method=None):
-        return {'number': repr(wId),
+        # return {'number': repr(wId),
+        #         'text': repr('%s%d'%(self.propName, wId))}
+        return {'i': repr(wId),
                 'text': repr('%s%d'%(self.propName, wId))}
 
     def initialiser(self):

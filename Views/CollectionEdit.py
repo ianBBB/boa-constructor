@@ -161,7 +161,8 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
         self.itemList.DeleteAllItems()
 
     def addItem(self, idx, displayProp):
-        self.itemList.InsertStringItem(idx, displayProp)
+        # self.itemList.InsertStringItem(idx, displayProp)
+        self.itemList.InsertItem(idx, displayProp)
 
     def selectObject(self, idx):
         wxxSELECTED = wx.LIST_STATE_FOCUSED | wx.LIST_STATE_SELECTED

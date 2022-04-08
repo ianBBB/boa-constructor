@@ -124,7 +124,8 @@ class BaseFrameModel(ClassModel):
         if ObjCollection.isInitCollMeth(meth):
             ctrlName = methodparse.ctrlNameFromMeth(meth)
             try:
-                res = Utils.split_seq(codeBody, '', string.strip)
+                # res = Utils.split_seq(codeBody, '', string.strip)
+                res = Utils.split_seq(codeBody, '', "strip()")
                 inits, body, fins = res[:3]
             except ValueError:
                 raise Exception(_('Collection body %s not in init, body, fin form') % meth)
@@ -259,7 +260,7 @@ class BaseFrameModel(ClassModel):
             try:
                 val = PaletteMapping.evalCtrl(code)
             except Exception as err:
-                print(str(err))
+                print((str(err)))
                 continue
             else:
                 setattr(evalNS, attr, val)

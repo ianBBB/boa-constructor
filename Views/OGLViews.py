@@ -479,7 +479,7 @@ class SortedUMLViewMix:
         # distribute each generation across the width
         # and the generations across height
         y = 0
-        for currentWidth, currentHeight, generation in map( None, widths, heights, generations ):
+        for currentWidth, currentHeight, generation in zip(widths, heights, generations ):
             x = 0
             # whiteSpace is the space between any two elements...
             whiteSpace = (width - currentWidth)/(len(generation)-1.0 or 2.0)

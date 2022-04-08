@@ -337,7 +337,9 @@ class MenuItemsCIDTC(CollectionIddDTC):
     def constructor(self):
         tcl = self.textConstrLst[self.index]
         if tcl.method == 'Append':
-            return {'Text': 'text', 'Help': 'help',
+            # return {'Text': 'text', 'Help': 'help',
+            #         'Kind': 'kind', 'ItemId': 'id'}
+            return {'Text': 'text', 'Item': 'item', 'Help': 'helpString',
                     'Kind': 'kind', 'ItemId': 'id'}
         elif tcl.method == 'AppendSeparator':
             return {}
@@ -364,9 +366,14 @@ class MenuItemsCIDTC(CollectionIddDTC):
         newItemName, winId = self.newUnusedItemNames(wId)
 
         if method == 'Append':
+            # return {'id': winId,
+            #         'text': repr(newItemName),
+            #         'help': repr(''),
+            #         'kind': 'wx.ITEM_NORMAL'}
             return {'id': winId,
-                    'text': repr(newItemName),
-                    'help': repr(''),
+                    'text': newItemName,
+                    'item': newItemName,
+                    'helpString': repr(''),
                     'kind': 'wx.ITEM_NORMAL'}
         elif method == 'AppendSeparator':
             return {}

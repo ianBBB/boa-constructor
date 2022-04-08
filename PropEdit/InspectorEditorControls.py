@@ -198,10 +198,12 @@ class ButtonIEC(BevelIEC):
 
     def setWidth(self, width):
         if self.editorCtrl:
-            self.editorCtrl.SetDimensions(width - self.btnSize - 3,
+            # self.editorCtrl.SetDimensions(width - self.btnSize - 3,
+            self.editorCtrl.SetSize(width - self.btnSize - 3,
               self.editorCtrl.GetPosition().y, self.btnSize,
               Preferences.oiLineHeight-2)
-            self.propValLabel.SetDimensions(2,
+            # self.propValLabel.SetDimensions(2,
+            self.propValLabel.SetSize(2,
               self.propValLabel.GetPosition().y, width - self.btnSize - 6,
               Preferences.oiLineHeight-3)
 

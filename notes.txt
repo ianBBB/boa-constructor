@@ -26,12 +26,11 @@ FramesConstr, FrameDTC
                        shortHelp=_('Brings the Inspector to the front'),
                        longHelp='',clientData= None)
 
-Explorer 203
-'C:\\Users\\ibak6\\PycharmProjects\\boa-constructor\\Plug-ins\\CodeTemplates.plug-in.py'
+Designer.py updates source.
 
-'C:\\Users\\ibak6\\PycharmProjects\\boa-constructor\\Plug-ins\\HelpBook.plug-in.py'
-
-'C:\\Users\\ibak6\\PycharmProjects\\boa-constructor\\Plug-ins\\PyInterpreterChooser.plug-in.py'
+The new source is in ;
+newData = self.model.data
+where self is <Views.Designer.DesignerView object at 0x0000023D06A17940>
 
 
 raise Exception('NotAvailable', exc_value)

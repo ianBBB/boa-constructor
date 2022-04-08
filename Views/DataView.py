@@ -109,7 +109,9 @@ class DataView(wx.ListView, InspectableObjectView):
             if idx == -1:
                 idx = self.il.Add(PaletteStore.bitmapForComponent(ClassObj))
 
-            self.InsertImageStringItem(self.GetItemCount(), '%s : %s' % (
+            # self.InsertImageStringItem(self.GetItemCount(), '%s : %s' % (
+            #       ctrl.comp_name, className), idx)
+            self.InsertItem(self.GetItemCount(), '%s : %s' % (
                   ctrl.comp_name, className), idx)
         self.opened = True
 
