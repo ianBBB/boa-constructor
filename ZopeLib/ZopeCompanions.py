@@ -9,7 +9,7 @@
 # Copyright:   (c) 2001 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing ZopeLib.ZopeCompanions'
+print('importing ZopeLib.ZopeCompanions')
 
 import os
 
@@ -48,10 +48,10 @@ class ZopePropEdit(PropertyEditor):
 
 class EvalZopePropEdit(ZopePropEdit):
     def valueToIECValue(self):
-        return `self.value`
+        return repr(self.value)
 
     def inspectorEdit(self):
-        self.editorCtrl = InspectorEditorControls.TextCtrlIEC(self, `self.value`)
+        self.editorCtrl = InspectorEditorControls.TextCtrlIEC(self, repr(self.value))
         self.editorCtrl.createControl(self.parent, self.value, self.idx,
           self.width)
 
@@ -59,9 +59,9 @@ class EvalZopePropEdit(ZopePropEdit):
         if self.editorCtrl:
             try:
                 self.value = eval(self.editorCtrl.getValue(), {})
-            except Exception, message:
+            except Exception as message:
                 self.value = self.getCtrlValue()
-                print 'invalid constr prop value', message
+                print('invalid constr prop value', message)
         else:
             self.value = self.getCtrlValue()
         return self.value
@@ -80,9 +80,9 @@ class StrZopePropEdit(ZopePropEdit):
         if self.editorCtrl:
             try:
                 self.value = self.editorCtrl.getValue()
-            except Exception, message:
+            except Exception as message:
                 self.value = self.getCtrlValue()
-                print 'invalid constr prop value', message
+                print('invalid constr prop value', message)
         else:
             self.value = self.getCtrlValue()
         return self.value
@@ -146,7 +146,7 @@ class ZopeConnection:
                 return Client.call(*(url, self.user, self.password), **kw)
             finally:
                 wx.EndBusyCursor()
-        except Client.ServerError, rex:
+        except Client.ServerError as rex:
             return None, rex
 
     def callkw(self, objPath, method, kw):
@@ -158,7 +158,7 @@ class ZopeConnection:
                 return Client.call(*(url, self.user, self.password), **kw)
             finally:
                 wx.EndBusyCursor()
-        except Client.ServerError, rex:
+        except Client.ServerError as rex:
             return None, rex
 
 #---Companion classes for creating and inspecting Zope objects------------------
@@ -277,7 +277,7 @@ class CustomZopePropsMixIn:
         propItems = []
 
         if self.propOrder is None:
-            propOrder = propDict.keys()
+            propOrder = list(propDict.keys())
             propOrder.sort()
         else:
             propOrder = self.propOrder

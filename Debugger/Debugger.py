@@ -23,12 +23,12 @@ import Preferences, Utils
 from Preferences import pyPath, IS, flatTools, keyDefs
 from Utils import _
 
-from DebuggerControls import StackViewCtrl, BreakViewCtrl, NamespaceViewCtrl,\
+from .DebuggerControls import StackViewCtrl, BreakViewCtrl, NamespaceViewCtrl,\
                              WatchViewCtrl, DebugStatusBar
-import PathMappingDlg
+from . import PathMappingDlg
 
-from Breakpoint import bplist
-from DebugClient import EVT_DEBUGGER_OK, EVT_DEBUGGER_EXC, \
+from .Breakpoint import bplist
+from .DebugClient import EVT_DEBUGGER_OK, EVT_DEBUGGER_EXC, \
      EVT_DEBUGGER_STOPPED, EmptyResponseError
 
 # When an output window surpasses these limits, it will be trimmed.
@@ -138,7 +138,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
                style=wx.SP_NOBORDER|Preferences.splitterStyle)
 
         (stackImgIdx, breaksImgIdx, watchesImgIdx, localsImgIdx,
-                  globalsImgIdx) = range(5)
+                  globalsImgIdx) = list(range(5))
 
         # Create a Notebook
         self.nbTop = wx.Notebook(self.splitter, wxID_TOPPAGECHANGED)
@@ -289,10 +289,10 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
     def receiveDict(self, status):
         frameno = status['frameno']
         if frameno == self.stackView.getSelection():
-            if status.has_key('locals'):
+            if 'locals' in status:
                 self.updated_panes[1] = 1
                 self.locs.load_dict(status['locals'])
-            if status.has_key('globals'):
+            if 'globals' in status:
                 self.updated_panes[2] = 1
                 self.globs.load_dict(status['globals'])
         else:
@@ -368,7 +368,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
 
     def setDebugClient(self, client=None):
         if client is None:
-            from ChildProcessClient import ChildProcessClient
+            from .ChildProcessClient import ChildProcessClient
             client = ChildProcessClient(self, Preferences.debugServerArgs)
         self.debug_client = client
 
@@ -392,7 +392,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
             try:
                 self.debug_client.kill()
             except:
-                print _('Error on killing debugger: %s: %s')%sys.exc_info()[:2]
+                print(_('Error on killing debugger: %s: %s')%sys.exc_info()[:2])
         self.clearViews()
 
     def OnDebuggerStopped(self, event):
@@ -478,7 +478,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
         if self.slave_mode:
             # Work with a child process.
             add_paths = simplifyPathList(pyPath)
-            add_paths = map(self.clientFNToServerFN, add_paths)
+            add_paths = list(map(self.clientFNToServerFN, add_paths))
             filename = self.clientFNToServerFN(self.filename)
             self.invokeInDebugger(
                 'runFileAndRequestStatus',
@@ -675,7 +675,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
             self.lastStepView = None
 
     def getEditorSourceView(self, filename):
-        if self.editor.modules.has_key(filename):
+        if filename in self.editor.modules:
             return self.editor.modules[filename].model.getSourceView()
         else:
             return None
@@ -689,7 +689,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
             #self.editor.SetFocus()
             try:
                 self.editor.openOrGotoModule(filename)
-            except Exception, err:
+            except Exception as err:
                 self.editor.setStatus(
                       _('Debugger: Failed to open file %s')%filename, 'Error')
             else:

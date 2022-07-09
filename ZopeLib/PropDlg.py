@@ -49,7 +49,7 @@ class NewPropDlg(wx.Dialog):
               parent=self.panel1, pos=wx.Point(56, 72), size=wx.Size(144, 21),
               style=0)
         self.chType.SetSelection(6)
-        self.chType.SetToolTipString('Property type')
+        self.chType.SetToolTip('Property type')
 
         self.btOK = wx.Button(id=wxID_NEWPROPDLGBTOK, label='OK', name='btOK',
               parent=self.panel1, pos=wx.Point(48, 112), size=wx.Size(72, 24),

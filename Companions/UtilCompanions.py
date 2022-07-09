@@ -9,7 +9,7 @@
 # Copyright:   (c) 2000 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Companions.UtilCompanions'
+print('importing Companions.UtilCompanions')
 import os, copy
 
 import wx
@@ -17,9 +17,9 @@ import wx
 import Preferences, Utils
 from Utils import _
 
-from BaseCompanions import UtilityDTC, CollectionDTC, CollectionIddDTC, NYIDTC
+from .BaseCompanions import UtilityDTC, CollectionDTC, CollectionIddDTC, NYIDTC
 
-import Constructors
+from . import Constructors
 from PropEdit.PropertyEditors import IntConstrPropEdit, StrConstrPropEdit, \
       CollectionPropEdit, BitmapConstrPropEdit, EnumConstrPropEdit, \
       LCCEdgeConstrPropEdit, WinEnumConstrPropEdit, BoolConstrPropEdit, \
@@ -27,7 +27,8 @@ from PropEdit.PropertyEditors import IntConstrPropEdit, StrConstrPropEdit, \
       ConstrPropEdit
 
 from PropEdit import Enumerations, InspectorEditorControls
-import EventCollections, RTTI
+import RTTI
+from . import EventCollections
 
 import methodparse, moduleparse, sourceconst
 
@@ -143,7 +144,7 @@ class ImageListImagesCDTC(CollectionDTC):
 
         # resize wx.NullBitmap if different size than the imagelist
         ix, iy = self.parentCompanion.control.GetSize(0)
-        for param in vals.keys():
+        for param in list(vals.keys()):
             if vals[param] == 'wx.NullBitmap' and (\
                   dtd[param].GetWidth() != ix or\
                   dtd[param].GetHeight() != iy):
@@ -265,7 +266,7 @@ class AcceleratorTableEntriesCDTC(CollectionDTC):
         return {0: '(0, 0, -1)'}
 
     def getDisplayProp(self):
-        return `self.textConstrLst[self.index].params.values()`
+        return repr(list(self.textConstrLst[self.index].params.values()))
 
 #    def initialiser(self):
 #        return ['%s%s = []'%(sourceconst.bodyIndent, self.__class__.sourceObjName), '']
@@ -299,7 +300,7 @@ class MenuDTC(UtilityDTC):
         return props
 
     def designTimeSource(self):
-        return {'title': `''`}
+        return {'title': repr('')}
 
     def hideDesignTime(self):
         return ['NextHandler', 'PreviousHandler', 'EventHandler', 'Id',
@@ -336,7 +337,9 @@ class MenuItemsCIDTC(CollectionIddDTC):
     def constructor(self):
         tcl = self.textConstrLst[self.index]
         if tcl.method == 'Append':
-            return {'Text': 'text', 'Help': 'help',
+            # return {'Text': 'text', 'Help': 'help',
+            #         'Kind': 'kind', 'ItemId': 'id'}
+            return {'Text': 'text', 'Item': 'item', 'Help': 'helpString',
                     'Kind': 'kind', 'ItemId': 'id'}
         elif tcl.method == 'AppendSeparator':
             return {}
@@ -363,24 +366,29 @@ class MenuItemsCIDTC(CollectionIddDTC):
         newItemName, winId = self.newUnusedItemNames(wId)
 
         if method == 'Append':
+            # return {'id': winId,
+            #         'text': repr(newItemName),
+            #         'help': repr(''),
+            #         'kind': 'wx.ITEM_NORMAL'}
             return {'id': winId,
-                    'text': `newItemName`,
-                    'help': `''`,
+                    'text': newItemName,
+                    'item': newItemName,
+                    'helpString': repr(''),
                     'kind': 'wx.ITEM_NORMAL'}
         elif method == 'AppendSeparator':
             return {}
         elif method == 'AppendMenu':
             return {'id': winId,
-                    'text': `newItemName`,
+                    'text': repr(newItemName),
                     'submenu': 'wx.Menu()',
-                    'help': `''`}
+                    'help': repr('')}
 
     def designTimeDefaults(self, vals, method=None):
         if method is None:
             method = self.insertionMethod
 
         dtd = {}
-        for param in vals.keys():
+        for param in list(vals.keys()):
             if param == 'submenu':
                 name = vals[param]
                 if name[:4] == 'self':
@@ -388,7 +396,7 @@ class MenuItemsCIDTC(CollectionIddDTC):
                 elif name == 'wx.Menu()':
                     dtd[param] = wx.Menu()
                 else:
-                    raise Exception, _('Invalid menu reference: %s')%name
+                    raise Exception(_('Invalid menu reference: %s')%name)
             elif param == self.idProp:
                 dtd[param] = wx.NewId()
             else:
@@ -489,11 +497,11 @@ class MenuBarMenusCDTC(CollectionDTC):
 
     def designTimeSource(self, wId, method=None):
         return {'menu': 'wx.Menu()',
-                'title': `'%s%d'%(self.propName, wId)`}
+                'title': repr('%s%d'%(self.propName, wId))}
 
     def designTimeDefaults(self, vals, method=None):
         dtd = {}
-        for param in vals.keys():
+        for param in list(vals.keys()):
             if param == 'menu':
                 name = vals[param]
                 if name[:4] == 'self':
@@ -501,7 +509,7 @@ class MenuBarMenusCDTC(CollectionDTC):
                 elif name == 'wx.Menu()':
                     dtd[param] = wx.Menu()
                 else:
-                    raise Exception, _('Invalid menu reference: %s')%name
+                    raise Exception(_('Invalid menu reference: %s')%name)
             else:
                 dtd[param] = self.eval(vals[param])
 

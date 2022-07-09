@@ -16,7 +16,7 @@ import wx
 import Preferences, Utils
 from Utils import _
 
-import ExplorerNodes
+from . import ExplorerNodes
 from Models import EditorHelper
 
 [wxID_EDTGOTO, wxID_EDTRELOAD, wxID_EDTCLOSE, wxID_EDTCLOSEALL, wxID_EDTMOVEUP,
@@ -76,7 +76,7 @@ class EditorController(ExplorerNodes.Controller):
         self.editor.tabs.InsertPage(idx+direc, page, text, False, imgIdx)
 
         # swap the two tIdx's
-        for modPage in self.editor.modules.values():
+        for modPage in list(self.editor.modules.values()):
             if modPage.tIdx == idx:
                 modPage.tIdx = idx + direc
             elif modPage.tIdx == idx + direc:
@@ -157,7 +157,7 @@ class OpenModelsNode(ExplorerNodes.ExplorerNode):
     def openList(self):
         res = []
         mods = []
-        for name, modPage in self.editor.modules.items():
+        for name, modPage in list(self.editor.modules.items()):
             mods.append( (modPage.tIdx, name, modPage) )
 
         mods.sort()
@@ -237,7 +237,7 @@ class EditorNewController(ExplorerNodes.Controller):
         self.menu.Destroy()
 
     def OnCreate(self, event):
-        print 'Create'
+        print('Create')
 
 class NewPaletteNode(ExplorerNodes.ExplorerNode):
     protocol = 'boa.new-palette'
@@ -257,7 +257,7 @@ class NewPaletteNode(ExplorerNodes.ExplorerNode):
     def openList(self):
         res = []
         mods = []
-        for name, modPage in self.editor.modules.items():
+        for name, modPage in list(self.editor.modules.items()):
             mods.append( (modPage.tIdx, name, modPage) )
 
         mods.sort()

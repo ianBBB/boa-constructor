@@ -25,7 +25,7 @@ class FrameI18N(wx.Frame):
               label=_('the quick brown fox jumps over the lazy dog'),
               name='staticText1', parent=self, pos=wx.Point(0, 0),
               size=wx.Size(300, 43), style=0)
-        self.staticText1.SetToolTipString(_('I18N Example'))
+        self.staticText1.SetToolTip(_('I18N Example'))
 
     def __init__(self, parent):
         self._init_ctrls(parent)

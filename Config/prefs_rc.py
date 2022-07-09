@@ -7,7 +7,7 @@ import wx
 import wx.stc
 if not hasattr(wx.stc, 'STC_CP_DBCS'):
     wx.stc.STC_CP_DBCS = None
-from wxCompat import wxNO_3D
+
 
 #-Miscellaneous-----------------------------------------------------------------
 
@@ -24,12 +24,12 @@ dataViewListStyle = wx.LC_LIST
 ## options: 'tabs', 'menu'
 paletteStyle = 'tabs'
 # Frame test button on the Palette toolbar
-showFrameTestButton = False
+showFrameTestButton = True
 # Style flags used by most splitters in the IDE
-splitterStyle = wx.SP_LIVE_UPDATE | wx.SP_3DSASH | wxNO_3D
+splitterStyle = wx.SP_LIVE_UPDATE | wx.SP_3DSASH
 
 # Alternating background colours used in ListCtrls (pastel blue and yellow)
-pastels = True
+pastels = False
 pastelMedium = wx.Colour(235, 246, 255)
 pastelLight = wx.Colour(255, 255, 240)
 
@@ -82,7 +82,7 @@ installBCRTL = False
 
 # Determines how Boa reacts to errors when running
 ## options: 'release', 'development'
-debugMode = 'release'
+debugMode = 'development'
 
 # If the environment variable PYTHONSTARTUP is set to a python file
 # this file can be executed at startup in the Shell's namespace
@@ -107,7 +107,7 @@ suSocketFileOpenServer = True
 eoErrOutDockWindow = 'editor'
 # When docked in the Editor, percentage wise, how high should the default
 # Error/Output window be?
-eoErrOutWindowHeightPerc = 0.2
+eoErrOutWindowHeightPerc = 20
 
 # Arguments for Debug Server
 # e.g. '--zope' for PythonScript and PageTemplate debugging support

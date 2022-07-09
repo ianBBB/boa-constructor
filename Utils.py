@@ -12,10 +12,12 @@
 import string, os, sys, glob, pprint, types, re, traceback
 
 import wx
+from wx import adv
 
 import Preferences
 from Preferences import IS
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
+from html.parser import HTMLParser
 
 # Centralised i18n gettext compatible definition
 _ = wx.GetTranslation
@@ -25,7 +27,7 @@ def toPyPath(filename):
     return os.path.join(Preferences.pyPath, filename)
 
 def ShowErrorMessage(parent, caption, mess):
-    dlg = wx.MessageDialog(parent, mess.__class__.__name__ +': '+`mess`,
+    dlg = wx.MessageDialog(parent, mess.__class__.__name__ +': '+repr(mess),
                           caption, wx.OK | wx.ICON_EXCLAMATION)
     try: dlg.ShowModal()
     finally: dlg.Destroy()
@@ -42,8 +44,13 @@ def yesNoDialog(parent, title, question):
 
 def AddToolButtonBmpObject(frame, toolbar, thebitmap, hint, triggermeth,
       theToggleBitmap=wx.NullBitmap):
-    nId = wx.NewId()
-    toolbar.AddTool(nId, thebitmap, theToggleBitmap, shortHelpString = hint)
+    nId = wx.NewIdRef(count=1)
+
+    if 'wx'in str(type(toolbar)):
+        toolbar.AddTool(nId, '', thebitmap, hint, wx.ITEM_NORMAL)
+    else:
+        toolbar.AddTool(nId, thebitmap, theToggleBitmap, hint, False)
+
     frame.Bind(wx.EVT_TOOL, triggermeth, id=nId)
     return nId
 
@@ -58,7 +65,7 @@ def AddToolButtonBmpIS(frame, toolbar, name, hint, triggermeth, toggleBmp = ''):
         return AddToolButtonBmpObject(frame, toolbar, IS.load(name), hint[:85], triggermeth)
 
 def AddToggleToolButtonBmpObject(frame, toolbar, thebitmap, hint, triggermeth):
-    nId = wx.NewId()
+    nId = wx.NewIdRef(count=1)
     toolbar.AddTool(nId, thebitmap, thebitmap, shortHelpString = hint, isToggle = True)
     frame.Bind(wx.EVT_TOOL, triggermeth, id=nId)
     return nId
@@ -85,7 +92,17 @@ def split_seq(seq, pivot, transformFunc = None):
     result = []
     cur_sect = []
     for itm in seq:
-        if transformFunc and transformFunc(itm) == pivot or itm == pivot:
+        # if transformFunc and transformFunc(itm) == pivot or itm == pivot:
+        #     result.append(cur_sect)
+        #     cur_sect = []
+        # else:
+        #     cur_sect.append(itm)
+        if transformFunc:
+            transformResult = eval("itm."+transformFunc)
+        else:
+            transformResult=None
+
+        if transformFunc and transformResult == pivot or itm == pivot:
             result.append(cur_sect)
             cur_sect = []
         else:
@@ -126,7 +143,8 @@ def duplicateMenu(source):
         if menu.IsSeparator():
             dest.AppendSeparator()
         else:
-            dest.Append(menu.GetId(), menu.GetText(), menu.GetHelp(), menu.IsCheckable())
+            dest.Append(menu.GetId(), menu.GetItemLabelText(), menu.GetHelp(), menu.IsCheckable())  # wascommented out. don't know y.
+            #dest.Append(menu)
             mi = dest.FindItemById(menu.GetId())
             if menu.IsCheckable() and menu.IsChecked():
                 mi.Check(True)
@@ -135,8 +153,8 @@ def duplicateMenu(source):
 def getValidName(usedNames, baseName, ext = '', n = 1, itemCB = lambda x:x):
     def tryName(baseName, ext, n):
         return '%s%d%s' %(baseName, n, ext and '.'+ext)
-    while filter(lambda key, name = tryName(baseName, ext, n), itemCB = itemCB: \
-                 itemCB(key) == name, usedNames): n = n + 1
+    while list(filter(lambda key, name = tryName(baseName, ext, n), itemCB = itemCB: \
+                 itemCB(key) == name, usedNames)): n = n + 1
     return tryName(baseName, ext, n)
 
 def srcRefFromCtrlName(ctrlName):
@@ -151,19 +169,19 @@ def getWxPyNameForClass(Class):
     return '.'.join([pathSeg for pathSeg in classPathSegs if pathSeg[0] != '_'])
 
 def winIdRange(count):
-    return [wx.NewId() for x in range(count)]
+    return [wx.NewIdRef(count=1) for x in range(count)]
 
 wxNewIds = winIdRange
 
 def methodLooksLikeEvent(method):
-    return len(method) >= 3 and method[:2] == 'On' and method[2] in string.uppercase
+    return len(method) >= 3 and method[:2] == 'On' and method[2] in string.ascii_uppercase
 
 def startswith(str, substr):
     return len(str) >= len(substr) and str[:len(substr)] == substr
 
-ws2s = string.maketrans(string.whitespace, ' '*len(string.whitespace))
+# ws2s = string.maketrans(string.whitespace, ' '*len(string.whitespace))
 def whitespacetospace(str):
-    return str.translate(ws2s)
+    return str.replace(string.whitespace, ' '*len(string.whitespace))
 
 ##tst_str = ' 1\t\n 3'
 ##print `whitespacetospace(tst_str)`
@@ -287,9 +305,9 @@ def showTip(frame, forceShow=0):
             tipsFile = tipsDir+'/tips.txt'
             if not os.path.exists(tipsFile):
                 tipsFile = toPyPath('Docs/tips.txt')
-        
-        tp = wx.CreateFileTipProvider(tipsFile, index)
-        showTip = wx.ShowTip(frame, tp, showTip)
+
+        tp = wx.adv.CreateFileTipProvider(tipsFile, index)
+        showTip = wx.adv.ShowTip(frame, tp, showTip)
         index = tp.GetCurrentTip()
         if conf:
             conf.set('tips', 'showonstartup', showTip and 'true' or 'false')
@@ -339,7 +357,7 @@ def writeConfig(conf):
 
 import wx.html
 
-wxEVT_HTML_URL_CLICK = wx.NewId()
+wxEVT_HTML_URL_CLICK = wx.NewIdRef(count=1)
 EVT_HTML_URL_CLICK = wx.PyEventBinder(wxEVT_HTML_URL_CLICK)
 
 
@@ -365,13 +383,13 @@ def wxProxyPanel(parent, Win, *args, **kwargs):
     """
     panel = wx.Panel(parent, -1, style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN)
 
-    if type(Win) is types.ClassType or type(Win) is types.TypeType:
+    if isinstance(Win, type) or isinstance(Win, type):
         win = Win(*((panel,) + args), **kwargs)
     elif isinstance(Win, wx.Window):
         win = Win
         win.Reparent(panel)
     else:
-        raise Exception, _('Unhandled type for Win')
+        raise Exception(_('Unhandled type for Win'))
 
     def OnWinSize(evt, win=win):
         win.SetSize(evt.GetSize())
@@ -396,7 +414,7 @@ def updateFile(src, dst):
         if os.path.splitext(src)[-1] in dofiles and \
               ( not os.path.exists(dst) or \
               os.stat(dst)[stat.ST_MTIME] < os.stat(src)[stat.ST_MTIME]):
-            print 'copying', src, dst
+            print('copying', src, dst)
             shutil.copy2(src, dst)
 
 
@@ -414,7 +432,7 @@ def visit_update(paths, dirname, names):
     if os.path.basename(dirname) in skipdirs:
         return
     if not os.path.exists(dstdirname):
-        print 'creating', dstdirname
+        print('creating', dstdirname)
         os.makedirs(dstdirname)
     for name in names:
         srcname = os.path.join(dirname, name)
@@ -443,7 +461,7 @@ class PseudoFile:
         self.output = output
 
     def writelines(self, l):
-        map(self.write, l)
+        list(map(self.write, l))
 
     def write(self, s):
         pass
@@ -514,17 +532,23 @@ def getCtrlsFromDialog(dlg, className):
     """ Returns children of given class from dialog.
 
     This is useful for standard dialogs that does not expose their children """
-    return filter(lambda d, cn=className: d.__class__.__name__ == cn,
-                  dlg.GetChildren())
+    return list(filter(lambda d, cn=className: d.__class__.__name__ == cn,
+                  dlg.GetChildren()))
+
+class MyHTMLParser(HTMLParser):
+
+    __ret_str= ''
+
+    def handle_data(self, data):
+        self.__ret_str += data + '\n'
+
+    def converted_text(self):
+        return self.__ret_str
 
 def html2txt(htmlblock):
-    import htmllib, formatter, StringIO
-    s = StringIO.StringIO('')
-    w = formatter.DumbWriter(s)
-    f = formatter.AbstractFormatter(w)
-    p = htmllib.HTMLParser(f)
+    p = MyHTMLParser()
     p.feed(htmlblock)
-    return s.getvalue().strip()
+    return p.converted_text()
 
 def getEntireWxNamespace():
     """ Return a dictionary containing the entire (non filtered) wxPython
@@ -543,7 +567,7 @@ def getEntireWxNamespace():
     return namespace
 
 class FrameRestorerMixin:
-    """ Used by top level windows to restore from gidden or iconised state
+    """ Used by top level windows to restore from hidden or iconised state
     and to load and persist window dimensions
 
     Classes using the mixin must define self.setDefaultDimensions()
@@ -567,7 +591,7 @@ class FrameRestorerMixin:
             else:
                 self.SetPosition(tuple(dims[:-1]))
         else:
-            self.SetDimensions(*dims)
+            self.setDimensions(*dims)
 
     def getDimensions(self):
         pos = self.GetPosition().Get()
@@ -596,7 +620,7 @@ class FrameRestorerMixin:
         if dims == ():
             dims = self.getDimensions()
         conf = createAndReadConfig(self.confFile)
-        conf.set(self.confSection, self.winConfOption, `dims`)
+        conf.set(self.confSection, self.winConfOption, repr(dims))
         writeConfig(conf)
 
     def restoreDefDims(self):
@@ -604,7 +628,7 @@ class FrameRestorerMixin:
         self.loadDims()
 
 def callOnFrameRestorers(method):
-    for name, window in FrameRestorerMixin.frameRestorerWindows.items():
+    for name, window in list(FrameRestorerMixin.frameRestorerWindows.items()):
         if not window:
             del FrameRestorerMixin.frameRestorerWindows[name]
         else:
@@ -614,7 +638,7 @@ def callOnFrameRestorers(method):
 def setupCloseWindowOnEscape(win):
     def OnCloseWin(event, win=win): win.Close()
 
-    wxID_CLOSEWIN = wx.NewId()
+    wxID_CLOSEWIN = wx.NewIdRef(count=1)
     win.Bind(wx.EVT_MENU, OnCloseWin, id=wxID_CLOSEWIN)
     return (wx.ACCEL_NORMAL, wx.WXK_ESCAPE, wxID_CLOSEWIN)
 
@@ -702,7 +726,7 @@ class ListCtrlLabelEditFixEH(wx.EvtHandler):
        <control>.PopEventHandler(True)
     """
 
-    wxEVT_CTRLEDIT = wx.NewId()
+    wxEVT_CTRLEDIT = wx.NewIdRef(count=1)
 
     def __init__(self, listCtrl):
         wx.EvtHandler.__init__(self)
@@ -744,7 +768,7 @@ def getListCtrlSelection(listctrl, state=wx.LIST_STATE_SELECTED):
     """ Returns list of item indexes of given state """
     res = []
     idx = -1
-    while 1:
+    while True:
         idx = listctrl.GetNextItem(idx, wx.LIST_NEXT_ALL, state)
         if idx == -1:
             break
@@ -757,7 +781,7 @@ class ListCtrlSelectionManagerMix:
     As selection single and multi-select list return the item index or a
     list of item indexes respectively.
     """
-    wxEVT_DOPOPUPMENU = wx.NewId()
+    wxEVT_DOPOPUPMENU = wx.NewIdRef(count=1)
     _menu = None
 
     def __init__(self):
@@ -842,12 +866,12 @@ def getIndentBlock():
 def getIndentedStrForLen(n):
     if Preferences.STCUseTabs:
         d, m = divmod(n, Preferences.STCTabWidth)
-        if m: 
+        if m:
             d += 1
         return '\t'*d
     else:
         return n*' '
-    
+
 #-------------------------------------------------------------------------------
 
 def canReadStream(stream):
@@ -875,7 +899,7 @@ def appendMenuItem(menu, wId, label, code=(), bmp='', help=''):
         if wx.Platform == '__WXGTK__' and wx.VERSION >= (2,3,3) or \
               wx.Platform == '__WXMSW__':
             menuItem.SetBitmap(Preferences.IS.load(bmp))
-    menu.AppendItem(menuItem)
+    menu.Append(menuItem)
 
 def getNotebookPage(notebook, name):
     for i in range(notebook.GetPageCount()):
@@ -897,18 +921,18 @@ def resetMinSize(parent, ignoreCtrls=(), ignoreClasses=()):
         size = wx.Size(textSize[0]+2,-1)
     else:
         size = wx.DefaultSize
-          
-    parent.SetMinSize(size)    
+
+    parent.SetMinSize(size)
     parent.SetSize(wx.Size(1, 1))
-    
+
     for child in parent.GetChildren():
         if child not in ignoreCtrls and not isinstance(child, ignoreClasses):
-            resetMinSize(child, ignoreCtrls, ignoreClasses) 
+            resetMinSize(child, ignoreCtrls, ignoreClasses)
 
 def wxPyExceptHook(type, value, trace):
     if wx and sys and traceback:
         exc = traceback.format_exception(type, value, trace)
-        for e in exc: 
+        for e in exc:
             wx.LogError(e)
         sys.__excepthook__(type, value, trace)
 
@@ -936,7 +960,7 @@ def coding_spec(str):
         codecs.lookup(name)
     except LookupError:
         # The standard encoding error does not indicate the encoding
-        raise LookupError, _('Unknown encoding %s')%name
+        raise LookupError(_('Unknown encoding %s')%name)
     return name
 
 unicodeErrorMsg = 'Please change the defaultencoding in sitecustomize.py or '\
@@ -949,23 +973,23 @@ def stringFromControl(u):
     if wx.USE_UNICODE:
         try:
             return str(u)
-        except UnicodeError, err:
+        except UnicodeError as err:
             try:
                 spec = coding_spec(u)
                 if spec is None:
                     raise
                 return u.encode(spec)
-            except UnicodeError, err:
+            except UnicodeError as err:
                 try:
                     s = _('Unable to encode unicode string, please change '\
                           'the defaultencoding in sitecustomize.py to handle this '\
                           'encoding.\nError message %s')%str(err)
-                except UnicodeError, err:
-                    raise Exception, 'Unable to encode unicode string, please change '\
+                except UnicodeError as err:
+                    raise Exception('Unable to encode unicode string, please change '\
                           'the defaultencoding in sitecustomize.py to handle this '\
-                          'encoding.\nError message %s'%str(err)
+                          'encoding.\nError message %s'%str(err))
                 else:
-                    raise Exception, s
+                    raise Exception(s)
     else:
         return u
 
@@ -978,29 +1002,29 @@ def stringToControl(s, safe=False):
             if safe:
                 return s.decode(sys.getdefaultencoding(), 'ignore')
             else:
-                return unicode(s)
-        except UnicodeError, err:
+                return str(s)
+        except UnicodeError as err:
             try:
                 spec = coding_spec(s)
                 if spec is None:
                     raise
                 return s.decode(spec)
-            except UnicodeError, err:
+            except UnicodeError as err:
                 try:
                     s = _('Unable to decode unicode string, please change '\
                           'the defaultencoding in sitecustomize.py to handle this '\
                           'encoding.\n Error message %s')
-                except UnicodeError, err:
-                    raise Exception, 'Unable to decode unicode string, please change '\
+                except UnicodeError as err:
+                    raise Exception('Unable to decode unicode string, please change '\
                           'the defaultencoding in sitecustomize.py to handle this '\
-                          'encoding.\n Error message %s'%str(err)
+                          'encoding.\n Error message %s'%str(err))
                 else:
-                    raise Exception, s
+                    raise Exception(s)
     else:
         return s
 
 def safeDecode(s):
-    return s.decode(sys.getdefaultencoding(), 'replace')    
+    return s.decode(sys.getdefaultencoding(), 'replace')
 
 #-------------------------------------------------------------------------------
 

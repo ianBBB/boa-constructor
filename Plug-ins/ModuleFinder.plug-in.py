@@ -3,7 +3,7 @@
 import sys, imp
 
 import wx
-
+import os
 import Preferences
 import Utils
 from Utils import _, resetMinSize
@@ -94,7 +94,7 @@ def openModuleFinder(editor):
             try:
                 f, filename, (ext, mode, type) = \
                       Utils.find_dotted_module(modName)#, sys.path)
-            except ImportError, err:
+            except ImportError as err:
                 wx.LogError(_('%s not found on sys.path (%s).')%(modName, str(err)))
             else:
                 if f is not None:
@@ -123,7 +123,7 @@ Plugins.registerTool(_('Module finder'), openModuleFinder,
 
 def getModuleFinderImgData():
     return \
-'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x06\
+b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x06\
 \x00\x00\x00\x1f\xf3\xffa\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\
 \x00\x01\x1aIDATx\x9c\xa5\x93]j\xc30\x10\x84?\x95\x1c@\xd7\xf1\x12\x08\xd5\
 \x89J\xf0[J\x7f\xc2\xe6-\x94\x9eH\x10\x12\xd6\xd7\xc9\x01\n\xdb\x07[\x8a\x9d\

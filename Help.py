@@ -29,7 +29,8 @@ from Utils import _
 class PyDocHelpPage(wx.Panel):
     def _init_utils(self):
         # generated method, don't edit
-        self.scrBrowse =wx.StockCursor(id=wx.CURSOR_HAND)
+        # self.scrBrowse =wx.StockCursor(id=wx.CURSOR_HAND)
+        self.scrBrowse =wx.Cursor(wx.CURSOR_HAND)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
@@ -42,10 +43,11 @@ class PyDocHelpPage(wx.Panel):
 
         self.txtSearch =wx.TextCtrl(id=wxID_PYDOCHELPPAGETXTSEARCH,
               name='txtSearch', parent=self, pos=wx.Point(10, 10),
-              size=wx.Size(231, 21), style=0, value='')
+              size=wx.Size(231, 21), style=wx.TE_PROCESS_ENTER, value='')
         self.txtSearch.SetConstraints(LayoutAnchors(self.txtSearch, True, True,
               True, False))
-        self.txtSearch.SetToolTipString(_('Enter name to search for'))
+        self.txtSearch.SetToolTip(_('Enter name to search for'))
+
         self.txtSearch.Bind(wx.EVT_TEXT_ENTER, self.OnTxtsearchTextEnter, id=wxID_PYDOCHELPPAGETXTSEARCH)
 
         self.boxResults =wx.ListBox(choices=[], id=wxID_PYDOCHELPPAGEBOXRESULTS,
@@ -292,9 +294,9 @@ def decorateWxPythonWithDocStrs(dbfile):
     try:
         db = marshal.load(open(dbfile, 'rb'))
     except IOError:
-        print 'wxPython Doc strings: %s failed to load'%dbfile
+        print('wxPython Doc strings: %s failed to load'%dbfile)
     else:
-        for name, doc in db['classes'].items():
+        for name, doc in list(db['classes'].items()):
             try:
                 wxClass = namespace[name]
                 wxClass.__doc__ = doc
@@ -304,14 +306,14 @@ def decorateWxPythonWithDocStrs(dbfile):
             except:
                 pass
 
-        for name, doc in db['methods'].items():
+        for name, doc in list(db['methods'].items()):
             try:
                 cls, mth = string.split(name, '.')
                 wxMeth = getattr(namespace[cls], mth)
-                wxMeth.im_func.__doc__ = doc
+                wxMeth.__func__.__doc__ = doc
 
                 wxMeth = getattr(namespace[cls+'Ptr'], mth)
-                wxMeth.im_func.__doc__ = doc
+                wxMeth.__func__.__doc__ = doc
             except:
                 pass
 
@@ -333,7 +335,7 @@ class wxHtmlHelpControllerEx(wx.html.HtmlHelpController):
     def UseConfig(self, config):
         # Fix config file if stored as minimised
         if config.ReadInt('hcX') == -32000:
-            map(config.DeleteEntry, ('hcX', 'hcY', 'hcW', 'hcH'))
+            list(map(config.DeleteEntry, ('hcX', 'hcY', 'hcW', 'hcH')))
 
         wx.html.HtmlHelpController.UseConfig(self, config)
 
@@ -400,11 +402,15 @@ class wxHelpFrameEx:
         if self.toolbar.FindById(wxID_COPYTOCLIP) is None:
             self.toolbar.AddSeparator()
             self.copyToClipId = wxID_COPYTOCLIP
-            self.toolbar.AddTool(id = self.copyToClipId, isToggle=0,
+            # self.toolbar.AddTool(id = self.copyToClipId, isToggle=0,
+            #     bitmap=Preferences.IS.load('Images/Shared/CopyHelp.png'),
+            #     pushedBitmap=wx.NullBitmap,
+            #     shortHelpString=_('Copy contents as text to clipboard'),
+            #     longHelpString='')
+            self.toolbar.AddTool(toolId = self.copyToClipId,
+                label = "Copy",
                 bitmap=Preferences.IS.load('Images/Shared/CopyHelp.png'),
-                pushedBitmap=wx.NullBitmap,
-                shortHelpString=_('Copy contents as text to clipboard'),
-                longHelpString='')
+                shortHelp=_('Copy contents as text to clipboard'))
             self.frame.Bind(wx.EVT_TOOL, self.OnCopyPage, id=self.copyToClipId)
             self.toolbar.Realize()
 
@@ -510,7 +516,8 @@ def getCacheDir():
     return cacheDir
 
 # needed for .htb files
-wx.FileSystem.AddHandler(wx.ZipFSHandler())
+# wx.FileSystem.AddHandler(wx.ZipFSHandler())
+wx.FileSystem.AddHandler(wx.ArchiveFSHandler())
 
 use_standard_controller = False
 def initHelp(calledAtStartup=False):
@@ -535,7 +542,7 @@ def initHelp(calledAtStartup=False):
     books = eval(conf.get('help', 'books'), {})
     for book in books:
         if calledAtStartup:
-            print 'Help: loading %s'% os.path.basename(book)
+            print('Help: loading %s'% os.path.basename(book))
         bookPath = os.path.normpath(jn(docsDir, book))
         if os.path.exists(bookPath):
             _hc.AddBook(bookPath,
@@ -565,7 +572,8 @@ def testPydocServerAddress(host, port):
     try:
         try:
             sock.bind((host, port))
-        except socket.error, (code, msg):
+        except socket.error as xxx_todo_changeme:
+            (code, msg) = xxx_todo_changeme.args
             if code == 10048: # address in use
                 return False
             raise

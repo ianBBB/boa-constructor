@@ -19,7 +19,7 @@ clRed = '#882222'
 def replaceLT(str):
     return '<font color="#000060" size="-1"><b>'+str.replace('<', '&lt;')+'</b></font>'
 
-import repr
+import reprlib
 _repr = repr
 del repr
 
@@ -44,7 +44,7 @@ class _CyclopsHTMLRepr(_repr.Repr):
         if level <= 0:
             return replaceLT('{...}')
         s = ''
-        for k, v in x.items()[:min(n, self.maxdict)]:
+        for k, v in list(x.items())[:min(n, self.maxdict)]:
             if s:
                 s = s + ', '
             s = s + self.repr1(k, level-1)
@@ -57,7 +57,7 @@ class _CyclopsHTMLRepr(_repr.Repr):
 
     def repr_instance(self, x, level):
         try:
-            return replaceLT(`x`)
+            return replaceLT(repr(x))
             # Bugs in x.__repr__() can cause arbitrary
             # exceptions -- then make up something
         except:
@@ -65,7 +65,7 @@ class _CyclopsHTMLRepr(_repr.Repr):
                    hex(id(x))[2:] + '>')
 
     def repr_class(self, x, level):
-        return replaceLT(`x`)
+        return replaceLT(repr(x))
 
     repr_instance_method = repr_class
 
@@ -82,7 +82,7 @@ def find_declarer(cls, attr, found = 0):
         return found, cls
     else:
         for base in cls.__bases__:
-            if base.__dict__.has_key(attr):
+            if attr in base.__dict__:
                 return 1, base
             else:
                 found, basecls = find_declarer(base, attr, 0)
@@ -124,14 +124,14 @@ class CycleFinderHTML(Cyclops.CycleFinder):
         n = len(slice)
         assert n >= 2
         self.report.append('<b>%d-element cycle</b><br>' % (n-1))
-        for i in xrange(n):
+        for i in range(n):
             obj = slice[i][0]
             self.show_obj(obj)
             if i < n-1:
                 if type(obj).__name__ == 'instance method':
-                    attrib = obj.im_func.func_name
+                    attrib = obj.__func__.__name__
 
-                    found, attrib_decl = find_declarer(obj.im_class, attrib)
+                    found, attrib_decl = find_declarer(obj.__self__.__class__, attrib)
 #                    print 'XXXXX', found, attrib_decl, attrib
                     self.report.append('%s<a href="attrlink://%s.%s">this%s</a>-><br>' \
                       % (indent, str(attrib_decl), attrib, attrib))
@@ -187,7 +187,7 @@ class CycleFinderHTML(Cyclops.CycleFinder):
         self.report.append('&nbsp;&nbsp;&nbsp;&nbsp;%s<br>'%_quickrepr(obj))
 
     def add_stat_line(self, desc, value):
-        if type(value) == type([]):
+        if isinstance(value, type([])):
             lns = []
             for itm in value:
                 lns.append('<td><b>%s</b></td>'%str(itm))
@@ -225,7 +225,7 @@ class CycleFinderHTML(Cyclops.CycleFinder):
         self._add_section('AllCycles', 'All cycles')
         n = len(self.cycles)
         self.report.append('<ul>')
-        for i in xrange(n):
+        for i in range(n):
             self.report.append('<li>')
             self._print_cycle(self.cycles[i])
 #            if i < n-1:
@@ -245,7 +245,7 @@ class CycleFinderHTML(Cyclops.CycleFinder):
 
         self._print_separator()
         self._add_section('CycleObjs', 'Objects involved in cycles', self.show_cycleobjs.__doc__)
-        objs = self.cycleobjs.values()
+        objs = list(self.cycleobjs.values())
         objs.sort(compare)
         for obj in objs:
             self.show_obj(obj)
@@ -260,10 +260,10 @@ class CycleFinderHTML(Cyclops.CycleFinder):
 
         self._print_separator()
         self._add_section('SCC', 'Cycle objects partitioned into maximal SCCs', self.show_sccs.__doc__)
-        sccs = self.sccno2objs.values()
+        sccs = list(self.sccno2objs.values())
         n = len(sccs)
         self.report.append('<ul>')
-        for i in xrange(n):
+        for i in range(n):
             self.report.append('<li><b>SCC %d of %d</b><br>' %(i+1, n))
             objs = sccs[i]
             objs.sort(compare)
@@ -284,7 +284,7 @@ class CycleFinderHTML(Cyclops.CycleFinder):
 
         self._print_separator()
         self._add_section('ArcTypes', 'Arc types involved in cycles', self.show_arcs.__doc__)
-        items = self.arctypes.items()
+        items = list(self.arctypes.items())
         if compare:
             items.sort(compare)
         else:
@@ -312,7 +312,7 @@ class CycleFinderHTML(Cyclops.CycleFinder):
         stats = []
         self.report.append('<ul>')
         try:
-            while 1:
+            while True:
 #                print "*" * 70
 #                print "non-cyclic root set objects:"
                 sawitalready = {}
@@ -323,7 +323,7 @@ class CycleFinderHTML(Cyclops.CycleFinder):
                 self.header.append('<a href="#%s">%s</a><br>'%(name, desc))
                 self.report.append('<li><a NAME="%s"><b>%s</b></a></li><br>'%(name, desc))
                 for rc, cyclic, x in self.get_rootset():
-                    if not sawitalready.has_key(id(x)):
+                    if id(x) not in sawitalready:
                         sawitalready[id(x)] = 1
                         if rc == 0:
                             numdead = numdead + 1
@@ -335,7 +335,7 @@ class CycleFinderHTML(Cyclops.CycleFinder):
                             if show_objs: self.show_obj(x)
                             if hasattr(x, '__class__'):
                                 cn = x.__class__.__name__
-                                if class_count.has_key(cn):
+                                if cn in class_count:
                                     class_count[cn][id(x)] = 0
                                 else:
                                     class_count[cn] = {id(x):0}
@@ -346,7 +346,7 @@ class CycleFinderHTML(Cyclops.CycleFinder):
 
                 desc = '<br><b>Summary of instance count:</b><br>'
                 self.report.append(desc)
-                clss = class_count.keys()
+                clss = list(class_count.keys())
                 clss.sort()
                 for cls in clss:
                     desc = '%s: %d<br>' % (cls, len(class_count[cls]))

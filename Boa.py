@@ -18,6 +18,7 @@
 Handles creation/initialisation of main objects and commandline arguments """
 
 import sys, os, string, time, warnings
+import importlib
 
 #sys.stdout = sys.__stdout__#open('stdout.txt', 'w')
 #sys.stderr = sys.__stderr__#open('stderr.txt', 'w')
@@ -31,14 +32,15 @@ t1 = time.time()
 # already running instance of Boa. There is another flag under Preferences
 # which determines if Boa should create and listen on the socket.
 server_mode = 1
-
+# trace_mode_paused = True
 main_script = 'Boa.py'
+
 
 trace_mode = 'functions' # 'lines'
 trace_save = 'all'#'lastline' # 'all'
 def trace_func(frame, event, arg):
     """ Callback function when Boa runs in tracing mode"""
-    if frame and tracefile:
+    if frame and tracefile :
         info = '%s|%d|%d|%s|\n' % (frame.f_code.co_filename, frame.f_lineno,
               id(frame), event)
         if trace_save == 'lastline':
@@ -48,14 +50,14 @@ def trace_func(frame, event, arg):
     return trace_func
 
 def get_current_frame():
-    try: raise Exception, 'get_exc_info'
+    try: raise Exception('get_exc_info')
     except: return sys.exc_info()[2].tb_frame.f_back
 
 def sendToRunningBoa(names, host='127.0.0.1', port=50007):
     import socket
     try:
         if names:
-            print 'Sent',
+            print('Sent', end=' ')
         for name in names:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((host, port))
@@ -63,9 +65,9 @@ def sendToRunningBoa(names, host='127.0.0.1', port=50007):
             if name.find('://') == -1:
                 name = os.path.abspath(name)
             s.send(name)
-            print name,
+            print(name, end=' ')
             s.close()
-        print
+        print()
     except socket.error: return 0
     else: return 1
 
@@ -94,9 +96,9 @@ def processArgs(argv):
           'EmptyEditor', 'RemoteDebugServer', 'NoCmdLineTransfer', 'Help', 
           'Version', 'help', 'version', 'OverridePrefsDirName=', 'WxVersionSelect=',
           'UnicodeEncoding='])
-    except getopt.GetoptError, err:
-        print 'Error: %s'%str(err)
-        print 'For options: Boa.py --help'
+    except getopt.GetoptError as err:
+        print('Error: %s'%str(err))
+        print('For options: Boa.py --help')
         sys.exit()
 
     if len(args):
@@ -111,7 +113,7 @@ def processArgs(argv):
         elif opt in ('-R', '--RemoteDebugServer') and len(args):
             _doRemoteDebugSvr = 1
         elif opt in ('-T', '--Trace'):
-            print 'Running in trace mode.'
+            print('Running in trace mode.')
             global tracefile
             tracefile = open('Boa.trace', 'wt')
             tracefile.write(os.getcwd()+'\n')
@@ -141,47 +143,47 @@ def processArgs(argv):
             _unicodeEncoding = arg
     
         if opt in ('-h', '--help', '-H', '--Help'):
-            print 'Boa Constructor (%s)'%__version__.version
-            print 'Command-line usage: %s [options] [file1] [file2] ...'%main_script
-            print '-C, --Constricted:'
-            print '\tRuns in constricted mode, overrides the Preference'
-            print '-D, --Debug:'
-            print '\tRuns the first filename passed on the command-line in the Debugger '
-            print '\ton startup'
-            print '-T, --Trace:'
-            print '\tRuns in traceing mode. Used for tracking down core dumps. Every '
-            print '\tfunction call is logged to a file which can later be parsed for '
-            print '\ta traceback'
-            print '-S, --StartupFile:'
-            print '\tExecutes the script pointed to by $BOASTARTUP or '\
-                  '$PYTHONSTARTUP in'
-            print '\tthe Shell namespace. The Editor object is available as sys.boa_ide.'
-            print '\tOverrides the Preference'
-            print '-B, --BlockHomePrefs:'
-            print '\tPrevents the $HOME directory being used '
-            print '-O dirname, --OverridePrefsDirName dirname:'
-            print '\tSpecify a different directory to load Preferences from.'
-            print '\tDefault is .boa and is used if it exists'
-            print '\tDirectory will be created (and populated) if it does not exist'
-            print '-E, --EmptyEditor:'
-            print "\tDon't open the files that were open last time Boa was closed."
-            print '-R, --RemoteDebugServer:'
-            print '\tRuns the first filename passed on the command-line in a '
-            print '\tRemote Debugger Server that can be connected to over a socket.'
-            print '-N, --NoCmdLineTransfer:'
-            print "\tDon't transfer command line options to a running Boa, start a "
-            print '\tnew instance.'
-            print '-U encoding, --UnicodeEncoding encoding:'
-            print '\tSpecify a spesific encoding to use.'
-            print '-W version, --wxVersionSelect version:'
-            print '\tSpecify a spesific version of wxPython to use.'
-            print '-H, --Help, -h, --help:'
-            print '\tThis page.'
+            print('Boa Constructor (%s)'%__version__.version)
+            print('Command-line usage: %s [options] [file1] [file2] ...'%main_script)
+            print('-C, --Constricted:')
+            print('\tRuns in constricted mode, overrides the Preference')
+            print('-D, --Debug:')
+            print('\tRuns the first filename passed on the command-line in the Debugger ')
+            print('\ton startup')
+            print('-T, --Trace:')
+            print('\tRuns in traceing mode. Used for tracking down core dumps. Every ')
+            print('\tfunction call is logged to a file which can later be parsed for ')
+            print('\ta traceback')
+            print('-S, --StartupFile:')
+            print('\tExecutes the script pointed to by $BOASTARTUP or '
+                  '$PYTHONSTARTUP in')
+            print('\tthe Shell namespace. The Editor object is available as sys.boa_ide.')
+            print('\tOverrides the Preference')
+            print('-B, --BlockHomePrefs:')
+            print('\tPrevents the $HOME directory being used ')
+            print('-O dirname, --OverridePrefsDirName dirname:')
+            print('\tSpecify a different directory to load Preferences from.')
+            print('\tDefault is .boa and is used if it exists')
+            print('\tDirectory will be created (and populated) if it does not exist')
+            print('-E, --EmptyEditor:')
+            print("\tDon't open the files that were open last time Boa was closed.")
+            print('-R, --RemoteDebugServer:')
+            print('\tRuns the first filename passed on the command-line in a ')
+            print('\tRemote Debugger Server that can be connected to over a socket.')
+            print('-N, --NoCmdLineTransfer:')
+            print("\tDon't transfer command line options to a running Boa, start a ")
+            print('\tnew instance.')
+            print('-U encoding, --UnicodeEncoding encoding:')
+            print('\tSpecify a specific encoding to use.')
+            print('-W version, --wxVersionSelect version:')
+            print('\tSpecify a spesific version of wxPython to use.')
+            print('-H, --Help, -h, --help:')
+            print('\tThis page.')
     
             sys.exit()
     
         if opt in ('-v', '--version', '-V', '--Version'):
-            print 'Version: %s'%__version__.version
+            print('Version: %s'%__version__.version)
             sys.exit()
 
     return (_doDebug, _startupfile, _startupModules, _constricted, _emptyEditor,
@@ -195,7 +197,7 @@ if __name__ == '__main__' and len(sys.argv) > 1:
      blockSocketServer, wxVersionSelect, unicodeEncoding, 
      opts, args) = processArgs(sys.argv[1:])
     if doDebugSvr and startupModules:
-        print 'Running as a Remote Debug Server'
+        print('Running as a Remote Debug Server')
         from Debugger.RemoteServer import start
         # XXX username, password optionally should be on the command-line
         start(username='', password='')
@@ -203,7 +205,7 @@ if __name__ == '__main__' and len(sys.argv) > 1:
         # startupModules contain everything from the first filename and on
         sys.argv = startupModules
         sys.path.insert(0, os.path.abspath(os.path.dirname(sys.argv[0])))
-        execfile(sys.argv[0], {'__name__': '__main__',
+        exec(compile(open(sys.argv[0], "rb").read(), sys.argv[0], 'exec'), {'__name__': '__main__',
                                '__builtins__': __builtins__})
 
         sys.exit()
@@ -211,30 +213,35 @@ if __name__ == '__main__' and len(sys.argv) > 1:
     # Try connect to running Boa using sockets, tnx to Tim Hochberg
     if not blockSocketServer and startupModules and server_mode:
         if sendToRunningBoa(startupModules):
-            print 'Transfered arguments to running Boa, exiting.'
+            print('Transfered arguments to running Boa, exiting.')
             sys.exit()
 
-print 'Starting Boa Constructor v%s'%__version__.version
-print 'importing wxPython'
+print('Starting Boa Constructor v%s'%__version__.version)
+print('importing wxPython')
 
-reload(sys)
-set_default_encoding = getattr(sys, 'setdefaultencoding')
-if unicodeEncoding is not None:
-    print 'using encoding %s'%unicodeEncoding
-
-    if hasattr(sys, 'frozen'):  
-        set_default_encoding(unicodeEncoding)
-    else:   
-        set_default_encoding(unicodeEncoding)
-else:
-    set_default_encoding('utf-8')
+# ##########################
+# old Python 2 code, standard encoding is now utf-8 which is
+# set in the following line
+###########################
+# importlib.reload(sys)
+# set_default_encoding = getattr(sys, 'setdefaultencoding')
+# if unicodeEncoding is not None:
+#     print('using encoding %s'%unicodeEncoding)
+#
+#     if hasattr(sys, 'frozen'):
+#         set_default_encoding(unicodeEncoding)
+#     else:
+#         set_default_encoding(unicodeEncoding)
+# else:
+#     set_default_encoding('utf-8')
+_unicodeEncoding = 'uft8'
 
 try:
     # See if there is a multi-version install of wxPython
     if not hasattr(sys, 'frozen'):
         import wxversion
         if wxVersionSelect is None:
-            wxversion.ensureMinimal('2.6')
+            wxversion.ensureMinimal('4.1')
         else:
             wxversion.select(wxVersionSelect)
 except ImportError:
@@ -243,6 +250,7 @@ except ImportError:
     pass
 
 import wx
+from wx import adv
 wx.RegisterId(15999)
 
 #warnings.filterwarnings('ignore', '', DeprecationWarning, 'wxPython.imageutils')
@@ -254,30 +262,30 @@ for c in wxVersion:
     if c not in string.digits+'.':
         wxVersion = wxVersion.replace(c, '')
 
-wxVersion = tuple(map(lambda v: int(v),
-                      (wxVersion.split('.')+['0'])[:4]))
+wxVersion = tuple([int(v) for v in (wxVersion.split('.')+['0'])[:4]])
 
 if wxVersion < __version__.wx_version:
     wx.PySimpleApp()
     wx.MessageBox('Sorry! This version of Boa requires at least '\
                  'wxPython %d.%d.%d.%d'%__version__.wx_version,
                  'Version error', wx.OK | wx.ICON_ERROR)
-    raise Exception, 'wxPython >= %d.%d.%d.%d required'%__version__.wx_version
+    raise Exception('wxPython >= %d.%d.%d.%d required'%__version__.wx_version)
 
 if __version__.wx_version_max and wxVersion > __version__.wx_version_max:
     wx.PySimpleApp()
     wx.MessageBox('Sorry! This version of Boa does not work under '\
                  'wxPython %d.%d.%d.%d, please downgrade to '\
-                 'wxPython %d.%d.%d.%d'% (wxVersion+__version__.wx_version_max),
+                 'wxPython %d.%d.%d.%d'% tuple(wxVersion+__version__.wx_version_max),
                  'Version error', wx.OK | wx.ICON_ERROR)
-    raise Exception, 'wxPython %d.%d.%d.%d not supported'%wxVersion
+    raise Exception('wxPython %d.%d.%d.%d not supported'%wxVersion)
 
-import Preferences, Utils
+import Preferences
+import Utils
 from Utils import _
 
 import About
 
-print 'running main...'
+print('running main...')
 
 # XXX auto created frames (main frame handled currently)
 # XXX More property editors!
@@ -512,9 +520,9 @@ class BoaApp(wx.App):
 
         wx.ToolTip.Enable(True)
         if Preferences.debugMode == 'release':
-            self.SetAssertMode(wx.PYAPP_ASSERT_SUPPRESS)
+            self.SetAssertMode(wx.APP_ASSERT_SUPPRESS)
         elif Preferences.debugMode == 'development':
-            self.SetAssertMode(wx.PYAPP_ASSERT_EXCEPTION)
+            self.SetAssertMode(wx.APP_ASSERT_EXCEPTION)
 
 
         conf = Utils.createAndReadConfig('Explorer')
@@ -535,15 +543,15 @@ class BoaApp(wx.App):
             # Imported here to initialise core features and plug-ins
             import PaletteMapping
 
-            print 'creating Palette'
+            print('creating Palette')
             import Palette
             self.main = Palette.BoaFrame(None, -1, self)
 
-            print 'creating Inspector'
+            print('creating Inspector')
             import Inspector
             inspector = Inspector.InspectorFrame(self.main)
 
-            print 'creating Editor'
+            print('creating Editor')
             import Editor
             editor = Editor.EditorFrame(self.main, -1, inspector, wx.Menu(),
                 self.main.componentSB, self, self.main)
@@ -554,7 +562,7 @@ class BoaApp(wx.App):
             conf.set('splash', 'modulecount', str(len(sys.modules)))
             try:
                 Utils.writeConfig(conf)
-            except IOError, err:
+            except IOError as err:
                 startupErrors.append(_('Error writing config file: %s\nPlease '
               'ensure that the Explorer.*.cfg file is not read only.')% str(err))
 
@@ -567,13 +575,13 @@ class BoaApp(wx.App):
 
             import Help
             if not Preferences.delayInitHelp:
-                print 'initialising help'
+                print('initialising help')
                 Help.initHelp()
 
             global constricted
             constricted = constricted or Preferences.suBoaConstricted
 
-            print 'showing main frames <<100/100>>'
+            print('showing main frames <<100/100>>')
             if constricted:
                 editor.CenterOnScreen()
                 inspector.CenterOnScreen()
@@ -620,7 +628,7 @@ class BoaApp(wx.App):
         if Preferences.exWorkingDirectory:
             try:
                 os.chdir(Preferences.exWorkingDirectory)
-            except OSError, err:
+            except OSError as err:
                 startupErrors.append(_('Could not set working directory from '
                                        'Preferences.exWorkingDirectory :'))
                 startupErrors.append(str(err))
@@ -631,10 +639,10 @@ class BoaApp(wx.App):
             wx.LogError(_('\nThere were errors during startup, please click "Details"'))
 
         if wx.Platform == '__WXMSW__':
-            self.tbicon = wx.TaskBarIcon()
+            self.tbicon = adv.TaskBarIcon()
             self.tbicon.SetIcon(self.main.GetIcon(), 'Boa Constructor')
-            self.tbicon.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarActivate)
-            self.tbicon.Bind(wx.EVT_TASKBAR_RIGHT_UP, self.OnTaskBarMenu)
+            self.tbicon.Bind(adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarActivate)
+            self.tbicon.Bind(adv.EVT_TASKBAR_RIGHT_UP, self.OnTaskBarMenu)
             self.tbicon.Bind(wx.EVT_MENU, self.OnTaskBarActivate, id=self.TBMENU_RESTORE)
             self.tbicon.Bind(wx.EVT_MENU, self.OnTaskBarClose, id=self.TBMENU_CLOSE)
             self.tbicon.Bind(wx.EVT_MENU, self.OnTaskBarAbout, id=self.TBMENU_ABOUT)
@@ -680,7 +688,7 @@ def main(argv=None):
             # Install/update run time libs if necessary
             Utils.updateDir(join(Preferences.pyPath, 'bcrtl'),
                   join(wxPythonLibPath, 'bcrtl'))
-        except Exception, error:
+        except Exception as error:
             startupErrors.extend(['Error while installing Run Time Libs:',
             '    '+str(error),
             '\nMake sure you have sufficient rights to copy these files, and that ',
@@ -695,7 +703,7 @@ def main(argv=None):
               unicodeEncoding, opts, args = processArgs(argv)
     try:
         app = BoaApp()
-    except Exception, error:
+    except Exception as error:
         wx.MessageBox(str(error), _('Error on startup'))
         raise
 

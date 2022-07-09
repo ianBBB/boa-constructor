@@ -1,0 +1,49 @@
+template 2to3 command:
+2to3 -w -f all -f idioms -f set_literal -f buffer
+
+
+List of activities on current file
+==================================
+About
+# 2to3
+warnings (but still some left)
+
+List of activities on current file
+==================================
+langlistctrl.py
+# 2to3
+warnings (but still some left)
+
+FramesConstr, FrameDTC
+
+
+        # parent.AddTool(bitmap=IS.load('Images/Shared/Inspector.png'),
+        #       id=wxID_BOAFRAMETOOLBARTOOLS0, isToggle=False, # longHelpString='',
+        #       pushedBitmap=wx.NullBitmap,
+        #       shortHelpString=_('Brings the Inspector to the front'))    # ORIG
+        parent.AddTool(toolId=wxID_BOAFRAMETOOLBARTOOLS0, label='', bitmap=IS.load('Images/Shared/Inspector.png'),
+                        bmpDisabled =wx.NullBitmap, kind=wx.ITEM_NORMAL,
+                       shortHelp=_('Brings the Inspector to the front'),
+                       longHelp='',clientData= None)
+
+Designer.py updates source.
+
+The new source is in ;
+newData = self.model.data
+where self is <Views.Designer.DesignerView object at 0x0000023D06A17940>
+
+
+raise Exception('NotAvailable', exc_value)
+
+elif isinstance(filetype, IOBase) and hasattr(filetype,'read'):
+
+# return cmp(self.value, other)
+return (self.value > other) - (self.value < other)
+
+^(class|    def)
+
+Is it OK to add/change code to code that has been released under XXX copyright.
+What about the copyright notices for included software. Will that still be OK?
+What copyright should I use if I want to mke it available as a project on Github. Is there anything better/newer
+ I should use?
+How important is PEP.

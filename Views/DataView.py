@@ -9,7 +9,7 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-print 'importing Views.DataView'
+print('importing Views.DataView')
 
 import os, copy
 
@@ -21,8 +21,8 @@ from Utils import _
 import sourceconst
 import PaletteMapping, PaletteStore, Help
 
-from InspectableViews import InspectableObjectView, DesignerError
-import ObjCollection
+from .InspectableViews import InspectableObjectView, DesignerError
+from . import ObjCollection
 
 class DataView(wx.ListView, InspectableObjectView):
     viewName = 'Data'
@@ -32,7 +32,7 @@ class DataView(wx.ListView, InspectableObjectView):
     postBmp = 'Images/Inspector/Post.png'
     cancelBmp = 'Images/Inspector/Cancel.png'
     def __init__(self, parent, inspector, model, compPal):
-        [self.wxID_DATAVIEW] = [wx.NewId() for _init_ctrls in range(1)]
+        [self.wxID_DATAVIEW] = [wx.NewIdRef() for _init_ctrls in range(1)]
         wx.ListView.__init__(self, parent, self.wxID_DATAVIEW, size=(0,0),
               style=Preferences.dataViewListStyle | wx.SUNKEN_BORDER)
 
@@ -64,7 +64,7 @@ class DataView(wx.ListView, InspectableObjectView):
         self.active = True
 
     def initialize(self):
-        if self.model.objectCollections.has_key(self.collectionMethod):
+        if self.collectionMethod in self.model.objectCollections:
             objCol = self.model.objectCollections[self.collectionMethod]
             objCol.indexOnCtrlName()
         else:
@@ -80,7 +80,7 @@ class DataView(wx.ListView, InspectableObjectView):
     def refreshCtrl(self):
         self.DeleteAllItems()
 
-        if self.model.objectCollections.has_key(self.collectionMethod):
+        if self.collectionMethod in self.model.objectCollections:
             objCol = self.model.objectCollections[self.collectionMethod]
             objCol.indexOnCtrlName()
         else:
@@ -109,7 +109,9 @@ class DataView(wx.ListView, InspectableObjectView):
             if idx == -1:
                 idx = self.il.Add(PaletteStore.bitmapForComponent(ClassObj))
 
-            self.InsertImageStringItem(self.GetItemCount(), '%s : %s' % (
+            # self.InsertImageStringItem(self.GetItemCount(), '%s : %s' % (
+            #       ctrl.comp_name, className), idx)
+            self.InsertItem(self.GetItemCount(), '%s : %s' % (
                   ctrl.comp_name, className), idx)
         self.opened = True
 
@@ -117,7 +119,7 @@ class DataView(wx.ListView, InspectableObjectView):
         InspectableObjectView.saveCtrls(self, definedCtrls, module, collDeps)
 
         compns = []
-        for objInf in self.objects.values():
+        for objInf in list(self.objects.values()):
             compns.append(objInf[0])
         self.model.removeWindowIds(self.collectionMethod)
         self.model.writeWindowIds(self.collectionMethod, compns)
@@ -159,7 +161,7 @@ class DataView(wx.ListView, InspectableObjectView):
         self.selectNone()
 
         # notify other components of deletion
-        if self.objects.has_key(name):
+        if name in self.objects:
             self.controllerView.notifyAction(self.objects[name][0], 'delete')
 
             InspectableObjectView.deleteCtrl(self, name, parentRef)
@@ -206,7 +208,7 @@ class DataView(wx.ListView, InspectableObjectView):
 
             try:
                 objName = self.newObject(CtrlClass, CtrlCompanion)
-            except DesignerError, err:
+            except DesignerError as err:
                 if str(err) == _('Wrong Designer'):
                     return
                 raise
@@ -239,7 +241,7 @@ class DataView(wx.ListView, InspectableObjectView):
         idx = 0
         while idx < len(self.selection):
             name, ctrlIdx = self.selection[idx]
-            if ctrlIdx == event.m_itemIndex:
+            if ctrlIdx == event.Index:
                 del self.selection[idx]
             else:
                 idx = idx + 1

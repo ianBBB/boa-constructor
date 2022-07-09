@@ -7,7 +7,7 @@ def create(parent):
 
 [wxID_WXFRAME2, wxID_WXFRAME2CONTEXTHELPBUTTON1, wxID_WXFRAME2PANEL1, 
  wxID_WXFRAME2TEXTCTRL1, 
-] = [wx.NewId() for _init_ctrls in range(4)]
+] = [wx.NewIdRef() for _init_ctrls in range(4)]
 
 class wxFrame2(wx.Frame):
     def _init_ctrls(self, prnt):
@@ -26,7 +26,7 @@ class wxFrame2(wx.Frame):
               name='textCtrl1', parent=self.panel1, pos=wx.Point(8, 8),
               size=wx.Size(192, 21), style=0, value='textCtrl1')
         self.textCtrl1.SetHelpText('Here be expansive')
-        self.textCtrl1.SetToolTipString('Here be spartan')
+        self.textCtrl1.SetToolTip('Here be spartan')
 
         self.contextHelpButton1 = wx.ContextHelpButton(parent=self.panel1,
               pos=wx.Point(224, 8), size=wx.Size(20, 19), style=wx.BU_AUTODRAW)

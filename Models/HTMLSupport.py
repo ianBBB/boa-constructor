@@ -9,14 +9,14 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Models.HTMLSupport'
+print('importing Models.HTMLSupport')
 
 import wx
 
 import Preferences, Utils, Plugins
 from Utils import _
 
-import EditorHelper
+from . import EditorHelper
 EditorHelper.imgHTMLFileModel = EditorHelper.imgIdxRange()
 
 from Models.EditorModels import PersistentModel
@@ -55,7 +55,7 @@ class HTMLSourceView(EditorStyledTextCtrl, HTMLStyledTextCtrlMix):
         self.active = True
 
 
-import Controllers
+from . import Controllers
 from Views.EditorViews import HTMLFileView
 class HTMLFileController(Controllers.PersistentController):
     Model           = HTMLFileModel

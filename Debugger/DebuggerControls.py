@@ -1,5 +1,5 @@
 import os, pprint
-from repr import Repr
+from reprlib import Repr
 
 import wx
 import wx.lib.stattext
@@ -10,7 +10,7 @@ from Utils import _
 
 from Explorers import Explorer
 
-from Breakpoint import bplist
+from .Breakpoint import bplist
 
 SEL_STATE = wx.LIST_STATE_SELECTED | wx.LIST_STATE_FOCUSED
 
@@ -69,7 +69,7 @@ class StackViewCtrl(DebuggerListCtrl):
             else:
                 # Update.
                 self.SetStringItem(pos, 0, attrib, -1)
-            self.SetStringItem(pos, 1, `lineno`, -1)
+            self.SetStringItem(pos, 1, repr(lineno), -1)
             self.SetStringItem(pos, 2, sourceline, -1)
             pos = pos + 1
 
@@ -113,7 +113,7 @@ class StackViewCtrl(DebuggerListCtrl):
             editor.SetFocus()
             try:
                 editor.openOrGotoModule(filename)
-            except Explorer.TransportLoadError, err:
+            except Explorer.TransportLoadError as err:
                 serverPath = entry['filename']
                 if serverPath[0] == '<' and serverPath[-1] == '>':
                     wx.LogError(_('Not a source file: %s, probably an executed '
@@ -131,7 +131,7 @@ class StackViewCtrl(DebuggerListCtrl):
                     if clientPath:
                         clientPath = prevClientPath = Explorer.splitURI(clientPath)[2]
                         prevServerPath = serverPath
-                        while 1:
+                        while True:
                             serverPath, serverBase = os.path.split(serverPath)
                             clientPath, clientBase = os.path.split(clientPath)
 
@@ -395,7 +395,7 @@ class BreakViewCtrl(DebuggerListCtrl):
             ignore = bp['ignore']
 
             dlg = wx.TextEntryDialog(self, _('Number of hits to ignore:'),
-                  _('Change ignore count'), `ignore`)
+                  _('Change ignore count'), repr(ignore))
             try:
                 if dlg.ShowModal() == wx.ID_OK:
                     ignore = int(dlg.GetValue())
@@ -460,7 +460,7 @@ class NamespaceViewCtrl(DebuggerListCtrl):
         if not nsdict:
             pass
         else:
-            self.names = nsdict.keys()
+            self.names = list(nsdict.keys())
             self.names.sort()
             row = 0
             for name in self.names:
@@ -693,7 +693,7 @@ class DebugStatusBar(wx.StatusBar):
         else:
             self.state.SetBackgroundColour(self.stateCols['info'])
         self.state.SetLabel(message)
-        self.state.SetToolTipString(message)
+        self.state.SetToolTip(message)
 
         self._setCtrlDims(self.state, self.GetFieldRect(1))
 

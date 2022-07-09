@@ -14,14 +14,15 @@
 """ The model classes represent different types of source code files,
     Different views can be connected to a model  """
 
-print 'importing Models.EditorModels'
+print('importing Models.EditorModels')
 
 import os, sys, tempfile
-from cStringIO import StringIO
+from io import StringIO
 
 import wx
 
-import Preferences, Utils, EditorHelper
+import Preferences, Utils
+from . import EditorHelper
 from Preferences import keyDefs
 from Utils import _
 
@@ -61,12 +62,17 @@ class EditorModel:
             self.filename = self.transport.getURI()
 
     def reorderFollowingViewIdxs(self, idx):
-        for view in self.views.values():
+        for view in list(self.views.values()):
             if view.pageIdx > idx:
                 view.pageIdx = view.pageIdx - 1
 
     def getDataAsLines(self):
-        return StringIO(self.data).readlines()
+        if type(self.data) == str:
+            return StringIO(self.data).readlines()
+        else:
+            # return (self.data).decode('uft-8').readlines()
+            converted_string= str(self.data)
+            return StringIO(converted_string).readlines()
 
     def setDataFromLines(self, lines):
         data = self.data
@@ -84,7 +90,7 @@ class EditorModel:
     def notify(self):
         """ Update all views connected to this model.
             This method must be called after changes were made to the model """
-        for view in self.views.values():
+        for view in list(self.views.values()):
             view.update()
 
     def update(self):
@@ -105,9 +111,9 @@ class EditorModel:
     # XXX Move these names into overrideable attrs
     def getSourceView(self):
         views = self.views
-        if views.has_key('Source'):
+        if 'Source' in views:
             return views['Source']
-        elif views.has_key('ZopeHTML'):
+        elif 'ZopeHTML' in views:
             return views['ZopeHTML']
         return None
 
@@ -180,7 +186,7 @@ class BasePersistentModel(EditorModel):
             Note: Load's not really used much currently cause objects are
                   constructed with their data as parameter """
         if not self.transport:
-            raise Exception, _('No transport for loading')
+            raise Exception(_('No transport for loading'))
 
         self.data = self.transport.load(mode=self.fileModes[0])
         self.modified = False
@@ -191,7 +197,7 @@ class BasePersistentModel(EditorModel):
     def save(self, overwriteNewer=False):
         """ Saves contents of data to file specified by self.filename. """
         if not self.transport:
-            raise Exception, _('No transport for saving')
+            raise Exception(_('No transport for saving'))
 
         if self.filename:
             filename = self.transport.assertFilename(self.filename)
@@ -204,13 +210,13 @@ class BasePersistentModel(EditorModel):
             self.modified = False
             self.saved = True
 
-            for view in self.views.values():
+            for view in list(self.views.values()):
                 view.saveNotification()
 
             if _vc_hook:
                 _vc_hook.save(filename, self.data, mode=self.fileModes[1])
         else:
-            raise Exception, _('No filename')
+            raise Exception(_('No filename'))
 
     def saveAs(self, filename):
         """ Saves contents of data to file specified by filename.
@@ -257,7 +263,7 @@ class BasePersistentModel(EditorModel):
         from Explorers.Explorer import splitURI, TransportError
         prot, cat, filename, uri = splitURI(filename)
         if prot != 'file':
-            raise TransportError, _('Operation only supported on the filesystem.')
+            raise TransportError(_('Operation only supported on the filesystem.'))
         return filename
 
     def getDefaultData(self):
@@ -295,7 +301,7 @@ class BitmapFileModel(PersistentModel):
     def save(self, overwriteNewer=False):
         ext = os.path.splitext(self.filename)[1].lower()
         if ext == '.gif':
-            raise Exception, _('Saving .gif format not supported')
+            raise Exception(_('Saving .gif format not supported'))
 
         PersistentModel.save(self, overwriteNewer)
 
@@ -306,14 +312,14 @@ class BitmapFileModel(PersistentModel):
         updateViews = 0
         if newExt != oldExt:
             updateViews = 1
-            import cStringIO
+            import io
             bmp = wx.BitmapFromImage(wx.ImageFromStream(
-                  cStringIO.StringIO(self.data)))
+                  io.StringIO(self.data)))
             fn = tempfile.mktemp(newExt)
             try:
                 bmp.SaveFile(fn, self.extTypeMap[newExt])
             except KeyError:
-                raise Exception, _('%s image file types not supported')%newExt
+                raise Exception(_('%s image file types not supported')%newExt)
             try:
                 # convert data to new image format
                 self.data = open(fn, 'rb').read()

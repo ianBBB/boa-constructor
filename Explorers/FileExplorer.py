@@ -9,7 +9,7 @@
 # Copyright:   (c) 2001 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Explorers.FileExplorer'
+print('importing Explorers.FileExplorer')
 
 import os, time, stat, sys
 
@@ -18,7 +18,7 @@ import wx
 import Preferences, Utils
 from Utils import _
 
-import ExplorerNodes
+from . import ExplorerNodes
 from Models import Controllers, EditorHelper
 from PropEdit import PropertyEditors, InspectorEditorControls
 
@@ -68,8 +68,8 @@ class FileSysCatNode(ExplorerNodes.CategoryNode):
 ##        return name
 
     def renameItem(self, name, newName):
-        if self.entries.has_key(newName):
-            raise Exception, _('Name exists')
+        if newName in self.entries:
+            raise Exception(_('Name exists'))
         self.entries[newName] = newName
         del self.entries[name]
         self.updateConfig()
@@ -127,10 +127,10 @@ class FileSysController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControl
               (wxID_FSFINDINFILES, _('Find'), self.OnFindFSItem, self.findBmp),
         ]
 
-        if controllers.has_key('zip'):
+        if 'zip' in controllers:
             self.newMenuDef.append(
              (wxID_FSNEWZIP, _('Empty zip archive'), self.OnEmptyZipArchive, '-') )
-        if controllers.has_key('tar.gz'):
+        if 'tar.gz' in controllers:
             self.newMenuDef.append(
              (wxID_FSNEWZIP, _('Empty tar.gz archive'), self.OnEmptyTarGzipArchive, '-') )
 
@@ -148,13 +148,13 @@ class FileSysController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControl
         # Check default option
         self.fileFilterMenu.Check(wxID_FSFILTERBOAMODULES, True)
 
-        self.menu.AppendMenu(wxID_FSFILTER, _('Filter'), self.fileFilterMenu)
+        self.menu.Append(wxID_FSFILTER, _('Filter'), self.fileFilterMenu)
 
         # XXX this should not be done here
-        if controllers.has_key('cvs'):
-            self.menu.AppendMenu(wxID_FSCVS, 'CVS', controllers['cvs'].fileCVSMenu)
-        if controllers.has_key('svn'):
-            self.menu.AppendMenu(wxID_FSSVN, 'SVN', controllers['svn'].fileSVNMenu)
+        if 'cvs' in controllers:
+            self.menu.Append(wxID_FSCVS, 'CVS', controllers['cvs'].fileCVSMenu)
+        if 'svn' in controllers:
+            self.menu.Append(wxID_FSSVN, 'SVN', controllers['svn'].fileSVNMenu)
 
         self.toolbarMenus = [self.fileMenuDef]
 
@@ -166,7 +166,7 @@ class FileSysController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControl
         self.menu.Destroy()
 
     def OnTest(self, event):
-        print self.list.node.clipboard.globClip.currentClipboard
+        print((self.list.node.clipboard.globClip.currentClipboard))
 
     def OnFilterFSItems(self, event):
         evtid = event.GetId()
@@ -188,11 +188,11 @@ class FileSysController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControl
                   nd.clipboard, -1, nd, nd.bookmarks)
 
         mapFindInFileCount = {}
-        for oFindRes in mapResults.keys():
+        for oFindRes in list(mapResults.keys()):
             if len( mapResults[oFindRes] ):
                 mapFindInFileCount[oFindRes] = len( mapResults[oFindRes] )
-        self.list.node.results = map(None, mapFindInFileCount.values(),
-                                           mapFindInFileCount.keys() )
+        self.list.node.results = map(None, list(mapFindInFileCount.values()),
+                                           list(mapFindInFileCount.keys()) )
         self.list.node.lastSearch = pattern
         self.list.refreshCurrent()
 
@@ -327,7 +327,7 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
         ExplorerNodes.ExplorerNode.__init__(self, name, resourcepath, clipboard,
               imgIdx, parent, properties or {})
         self.bookmarks = bookmarks
-        self.exts = EditorHelper.extMap.keys() + EditorHelper.inspectableFilesReg.keys()
+        self.exts = list(EditorHelper.extMap.keys()) + list(EditorHelper.inspectableFilesReg.keys())
         self.entries = []
 
         # XXX not used ?
@@ -343,9 +343,9 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
         return os.path.isdir(self.resourcepath)
 
     def isFolderish(self):
-        return self.isDir() or filter(lambda se, rp=self.resourcepath,
+        return self.isDir() or list(filter(lambda se, rp=self.resourcepath,
               ap=self.allowedProtocols : (ap == ['*'] or se[0].protocol in ap) and se[1](rp),
-              self.subExplorerReg['file'])
+              self.subExplorerReg['file']))
 
     def createParentNode(self):
         parent = os.path.abspath(os.path.join(self.resourcepath, '..'))
@@ -369,7 +369,7 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
                         return 'fol', Other(file, filename, self.clipboard,
                               imgIdx, self, self.bookmarks)
             Model = Controllers.identifyFile(filename)[0]
-            if extSubTypes.has_key(ext):
+            if ext in extSubTypes:
                 for SubTypeModel in extSubTypes[ext]:
                     if issubclass(Model, SubTypeModel):
                         break
@@ -399,13 +399,16 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
             # A hack for locally-encoded filesystems:
             # We need to convert filesystem names
             # from local encoding to unicode
-            if type(self.resourcepath) is str:
-                files = os.listdir(self.resourcepath.decode(
-                      sys.getfilesystemencoding()))
+            if isinstance(self.resourcepath, str):
+                # files = os.listdir(self.resourcepath.decode(
+                #       sys.getfilesystemencoding()))
+                from pathlib import Path
+                files = os.listdir(
+                    Path(self.resourcepath))
             else: # unicode or other
                 files = os.listdir(self.resourcepath)
             #---------------------------------------- 
-        except Exception, err:
+        except Exception as err:
             raise ExplorerNodes.TransportError(err)
         files.sort()
         entries = {'mod': [], 'fol': []}
@@ -448,7 +451,7 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
             if node.resourcepath == os.path.join(self.resourcepath, node.name):
                 newNameBase = os.path.join(self.resourcepath, 'copy%s_of_'+node.name)
                 num = ''
-                while 1:
+                while True:
                     newName = newNameBase%num
                     if os.path.exists(newName):
                         try: num = str(int(num) + 1)
@@ -496,12 +499,15 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
     def load(self, mode='rb'):
         try:
             data = open(self.resourcepath, mode).read()
+            if type(data) == 'bytes' :
+                data = data.decode('UTF-8')
             self.updateStdAttrs()
             return data
-        except IOError, error:
+        except IOError as error:
             raise ExplorerNodes.TransportLoadError(error, self.resourcepath)
 
-    def save(self, filename, data, mode='wb', overwriteNewer=False):
+    # def save(self, filename, data, mode='wb', overwriteNewer=False):
+    def save(self, filename, data, mode='w', overwriteNewer=False):
         if self.resourcepath != filename:
             self.resourcepath = filename
             self.name = os.path.basename(self.resourcepath)
@@ -510,8 +516,9 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
                 raise ExplorerNodes.TransportModifiedSaveError(_('This file has '
                   'been saved by someone else since it was loaded'),
                   self.resourcepath)
-            open(self.resourcepath, mode).write(data)
-        except IOError, error:
+            # open(self.resourcepath, mode).write(bytes(data,'ascii'))
+            open(self.resourcepath, mode).write(data.encode('ascii'))
+        except IOError as error:
             raise ExplorerNodes.TransportSaveError(error, self.resourcepath)
         self.updateStdAttrs()
 
@@ -534,7 +541,7 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
 
     def setStdAttr(self, attr, value=None):
         if attr == 'read-only':
-            os.chmod(self.resourcepath, value and 0444 or 0666)
+            os.chmod(self.resourcepath, value and 0o444 or 0o666)
 
         self.updateStdAttrs()
 

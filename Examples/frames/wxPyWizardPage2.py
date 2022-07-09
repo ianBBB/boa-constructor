@@ -5,7 +5,7 @@ import wx.wizard
 
 [wxID_WXPYWIZARDPAGE2, wxID_WXPYWIZARDPAGE2BUTTON1, 
  wxID_WXPYWIZARDPAGE2BUTTON2, 
-] = [wx.NewId() for _init_ctrls in range(3)]
+] = [wx.NewIdRef() for _init_ctrls in range(3)]
 
 class wxPyWizardPage2(wx.wizard.PyWizardPage):
     def _init_ctrls(self, prnt):

@@ -166,7 +166,7 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
 
         try:
             ro = re.compile(regex, flags)
-        except Exception, err:
+        except Exception as err:
             self.statusBar.SetStatusText(_('Error: %s: %s')%(err.__class__, err), 1)
             self.sbImage.SetBitmap(self.statusImages[0])
             return
@@ -188,7 +188,7 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
             # so lets get the index, name and group into a list of tuples and
             # sort the list
             namedGroups = []
-            for name, idx in ro.groupindex.items():
+            for name, idx in list(ro.groupindex.items()):
                 namedGroups += [(idx, name, mo.group(name))]
             namedGroups.sort()
 
@@ -219,7 +219,7 @@ Plugins.registerTool(_('Regex editor'), openRegexEditor, 'Images/RegexEditor.png
 
 def getRegexEditorImgData():
     return \
-'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x02\
+b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x02\
 \x00\x00\x00\x90\x91h6\x00\x00\x00\x03sBIT\x08\x08\x08\xdb\xe1O\xe0\x00\x00\
 \x00\x9cIDAT(\x91\x95\x91Q\r\xc40\x0cC}\xa7\x01\x08\x84A0\xa4B\x18\x94Bh\xa1\
 \x8c\x81!\x14B\x19t\x1f\xb9\x9bn\xd5mj\xfd\x95H~\xb2\xa3\xbcZk\x18V\xcey\x01\

@@ -6,3 +6,7 @@ Please post bug to https://bitbucket.org/cwt/boa-constructor/issues
 
 
 -- cwt
+
+Attempt to update boa for python 3.9 and wxpython 4.1.1
+
+-- isb

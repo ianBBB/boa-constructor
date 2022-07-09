@@ -138,9 +138,9 @@ from types import *
 # Internal stuff
 
 try:
-    unicode
+    str
 except NameError:
-    unicode = None # unicode support not available
+    str = None # unicode support not available
 
 try:
     _bool_is_builtin = False.__class__.__name__ == "bool"
@@ -149,16 +149,17 @@ except NameError:
 
 def _decode(data, encoding, is8bit=re.compile("[\x80-\xff]").search):
     # decode non-ascii string (if possible)
-    if unicode and encoding and is8bit(data):
-        data = unicode(data, encoding)
+    if str and encoding and is8bit(data):
+        # data = str(data, encoding)
+        data = data.encode(encoding)
     return data
 
-def escape(s, replace=string.replace):
-    s = replace(s, "&", "&amp;")
-    s = replace(s, "<", "&lt;")
-    return replace(s, ">", "&gt;",)
+def escape(s):
+    s = s.replace("&", "&amp;")
+    s = s.replace("<", "&lt;")
+    return s.replace(">", "&gt;",)
 
-if unicode:
+if str:
     def _stringify(string):
         # convert to 7-bit ascii if possible
         try:
@@ -172,8 +173,8 @@ else:
 __version__ = "1.0.1"
 
 # xmlrpc integer limits
-MAXINT =  2L**31-1
-MININT = -2L**31
+MAXINT =  2**31-1
+MININT = -2**31
 
 # --------------------------------------------------------------------
 # Error constants (from Dan Libby's specification at
@@ -274,7 +275,8 @@ class Fault(Error):
 if _bool_is_builtin:
     boolean = Boolean = bool
     # to avoid breaking code which references xmlrpclib.{True,False}
-    True, False = True, False
+    # True, False = True, False
+    True_xmlrpclib, False_xmlrpclib = True, False
 else:
     class Boolean:
         """Boolean-value wrapper.
@@ -291,7 +293,8 @@ else:
         def __cmp__(self, other):
             if isinstance(other, Boolean):
                 other = other.value
-            return cmp(self.value, other)
+            # return cmp(self.value, other)
+            return (self.value > other) - (self.value < other)
 
         def __repr__(self):
             if self.value:
@@ -302,10 +305,11 @@ else:
         def __int__(self):
             return self.value
 
-        def __nonzero__(self):
+        def __bool__(self):
             return self.value
 
-    True, False = Boolean(1), Boolean(0)
+
+    True_xmlrpclib, False_xmlrpclib = Boolean(1), Boolean(0)
 
     ##
     # Map true or false value to XML-RPC boolean values.
@@ -318,7 +322,7 @@ else:
     # @see True
     # @see False
 
-    def boolean(value, _truefalse=(False, True)):
+    def boolean(value, _truefalse=(False_xmlrpclib, True_xmlrpclib)):
         """Convert any Python value to XML-RPC 'boolean'."""
         return _truefalse[operator.truth(value)]
 
@@ -342,8 +346,8 @@ class DateTime:
     """
 
     def __init__(self, value=0):
-        if not isinstance(value, StringType):
-            if not isinstance(value, TupleType):
+        if not isinstance(value, str):
+            if not isinstance(value, tuple):
                 if value == 0:
                     value = time.time()
                 value = time.localtime(value)
@@ -353,7 +357,8 @@ class DateTime:
     def __cmp__(self, other):
         if isinstance(other, DateTime):
             other = other.value
-        return cmp(self.value, other)
+        # return cmp(self.value, other)
+        return (self.value > other) - (self.value < other)
 
     ##
     # Get date/time value.
@@ -403,16 +408,18 @@ class Binary:
     def __cmp__(self, other):
         if isinstance(other, Binary):
             other = other.data
-        return cmp(self.data, other)
+        # return cmp(self.data, other)
+        return (self.data > other) - (self.data < other)
+
 
     def decode(self, data):
         import base64
         self.data = base64.decodestring(data)
 
     def encode(self, out):
-        import base64, StringIO
+        import base64, io
         out.write("<value><base64>\n")
-        base64.encode(StringIO.StringIO(self.data), out)
+        base64.encode(io.StringIO(self.data), out)
         out.write("</base64></value>\n")
 
 def _binary(data):
@@ -605,18 +612,20 @@ class Marshaller:
         try:
             f = self.dispatch[type(value)]
         except KeyError:
-            raise TypeError, "cannot marshal %s objects" % type(value)
+            raise TypeError("cannot marshal %s objects" % type(value))
         else:
             f(self, value, write)
 
     def dump_int(self, value, write):
         # in case ints are > 32 bits
         if value > MAXINT or value < MININT:
-            raise OverflowError, "int exceeds XML-RPC limits"
+            raise OverflowError("int exceeds XML-RPC limits")
         write("<value><int>")
-        write(str(value))
+        # write(str(value))
+        write(repr(value))
         write("</int></value>\n")
-    dispatch[IntType] = dump_int
+    # dispatch[IntType] = dump_int
+    dispatch[int] = dump_int
 
     if _bool_is_builtin:
         def dump_bool(self, value, write):
@@ -627,36 +636,38 @@ class Marshaller:
 
     def dump_long(self, value, write):
         if value > MAXINT or value < MININT:
-            raise OverflowError, "long int exceeds XML-RPC limits"
+            raise OverflowError("long int exceeds XML-RPC limits")
         write("<value><int>")
         write(str(int(value)))
         write("</int></value>\n")
-    dispatch[LongType] = dump_long
+    # dispatch[LongType] = dump_long
+    dispatch[int] = dump_long
 
     def dump_double(self, value, write):
         write("<value><double>")
         write(repr(value))
         write("</double></value>\n")
-    dispatch[FloatType] = dump_double
-
+    # dispatch[FloatType] = dump_double
+    dispatch[float] = dump_double
     def dump_string(self, value, write, escape=escape):
         write("<value><string>")
         write(escape(value))
         write("</string></value>\n")
-    dispatch[StringType] = dump_string
-
-    if unicode:
+    # dispatch[StringType] = dump_string
+    dispatch[str] = dump_string
+    if str:
         def dump_unicode(self, value, write, escape=escape):
             value = value.encode(self.encoding)
             write("<value><string>")
             write(escape(value))
             write("</string></value>\n")
-        dispatch[UnicodeType] = dump_unicode
+        # dispatch[UnicodeType] = dump_unicode
+        dispatch[str] = dump_unicode
 
     def dump_array(self, value, write):
         i = id(value)
-        if self.memo.has_key(i):
-            raise TypeError, "cannot marshal recursive sequences"
+        if i in self.memo:
+            raise TypeError("cannot marshal recursive sequences")
         self.memo[i] = None
         dump = self.__dump
         write("<value><array><data>\n")
@@ -664,26 +675,29 @@ class Marshaller:
             dump(v, write)
         write("</data></array></value>\n")
         del self.memo[i]
-    dispatch[TupleType] = dump_array
-    dispatch[ListType] = dump_array
+    # dispatch[TupleType] = dump_array
+    # dispatch[ListType] = dump_array
+    dispatch[tuple] = dump_array
+    dispatch[list] = dump_array
 
     def dump_struct(self, value, write, escape=escape):
         i = id(value)
-        if self.memo.has_key(i):
-            raise TypeError, "cannot marshal recursive dictionaries"
+        if i in self.memo:
+            raise TypeError("cannot marshal recursive dictionaries")
         self.memo[i] = None
         dump = self.__dump
         write("<value><struct>\n")
-        for k in value.keys():
+        for k in list(value.keys()):
             write("<member>\n")
-            if type(k) is not StringType:
-                raise TypeError, "dictionary key must be string"
+            if not isinstance(k, StringType):
+                raise TypeError("dictionary key must be string")
             write("<name>%s</name>\n" % escape(k))
             dump(value[k], write)
             write("</member>\n")
         write("</struct></value>\n")
         del self.memo[i]
-    dispatch[DictType] = dump_struct
+    # dispatch[DictType] = dump_struct
+    dispatch[dict] = dump_struct
 
     def dump_instance(self, value, write):
         # check for special wrappers
@@ -694,7 +708,8 @@ class Marshaller:
         else:
             # store instance attributes as a struct (really?)
             self.dump_struct(value.__dict__, write)
-    dispatch[InstanceType] = dump_instance
+    # dispatch[InstanceType] = dump_instance
+    dispatch[type] = dump_instance
 
 ##
 # XML-RPC unmarshaller.
@@ -727,7 +742,7 @@ class Unmarshaller:
         if self._type is None or self._marks:
             raise ResponseError()
         if self._type == "fault":
-            raise apply(Fault, (), self._stack[0])
+            raise Fault(*(), **self._stack[0])
         return tuple(self._stack)
 
     def getmethodname(self):
@@ -750,14 +765,14 @@ class Unmarshaller:
     def data(self, text):
         self._data.append(text)
 
-    def end(self, tag, join=string.join):
+    def end(self, tag):
         # call the appropriate end tag handler
         try:
             f = self.dispatch[tag]
         except KeyError:
             pass # unknown tag ?
         else:
-            return f(self, join(self._data, ""))
+            return f(self, self._data.join(""))
 
     #
     # accelerator support
@@ -778,11 +793,11 @@ class Unmarshaller:
 
     def end_boolean(self, data):
         if data == "0":
-            self.append(False)
+            self.append(False_xmlrpclib)
         elif data == "1":
-            self.append(True)
+            self.append(True_xmlrpclib)
         else:
-            raise TypeError, "bad boolean value"
+            raise TypeError("bad boolean value")
         self._value = 0
     dispatch["boolean"] = end_boolean
 
@@ -875,7 +890,7 @@ def getparser():
     to an unmarshalling object.  Return both objects.
     """
     if FastParser and FastUnmarshaller:
-        target = FastUnmarshaller(True, False, _binary, _datetime, Fault)
+        target = FastUnmarshaller(True_xmlrpclib, False_xmlrpclib, _binary, _datetime, Fault)
         parser = FastParser(target)
     else:
         target = Unmarshaller()
@@ -1086,12 +1101,12 @@ class Transport:
         if isinstance(host, TupleType):
             host, x509 = host
 
-        import urllib
-        auth, host = urllib.splituser(host)
+        import urllib.request, urllib.parse, urllib.error
+        auth, host = urllib.parse.splituser(host)
 
         if auth:
             import base64
-            auth = base64.encodestring(urllib.unquote(auth))
+            auth = base64.encodestring(urllib.parse.unquote(auth))
             auth = string.join(string.split(auth), "") # get rid of whitespace
             extra_headers = [
                 ("Authorization", "Basic " + auth)
@@ -1109,9 +1124,9 @@ class Transport:
 
     def make_connection(self, host):
         # create a HTTP connection object from a host descriptor
-        import httplib
+        import http.client
         host, extra_headers, x509 = self.get_host_info(host)
-        return httplib.HTTP(host)
+        return http.client.HTTP(host)
 
     ##
     # Send request header.
@@ -1134,7 +1149,7 @@ class Transport:
         connection.putheader("Host", host)
         if extra_headers:
             if isinstance(extra_headers, DictType):
-                extra_headers = extra_headers.items()
+                extra_headers = list(extra_headers.items())
             for key, value in extra_headers:
                 connection.putheader(key, value)
 
@@ -1184,7 +1199,7 @@ class Transport:
 
         p, u = self.getparser()
 
-        while 1:
+        while True_xmlrpclib:
             if sock:
                 response = sock.recv(1024)
             else:
@@ -1192,7 +1207,7 @@ class Transport:
             if not response:
                 break
             if self.verbose:
-                print "body:", repr(response)
+                print("body:", repr(response))
             p.feed(response)
 
         file.close()
@@ -1211,16 +1226,16 @@ class SafeTransport(Transport):
     def make_connection(self, host):
         # create a HTTPS connection object from a host descriptor
         # host may be a string, or a (host, x509-dict) tuple
-        import httplib
+        import http.client
         host, extra_headers, x509 = self.get_host_info(host)
         try:
-            HTTPS = httplib.HTTPS
+            HTTPS = http.client.HTTPS
         except AttributeError:
             raise NotImplementedError(
                 "your version of httplib doesn't support HTTPS"
                 )
         else:
-            return apply(HTTPS, (host, None), x509 or {})
+            return HTTPS(*(host, None), **x509 or {})
 
 ##
 # Standard server proxy.  This class establishes a virtual connection
@@ -1265,11 +1280,11 @@ class ServerProxy:
         # establish a "logical" server connection
 
         # get the url
-        import urllib
-        type, uri = urllib.splittype(uri)
+        import urllib.request, urllib.parse, urllib.error
+        type, uri = urllib.parse.splittype(uri)
         if type not in ("http", "https"):
-            raise IOError, "unsupported XML-RPC protocol"
-        self.__host, self.__handler = urllib.splithost(uri)
+            raise IOError("unsupported XML-RPC protocol")
+        self.__host, self.__handler = urllib.parse.splithost(uri)
         if not self.__handler:
             self.__handler = "/RPC2"
 
@@ -1329,9 +1344,9 @@ if __name__ == "__main__":
     # server = ServerProxy("http://localhost:8000") # local server
     server = ServerProxy("http://betty.userland.com")
 
-    print server
+    print(server)
 
     try:
-        print server.examples.getStateName(41)
-    except Error, v:
-        print "ERROR", v
+        print(server.examples.getStateName(41))
+    except Error as v:
+        print("ERROR", v)

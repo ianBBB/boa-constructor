@@ -9,7 +9,7 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Views.ProfileView'
+print('importing Views.ProfileView')
 
 import marshal, os
 
@@ -17,7 +17,7 @@ import wx
 
 from Utils import _
 
-from EditorViews import ListCtrlView, CloseableViewMix
+from .EditorViews import ListCtrlView, CloseableViewMix
 
 class ProfileStatsView(ListCtrlView, CloseableViewMix):
     viewName = 'Profile stats'
@@ -123,12 +123,12 @@ class ProfileStatsView(ListCtrlView, CloseableViewMix):
         """ from pstats """
         if self.all_callees: return
         self.all_callees = all_callees = {}
-        for func in self.stats.keys():
-            if not all_callees.has_key(func):
+        for func in list(self.stats.keys()):
+            if func not in all_callees:
                 all_callees[func] = {}
             cc, nc, tt, ct, callers = self.stats[func]
-            for func2 in callers.keys():
-                if not all_callees.has_key(func2):
+            for func2 in list(callers.keys()):
+                if func2 not in all_callees:
                     all_callees[func2] = {}
                 all_callees[func2][func] = callers[func2]
         return
@@ -136,7 +136,7 @@ class ProfileStatsView(ListCtrlView, CloseableViewMix):
     def refreshCtrl(self):
         ListCtrlView.refreshCtrl(self)
         if self.stats:
-            self.statKeyList = self.stats.keys()
+            self.statKeyList = list(self.stats.keys())
             self.statKeyList.sort()
             i = 0
             for filename, lineno, funcname in self.statKeyList:
@@ -178,14 +178,14 @@ class ProfileStatsView(ListCtrlView, CloseableViewMix):
             idx = self.getStatIdx()
             callDct = self.stats[self.statKeyList[idx]][4]
 
-            called = [`x[1]`+': '+x[0][2]+' | '+os.path.basename(os.path.splitext(x[0][0])[0])
-                      for x in callDct.items()]
+            called = [repr(x[1])+': '+x[0][2]+' | '+os.path.basename(os.path.splitext(x[0][0])[0])
+                      for x in list(callDct.items())]
             dlg = wx.SingleChoiceDialog(self.model.editor, _('Choose a function:'),
               _('%s was called by...') % self.statKeyList[idx][2], called)
             try:
                 if dlg.ShowModal() == wx.ID_OK:
                     idx = called.index(dlg.GetStringSelection())
-                    key = callDct.keys()[idx]
+                    key = list(callDct.keys())[idx]
 
                     for i in range(self.GetItemCount()):
                         if self.statKeyList[self.GetItemData(i)] == key:
@@ -203,18 +203,18 @@ class ProfileStatsView(ListCtrlView, CloseableViewMix):
 #            callDct = self.stats[key][4]
 
             self.calc_callees()
-            if self.all_callees.has_key(key):
+            if key in self.all_callees:
                 callDct = self.all_callees[key]
 
-                called = [`x[1]`+': '+x[0][2]+' | '+os.path.basename(os.path.splitext(x[0][0])[0])
-                          for x in callDct.items()]
+                called = [repr(x[1])+': '+x[0][2]+' | '+os.path.basename(os.path.splitext(x[0][0])[0])
+                          for x in list(callDct.items())]
                  
                 dlg = wx.SingleChoiceDialog(self.model.editor, _('Choose a function:'),
                   _('%s called...') % self.statKeyList[idx][2], called)
                 try:
                     if dlg.ShowModal() == wx.ID_OK:
                         idx = called.index(dlg.GetStringSelection())
-                        key = callDct.keys()[idx]
+                        key = list(callDct.keys())[idx]
 
                         for i in range(self.GetItemCount()):
                             if self.statKeyList[self.GetItemData(i)] == key:

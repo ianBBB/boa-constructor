@@ -9,7 +9,7 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-print 'importing Views'
+print('importing Views')
 
 import os, sys
 
@@ -134,7 +134,7 @@ class EditorView:
         self.methodsIds = []
         for name, meth, bmp, accl in self.actions:
             if name != '-':
-                self.methodsIds.append( (wx.NewId(), meth) )
+                self.methodsIds.append( (wx.NewIdRef(), meth) )
 
     def buildMenuDefn(self):
         self.accelLst = []
@@ -237,7 +237,7 @@ class EditorView:
 
             self.model.reorderFollowingViewIdxs(self.pageIdx)
             # XXX If the last view closes should the model close ??
-            if self.model.views.has_key(focusView):
+            if focusView in self.model.views:
                 self.model.views[focusView].focus()
             del self.model.views[tabName]
             self.destroy()
@@ -322,7 +322,8 @@ class EditorView:
 
     def OnRightClick(self, event):
         menu = self.generateMenu()
-        event.GetEventObject().PopupMenuXY(menu, event.GetX(), event.GetY())
+        # event.GetEventObject().PopupMenu(menu, event.GetX(), event.GetY())
+        event.GetEventObject().PopupMenu(menu, wx.Point(event.GetX(), event.GetY()))
         menu.Destroy()
 
 class TestView(wx.TextCtrl, EditorView):
@@ -481,7 +482,7 @@ class ModuleDocView(HTMLDocView):
         methlist = []
         meths = []
         module = self.model.getModule()
-        methods = module.classes[aclass].methods.keys()
+        methods = list(module.classes[aclass].methods.keys())
         methods.sort()
         for ameth in methods:
             methlist.append('<a href="#%(Class)s%(Method)s">%(Method)s</a><br>' % {\
@@ -575,9 +576,9 @@ class CyclopsView(HTMLView, CloseableViewMix):
             if jumpType == 'classlink':
                 lineno = module.classes[clss].block.start
             elif jumpType == 'attrlink':
-                if module.classes[clss].attributes.has_key(attr):
+                if attr in module.classes[clss].attributes:
                     lineno = module.classes[clss].attributes[attr][0].start
-                elif module.classes[clss].methods.has_key(attr):
+                elif attr in module.classes[clss].methods:
                     lineno = module.classes[clss].methods[attr].start
                 else:
                     lineno = module.classes[clss].block.start
@@ -652,7 +653,8 @@ class ListCtrlView(wx.ListView, EditorView, Utils.ListCtrlSelectionManagerMix):
     def addReportItems(self, index, list, imgIdx = None):
         if list:
             if imgIdx is not None:
-                self.InsertImageStringItem(index, list[0], imgIdx)
+                # self.InsertImageStringItem(index, list[0], imgIdx)
+                self.InsertItem(index, list[0], imgIdx)
             else:
                 self.InsertStringItem(index, list[0])
             self.SetItemData(index, index)
@@ -660,7 +662,7 @@ class ListCtrlView(wx.ListView, EditorView, Utils.ListCtrlSelectionManagerMix):
             col = 1
             if len(list) > 1:
                 for text in list[1:]:
-                    self.SetStringItem(index, col, str(text))
+                    self.SetItem(index, col, str(text))
                     col = col + 1
         return index + 1
 
@@ -708,7 +710,7 @@ class ListCtrlView(wx.ListView, EditorView, Utils.ListCtrlSelectionManagerMix):
         event.Skip()
 
     def OnItemSelect(self, event):
-        self.selected = event.m_itemIndex
+        self.selected = event.Index
 
     def OnItemDeselect(self, event):
         self.selected = -1
@@ -821,11 +823,11 @@ class ToDoView(ListCtrlView):
             idx = -1
             while todoStr and todoStr[idx] == '!':
                 idx = idx -1
-            urgency = `idx * -1 -1`
+            urgency = repr(idx * -1 -1)
 
             if todo[0] - 1 != lastLine:
                 todoCnt = todoCnt + 1
-            lineNo = `todo[0]`
+            lineNo = repr(todo[0])
             lastLine = todo[0]
 
             self.distinctTodos.append(todoCnt)
@@ -872,7 +874,7 @@ class ToDoView(ListCtrlView):
 ##                self.blockReentrant = False
 
     def OnGoto(self, event):
-        if self.model.views.has_key('Source') and self.selected >= 0:
+        if 'Source' in self.model.views and self.selected >= 0:
             srcView = self.model.views['Source']
             # XXX Implement an interface for views to talk
             srcView.focus()
@@ -887,7 +889,7 @@ class FindResultsAdderMixin:
         """
         from FindResults import FindResults
         name = _('Results: %s')%pattern
-        if not self.model.views.has_key(name):
+        if name not in self.model.views:
             resultView = self.model.editor.addNewView(name, FindResults)
         else:
             resultView = self.model.views[name]
@@ -948,7 +950,7 @@ class InfoView(wx.TextCtrl, EditorView):
         self.SetValue('')
         module = self.model.getModule()
         info = module.getInfoBlock()
-        self.WriteText(`info`)
+        self.WriteText(repr(info))
 
     def OnAddInfo(self, event):
         self.model.addInfoBlock()
@@ -1006,12 +1008,13 @@ class ExploreView(wx.TreeCtrl, EditorView):
         module = self.model.getModule()
 
         breaks = module.break_lines
-        breakLnNos = breaks.keys()
+        breakLnNos = list(breaks.keys())
         breakLnNos.sort()
 
         self.DeleteAllItems()
         rootItem = self.AddRoot(self.model.moduleName, 5, -1,
               wx.TreeItemData(CodeBlock('', 0, 0)))
+              # wx.Tree(CodeBlock('', 0, 0)))
         if module.imports or module.from_imports_names:
             importsItem = self.AppendItem(rootItem, 'Imports', 8, data=wx.TreeItemData(CodeBlock('', 0, 0)))
             for i in module.imports:
@@ -1022,13 +1025,13 @@ class ExploreView(wx.TreeCtrl, EditorView):
         for className in module.class_order:
             classItem = self.AppendItem(rootItem, className, 0, -1,
                   wx.TreeItemData(module.classes[className].block))
-            for attrib in module.classes[className].attributes.keys():
+            for attrib in list(module.classes[className].attributes.keys()):
                 attribItem = self.AppendItem(classItem, attrib, 4, -1,
                   wx.TreeItemData(module.classes[className].attributes[attrib]))
             brkStrt = module.classes[className].block.start
             for method in module.classes[className].method_order:
                 methBlock = module.classes[className].methods[method]
-                for brkLnNo in breaks.keys():
+                for brkLnNo in list(breaks.keys()):
                     if brkLnNo > brkStrt and brkLnNo < methBlock.start:
                         brkItm = self.AppendItem(classItem, breaks[brkLnNo] , 7,
                             -1, wx.TreeItemData(CodeBlock('', brkLnNo, brkLnNo)))
@@ -1049,7 +1052,7 @@ class ExploreView(wx.TreeCtrl, EditorView):
                             methodLocalsItem = self.AppendItem(methodsItem, l, 6, -1,
                                   wx.TreeItemData(CodeBlock('', methBlock.locals[l].lineno, 0)))
 
-        functionList = module.functions.keys()
+        functionList = list(module.functions.keys())
         functionList.sort()
         for func in functionList:
             funcBlock = module.functions[func]
@@ -1067,14 +1070,14 @@ class ExploreView(wx.TreeCtrl, EditorView):
         self.Expand(rootItem)
 
     def OnGoto(self, event):
-        if self.model.views.has_key('Source'):
+        if 'Source' in self.model.views:
             srcView = self.model.views['Source']
             idx = self.GetSelection()
             if idx.IsOk():
                 srcView.focus()
                 self.model.editor.addBrowseMarker(srcView.GetCurrentLine())
-                dat = self.GetPyData(idx)
-                if type(dat) == type([]):
+                dat = self.GetItemData(idx)
+                if isinstance(dat, type([])):
                     srcView.gotoLine(dat[0].start -1)
                 else:
                     srcView.gotoLine(dat.start -1)
@@ -1097,28 +1100,28 @@ class ExplorePythonExtensionView(ExploreView):
         self.Expand(rootItem)
 
     def populateItemFromModuleData(self, item, moduleData):
-        classes = moduleData.classes.items()
+        classes = list(moduleData.classes.items())
         classes.sort()
         for className, classData in classes:
             classItem = self.AppendItem(item, className, 0, -1)
             for meth in classData.methods:
                 methItem = self.AppendItem(classItem, meth, 2, -1)
-            attrs = classData.attrs.items()
+            attrs = list(classData.attrs.items())
             attrs.sort()
             for name, attr in attrs:
                 attrItem = self.AppendItem(classItem, '%s: %s'%(name, attr), 6, -1)
 
-        functions = moduleData.functions.items()
+        functions = list(moduleData.functions.items())
         functions.sort()
         for funcName, func in functions:
             funcItem = self.AppendItem(item, funcName, 3, -1)
 
-        attrs = moduleData.attrs.items()
+        attrs = list(moduleData.attrs.items())
         attrs.sort()
         for name, attr in attrs:
             attrItem = self.AppendItem(item, '%s: %s'%(name, attr), 6, -1)
 
-        modules = moduleData.modules.items()
+        modules = list(moduleData.modules.items())
         modules.sort()
         for name, module in modules:
             modItem = self.AppendItem(item, name, 5, -1)
@@ -1171,7 +1174,7 @@ class ExploreEventsView(ExploreView):
             #self.objectColls[oc]
             objColl = model.readDesignerMethod(oc, codeBody)
             objColl.indexOnCtrlName()
-            if self.stdCollMeths.has_key(oc):
+            if oc in self.stdCollMeths:
                 name = self.stdCollMeths[oc]
             else:
                 collName = oc[11:]
@@ -1187,26 +1190,26 @@ class ExploreEventsView(ExploreView):
 
             for evt in objColl.events:
                 if evt.windowid:
-                    if not idEvtMeths.has_key(evt.windowid):
+                    if evt.windowid not in idEvtMeths:
                         idEvtMeths[evt.windowid] = []
                     idEvtMeths[evt.windowid].append(evt.trigger_meth)
                 else:
-                    if not ctrlEvtMeths.has_key(evt.comp_name):
+                    if evt.comp_name not in ctrlEvtMeths:
                         ctrlEvtMeths[evt.comp_name] = []
                     ctrlEvtMeths[evt.comp_name].append(evt.trigger_meth)
 
             for crt in objColl.creators:
                 cb = main.methods[oc]
                 evts = []
-                if oc in self.stdCollMeths.keys():
+                if oc in list(self.stdCollMeths.keys()):
                     name = crt.comp_name
-                    if ctrlEvtMeths.has_key(name):
+                    if name in ctrlEvtMeths:
                         evts.extend(ctrlEvtMeths[name])
 ##                        if not name:
 ##                            cb = main.block
                         if name:
                             cb = main.attributes[name]
-                    if crt.params.has_key('id') and idEvtMeths.has_key(crt.params['id']):
+                    if 'id' in crt.params and crt.params['id'] in idEvtMeths:
                         evts.extend(idEvtMeths[crt.params['id']])
 
                     if evts:
@@ -1217,9 +1220,9 @@ class ExploreEventsView(ExploreView):
                             evtItem = self.AppendItem(attrItem, evtMeth, 2, -1,
                                   wx.TreeItemData(main.methods[evtMeth]))
 
-                elif crt.params.has_key('id'):
+                elif 'id' in crt.params:
                     name = crt.params['id']
-                    if idEvtMeths.has_key(name):
+                    if name in idEvtMeths:
                         evts = idEvtMeths[name]
                         for evtMeth in evts:
                             evtItem = self.AppendItem(collMethItem, evtMeth, 2, -1,
@@ -1261,9 +1264,9 @@ class HierarchyView(wx.TreeCtrl, EditorView):
         self.tokenImgLst = None
 
     def buildTree(self, parent, dict):
-        for item in dict.keys():
+        for item in list(dict.keys()):
             child = self.AppendItem(parent, item, 0)
-            if len(dict[item].keys()):
+            if len(list(dict[item].keys())):
                 self.buildTree(child, dict[item])
             self.Expand(child)
 
@@ -1275,8 +1278,8 @@ class HierarchyView(wx.TreeCtrl, EditorView):
         hierc = module.createHierarchy()
 
         root = self.AddRoot(self.model.moduleName, 3)
-        for top in hierc.keys():
-            if module.classes.has_key(top): imgIdx = 1
+        for top in list(hierc.keys()):
+            if top in module.classes: imgIdx = 1
             else: imgIdx = 2
 
             item = self.AppendItem(root, top, imgIdx)
@@ -1290,8 +1293,8 @@ class HierarchyView(wx.TreeCtrl, EditorView):
         idx  = self.GetSelection()
         if idx.IsOk():
             name = self.GetItemText(idx)
-            if self.model.views.has_key('Source') and \
-              self.model.getModule().classes.has_key(name):
+            if 'Source' in self.model.views and \
+              name in self.model.getModule().classes:
                 srcView = self.model.views['Source']
                 srcView.focus()
                 module = self.model.getModule()
@@ -1344,9 +1347,9 @@ class DistUtilManifestView(ListCtrlView):
         manifestPath = self.getSetupDir() +'/Manifest'
         try:
             manifest = openEx(manifestPath).load()
-        except TransportError, err:
+        except TransportError as err:
             self.InsertStringItem(0, _('Error'))
-            self.SetStringItem(0, 1, str(err))
+            self.SetItem(0, 1, str(err))
             self.manifest = None
         else:
             self.manifest = []
@@ -1359,7 +1362,7 @@ class DistUtilManifestView(ListCtrlView):
                 self.manifest.append(path)
                 name = os.path.basename(path)
                 self.InsertStringItem(idx, name)
-                self.SetStringItem(idx, 1, path)
+                self.SetItem(idx, 1, path)
 
         self.pastelise()
 
@@ -1402,15 +1405,15 @@ class CVSConflictsView(ListCtrlView):
         confCnt = 0
         for rev, lineNo, size in self.conflicts:
             self.InsertStringItem(confCnt, rev)
-            self.SetStringItem(confCnt, 1, `lineNo`)
-            self.SetStringItem(confCnt, 2, `size`)
+            self.SetItem(confCnt, 1, repr(lineNo))
+            self.SetItem(confCnt, 2, repr(size))
             confCnt = confCnt + 1
 
 
         self.pastelise()
 
     def OnGoto(self, event):
-        if self.model.views.has_key('Source'):
+        if 'Source' in self.model.views:
             srcView = self.model.views['Source']
             srcView.focus()
             lineNo = int(self.conflicts[self.selected][1]) -1

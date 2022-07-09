@@ -278,7 +278,7 @@ class SelectionGroup:
         if self.selCompn: self.selCompn.beforeResize()
 
         try:
-            self.selection.SetDimensions(self.position.x, self.position.y,
+            self.selection.SetSize(self.position.x, self.position.y,
                                          self.size.x, self.size.y)
         finally:
             if self.selCompn: self.selCompn.afterResize()
@@ -330,43 +330,43 @@ class SelectionGroup:
                 trSze = wx.Size(granularise(size.x + position.x, sz.x + ps.x) - trPos.x,
                                granularise(size.y + position.y, sz.y + ps.y) - trPos.y)
 
-            self.stTL.SetDimensions(trPos.x -offsetO, trPos.y -offsetO, tagSize, tagSize)
-            self.stTR.SetDimensions(trPos.x -offsetI + trSze.x, trPos.y -offsetO, tagSize, tagSize)
-            self.stBR.SetDimensions(trPos.x -offsetI + trSze.x, trPos.y -offsetI + trSze.y, tagSize, tagSize)
-            self.stBL.SetDimensions(trPos.x -offsetO, trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stTL.SetSize(trPos.x -offsetO, trPos.y -offsetO, tagSize, tagSize)
+            self.stTR.SetSize(trPos.x -offsetI + trSze.x, trPos.y -offsetO, tagSize, tagSize)
+            self.stBR.SetSize(trPos.x -offsetI + trSze.x, trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stBL.SetSize(trPos.x -offsetO, trPos.y -offsetI + trSze.y, tagSize, tagSize)
 
-            self.stT.SetDimensions(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetO, tagSize, tagSize)
-            self.stB.SetDimensions(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetI + trSze.y, tagSize, tagSize)
-            self.stL.SetDimensions(trPos.x -offsetO, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
-            self.stR.SetDimensions(trPos.x -offsetI +trSze.x, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
+            self.stT.SetSize(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetO, tagSize, tagSize)
+            self.stB.SetSize(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stL.SetSize(trPos.x -offsetO, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
+            self.stR.SetSize(trPos.x -offsetI +trSze.x, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
 
         else:
             # Moving
-            if dbgInfo: InspDbgInfo(self.inspector, `position`+':'+`ps`, 1)
+            if dbgInfo: InspDbgInfo(self.inspector, repr(position)+':'+repr(ps), 1)
             trPos = wx.Point(granulariseMove(position.x, ps.x),
                             granulariseMove(position.y, ps.y))
-            if dbgInfo: InspDbgInfo(self.inspector, `trPos`, 0)
+            if dbgInfo: InspDbgInfo(self.inspector, repr(trPos), 0)
             trSze = wx.Size(sz.x, sz.y)
 
-        self.slT.SetDimensions(trPos.x -frmWid, trPos.y -frmWid, trSze.x +frmWid, frmWid)
-        self.slR.SetDimensions(trPos.x + trSze.x, trPos.y -frmWid, frmWid, trSze.y+frmWid*2)
-        self.slB.SetDimensions(trPos.x -frmWid, trPos.y + trSze.y, trSze.x +frmWid*2, frmWid)
-        self.slL.SetDimensions(trPos.x -frmWid, trPos.y-frmWid, frmWid, trSze.y +frmWid)
+        self.slT.SetSize(trPos.x -frmWid, trPos.y -frmWid, trSze.x +frmWid, frmWid)
+        self.slR.SetSize(trPos.x + trSze.x, trPos.y -frmWid, frmWid, trSze.y+frmWid*2)
+        self.slB.SetSize(trPos.x -frmWid, trPos.y + trSze.y, trSze.x +frmWid*2, frmWid)
+        self.slL.SetSize(trPos.x -frmWid, trPos.y-frmWid, frmWid, trSze.y +frmWid)
 
         if finishDragging:
             self.dragging = False
             self.startPos = trPos
             self.startSize = trSze
 
-            self.stTL.SetDimensions(trPos.x -offsetO, trPos.y -offsetO, tagSize, tagSize)
-            self.stTR.SetDimensions(trPos.x -offsetI + trSze.x, trPos.y -offsetO, tagSize, tagSize)
-            self.stBR.SetDimensions(trPos.x -offsetI + trSze.x, trPos.y -offsetI + trSze.y, tagSize, tagSize)
-            self.stBL.SetDimensions(trPos.x -offsetO, trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stTL.SetSize(trPos.x -offsetO, trPos.y -offsetO, tagSize, tagSize)
+            self.stTR.SetSize(trPos.x -offsetI + trSze.x, trPos.y -offsetO, tagSize, tagSize)
+            self.stBR.SetSize(trPos.x -offsetI + trSze.x, trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stBL.SetSize(trPos.x -offsetO, trPos.y -offsetI + trSze.y, tagSize, tagSize)
 
-            self.stT.SetDimensions(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetO, tagSize, tagSize)
-            self.stB.SetDimensions(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetI + trSze.y, tagSize, tagSize)
-            self.stL.SetDimensions(trPos.x -offsetO, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
-            self.stR.SetDimensions(trPos.x -offsetI +trSze.x, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
+            self.stT.SetSize(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetO, tagSize, tagSize)
+            self.stB.SetSize(trPos.x -offsetO + int(round(trSze.x/2.0)), trPos.y -offsetI + trSze.y, tagSize, tagSize)
+            self.stL.SetSize(trPos.x -offsetO, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
+            self.stR.SetSize(trPos.x -offsetI +trSze.x, trPos.y -offsetO + int(round(trSze.y/2.0)), tagSize, tagSize)
 
         self.position  = trPos
         self.size = trSze
@@ -481,17 +481,18 @@ class SelectionTag(wx.Panel):
         wx.Panel.__init__(self, parent, -1, size = wx.Size(tagSize, tagSize), style = pnlStyle)
         self.Hide()
         self.group = group
-        self.SetCursor(wx.StockCursor(cursor))
+        # self.SetCursor(wx.StockCursor(cursor))
+        self.SetCursor(wx.Cursor(cursor))
         self.selection = None
         self.position = wx.Size(0, 0)
         self.setAnchor(None)
         self.hasSizer = False
         self.inSizer = False
 
-        self.wxID_ANCHORED = wx.NewId()
+        self.wxID_ANCHORED = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnAnchorToggle, id=self.wxID_ANCHORED)
 
-        self.wxID_SIZERED = wx.NewId()
+        self.wxID_SIZERED = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnSelectSizer, id=self.wxID_SIZERED)
 
         self.Bind(wx.EVT_LEFT_DOWN, group.OnSizeBegin)
@@ -612,7 +613,7 @@ class SideSelTag(SelectionTag):
         if self.hasSizer:
             if designer.sizersView:
                 s = companion.GetSizer(None)
-                for objInfo in designer.sizersView.objects.values():
+                for objInfo in list(designer.sizersView.objects.values()):
                     if objInfo[1] == s:
                         compn = objInfo[0]
                         designer.sizersView.focus()
@@ -732,7 +733,7 @@ def openCollEditorForSizerItem(inspector, companion, sizersView=None):
         sizersView = companion.designer.sizersView
     if sizersView:
         s = companion.control.GetContainingSizer()
-        for objName, objInfo in sizersView.objects.items():
+        for objName, objInfo in list(sizersView.objects.items()):
             if objInfo[1] == s:
                 compn = objInfo[0]
                 inspector.selectObject(compn)
@@ -742,7 +743,7 @@ def openCollEditorForSizerItem(inspector, companion, sizersView=None):
                     nv.propEditor.edit(None)
                     collEditor = sizersView.collEditors[(objName, 'Items')]
                     for idx, crt in zip(
-                         range(len(collEditor.companion.textConstrLst)),
+                         list(range(len(collEditor.companion.textConstrLst))),
                          collEditor.companion.textConstrLst):
                         if crt.method == 'AddWindow' and \
                               crt.params[0] != 'None':
@@ -759,7 +760,7 @@ def openCollEditorForSizerItems(inspector, companion, sizersView=None, sizer=Non
     if sizersView:
         if sizer is None:
             sizer = companion.control.GetSizer()
-        for objName, objInfo in sizersView.objects.items():
+        for objName, objInfo in list(sizersView.objects.items()):
             if objInfo[1] == sizer:
                 compn = objInfo[0]
                 inspector.selectObject(compn)

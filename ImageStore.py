@@ -11,7 +11,7 @@
 # Licence:     BSD
 #----------------------------------------------------------------------
 
-import sys, os, cStringIO
+import sys, os, io
 
 import wx
 _ = wx.GetTranslation
@@ -51,8 +51,8 @@ class ImageStore:
         elif ext == '.ico':
             return wx.Icon(filename, wx.BITMAP_TYPE_ICO)
         elif ext == 'data':
-            stream = cStringIO.StringIO(self.dataReg[filename])
-            bitmap = wx.BitmapFromImage(wx.ImageFromStream(stream))
+            stream = io.BytesIO(self.dataReg[filename])
+            bitmap = wx.Bitmap(wx.Image(stream))
             if filename[-3:].lower() == 'ico':
                 icon = wx.EmptyIcon()
                 icon.CopyFromBitmap(bitmap)
@@ -60,7 +60,7 @@ class ImageStore:
             else:
                 return bitmap
         else:
-            raise UnhandledExtError, _('Extension not handled: %s')%ext
+            raise UnhandledExtError(_('Extension not handled: %s')%ext)
 
     def pathExtFromName(self, root, name):
         imgPath = self.canonizePath(os.path.join(root, name))
@@ -79,12 +79,12 @@ class ImageStore:
                 continue
 
             if self.useCache:
-                if not self.images.has_key(name):
+                if name not in self.images:
                     self.images[name] = self.createImage(imgpath, ext)
                 return self.images[name]
             else:
                 return self.createImage(imgpath, ext)
-        raise InvalidImgPathError, _('%s not found in image paths')%name
+        raise InvalidImgPathError(_('%s not found in image paths')%name)
 
     def canonizePath(self, imgPath):
         return os.path.normpath(imgPath).replace('\\', '/')
@@ -94,7 +94,7 @@ class ImageStore:
             return
 
         if not os.path.isfile(imgPath):
-            raise InvalidImgPathError, _('%s not valid') %imgPath
+            raise InvalidImgPathError(_('%s not valid') %imgPath)
 
     def addRootPath(self, rootPath):
         self.rootpaths.append(rootPath)
@@ -112,7 +112,7 @@ class ZippedImageStore(ImageStore):
 
         archive = os.path.join(rootPath, 'Images.archive.zip')
         if os.path.exists(archive):
-            print 'reading image archive...'
+            print('reading image archive...')
             import zipfile
             zf = zipfile.ZipFile(archive)
             self.archives[archive] = [fl.filename for fl in zf.filelist]
@@ -126,7 +126,7 @@ class ZippedImageStore(ImageStore):
 
             zf.close()
         else:
-            print 'image archive %s not found'%archive
+            print('image archive %s not found'%archive)
 
     def load(self, name):
         name = self.canonizePath(name)
@@ -155,7 +155,7 @@ class ResourceImageStore(ImageStore):
                 for comp in components[1:]: 
                     mod = getattr(mod, comp) 
                 return mod 
-            raise ImportError, _('Could not find %s')%name
+            raise ImportError(_('Could not find %s')%name)
         finally:
             sys.path = realSysPath
 
@@ -164,7 +164,7 @@ class ResourceImageStore(ImageStore):
         if name not in self.dataReg:
             try:
                 mod = self.subModuleImport(name)
-            except ImportError, err:
+            except ImportError as err:
                 #print '%s not found: %s'%(name, str(err))
                 return ImageStore.load(self, pathName)
             self.dataReg[name] = mod.data

@@ -24,7 +24,7 @@
 #  Todo:
 #  - add pprint() - pretty-print output of defined BNF
 #
-from __future__ import generators
+
 __doc__ = \
 """
 pyparsing module - Classes and methods to define and execute parsing grammars
@@ -90,7 +90,7 @@ class ParseException(Exception):
         elif( aname == "line" ):
             return line( self.loc, self.pstr )
         else:
-            raise AttributeError, aname
+            raise AttributeError(aname)
 
     def __str__( self ):
         return "%s (%d), (%d,%d)" % ( self.msg, self.loc, self.lineno, self.column )
@@ -127,7 +127,7 @@ class ParseResults(object):
             self.__name = None
             self.__parent = None
             self.__modal = modal
-            if type(toklist) is list:
+            if isinstance(toklist, list):
                 self.__toklist = toklist[:]
             else:
                 self.__toklist = [toklist]
@@ -175,25 +175,25 @@ class ParseResults(object):
         del self.__toklist[i]
 
     def __contains__( self, k ):
-        return self.__tokdict.has_key(k)
+        return k in self.__tokdict
         
     def __len__( self ): return len( self.__toklist )
     def __iter__( self ): return iter( self.__toklist )
     def keys( self ): 
         """Returns all named result keys."""
-        return self.__tokdict.keys()
+        return list(self.__tokdict.keys())
     
     def items( self ): 
         """Returns all named result keys and values as a list of tuples."""
-        return [(k,v[-1][0]) for k,v in self.__tokdict.items()]
+        return [(k,v[-1][0]) for k,v in list(self.__tokdict.items())]
     
     def values( self ): 
         """Returns all named result values."""
-        return [ v[-1][0] for v in self.__tokdict.values() ]
+        return [ v[-1][0] for v in list(self.__tokdict.values()) ]
 
     def __getattr__( self, name ):
         if name not in self.__slots__:
-            if self.__tokdict.has_key( name ):
+            if name in self.__tokdict:
                 if self.__modal:
                     return self.__tokdict[name][-1][0]
                 else:
@@ -207,7 +207,7 @@ class ParseResults(object):
         self.__toklist += other.__toklist
         if other.__tokdict:
             addOffset = lambda a: (a<0 and offset) or (a + offset)
-            otherdictitems = [(k,(v[0],addOffset(v[1])) ) for (k,vlist) in other.__tokdict.items() for v in vlist]
+            otherdictitems = [(k,(v[0],addOffset(v[1])) ) for (k,vlist) in list(other.__tokdict.items()) for v in vlist]
             for k,v in otherdictitems:
                 self[k] = v
                 if isinstance(v[0],ParseResults):
@@ -263,7 +263,7 @@ class ParseResults(object):
         """Returns the parse results as XML. Tags are created for tokens and lists that have defined results names."""
         nl = "\n"
         out = []
-        namedItems = dict( [ (v[1],k) for (k,vlist) in self.__tokdict.items() for v in vlist ] )
+        namedItems = dict( [ (v[1],k) for (k,vlist) in list(self.__tokdict.items()) for v in vlist ] )
         
         selfTag = None
         if doctag is not None:
@@ -304,7 +304,7 @@ class ParseResults(object):
 
 
     def __lookup(self,sub):
-        for k,vlist in self.__tokdict.items():
+        for k,vlist in list(self.__tokdict.items()):
             for v,loc in vlist:
                 if sub is v:
                     return k
@@ -322,8 +322,8 @@ class ParseResults(object):
                 return None
         elif (len(self) == 1 and 
                len(self.__tokdict) == 1 and
-               self.__tokdict.values()[0][0][1] in (0,-1)):
-            return self.__tokdict.keys()[0]
+               list(self.__tokdict.values())[0][0][1] in (0,-1)):
+            return list(self.__tokdict.keys())[0]
         else:
             return None
 
@@ -405,7 +405,7 @@ class ParserElement(object):
             exprsFound = False
             for e in self.ignoreExprs:
                 try:
-                    while 1:
+                    while True:
                         loc,dummy = e.parse( instring, loc )
                         exprsFound = True
                 except ParseException:
@@ -434,15 +434,15 @@ class ParserElement(object):
         debugging = ( self.debug and doActions )
 
         if debugging:
-            print "Match",self,"at loc",loc,"(%d,%d)" % ( lineno(loc,instring), col(loc,instring) )
+            print("Match",self,"at loc",loc,"(%d,%d)" % ( lineno(loc,instring), col(loc,instring) ))
             loc = self.preParse( instring, loc )
             tokensStart = loc
             try:
                 loc,tokens = self.parseImpl( instring, loc, doActions )
             except IndexError:
-                raise ParseException, ( instring, len(instring), self.errmsg )
-            except ParseException, err:
-                print "Exception raised:", err
+                raise ParseException( instring, len(instring), self.errmsg)
+            except ParseException as err:
+                print("Exception raised:", err)
                 raise
         else:
             loc = self.preParse( instring, loc )
@@ -451,7 +451,7 @@ class ParserElement(object):
                 try:
                     loc,tokens = self.parseImpl( instring, loc, doActions )
                 except IndexError:
-                    raise ParseException, ( instring, len(instring), self.errmsg )
+                    raise ParseException( instring, len(instring), self.errmsg)
             else:
                 loc,tokens = self.parseImpl( instring, loc, doActions )
         
@@ -466,8 +466,8 @@ class ParserElement(object):
                         if isinstance(tokens,tuple):
                             tokens = tokens[1]
                         retTokens = ParseResults( tokens, self.resultsName, asList=self.saveList, modal=self.modalResults )
-                except ParseException, err:
-                    print "Exception raised in user parse action:", err
+                except ParseException as err:
+                    print("Exception raised in user parse action:", err)
                     raise
             else:
                 tokens = self.parseAction( instring, tokensStart, retTokens )
@@ -480,7 +480,7 @@ class ParserElement(object):
                                               modal=self.modalResults )
 
         if debugging:
-            print "Matched",self,"->",retTokens.asList()
+            print("Matched",self,"->",retTokens.asList())
 
         return loc, retTokens
 
@@ -770,7 +770,7 @@ class Word(Token):
         if max > 0:
             self.maxLen = max
         else:
-            self.maxLen = 2L**31-1
+            self.maxLen = 2**31-1
 
         if exact > 0:
             self.maxLen = exact
@@ -843,7 +843,7 @@ class CharsNotIn(Token):
         if max > 0:
             self.maxLen = max
         else:
-            self.maxLen = 2L**31-1
+            self.maxLen = 2**31-1
 
         if exact > 0:
             self.maxLen = exact
@@ -921,7 +921,7 @@ class White(Token):
         if max > 0:
             self.maxLen = max
         else:
-            self.maxLen = 2L**31-1
+            self.maxLen = 2**31-1
 
         if exact > 0:
             self.maxLen = exact
@@ -975,7 +975,7 @@ class GoToColumn(PositionToken):
     def parseImpl( self, instring, loc, doActions=True ):
         thiscol = col( loc, instring )
         if thiscol > self.col:
-            raise ParseException, ( instring, loc, "Text not in expected column" )
+            raise ParseException( instring, loc, "Text not in expected column")
         newloc = loc + self.col - thiscol
         ret = instring[ loc: newloc ]
         return newloc, [ ret ]
@@ -1167,7 +1167,7 @@ class And(ParseExpression):
         loc, resultlist = self.exprs[0].parse( instring, loc, doActions )
         for e in self.exprs[1:]:
             loc, exprtokens = e.parse( instring, loc, doActions )
-            if exprtokens or exprtokens.keys():
+            if exprtokens or list(exprtokens.keys()):
                 resultlist += exprtokens
         return loc, resultlist
 
@@ -1212,11 +1212,11 @@ class Or(ParseExpression):
         for e in self.exprs:
             try:
                 loc2 = e.tryParse( instring, loc )
-            except ParseException, err:
+            except ParseException as err:
                 if err.loc > maxExcLoc:
                     maxException = err
                     maxExcLoc = err.loc
-            except IndexError, err:
+            except IndexError as err:
                 if len(instring) > maxExcLoc:
                     maxException = ParseException(instring,len(instring),e.errmsg)
                     maxExcLoc = len(instring)
@@ -1268,11 +1268,11 @@ class MatchFirst(ParseExpression):
         for e in self.exprs:
             try:
                 return e.parse( instring, loc, doActions )
-            except ParseException, err:
+            except ParseException as err:
                 if err.loc > maxExcLoc:
                     maxException = err
                     maxExcLoc = err.loc
-            except IndexError, err:
+            except IndexError as err:
                 if len(instring) > maxExcLoc:
                     maxException = ParseException(instring,len(instring),e.errmsg)
                     maxExcLoc = len(instring)
@@ -1433,11 +1433,11 @@ class ZeroOrMore(ParseElementEnhance):
         try:
             loc, tokens = self.expr.parse( instring, loc, doActions )
             hasIgnoreExprs = ( len(self.ignoreExprs) > 0 )
-            while 1:
+            while True:
                 if hasIgnoreExprs:
                     loc = self.skipIgnorables( instring, loc )
                 loc, tmptokens = self.expr.parse( instring, loc, doActions )
-                if tmptokens or tmptokens.keys():
+                if tmptokens or list(tmptokens.keys()):
                     tokens += tmptokens
         except (ParseException,IndexError):
             pass
@@ -1466,11 +1466,11 @@ class OneOrMore(ParseElementEnhance):
         loc, tokens = self.expr.parse( instring, loc, doActions )
         try:
             hasIgnoreExprs = ( len(self.ignoreExprs) > 0 )
-            while 1:
+            while True:
                 if hasIgnoreExprs:
                     loc = self.skipIgnorables( instring, loc )
                 loc, tmptokens = self.expr.parse( instring, loc, doActions )
-                if tmptokens or tmptokens.keys():
+                if tmptokens or list(tmptokens.keys()):
                     tokens += tmptokens
         except (ParseException,IndexError):
             pass
@@ -1621,7 +1621,7 @@ class TokenConverter(ParseElementEnhance):
 class Upcase(TokenConverter):
     """Converter to upper case all matching tokens."""
     def postParse( self, instring, loc, tokenlist ):
-        return map( string.upper, tokenlist )
+        return list(map( string.upper, tokenlist ))
 
 
 class Combine(TokenConverter):
@@ -1642,7 +1642,7 @@ class Combine(TokenConverter):
         del retToks[:]
         retToks += ParseResults([ "".join(tokenlist._asStringList(self.joinString)) ], modal=self.modalResults)
 
-        if self.resultsName and len(retToks.keys())>0:
+        if self.resultsName and len(list(retToks.keys()))>0:
             return [ retToks ]
         else:
             return retToks
@@ -1748,7 +1748,7 @@ def dictOf( key, value ):
     """
     return Dict( ZeroOrMore( Group ( key + value ) ) )
 
-alphas     = string.letters
+alphas     = string.ascci_letters
 nums       = string.digits
 alphanums  = alphas + nums
 printables = "".join( [ c for c in string.printable if c not in string.whitespace ] )
@@ -1783,20 +1783,20 @@ commaSeparatedList = delimitedList( Optional( quotedString | _commasepitem, defa
 if __name__ == "__main__":
 
     def test( teststring ):
-        print teststring,"->",
+        print(teststring,"->", end=' ')
         try:
             tokens = simpleSQL.parseString( teststring )
             tokenlist = tokens.asList()
-            print tokenlist
-            print "tokens = ",        tokens
-            print "tokens.columns =", tokens.columns
-            print "tokens.tables =",  tokens.tables
-            print tokens.asXML("SQL",True)
-        except ParseException, err:
-            print err.line
-            print " "*(err.column-1) + "^"
-            print err
-        print
+            print(tokenlist)
+            print("tokens = ",        tokens)
+            print("tokens.columns =", tokens.columns)
+            print("tokens.tables =",  tokens.tables)
+            print(tokens.asXML("SQL",True))
+        except ParseException as err:
+            print(err.line)
+            print(" "*(err.column-1) + "^")
+            print(err)
+        print()
 
     selectToken    = CaselessLiteral( "select" )
     fromToken      = CaselessLiteral( "from" )

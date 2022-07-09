@@ -1,6 +1,6 @@
 import sys
 
-from Tasks import ThreadedTaskHandler
+from .Tasks import ThreadedTaskHandler
 
 import wx
 

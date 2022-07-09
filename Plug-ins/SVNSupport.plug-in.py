@@ -40,7 +40,7 @@ class SVNEntriesParser:
         for entryName, entryAttrs in self.entries:
             if name == entryName:
                 return entryAttrs
-        raise KeyError, name+' not found'
+        raise KeyError(name+' not found')
         
     def StartElement(self, name, attrs ):
         name = name.encode()
@@ -179,7 +179,7 @@ class SVNController(ExplorerNodes.Controller):
         self.list.InsertColumn(4, 'Options', wx.LIST_FORMAT_LEFT, 50)
 
     def cleanupListCtrl(self):
-        cols = range(5)
+        cols = list(range(5))
         cols.reverse()
         for col in cols:
             self.list.DeleteColumn(col)
@@ -336,9 +336,9 @@ class SVNController(ExplorerNodes.Controller):
                 if name[0] in self.quotes and name[-1] in self.quotes:
                     name = name[1:-1]
                 os.remove(os.path.join(dir, name))
-            except OSError, err:
+            except OSError as err:
                 # Skip files already removed
-                print err
+                print(err)
 
     def OnRemoveSVNItems(self, event):
         self.doSvnCmdOnSelection('remove', '', self.selPreCmd_remove)
@@ -505,7 +505,7 @@ class SVNFileNode(ExplorerNodes.ExplorerNode):
                 conflicts = model.getSVNConflicts()
                 if conflicts:
                     from Views.EditorViews import SVNConflictsView
-                    if not model.views.has_key(SVNConflictsView.viewName):
+                    if SVNConflictsView.viewName not in model.views:
                         resultView = editor.addNewView(SVNConflictsView.viewName,
                               SVNConflictsView)
                     else:

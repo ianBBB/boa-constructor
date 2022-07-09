@@ -113,36 +113,36 @@ class Signature:
         self.type = type(func)
         self.name, self.func = _getcode(func)
     def ordinary_args(self):
-        n = self.func.func_code.co_argcount
-        return self.func.func_code.co_varnames[0:n]
+        n = self.func.__code__.co_argcount
+        return self.func.__code__.co_varnames[0:n]
     def special_args(self):
-        n = self.func.func_code.co_argcount
+        n = self.func.__code__.co_argcount
         x = {}
         #
         #
         #
-        if self.func.func_code.co_flags & (self.POS_LIST|self.KEY_DICT):
-            x['positional'] = self.func.func_code.co_varnames[n]
+        if self.func.__code__.co_flags & (self.POS_LIST|self.KEY_DICT):
+            x['positional'] = self.func.__code__.co_varnames[n]
             try:
-                x['keyword'] = self.func.func_code.co_varnames[n+1]
+                x['keyword'] = self.func.__code__.co_varnames[n+1]
             except IndexError:
                 x['keyword'] = x['positional']
                 del x['positional']
-        elif self.func.func_code.co_flags & self.POS_LIST:
-            x['positional'] = self.func.func_code.co_varnames[n]
-        elif self.func.func_code.co_flags & self.KEY_DICT:
-            x['keyword'] = self.func.func_code.co_varnames[n]
+        elif self.func.__code__.co_flags & self.POS_LIST:
+            x['positional'] = self.func.__code__.co_varnames[n]
+        elif self.func.__code__.co_flags & self.KEY_DICT:
+            x['keyword'] = self.func.__code__.co_varnames[n]
         return x
     def full_arglist(self):
         base = list(self.ordinary_args())
         x = self.special_args()
-        if x.has_key('positional'):
+        if 'positional' in x:
             base.append(x['positional'])
-        if x.has_key('keyword'):
+        if 'keyword' in x:
             base.append(x['keyword'])
         return base
     def defaults(self):
-        defargs = self.func.func_defaults
+        defargs = self.func.__defaults__
         args = self.ordinary_args()
         mapping = {}
         if defargs is not None:
@@ -156,13 +156,13 @@ class Signature:
         specials = self.special_args()
         l = []
         for arg in self.ordinary_args():
-            if defaults.has_key(arg):
+            if arg in defaults:
                 l.append( arg + '=' + str(defaults[arg]) )
             else:
                 l.append( arg )
-        if specials.has_key('positional'):
+        if 'positional' in specials:
             l.append( '*' + specials['positional'] )
-        if specials.has_key('keyword'):
+        if 'keyword' in specials:
             l.append( '**' + specials['keyword'] )
         return "%s(%s)" % (self.name, string.join(l, ', '))
 
@@ -171,43 +171,43 @@ def _getcode(f):
 
     This function returns the name and """
     def method_get(f):
-        return f.__name__, f.im_func
+        return f.__name__, f.__func__
     def function_get(f):
         return f.__name__, f
     def instance_get(f):
         if hasattr(f, '__call__'):
             return ("%s%s" % (f.__class__.__name__, '__call__'),
-                    f.__call__.im_func)
+                    f.__call__.__func__)
         else:
             s = ("Instance %s of class %s does not have a __call__ method" %
                  (f, f.__class__.__name__))
-            raise TypeError, s
+            raise TypeError(s)
     def class_get(f):
         if hasattr(f, '__init__'):
-            return f.__name__, f.__init__.im_func
+            return f.__name__, f.__init__.__func__
         else:
             return f.__name__, lambda: None
     codedict = { types.UnboundMethodType: method_get,
                  types.MethodType       : method_get,
                  types.FunctionType     : function_get,
                  types.InstanceType     : instance_get,
-                 types.ClassType        : class_get
+                 type        : class_get
                  }
     try:
         return codedict[type(f)](f)
     except KeyError:
         if callable(f): # eg, built-in functions and methods
-            raise ValueError, "type %s not supported yet." % type(f)
+            raise ValueError("type %s not supported yet." % type(f))
         else:
-            raise TypeError, ("object %s of type %s is not callable." %
+            raise TypeError("object %s of type %s is not callable." %
                                      (f, type(f)))
 
 if __name__ == '__main__':
     def foo(x, y, z=-1.0, *args, **kw):
         return (x+y)**z
     f = Signature(foo)
-    print "ordinary arglist:", f.ordinary_args()
-    print "special_args:", f.special_args()
-    print "full_arglist:", f.full_arglist()
-    print "defaults:", f.defaults()
-    print "signature:",
+    print("ordinary arglist:", f.ordinary_args())
+    print("special_args:", f.special_args())
+    print("full_arglist:", f.full_arglist())
+    print("defaults:", f.defaults())
+    print("signature:", end=' ')

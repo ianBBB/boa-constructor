@@ -116,7 +116,7 @@ class FindReplaceEngine:
         else:
             results = self._findAllInSource(view.GetText(), pattern, 0)
         name = _('Results:') + ' ' + pattern
-        if not view.model.views.has_key(name):
+        if name not in view.model.views:
             resultView = view.model.editor.addNewView(name, FindResults)
         else:
             resultView = view.model.views[name]
@@ -216,7 +216,7 @@ class FindReplaceEngine:
                 except IOError:
                     continue
 
-                if type(filename) is unicode:
+                if isinstance(filename, str):
                     filename = filename.encode(sys.getfilesystemencoding())
 
                 if not dlg.Update(i, _("Searching in file '%s'")%filename):
@@ -236,7 +236,7 @@ class FindReplaceEngine:
         self.findAllInFiles(self.findNamesInPackage(view), view, pattern)
 
     def findAllInApp(self, view, pattern):
-        names = map(view.model.moduleFilename, view.model.modules.keys())
+        names = list(map(view.model.moduleFilename, list(view.model.modules.keys())))
         names.sort()
         self.findAllInFiles(names, view, pattern)
 
@@ -271,7 +271,7 @@ class FindReplaceEngine:
         domain, offset = self._processText(text, start)
         matches = []
         start = 0
-        while 1:
+        while True:
             s = compiled.search(domain, start)
             if s is None or s.end() == 0:
                 break
@@ -296,7 +296,7 @@ class FindReplaceEngine:
                 self.wrap = conf.getint('finder', 'wrap')
                 self.closeOnFound = conf.getint('finder', 'closeonfound')
         except:
-            print 'Problem loading finder options'
+            print('Problem loading finder options')
 
     def saveOptions(self):
         try:
@@ -305,8 +305,8 @@ class FindReplaceEngine:
             conf.set('finder', 'wrap', str(self.wrap))
             conf.set('finder', 'closeonfound', str(self.closeOnFound))
             Utils.writeConfig(conf)
-        except Exception, err:
-            print 'Problem saving finder options: %s' % err
+        except Exception as err:
+            print('Problem saving finder options: %s' % err)
 
     def _getValidFilename(self, filename):
         protsplit = filename.split('://')

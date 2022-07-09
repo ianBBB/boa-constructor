@@ -9,7 +9,7 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Explorers.CVSExplorer'
+print('importing Explorers.CVSExplorer')
 
 """ Explorer classes for CVS browsing and operations """
 
@@ -22,11 +22,11 @@ import Utils
 from Preferences import IS
 from Utils import _
 
-import ExplorerNodes
+from . import ExplorerNodes
 from Models import EditorModels, EditorHelper
 
 import ProcessProgressDlg
-import scrm
+from . import scrm
 
 cvs_environ_vars = ['CVSROOT', 'CVS_RSH', 'HOME']
 cvs_environ_ids  = [wx.NewId() for ev in cvs_environ_vars]
@@ -166,7 +166,7 @@ class CVSController(ExplorerNodes.Controller):
         self.list.InsertColumn(4, 'Options', wx.LIST_FORMAT_LEFT, 50)
 
     def cleanupListCtrl(self):
-        cols = range(5)
+        cols = list(range(5))
         cols.reverse()
         for col in cols:
             self.list.DeleteColumn(col)
@@ -346,9 +346,9 @@ class CVSController(ExplorerNodes.Controller):
                 if name[0] in self.quotes and name[-1] in self.quotes:
                     name = name[1:-1]
                 os.remove(os.path.join(dir, name))
-            except OSError, err:
+            except OSError as err:
                 # Skip files already removed
-                print err
+                print(err)
 
     def OnRemoveCVSItems(self, event):
         self.doCvsCmdOnSelection('remove', '', self.selPreCmd_remove)
@@ -397,7 +397,7 @@ class CVSController(ExplorerNodes.Controller):
             cvsroot = self.list.node.root
         else:
             if not cvsroot:
-                if os.environ.has_key('CVSROOT'):
+                if 'CVSROOT' in os.environ:
                     cvsroot = os.environ['CVSROOT']
                 else:
                     cvsroot = ''
@@ -427,7 +427,7 @@ class CVSController(ExplorerNodes.Controller):
         self.OnLoginCVS(event, ':pserver:anonymous@cvs.sourceforge.net:/cvsroot/[PROJECT]')
 
     def readCVSPass(self):
-        if os.environ.has_key('HOME') and os.path.isdir(os.environ['HOME']):
+        if 'HOME' in os.environ and os.path.isdir(os.environ['HOME']):
             cvspass = os.path.join(os.environ['HOME'], '.cvspass')
             if os.path.exists(cvspass):
                 passfile = open(cvspass, 'r+')
@@ -455,13 +455,13 @@ class CVSController(ExplorerNodes.Controller):
                     except:
                         wx.MessageBox(_('Changing environment variables is not supported on this OS\nConsult CVS howtos on how to set these globally'))
                 else:
-                    if os.environ.has_key(envKey):
+                    if envKey in os.environ:
                         del os.environ[envKey]
         finally:
             dlg.Destroy()
 
     def OnTest(self, event):
-        print 'TEST'
+        print('TEST')
 #        self.list.SetWindowStyleFlag(wx.LC_REPORT)
         self.setupListCtrl()
 
@@ -555,7 +555,7 @@ class CVSFileNode(ExplorerNodes.ExplorerNode):
                 conflicts = model.getCVSConflicts()
                 if conflicts:
                     from Views.EditorViews import CVSConflictsView
-                    if not model.views.has_key(CVSConflictsView.viewName):
+                    if CVSConflictsView.viewName not in model.views:
                         resultView = editor.addNewView(CVSConflictsView.viewName,
                               CVSConflictsView)
                     else:
@@ -688,7 +688,7 @@ class FSCVSFolderNode(ExplorerNodes.ExplorerNode):
 
 #---------------------------------------------------------------------------
 # Register cvs dirs as a subtype of file explorers
-import FileExplorer
+from . import FileExplorer
 FileExplorer.FileSysNode.subExplorerReg['folder'].append(
       (FSCVSFolderNode, isCVS, EditorHelper.imgCVSFolder)
 )

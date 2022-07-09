@@ -10,17 +10,17 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
-print 'importing Models.wxPythonEditorModels'
+print('importing Models.wxPythonEditorModels')
 
-import re, string, os, imp, sys, new
+import re, string, os, imp, sys   # , new
 
 import wx
 
 import Preferences, Utils
 from Utils import _
 
-import EditorHelper
-from PythonEditorModels import ClassModel, BaseAppModel, ModuleModel
+from . import EditorHelper
+from .PythonEditorModels import ClassModel, BaseAppModel, ModuleModel
 from Companions import BaseCompanions, FrameCompanions, WizardCompanions
 
 import sourceconst
@@ -58,7 +58,7 @@ class BaseFrameModel(ClassModel):
     def renameMain(self, oldName, newName):
         """ Rename the main class of the module """
         ClassModel.renameMain(self, oldName, newName)
-        if self.getModule().functions.has_key('create'):
+        if 'create' in self.getModule().functions:
             self.getModule().replaceFunctionBody('create',
                   ['    return %s(parent)'%newName, ''])
 
@@ -69,7 +69,7 @@ class BaseFrameModel(ClassModel):
     def new(self, params):
         """ Create a new frame module """
         paramLst = []
-        for param in params.keys():
+        for param in list(params.keys()):
             paramLst.append(Preferences.cgKeywordArgFormat %{'keyword': param,
                                                         'value': params[param]})
         
@@ -97,9 +97,9 @@ class BaseFrameModel(ClassModel):
         """ Return a list of all _init_* methods in the class """
         results = []
         module = self.getModule()
-        if module.classes.has_key(self.main):
+        if self.main in module.classes:
             main = module.classes[self.main]
-            for meth in main.methods.keys():
+            for meth in list(main.methods.keys()):
                 if len(meth) > len('_init_') and meth[:6] == '_init_':
                     results.append(meth)
         return results
@@ -124,10 +124,11 @@ class BaseFrameModel(ClassModel):
         if ObjCollection.isInitCollMeth(meth):
             ctrlName = methodparse.ctrlNameFromMeth(meth)
             try:
-                res = Utils.split_seq(codeBody, '', string.strip)
+                # res = Utils.split_seq(codeBody, '', string.strip)
+                res = Utils.split_seq(codeBody, '', "strip()")
                 inits, body, fins = res[:3]
             except ValueError:
-                raise Exception, _('Collection body %s not in init, body, fin form') % meth
+                raise Exception(_('Collection body %s not in init, body, fin form') % meth)
 
             allInitialisers, unmatched = methodparse.parseMixedBody(\
              [methodparse.EventParse, methodparse.CollectionItemInitParse],body)
@@ -206,13 +207,13 @@ class BaseFrameModel(ClassModel):
                 extAttrInitLine = idx
                 extAttrInitName = line.split('.__init__')[0]
         else:
-            raise Exception, 'self._init_ctrls not found in __init__'
+            raise Exception('self._init_ctrls not found in __init__')
 
         # build list of attrs
         attrs = []
 
         def readAttrsFromSrc(attrs, attributes, source, startline, endline):
-            for attr, blocks in attributes.items():
+            for attr, blocks in list(attributes.items()):
                 for block in blocks:
                     if startline <= block.start <= endline and attr not in attrs:
                         linePos = block.start-1
@@ -227,9 +228,9 @@ class BaseFrameModel(ClassModel):
                             
 
         if extAttrInitName:
-            if not mod.from_imports_names.has_key(extAttrInitName):
-                raise Exception, '%s.__init__ called, but not imported in the form: '\
-                      'from [ModuleName] import %s'%(extAttrInitName, extAttrInitName)
+            if extAttrInitName not in mod.from_imports_names:
+                raise Exception('%s.__init__ called, but not imported in the form: '\
+                      'from [ModuleName] import %s'%(extAttrInitName, extAttrInitName))
             # try to load external attrs
             extModName = mod.from_imports_names[extAttrInitName]
             extModFilename = os.path.join(os.path.dirname(self.filename),
@@ -237,9 +238,9 @@ class BaseFrameModel(ClassModel):
             from Explorers.Explorer import openEx
             try:
                 data = openEx(extModFilename).load()
-            except Exception, error:
-                raise Exception, 'Problem loading %s: File expected at: %s'%(extModName,
-                                                                 extModFilename)
+            except Exception as error:
+                raise Exception('Problem loading %s: File expected at: %s'%(extModName,
+                                                                 extModFilename))
             exModModel = ModuleModel(data, extModFilename, self.editor, 1)
             extModule = exModModel.getModule()
             extClass = extModule.classes[extAttrInitName]
@@ -258,8 +259,8 @@ class BaseFrameModel(ClassModel):
                 continue
             try:
                 val = PaletteMapping.evalCtrl(code)
-            except Exception, err:
-                print str(err)
+            except Exception as err:
+                print((str(err)))
                 continue
             else:
                 setattr(evalNS, attr, val)
@@ -282,7 +283,7 @@ class BaseFrameModel(ClassModel):
         signature has to be the same as the wxPython class.
         """
         res = {}
-        if cls.class_attributes.has_key('_custom_classes'):
+        if '_custom_classes' in cls.class_attributes:
             try:
                 import PaletteMapping
                 cls_attr = cls.class_attributes['_custom_classes'][0]
@@ -290,21 +291,21 @@ class BaseFrameModel(ClassModel):
                 srcline = cls_attr.start
 
                 # multiline parser ;)
-                while 1:
+                while True:
                     try:
                         custClasses = PaletteMapping.evalCtrl(attr_val, preserveExc=True)
-                        assert type(custClasses) == type({})
+                        assert isinstance(custClasses, type({}))
                         break
-                    except SyntaxError, err:
+                    except SyntaxError as err:
                         if err[0] == 'unexpected EOF while parsing':
                             attr_val = attr_val + mod.source[srcline].strip()
                             srcline = srcline + 1
                         else:
                             raise
-            except Exception, err:
-                raise Exception, _('_custom_classes is not valid: ')+str(err)
+            except Exception as err:
+                raise Exception(_('_custom_classes is not valid: ')+str(err))
 
-            for wxClassName, customs in custClasses.items():
+            for wxClassName, customs in list(custClasses.items()):
                 wxClass = PaletteMapping.evalCtrl(wxClassName)
                 res[wxClassName] = wxClass
                 for custom in customs:
@@ -324,7 +325,7 @@ class BaseFrameModel(ClassModel):
         module = self.getModule()
         # Parse all _init_* methods
         self.objectCollections = {}
-        if module.classes.has_key(self.main):
+        if self.main in module.classes:
             main = module.classes[self.main]
 
             self.specialAttrs = self.readSpecialAttrs(module, main)
@@ -345,7 +346,7 @@ class BaseFrameModel(ClassModel):
                         self.objectCollections[oc].properties.remove(prop)
 
             # Set the model's constructor
-            if self.objectCollections.has_key(sourceconst.init_ctrls):
+            if sourceconst.init_ctrls in self.objectCollections:
                 try:
                     self.mainConstr = \
                       self.objectCollections[sourceconst.init_ctrls].creators[0]

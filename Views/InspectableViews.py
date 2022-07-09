@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------
 # Name:        InspectableViews.py
-# Purpose:     View base class for GUI builder designer classes than can be
+# Purpose:     View base class for GUI builder designer classes that can be
 #              inspected and edited in the object inspector.
 #              Currently: frame designer, data view and collection editors
 #
@@ -11,7 +11,7 @@
 # Copyright:   (c) 2001 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Views.InspectableViews'
+print('importing Views.InspectableViews')
 
 import copy, os, pprint
 
@@ -20,8 +20,9 @@ import wx
 import Preferences, Utils
 from Utils import _
 
-import PaletteMapping, EditorViews
-from ObjCollection import ObjectCollection, getCollName
+import PaletteMapping
+from . import EditorViews
+from .ObjCollection import ObjectCollection, getCollName
 
 import methodparse, sourceconst
 
@@ -48,7 +49,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
         args = {}
         # Build dictionary of params
-        for paramKey in params.keys():
+        for paramKey in list(params.keys()):
             value = params[paramKey]
             ## function references in the constructor
             #if len(value) >= 11 and value[:11] == 'self._init_':
@@ -82,9 +83,9 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
     def destroy(self):
         del self.controllerView
         del self.inspector
-        for objval in self.objects.values():
+        for objval in list(self.objects.values()):
             objval[0].destroy()
-        for coll in self.collEditors.values():
+        for coll in list(self.collEditors.values()):
             coll.destroy()
         del self.collEditors
         del self.objects
@@ -133,7 +134,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
             self.applyDepsForCtrl(constr.comp_name, depLinks)
 
-        for ctrlName in collDeps.keys():
+        for ctrlName in list(collDeps.keys()):
             for collInit in collDeps[ctrlName]:
                 self.addCollView(ctrlName, collInit.method, False)
 
@@ -143,13 +144,11 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
             ctrlClass = PaletteMapping.evalCtrl(constrPrs.class_name, 
                   self.model.customClasses)
         except NameError:
-            raise DesignerError, \
-                  _('%s is not defined on the Palette.')%constrPrs.class_name
+            raise DesignerError(_('%s is not defined on the Palette.')%constrPrs.class_name)
         try:
             ctrlCompnClass = PaletteMapping.compInfo[ctrlClass][1]
         except KeyError:
-            raise DesignerError, \
-                  _('%s is not defined on the Palette.')%ctrlClass.__name__
+            raise DesignerError(_('%s is not defined on the Palette.')%ctrlClass.__name__)
         else:
             ctrlName = self.loadControl(ctrlClass, ctrlCompnClass,
               constrPrs.comp_name, constrPrs.params)
@@ -161,7 +160,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
             prop's setter with it.
             Also associate companion name with prop parse objs               """
         # XXX creator not used
-        if props.has_key(name):
+        if name in props:
             comp, ctrl = self.objects[name][0:2]
             # initialise live component's properies
             for prop in props[name]:
@@ -174,7 +173,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                     collItem = methodparse.CollectionInitParse(prop.params[0])
                     self.addCollView(name, collItem.method, False)
                 # Check for custom evaluator
-                elif comp.customPropEvaluators.has_key(prop.prop_name):
+                elif prop.prop_name in comp.customPropEvaluators:
                     args = comp.customPropEvaluators[prop.prop_name](prop.params, 
                           self.getAllObjects())
                     # XXX This is a hack !!!
@@ -192,11 +191,11 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                     try:
                         value = PaletteMapping.evalCtrl(prop.params[0], 
                                                         self.model.specialAttrs)
-                    except AttributeError, name:
+                    except AttributeError as name:
                         value = PaletteMapping.evalCtrl(prop.params[0], 
                           {'self': self.controllerView.objectNamespace})
                     except:
-                        print _('Problem with: %s') % prop.asText()
+                        print(_('Problem with: %s') % prop.asText())
                         raise
 
                     if prop.prop_name in comp.initPropsThruCompanion:
@@ -212,12 +211,12 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
             for it and applying it.
             Also associate companion name with prop parse objs               """
 
-        if collInits.has_key(name):
+        if name in collInits:
             if dependents is None: dependents = {}
             comp = self.objects[name][0]
             for collInit in collInits[name]:
                 if collInit.getPropName() in comp.dependentProps():
-                    if not dependents.has_key(name):
+                    if name not in dependents:
                         dependents[name] = []
                     dependents[name].append(collInit)
                 else:
@@ -227,13 +226,13 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
             comp.setCollInits(collInits[name])
 
     def initObjEvts(self, events, name, creator):
-        if events.has_key(name):
+        if name in events:
             self.objects[name][0].setEvents(events[name])
 
     def initIdOnlyObjEvts(self, events, creators):
         for crt in creators:
             name = crt.comp_name
-            if crt.params.has_key('id'):
+            if 'id' in crt.params:
                 wId = crt.params['id']
                 for evt in events:
                     if evt.windowid and evt.windowid == wId:
@@ -245,7 +244,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         try:
             collCompClass = comp.subCompanions[collName]
         except KeyError:
-            raise Exception, _('Sub-Companion not found for %s in %s')%(name, collInitMethod)
+            raise Exception(_('Sub-Companion not found for %s in %s')%(name, collInitMethod))
         collComp = collCompClass(name, self, comp, ctrl)
         if create:
             collComp.persistCollInit(collInitMethod, name, collName)
@@ -291,7 +290,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         return False
 
     def applyDepsForCtrl(self, ctrlName, depLinks):
-        if depLinks.has_key(ctrlName):
+        if ctrlName in depLinks:
             for prop, otherRefs in depLinks[ctrlName]:
                 for oRf in otherRefs:
                     if not oRf in self.objectOrder:
@@ -308,7 +307,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                         else:
                             ord, objs = self.model.allObjects()
 
-                            if objs.has_key(ctrlName):
+                            if ctrlName in objs:
                                 value = objs[ctrlName][1]
                             else:
                                 continue
@@ -322,7 +321,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                         for param in prop.params:
                             ctrlSrcName = Utils.ctrlNameFromSrcRef(param)
                             if len(param) >= 4 and param[:4] == 'self' and \
-                                  self.objects.has_key(ctrlSrcName):
+                                  ctrlSrcName in self.objects:
                                 refs.append(self.objects[ctrlSrcName][1])
                             else:
                                 refs.append(self.companion.eval(param))
@@ -336,19 +335,19 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         # Handle the case where ref is not a designer obj but a constant
         # all such constansts will be grouped under 'None'
         if not refs:
-            if not depLinks.has_key(None):
+            if None not in depLinks:
                 depLinks[None] = []
             depLinks[None].append( (prop, ()) )
         else:
             for link in refs:
-                if not depLinks.has_key(link):
+                if link not in depLinks:
                     depLinks[link] = []
                 otherRefs = refs[:]
                 otherRefs.remove(link)
                 depLinks[link].append( (prop, otherRefs) )
 
     def finaliseDepLinks(self, depLinks):
-        for ctrlName in depLinks.keys():
+        for ctrlName in list(depLinks.keys()):
             self.applyDepsForCtrl(ctrlName, depLinks)
 
     def renameEventMeth(self, oldName, newName):
@@ -370,7 +369,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         companion.renameCtrl(oldName, newName)
         companion.renameCtrlRefs(oldName, newName)
 
-        for name, prop in self.collEditors.keys():
+        for name, prop in list(self.collEditors.keys()):
             if name == oldName:
                 collEditor = self.collEditors[(name, prop)]
                 collEditor.renameCtrl(oldName, newName)
@@ -380,7 +379,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
     def renameFrame(self, oldName, newName):
         # update windowids & ctrls
-        for comp, ctrl, dummy in self.objects.values():
+        for comp, ctrl, dummy in list(self.objects.values()):
             if not comp.suppressWindowId:
                 comp.updateWindowIds()
 
@@ -404,7 +403,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         if not module:
             module = self.model.getModule()
 
-        for collView in self.collEditors.values():
+        for collView in list(self.collEditors.values()):
             collView.saveCtrls(module)
 
         # XXX Move toolbar up to the 1st position after the frame
@@ -460,8 +459,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
             newBody.insert(0, '%s# %s'%(sourceconst.bodyIndent,
                                         sourceconst.code_gen_warning))
 
-        if module.classes[self.model.main].methods.has_key(\
-          self.collectionMethod):
+        if self.collectionMethod in module.classes[self.model.main].methods:
             # Add doc string
             docs = module.getClassMethDoc(self.model.main,
               self.collectionMethod)
@@ -490,7 +488,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         collDeps = []
 
         collMeths = []
-        for compName, collProp in self.collEditors.keys():
+        for compName, collProp in list(self.collEditors.keys()):
             if compName in ctrlsAndContainedCtrls:
                 collView = self.collEditors[(compName, collProp)]
                 collMeth = []
@@ -544,9 +542,9 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                 try:
                     currMeth.append(line)
                 except NameError:
-                    print 'PASTE ERROR', input
+                    print('PASTE ERROR', input)
         if not methList:
-            raise Exception, _('Nothing to paste')
+            raise Exception(_('Nothing to paste'))
 
         collObjColls = []
         pastedCtrls = []
@@ -573,7 +571,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                 collObjColls.append( (meth[0], ctrlName, newObjColl) )
 
         if not collMethod:
-            raise DesignerError, _('Method %s not found') % self.collectionMethod
+            raise DesignerError(_('Method %s not found') % self.collectionMethod)
 
         # Parse input source
         objCol = self.model.readDesignerMethod(collMethod, methBody)
@@ -591,7 +589,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         pasteNameClasses = objCol.getCtrlNames()
         
         for name, cls in pasteNameClasses:
-            if objCol.eventsByName.has_key(name):
+            if name in objCol.eventsByName:
                 methodparse.decorateParseItems(objCol.eventsByName[name], name, 
                       self.model.main)
         
@@ -607,7 +605,8 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                 newNames.append(name)
                 oldNames.append(name)
 
-        for oldName, newName in map(None, oldNames, newNames):
+        # for oldName, newName in map(None, oldNames, newNames):
+        for oldName, newName in zip( oldNames, newNames):
             if newName != oldName:
                 objCol.renameCtrl(oldName, newName)
                 pastedCtrls.append(newName)
@@ -628,7 +627,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         # Get previous parent, 1st item in the group's parent will always be
         # the root parent
         # Only reparent visual controls
-        if objCol.creators[0].params.has_key('parent'):
+        if 'parent' in objCol.creators[0].params:
             copySource = objCol.creators[0].params['parent']
             objCol.reparent(copySource, Utils.srcRefFromCtrlName(destCtrlName))
 
@@ -668,7 +667,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         else:
             newName = '%s%s'%(className[0].lower(), className[1:])
 
-        return Utils.getValidName(self.objects.keys() + additionalNames, newName)
+        return Utils.getValidName(list(self.objects.keys()) + additionalNames, newName)
 
     def newObject(self, ObjClass, ObjCompanionClass):
         """ At design time, when adding a new ctrl from the palette, create and
@@ -688,7 +687,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
     def addCtrlToObjectCollection(self, textConstr):
         colMeth = self.collectionMethod
-        if not self.model.objectCollections.has_key(colMeth):
+        if colMeth not in self.model.objectCollections:
             self.model.objectCollections[colMeth] = ObjectCollection()
 
         self.model.objectCollections[colMeth].creators.append(textConstr)
@@ -712,7 +711,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         del self.objectOrder[self.objectOrder.index(name)]
         del self.objects[name]
 
-        for ctrlName, propName in self.collEditors.keys()[:]:
+        for ctrlName, propName in list(self.collEditors.keys())[:]:
             if ctrlName == name:
 #                self.collEditors[(ctrlName, propName)].close()
                 if self.collEditors[(ctrlName, propName)].frame:
@@ -738,7 +737,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 ##  decl getObjectsOfClass(self, theClass: class) -> dict
     def getObjectsOfClass(self, theClass):
         results = {}
-        for objName in self.objects.keys():
+        for objName in list(self.objects.keys()):
             if issubclass(self.objects[objName][1].__class__, theClass):
                 if objName:
                     results['self.'+objName] = self.objects[objName][1]
@@ -748,7 +747,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
     def getObjectsOfClassWithParent(self, theClass, theParentName):
         results = {}
-        for objName in self.objects.keys():
+        for objName in list(self.objects.keys()):
             if self.objects[objName][2] == theParentName and \
                   isinstance(self.objects[objName][1], theClass):
                 if objName:
@@ -759,7 +758,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
     def getAllObjects(self):
         results = {}
-        for objName in self.objects.keys():
+        for objName in list(self.objects.keys()):
             if objName:
                 results['self.'+objName] = self.objects[objName][1]
             else:
@@ -768,7 +767,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
     def getObjectsOfClassOwnedBy(self, theClass, theOwner):#XXX
         results = {}
-        for objName in self.objects.keys():
+        for objName in list(self.objects.keys()):
             if self.objects[objName][1].__class__ is theClass:
                 results['self.'+objName] = self.objects[objName][1]
         return results
@@ -779,7 +778,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         if ctrlName == self.GetName():
             ctrlName = ''
 
-        if not self.collEditors.has_key((ctrlName, propName)):
+        if (ctrlName, propName) not in self.collEditors:
             self.addCollView(ctrlName, '_init_coll_%s_%s'%(ctrlName, propName), True)
 
         collEditor = self.collEditors[(ctrlName, propName)]
@@ -796,14 +795,14 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                               _('Not Implemented'), wx.OK | wx.ICON_ERROR)
             try: dlg.ShowModal()
             finally: dlg.Destroy()
-            raise DesignerError, _('Not Implemented')
+            raise DesignerError(_('Not Implemented'))
         if CtrlCompanion.host != self.viewName:
             dlg = wx.MessageDialog(self,
               _('This component must be created in the %s view')%CtrlCompanion.host,
               _('Wrong Designer'), wx.OK | wx.ICON_ERROR)
             try: dlg.ShowModal()
             finally: dlg.Destroy()
-            raise DesignerError, _('Wrong Designer')
+            raise DesignerError(_('Wrong Designer'))
 
     def expandNamesToContainers(self, ctrlNames):
         """ Expand set of names to include the names of all their children """
@@ -815,11 +814,11 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
     def notifyAction(self, compn, action):
         # notify components
-        for otherCompn, otherCtrl, otherPrnt in self.objects.values():
+        for otherCompn, otherCtrl, otherPrnt in list(self.objects.values()):
             otherCompn.notification(compn, action)
 
         # notify collections
-        for collView in self.collEditors.values():
+        for collView in list(self.collEditors.values()):
             collView.companion.notification(compn, action)
 
     def showCreationOrderDlg(self, selName):
@@ -838,10 +837,11 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         for name in allNames:
             allSibs.append( (self.objectOrder.index(name), name) )
 
-        from CreationOrdDlg import CreationOrderDlg
+        from .CreationOrdDlg import CreationOrderDlg
         dlg = CreationOrderDlg(self, sibs, allSibs)
         if dlg.ShowModal() == wx.ID_OK:
-            for idx, name in map(None, dlg.allCtrlIdxs, dlg.allCtrlNames):
+            # for idx, name in map(None, dlg.allCtrlIdxs, dlg.allCtrlNames):
+            for idx, name in zip(dlg.allCtrlIdxs, dlg.allCtrlNames):
                 self.objectOrder[idx] = name
 
-import CollectionEdit
+from . import CollectionEdit

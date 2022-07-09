@@ -390,23 +390,25 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
             idx = self.processesPage.GetItemCount()
             if script:
                 name = '%s (%s)'%(name, script)
-            self.processesPage.InsertStringItem(idx, '%s : %s'%(name, pid))
+            self.processesPage.InsertItem(idx, '%s : %s'%(name, pid))
             self.processesPage.SetItemData(idx, pid)
 
             self.checkProcesses()
 
     def processFinished(self, pid):
         if self.processesPage:
-            for idx in range(self.processesPage.GetItemCount()):
-                if self.processesPage.GetItemData(idx) == pid:
-                    self.processesPage.DeleteItem(idx)
-                    break
+            # for idx in range(self.processesPage.GetItemCount()):
+            #     if self.processesPage.GetItemData(0) == pid:
+            #         self.processesPage.DeleteItem(0)
+            #         break
+            if self.processesPage.GetItemCount() > 0:
+                self.processesPage.DeleteAllItems()
             self.checkProcesses()
 
 
     def checkProcesses(self):
         if self.processesPage:
-            idxs = range(self.processesPage.GetItemCount())
+            idxs = list(range(self.processesPage.GetItemCount()))
             idxs.reverse()
             for idx in idxs:
                 pid = self.processesPage.GetItemData(idx)
@@ -462,7 +464,7 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
                   *(self.history[self.historyIdx]+(False,)))
 
     def OnErrorstacktcTreeItemActivated(self, event):
-        data = self.errorStackTC.GetPyData(event.GetItem())
+        data = self.errorStackTC.GetItemData(event.GetItem())
         if data is None:
             return
         if data.file.find('://') != -1 or os.path.isabs(data.file):
@@ -487,7 +489,7 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
         if self.vetoEvents: return
         selLine = self.errorStackTC.GetItemText(event.GetItem())
         if wx.Platform == '__WXGTK__':
-            self.errorStackTC.SetToolTipString(selLine)
+            self.errorStackTC.SetToolTip(selLine)
         self.statusBar.SetStatusText(selLine)
 
 ##    def OnErrorstacktcLeftDown(self, event):

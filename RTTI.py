@@ -10,7 +10,9 @@
 # Licence:     GPL
 #----------------------------------------------------------------------
 
-import sys, warnings
+import sys
+import warnings
+import inspect
 
 from types import *
 import wx
@@ -56,7 +58,8 @@ class PropertyWrapper:
 
     def getValue(self, *params):
         if self.routeType == 'CtrlRoute' and self.ctrl:
-            return self.getter(self.ctrl)
+            # return self.getter(self.ctrl)
+            return self.getter()
         elif self.routeType == 'CompnRoute' and self.compn:
             return self.getter(self.compn)
         elif self.routeType == 'EventRoute' and self.compn and len(params):
@@ -72,7 +75,8 @@ class PropertyWrapper:
 
     def setValue(self, value, *params):
         if self.routeType == 'CtrlRoute' and self.ctrl:
-            self.setter(self.ctrl, value)
+            # self.setter(self.ctrl, value)
+            self.setter(value)
         elif self.routeType == 'CompnRoute' and self.compn:
             self.setter(value)
         elif self.routeType == 'EventRoute' and self.compn and len(params):
@@ -91,10 +95,15 @@ class PropertyWrapper:
         if self.setter:
             if self.setterName:
                 return self.setterName
-            if type(self.setter) == FunctionType:
-                return self.setter.func_name
-            if type(self.setter) == MethodType:
-                return self.setter.im_func.func_name
+            # if isinstance(self.setter, FunctionType):
+            #     return self.setter.__name__
+            # if isinstance(self.setter, MethodType):
+            #     return self.setter.__func__.__name__
+
+            if isinstance(self.setter, BuiltinFunctionType):
+                return self.setter.__name__
+            if isinstance(self.setter, MethodType):
+                return self.setter.__func__.__name__
             else:
                 return ''
         else:
@@ -115,7 +124,7 @@ def getPropList(obj, cmp):
 
     """
     def catalogProperty(name, methType, meths, constructors, propLst, constrLst):
-        if constructors.has_key(name):
+        if name in constructors:
             constrLst.append(PropertyWrapper(name, methType, meths[0], meths[1]))
         else:
             propLst.append(PropertyWrapper(name, methType, meths[0], meths[1]))
@@ -131,7 +140,7 @@ def getPropList(obj, cmp):
     propLst = []
     constrLst = []
     #           2.4                          2.5
-    if obj and (type(obj) is InstanceType or isinstance(obj, wx.Object)):
+    if obj and (isinstance(obj, type) or isinstance(obj, wx.Object)):
         traverseAndBuildProps(props, cmp.vetoedMethods(), obj, obj.__class__)
 
         # populate property list
@@ -139,7 +148,7 @@ def getPropList(obj, cmp):
             constrNames = cmp.constructor()
         else:
             constrNames = {}
-        propNames = props['Properties'].keys()
+        propNames = list(props['Properties'].keys())
         propNames.sort()
         for propName in propNames:
             if cmp and propName in cmp.hideDesignTime():
@@ -153,7 +162,7 @@ def getPropList(obj, cmp):
                   constrNames, propLst, constrLst)
         if cmp:
             xtraProps = cmp.properties()
-            propNames = xtraProps.keys()
+            propNames = list(xtraProps.keys())
             propNames.sort()
             for propName in propNames:
                 #if propName in cmp.hideDesignTime():
@@ -164,13 +173,19 @@ def getPropList(obj, cmp):
                       constrNames, propLst, constrLst)
                 except: pass
 
-        propLst.sort()
-        constrLst.sort()
+        # propLst.sort()
+        def prop_sort_key(prop_prop_obj):
+            return prop_prop_obj.name
+        propLst.sort(key=prop_sort_key)
+
+        def constr_sort_key(constr_prop_obj):
+            return constr_prop_obj.name
+        constrLst.sort(key=constr_sort_key)
     else:
         if cmp:
             constrNames = cmp.constructor()
             xtraProps = cmp.properties()
-            propNames = xtraProps.keys()
+            propNames = list(xtraProps.keys())
             propNames.sort()
             for propName in propNames:
                 propMeths = xtraProps[propName]
@@ -181,7 +196,7 @@ def getPropList(obj, cmp):
                 #    print 'prop error', sys.exc_info()
         else:
             pass #print 'Empty object', obj, cmp
-
+    a=0
     return {'constructor': constrLst, 'properties': propLst}
 
 def getMethodType(method, obj, Class):
@@ -192,13 +207,31 @@ def getMethodType(method, obj, Class):
     try:
         meth = getattr(obj, method)
     except TypeError:
-        return result
-    except Exception:
-        #print obj, method
+        # print( obj,'\n',method , '\n', 'Type error.\n')
         return result
 
-    if (type(meth) == MethodType):
-        func = meth.im_func
+        # # ================================================================
+        # # Decided not to do this for now
+        # # ================================================================
+        # # some Getters require a parameter to be passed to them ( EG wx.StatusBar.GetRectFiled(x) needs an int to
+        # # select which). Need to block error message for this case and continue on to the rest of this method.
+        # type, value, traceback = sys.exc_info()
+        # er_str=str(value)
+        # er_mess = er_str.split(':')[-1].strip()
+        # if (er_mess == 'not enough arguments'):
+        #     pass
+        # # ================================================================
+        # else:
+        #     print( obj,'\n',method , '\n', 'Type error.\n')
+        #     return result
+    except Exception:
+        # print( obj,'\n',method , '\n', 'Attribute not in object\n')
+        return result
+
+    # if (isinstance(meth, MethodType)):
+    #     func = meth.__func__
+    if inspect.isbuiltin(meth):
+        func = meth
         result = ('Methods', method, func, func)
         prefix = method[:3]
         property = method[3:]
@@ -210,14 +243,16 @@ def getMethodType(method, obj, Class):
                 result = ('Built-ins', method, func, func)
             elif (prefix == 'Get') and hasattr(obj, setname) and property:
                 #see if getter breaks
-                v = func(obj)
-                result = ('Properties', property, func, getattr(obj, setname).im_func)
+                getter = getattr(obj,getname)
+                v=getter()
+                result = ('Properties', property, getter, getattr(obj, setname))
             elif (prefix == 'Set') and hasattr(obj, getname) and property:
                 #see if getter breaks
-                getter = getattr(obj, getname).im_func
-                v = getter(obj)
-                result = ('Properties', property, getter, func)
-        except Exception, err:
+                getter = getattr(obj,getname)
+                v=getter()
+                # result = ('Properties', property, getter, func)
+                result = ('Properties', property, getter, getattr(obj, setname))
+        except Exception as err:
             pass
     return result
 
@@ -227,13 +262,16 @@ def traverseAndBuildProps(props, vetoes, obj, Class):
             cat, name, methGetter, methSetter = \
               getMethodType(m, obj, Class.__dict__)
 
-            if not props[cat].has_key(name):
+            if name not in props[cat].keys():
                 props[cat][name] = (methGetter, methSetter)
 
+    # for Cls in Class.__bases__:
     for Cls in Class.__bases__:
         traverseAndBuildProps(props, vetoes, obj, Cls)
 
+    a=0
 if __name__ == '__main__':
+    # wx.PySimpleApp()
     wx.PySimpleApp()
     f = wx.Frame(None, -1, 'asd')
     c = wx.ComboBox(f, -1)

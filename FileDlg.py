@@ -41,7 +41,7 @@ htmlCurrItem = '''<b><font color="#0000BB">%s</font></b>'''
  wxID_WXBOAFILEDIALOGCHTYPES, wxID_WXBOAFILEDIALOGHTMLWINDOW1, 
  wxID_WXBOAFILEDIALOGSTATICTEXT1, wxID_WXBOAFILEDIALOGSTATICTEXT2, 
  wxID_WXBOAFILEDIALOGTCFILENAME, 
-] = [wx.NewId() for _init_ctrls in range(8)]
+] = [wx.NewIdRef() for _init_ctrls in range(8)]
 
 class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
     currentDir = '.'
@@ -114,7 +114,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
               True, True, False))
 
     def __init__(self, parent, message=_('Choose a file'), defaultDir='.',
-          defaultFile='', wildcard='', style=wx.OPEN, pos=wx.DefaultPosition):
+          defaultFile='', wildcard='', style=wx.FD_OPEN, pos=wx.DefaultPosition):
         self.htmlBackCol = wx.Colour(192, 192, 192)
         self.htmlBackCol = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)
 
@@ -177,7 +177,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
 
         self.tcFilename.SetFocus()
 
-        wxID_CLOSEDLG = wx.NewId()
+        wxID_CLOSEDLG = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnClose, id=wxID_CLOSEDLG)
         self.SetAcceleratorTable(
               wx.AcceleratorTable([(0, wx.WXK_ESCAPE, wxID_CLOSEDLG)]))
@@ -219,7 +219,8 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
 
         xtrdir = ''
 
-        mainSegs = string.split(dir, '://')
+        #mainSegs = string.split(dir, '://')
+        mainSegs = dir.split('://')
         if len(mainSegs) == 1:
             prot = 'file'
             dir = mainSegs[0]
@@ -266,9 +267,12 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             filepath2.append(file)
             textpathlst.append(file)
 
-            htmlfilepath = string.join(filepath, '<b>%s</b>'%os.sep)
+            # htmlfilepath = string.join(filepath, '<b>%s</b>'%os.sep)
+            htmlfilepath = str.join('<b>%s</b>'%os.sep,filepath)
+
             if segs2:
-                htmlfilepath = htmlfilepath + '<b>://</b>'+string.join(filepath2, '<b>/</b>')
+                htmlfilepath = htmlfilepath + '<b>://</b>'+str.join('<b>/</b>', filepath2)
+
         else:
             url = '%s://'%prot
             for seg in segs[:-1]:
@@ -281,9 +285,11 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             filepath.append(file)
             textpathlst.append(file)
 
-            htmlfilepath = string.join(filepath, '<b>%s</b>'%self.lcFiles.node.pathSep)
+            # htmlfilepath = string.join(filepath, '<b>%s</b>'%self.lcFiles.node.pathSep)
+            htmlfilepath = str.join('<b>%s</b>'%self.lcFiles.node.pathSep,filepath)
 
-        textfilepath = string.join(textpathlst, os.sep)
+
+        textfilepath = str.join( os.sep, textpathlst)
 
         self.textPath = textPath % (prot, textfilepath)
 
@@ -314,7 +320,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
 
             self.lcFiles.SetConstraints(None)
             (x, y), (w, h) = self.calcListDims()
-            self.lcFiles.SetDimensions(x, y, w, h)
+            self.lcFiles.SetSize(x, y, w, h)
             self.lcFiles.SetConstraints(
                   LayoutAnchors(self.lcFiles, True, True, True, True))
 
@@ -358,12 +364,12 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
         if node and node.isFolderish():
             try:
                 self.lcFiles.refreshItems(self.modImages, node)
-            except ExplorerNodes.TransportError, v:
+            except ExplorerNodes.TransportError as v:
                 wx.MessageBox(str(v), _('Transport Error'),
                              wx.OK | wx.ICON_EXCLAMATION | wx.CENTRE)
                 return
             self.updatePathLabel()
-            if self.style & wx.SAVE: btn = saveStr
+            if self.style & wx.FD_SAVE: btn = saveStr
             else: btn = openStr
             self.btOK.SetLabel(btn)
             return
@@ -431,7 +437,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
 
                 self.lcFiles.refreshItems(self.modImages, catnode)
                 self.updatePathLabel()
-                if self.style & wx.SAVE: btn = saveStr
+                if self.style & wx.FD_SAVE: btn = saveStr
                 else: btn = openStr
                 self.btOK.SetLabel(btn)
                 return
@@ -440,7 +446,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             if node: node.allowedProtocols = ['file', 'zip']
 
         nameExistsInDir = self.lcFiles.hasItemNamed(self.GetFilename())
-        if (node and not node.isFolderish() or not node) and self.style & wx.OVERWRITE_PROMPT:
+        if (node and not node.isFolderish() or not node) and self.style & wx.FD_OVERWRITE_PROMPT:
             if nameExistsInDir:
                 dlg = wx.MessageDialog(self, _('This file already exists.\n'\
                       'Do you want to overwrite the file?'), _('Overwrite file?'),
@@ -491,14 +497,15 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             if catFile:
                 res = os.path.dirname(res)
             return Explorer.getTransport(prot, cat, res, self.transports)
-        except Explorer.TransportCategoryError, err:
-            prot = string.split(uri, ':')[0]
+        except Explorer.TransportCategoryError as err:
+            # prot = string.split(uri, ':')[0]
+            prot = uri.split(':')[0]
             # bare protocol entered, route to right toplevel node
             if err.args[0] == _('Category not found') and err.args[1]==catFile:
                 if prot == 'root':
                     self.open(self.transports)
                     return self.transports
-                elif self.transportsByProtocol.has_key(prot):
+                elif prot in self.transportsByProtocol:
                     node = self.transportsByProtocol[prot]
                     self.open(node)
                     return node
@@ -506,7 +513,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
                     raise
             else:
                 raise
-        except Explorer.TransportError, err:
+        except Explorer.TransportError as err:
             #FileOpenDlg
             raise
 
@@ -517,12 +524,12 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
         node = self.lcFiles.getSelection()
         # deselect
         if not name:
-            if self.style & wx.SAVE: btn = saveStr
+            if self.style & wx.FD_SAVE: btn = saveStr
             else: btn = openStr
         # file
         elif name != '..' and not node.isFolderish():
             self.SetFilename(name)
-            if self.style & wx.SAVE: btn = saveStr
+            if self.style & wx.FD_SAVE: btn = saveStr
             else: btn = openStr
         # dir
         else:
@@ -582,10 +589,10 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
     def SetStyle(self, style):
         title = _('File Dialog')
         btn = _('OK')
-        if style & wx.OPEN:
+        if style & wx.FD_OPEN:
             title = _('Open')
             btn = openStr
-        if style & wx.SAVE:
+        if style & wx.FD_SAVE:
             title = _('Save As')
             btn = saveStr
 
@@ -594,7 +601,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
         self.style = style
     def SetWildcard(self, wildcard):
         self.wildcard = wildcard
-        if wildcard in self.filterMap.keys():
+        if wildcard in list(self.filterMap.keys()):
             self.chTypes.SetStringSelection(self.filterMap[wildcard][0])
             self.OnChtypesChoice()
 
@@ -632,7 +639,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             event.Skip()
 
     def openProtRoot(self, protocol):
-        if self.transportsByProtocol.has_key(protocol):
+        if protocol in self.transportsByProtocol:
             self.open(self.transportsByProtocol[protocol])
         else:
             self.open(self.transports)
@@ -682,7 +689,7 @@ class FileDlgFolderList(Explorer.BaseExplorerList):
                     transports.entries.append(catnode)
                     transportsByProtocol[protocol] = catnode
 
-        if ExplorerNodes.nodeRegByProt.has_key('sys.path'):
+        if 'sys.path' in ExplorerNodes.nodeRegByProt:
             syspathnode = ExplorerNodes.nodeRegByProt['sys.path'](
                   None, transports, None)
             transports.entries.append(syspathnode)

@@ -48,12 +48,12 @@ class StackErrorParser:
         self.parse()
 
     def printError(self):
-        print self.error
+        print(self.error)
         for se in self.stack:
-            print se
+            print(se)
 
     def __repr__(self):
-        return `self.error`+'\n'+pprint.pformat(self.stack)
+        return repr(self.error)+'\n'+pprint.pformat(self.stack)
 
 
 #    def write(self, s):
@@ -117,7 +117,7 @@ class CrashTraceLogParser(StackErrorParser):
         lines = self.lines
         stack = self.stack = []
         fileSize = len(lines)
-        self.error[:] = ['Core dump stack', 'trace file size: '+`fileSize`]
+        self.error[:] = ['Core dump stack', 'trace file size: '+repr(fileSize)]
 
         baseDir = lines[0].strip()
         del lines[0]
@@ -134,7 +134,7 @@ class CrashTraceLogParser(StackErrorParser):
             try:
                 file, lineno, frameid, event, arg = line.split('|', 4)
             except:
-                print 'Error on line', cnt, line
+                print('Error on line', cnt, line)
                 break
             if event == 'call':
                 if not os.path.isabs(file):
@@ -146,12 +146,12 @@ class CrashTraceLogParser(StackErrorParser):
                     break
             elif event == 'return':
                 idx = 0
-                while 1:
+                while True:
                     try:
                         _file, _lineno, _frameid, _event, _rest = lines[idx].split('|', 4)
                         #print _file, _lineno, _frameid, _event
-                    except Exception, error:
-                        print 'Error on find', cnt, idx, lines[idx], str(error)
+                    except Exception as error:
+                        print('Error on find', cnt, idx, lines[idx], str(error))
                         break
 
                     if _file == file and _frameid == frameid and _event == 'call':
@@ -161,14 +161,14 @@ class CrashTraceLogParser(StackErrorParser):
 
                     idx = idx + 1
                     if idx >= len(lines):
-                        print 'Call not found', file, lineno, frameid, len(lines)
+                        print('Call not found', file, lineno, frameid, len(lines))
                         del lines[:]
                         break
 
         if len(stack):
             stack.reverse()
         else:
-            self.error[:] = ['Empty (resolved) stack', 'trace file size: '+`fileSize`]
+            self.error[:] = ['Empty (resolved) stack', 'trace file size: '+repr(fileSize)]
 
 def buildErrorList(lines, Parser = StdErrErrorParser):
     errs = []
@@ -205,7 +205,7 @@ def crashError(file):
     try:
         lines = open(file).readlines()
         ctlp = CrashTraceLogParser(lines)
-        open(file+'.stack', 'w').write(`ctlp`)
+        open(file+'.stack', 'w').write(repr(ctlp))
         return [ctlp]
     except IOError:
         return []
@@ -215,13 +215,13 @@ resp = {0 : 'failed', 1: 'succeeded'}
 def test_buildErrorList(name, err_lines, answer):
     err_list = str(buildErrorList(err_lines))
     succ = err_list == answer
-    print '--Testing.', name, resp[succ]
+    print('--Testing.', name, resp[succ])
     if not succ:
-        print 'RESULT:'
-        print err_list
-        print 'ANSWER:'
-        print answer
-        print '--'
+        print('RESULT:')
+        print(err_list)
+        print('ANSWER:')
+        print(answer)
+        print('--')
 
 def test():
     tb = [tb_id+'\n',

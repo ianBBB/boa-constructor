@@ -29,8 +29,8 @@ class HistoryBrowsePage:
         return -1
 
     def __repr__(self):
-        return 'BrowsePage(%s, %s, %s)' % (`self.modulePage`, `self.view`,
-               `self.marker`)
+        return 'BrowsePage(%s, %s, %s)' % (repr(self.modulePage), repr(self.view),
+               repr(self.marker))
 
 
 class HistoryBrowser:

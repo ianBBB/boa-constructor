@@ -10,16 +10,19 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
-print 'importing Companions.WizardCompanions'
+print('importing Companions.WizardCompanions')
 
 import wx
-import wx.wizard
+# import wx.wizard
+from wx import adv
+
+
 
 from Preferences import wxDefaultFrameSize, wxDefaultFramePos
-from FrameCompanions import DialogDTC, FramePanelDTC
+from .FrameCompanions import DialogDTC, FramePanelDTC
 from PropEdit.PropertyEditors import BitmapConstrPropEdit, StrConstrPropEdit
 
-import EventCollections
+from . import EventCollections
 import sourceconst
 
 ##defWizardImport = 'import wx.wizard'
@@ -48,8 +51,8 @@ class WizardDTC(DialogDTC):
         return {'Title': 'title', 'Position': 'pos', 'Bitmap': 'bitmap'}
 
     def designTimeSource(self):
-        return {'title': `self.name`,
-                'pos':   `wxDefaultFramePos`,
+        return {'title': repr(self.name),
+                'pos':   repr(wxDefaultFramePos),
                 'bitmap': 'wx.NullBitmap'}
 
     def hideDesignTime(self):
@@ -100,7 +103,7 @@ class WizardPageSimpleDTC(FramePanelDTC):
 import Plugins
 
 Plugins.registerComponents(None,
-      (wx.wizard.Wizard, 'wx.wizard.Wizard', WizardDTC),
-      (wx.wizard.PyWizardPage, 'wx.wizard.PyWizardPage', PyWizardPageDTC),
-      (wx.wizard.WizardPageSimple, 'wx.wizard.WizardPageSimple', WizardPageSimpleDTC),
+      (wx.adv.Wizard, 'wx.adv.Wizard', WizardDTC),
+      (wx.adv.PyWizardPage, 'wx.adv.PyWizardPage', PyWizardPageDTC), # May no longer be available
+      (wx.adv.WizardPage, 'wx.adv.WizardPage', WizardPageSimpleDTC),
     )

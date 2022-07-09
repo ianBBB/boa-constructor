@@ -9,11 +9,11 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-print 'importing Companions.DialogCompanions'
+print('importing Companions.DialogCompanions')
 
 import wx
 
-from BaseCompanions import CodeCompanion
+from .BaseCompanions import CodeCompanion
 
 class CommonDialogCompanion(CodeCompanion):
     def __init__(self, name, parent):

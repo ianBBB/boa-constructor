@@ -9,10 +9,10 @@
 # Copyright:   (c) 2001 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Explorers.ExplorerNodes'
+print('importing Explorers.ExplorerNodes')
 
 import sys, os, time, stat, copy, pprint
-from ConfigParser import ConfigParser, NoOptionError
+from configparser import ConfigParser, NoOptionError
 
 import wx
 
@@ -20,7 +20,7 @@ import Preferences, Utils
 from Utils import _
 
 from Models import EditorHelper
-import scrm
+from . import scrm
 
 sensitive_properties = ('passwd', 'scp_pass')
 
@@ -112,7 +112,7 @@ class Controller:
                 if type(method) in (type(()), type([])):
                     subMenu = wx.Menu()
                     self.setupMenu(subMenu, win, method)
-                    menu.AppendMenu(wId, help, subMenu)
+                    menu.Append(wId, help, subMenu)
                 else:
                     menu.Append(wId, help, '', canCheck)
                     win.Bind(wx.EVT_MENU, method, id=wId)
@@ -499,27 +499,27 @@ class CategoryNode(ExplorerNode):
         try:
             return eval(self.config.get(self.resourcepath[cat_section],
                         self.resourcepath[cat_option]), {})
-        except NoOptionError, err:
+        except NoOptionError as err:
             return self.entries
 
     def refresh(self):
         # Important: To keep the explorer list and the inspector in sync,
         #            the reference to self.entries should only be updated
         #            and not reassigned
-        if type(self.entries) == type({}):
+        if isinstance(self.entries, type({})):
             self.entries.clear()
             self.entries.update(self.getConfigValue())
             # unscramble sensitive properties
-            for item in self.entries.keys():
-                if type(self.entries[item]) == type({}):
+            for item in list(self.entries.keys()):
+                if isinstance(self.entries[item], type({})):
                     dict = self.entries[item]
-                    for name in dict.keys():
+                    for name in list(dict.keys()):
                         if name in sensitive_properties:
                             dict[name] = scrm.scramble(dict[name])[2:]
 
     def openList(self):
         res = []
-        entries = self.entries.keys()
+        entries = list(self.entries.keys())
         entries.sort()
         for entry in entries:
             node = self.createChildNode(entry, self.entries[entry])
@@ -533,28 +533,28 @@ class CategoryNode(ExplorerNode):
                 del self.entries[name]
             except KeyError:
                 wx.LogWarning(_('Could not find %s in %s for deletion')%(name,
-                      self.entries.keys()))
+                      list(self.entries.keys())))
         self.updateConfig()
 
     illegal_substrs = ('://', '::', '/', '\\')
     def renameItem(self, name, newName):
         for ill_substr in self.illegal_substrs:
             if newName.find(ill_substr) != -1:
-                raise Exception, _('Contains invalid string sequence or char: "%s"')%ill_substr
+                raise Exception(_('Contains invalid string sequence or char: "%s"')%ill_substr)
         if newName in self.entries:
-            raise Exception, _('Name exists')
+            raise Exception(_('Name exists'))
         self.entries[newName] = self.entries[name]
         del self.entries[name]
         self.updateConfig()
 
     def newItem(self):
-        name = Utils.getValidName(self.entries.keys(), self.defName)
+        name = Utils.getValidName(list(self.entries.keys()), self.defName)
         self.entries[name] = copy.copy(self.defaultStruct)
         self.updateConfig()
         return name
 
     def updateConfig(self):
-        assert type(self.entries) is type(self.__class__.entries), \
+        assert isinstance(self.entries, type(self.__class__.entries)), \
                _('Entries type %s invalid, expected %s')%(str(type(self.entries)),
                                               str(type(self.__class__.entries)))
         self.config.set(self.resourcepath[cat_section],
@@ -562,7 +562,7 @@ class CategoryNode(ExplorerNode):
         Utils.writeConfig(self.config)
 
     def copyCatFrom(self, node):
-        name = Utils.getValidName(self.entries.keys(), node.name or node.treename)
+        name = Utils.getValidName(list(self.entries.keys()), node.name or node.treename)
         self.entries[name] = copy.copy(node.properties)
         self.updateConfig()
 
@@ -662,7 +662,7 @@ class BookmarksCatNode(CategoryNode):
         self.clipboards = None
 
     def createChildNode(self, name, value):
-        if type(value) == type({}):
+        if isinstance(value, type({})):
             return SubBookmarksCatNode(self, name, value)
         else:
             from Explorers.Explorer import splitURI, getTransport, TransportError
@@ -694,7 +694,7 @@ class BookmarksCatNode(CategoryNode):
         else:
             name = os.path.splitext(os.path.basename(respath))[0]
         if name in self.entries:
-            name = Utils.getValidName(self.entries.keys(), name)
+            name = Utils.getValidName(list(self.entries.keys()), name)
         self.entries[name] = respath
         self.updateConfig()
 
@@ -715,7 +715,7 @@ class BookmarksCatNode(CategoryNode):
         return BookmarkCategoryStringCompanion(catNode.treename, self)
 
     def copyCatFrom(self, node):
-        name = Utils.getValidName(self.entries.keys(), node.name or node.treename)
+        name = Utils.getValidName(list(self.entries.keys()), node.name or node.treename)
         self.entries[name] = node.resourcepath
         self.updateConfig()
 
@@ -753,7 +753,7 @@ class MRUCatNode(BookmarksCatNode):
         for entry in self.entries:
             try:
                 node = self.createChildNode(entry)
-            except Exception, err:
+            except Exception as err:
                 node = None
 
             if node:
@@ -825,12 +825,12 @@ class MRUCatController(Controller):
         self.recentItemsMenuIds = {}
         menu = wx.Menu()
         for node in self.list.node.openList():
-            if node.name not in self.recentItemsMenuIds.values():
+            if node.name not in list(self.recentItemsMenuIds.values()):
                 wid = wx.NewId()
                 self.recentItemsMenuIds[wid] = node.name
                 self.list.Bind(wx.EVT_MENU, self.OnMRUMenuItemSelect, id=wid)
             else:
-                for wid, name in self.recentItemsMenuIds.items():
+                for wid, name in list(self.recentItemsMenuIds.items()):
                     if name == node.name:
                         break
                 else:
@@ -956,7 +956,7 @@ class CategoryCompanion(ExplorerCompanion):
                    'password' : PasswdStrConfPropEdit,
                    'default': EvalConfPropEdit}
     try:
-        propMapping[type(u'')] = StrConfPropEdit
+        propMapping[type('')] = StrConfPropEdit
     except:
         pass
     def __init__(self, name, catNode):
@@ -972,7 +972,7 @@ class CategoryCompanion(ExplorerCompanion):
 
 class CategoryDictCompanion(CategoryCompanion):
     def getPropertyItems(self):
-        return self.catNode.entries[self.name].items()
+        return list(self.catNode.entries[self.name].items())
 
     def setPropHook(self, name, value, oldProp = None):
         # scramble sensitive properties before saving
@@ -986,8 +986,8 @@ class CategoryDictCompanion(CategoryCompanion):
 
         finally:
             scrams = []
-            for entry in self.catNode.entries.values():
-                for key in entry.keys():
+            for entry in list(self.catNode.entries.values()):
+                for key in list(entry.keys()):
                     if key in sensitive_properties:
                         val = entry[key]
                         entry[key] = scrm.scramble(val)

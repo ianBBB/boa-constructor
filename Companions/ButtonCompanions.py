@@ -9,7 +9,7 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing Companions.ButtonCompanions'
+print('importing Companions.ButtonCompanions')
 
 import wx
 
@@ -17,10 +17,10 @@ import wx.lib.buttons
 
 from Utils import _
 
-from BaseCompanions import WindowDTC
+from .BaseCompanions import WindowDTC
 
-import Constructors
-from EventCollections import *
+from . import Constructors
+from .EventCollections import *
 
 from PropEdit.PropertyEditors import *
 from PropEdit.Enumerations import *
@@ -50,10 +50,10 @@ class ButtonDTC(WindowDTC):
         return props
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
-        return {'label': `self.name`,
+        return {'label': repr(self.name),
                 'pos': position,
                 'size': size,
-                'name': `self.name`,
+                'name': repr(self.name),
                 'style': '0',}
 
     def events(self):
@@ -138,7 +138,7 @@ class BitmapButtonDTC(WindowDTC):
                 'pos': position,
                 'size': size,
                 'style': 'wx.BU_AUTODRAW',
-                'name': `self.name`}
+                'name': repr(self.name)}
 
     def properties(self):
         props = WindowDTC.properties(self)
@@ -155,7 +155,7 @@ class BitmapButtonDTC(WindowDTC):
         insp.pages.SetSelection(2)
         insp.events.doAddEvent('ButtonEvent', 'wx.EVT_BUTTON')
 
-class SpinButtonDTC(Constructors.WindowConstr, WindowDTC):
+class SpinButtonDTC( WindowDTC, Constructors.WindowConstr):
     def __init__(self, name, designer, parent, ctrlClass):
         WindowDTC.__init__(self, name, designer, parent, ctrlClass)
         self.windowStyles = ['wx.SP_HORIZONTAL', 'wx.SP_VERTICAL',
@@ -171,7 +171,7 @@ class SpinButtonDTC(Constructors.WindowConstr, WindowDTC):
         return {'pos': position,
                 'size': size,
                 'style': 'wx.SP_HORIZONTAL',
-                'name': `self.name`}
+                'name': repr(self.name)}
     def events(self):
         return WindowDTC.events(self) + ['SpinEvent', 'CmdScrollEvent']
 
@@ -195,7 +195,7 @@ class SpinButtonDTC(Constructors.WindowConstr, WindowDTC):
     def persistProp(self, name, setterName, value):
         if setterName == 'SetRange':
             rMin, rMax = self.eval(value)
-            newParams = [`rMin`, `rMax`]
+            newParams = [repr(rMin), repr(rMax)]
             # edit if exists
             for prop in self.textPropList:
                 if prop.prop_setter == setterName:
@@ -230,7 +230,7 @@ class SpinCtrlDTC(SpinButtonDTC):
                 'min': '0',
                 'max': '100',
                 'initial': '0',
-                'name': `self.name`}
+                'name': repr(self.name)}
 
     def events(self):
         return SpinButtonDTC.events(self) + ['SpinCtrlEvent', 'TextCtrlEvent']
@@ -263,10 +263,10 @@ class GenButtonDTC(WindowDTC):
 
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
-        return {'label': `self.name`,
+        return {'label': repr(self.name),
                 'pos': position,
                 'size': size,
-                'name': `self.name`,
+                'name': repr(self.name),
                 'style': '0'}
 
     def events(self):
@@ -294,7 +294,7 @@ class GenBitmapButtonDTC(GenButtonDTC):
         return {'bitmap': 'wx.NullBitmap',
                 'pos': position,
                 'size': size,
-                'name': `self.name`,
+                'name': repr(self.name),
                 'style': '0'}
 
     def defaultAction(self):
@@ -311,10 +311,10 @@ class GenBitmapTextButtonDTC(GenBitmapButtonDTC):
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
         return {'bitmap': 'wx.NullBitmap',
-                'label': `self.name`,
+                'label': repr(self.name),
                 'pos': position,
                 'size': size,
-                'name': `self.name`,
+                'name': repr(self.name),
                 'style': '0'}
 
 class GenToggleButtonMix:
@@ -374,7 +374,7 @@ class ColourPickerCtrlDTC(PickerCtrlDTC):
                 'size':  size,
                 'style': 'wx.CLRP_DEFAULT_STYLE',
                 'col': 'wx.BLACK',
-                'name': `self.name`}
+                'name': repr(self.name)}
 
 
 EventCategories['FontPickerEvent'] = ('wx.EVT_FONTPICKER_CHANGED',)
@@ -398,7 +398,7 @@ class FontPickerCtrlDTC(PickerCtrlDTC):
                 'size':  size,
                 'style': 'wx.FNTP_DEFAULT_STYLE',
                 'initial': 'wx.NullFont',
-                'name': `self.name`}
+                'name': repr(self.name)}
 
 
 
@@ -424,7 +424,7 @@ class DirPickerCtrlDTC(PickerCtrlDTC):
                 'style': 'wx.DIRP_DEFAULT_STYLE',
                 'path': "''",
                 'message': "'Select a folder'",
-                'name': `self.name`}
+                'name': repr(self.name)}
 
  
 EventCategories['FilePickerEvent'] = ('wx.EVT_FILEPICKER_CHANGED',)
@@ -453,7 +453,7 @@ class FilePickerCtrlDTC(PickerCtrlDTC):
                 'path': "''",
                 'message': "'Select a folder'",
                 'wildcard': "'*.*'",
-                'name': `self.name`}
+                'name': repr(self.name)}
 
 
 

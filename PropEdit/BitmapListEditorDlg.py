@@ -17,7 +17,7 @@ import methodparse
 
 from Utils import _
 
-from PropertyEditors import BitmapPropEditMix
+from .PropertyEditors import BitmapPropEditMix
 
 
 class BitmapProp(BitmapPropEditMix):
@@ -196,7 +196,7 @@ class BitmapListEditorDlg(wx.Dialog):
         elif tpe == 'ArtProvider':
             value, ctrlVal, bmpPath = bp.assureArtProviderImageLoaded(abspth, pth)
         elif abspth:
-            value = 'wx.Bitmap(%s, %s)'%(`pth`, tpe)
+            value = 'wx.Bitmap(%s, %s)'%(repr(pth), tpe)
             ctrlVal = wx.Bitmap(abspth, self.companion.eval(tpe))
         
         return value, ctrlVal
@@ -220,7 +220,7 @@ class BitmapListEditorDlg(wx.Dialog):
                 
                 self.initImageListCtrl()
             else:
-                print ':('
+                print(':(')
             
             return
 

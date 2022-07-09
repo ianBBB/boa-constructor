@@ -19,7 +19,8 @@ from wx.lib.anchors import LayoutAnchors
 
 from PropEdit import PropertyEditors
 from PropEdit.Enumerations import *
-from BaseCompanions import HelperDTC
+from .BaseCompanions import HelperDTC
+
 import PaletteStore, RTTI
 
 #---Helpers---------------------------------------------------------------------

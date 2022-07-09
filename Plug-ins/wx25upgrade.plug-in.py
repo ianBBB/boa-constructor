@@ -278,7 +278,7 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
             count = count +1
             temp = 'Done converting: %s,\n\nto: %s' % (fileName, newFileName)
             keepGoing = dlg.Update(count, temp)
-            print 'Converted: %s,\n\nnew name: %s' % (fileName, newFileName)
+            print('Converted: %s,\n\nnew name: %s' % (fileName, newFileName))
             count = count +1
             keepGoing = dlg.Update(count, "We are done")
             dlg.Destroy()
@@ -298,8 +298,8 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
                 ri.write(file)
 
                 return ''.join(file.output)
-        except Exception, error:
-            print 'Error on reindenting %s : %s'%(filename, str(error))
+        except Exception as error:
+            print('Error on reindenting %s : %s'%(filename, str(error)))
 
         return data
 

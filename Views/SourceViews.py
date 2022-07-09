@@ -9,10 +9,10 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-print 'importing Views.SourceViews'
+print('importing Views.SourceViews')
 
 import time, os
-from StringIO import StringIO
+from io import StringIO
 
 import wx
 import wx.stc
@@ -21,8 +21,9 @@ from Preferences import keyDefs
 import Utils
 from Utils import _
 
-import EditorViews, Search, Help, Preferences, Utils
-from StyledTextCtrls import TextSTCMix, idWord, object_delim, eols as endOfLines
+import Search, Help, Preferences, Utils
+from . import EditorViews
+from .StyledTextCtrls import TextSTCMix, idWord, object_delim, eols as endOfLines
 
 ##endOfLines = {  wx.stc.STC_EOL_CRLF : '\r\n',
 ##                wx.stc.STC_EOL_CR : '\r',
@@ -161,14 +162,14 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
             self._blockUpdate = False
 
         if self.eol is None:
-            self.eol = Utils.getEOLMode(newData, self.defaultEOL)
+            self.eol = Utils.getEOLMode(str(newData), self.defaultEOL)
 
             self.SetEOLMode({'\r\n': wx.stc.STC_EOL_CRLF,
                              '\r':   wx.stc.STC_EOL_CR,
                              '\n':   wx.stc.STC_EOL_LF}[self.eol])
 
         if not self.eolsChecked:
-            if Utils.checkMixedEOLs(newData):
+            if Utils.checkMixedEOLs(str(newData)):
                 wx.LogWarning(_('Mixed EOLs detected in %s, please use '
                              'Edit->Convert... to fix this problem.')\
                              %os.path.basename(self.model.filename))
@@ -291,8 +292,8 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
         selStartLine = self.LineFromPosition(selStartPos)
         selEndLine = self.LineFromPosition(selEndPos)
 
-        return range(self.LineFromPosition(selStartPos),
-              self.LineFromPosition(selEndPos))
+        return list(range(self.LineFromPosition(selStartPos),
+              self.LineFromPosition(selEndPos)))
 
 #-------------------------------------------------------------------------------
     def setLinePtr(self, lineNo):
@@ -461,7 +462,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
 
         s = self.GetClientSize()
 
-        self.PopupMenuXY(menu, s.x/2, s.y/2)
+        self.PopupMenu(menu, s.x/2, s.y/2)
         menu.Destroy()
 
     def OnSTCSettingsWhiteSpace(self, event):
@@ -492,7 +493,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
 
         s = self.GetClientSize()
 
-        self.PopupMenuXY(menu, s.x/2, s.y/2)
+        self.PopupMenu(menu, s.x/2, s.y/2)
         menu.Destroy()
 
     def OnConvertEols(self, event):
@@ -533,7 +534,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
         self.stcMacroCmds.append(data)
 
     def OnPrint(self, event):
-        import STCPrinting
+        from . import STCPrinting
 
         dlg = STCPrinting.STCPrintDlg(self.model.editor, self, self.model.filename)
         dlg.ShowModal()

@@ -12,7 +12,7 @@
 
 import string, traceback
 import os, sys
-from cStringIO import StringIO
+from io import StringIO
 
 import wx
 
@@ -65,10 +65,13 @@ class CompileModuleRunner(ModuleRunner):
         # If "filename" is passed as unicode,
         # we need to convert it back to the filesystem's encoding
         # because the "compile" function needs it so.
-        if type(filename) is unicode:
-            filename = filename.encode(sys.getfilesystemencoding())
+
+        # if type(filename) is unicode:   # In python 3, all strings are in unicode
+
+        # filename = filename.encode(sys.getfilesystemencoding())
             
-        protsplit = string.find(filename, '://')
+        # protsplit = string.find(filename, '://')
+        protsplit = filename.find('://')
         if protsplit != -1:
             prot, _filename = filename[:protsplit], filename[protsplit+3:]
             if prot != 'none':

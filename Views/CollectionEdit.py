@@ -10,7 +10,7 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 ##Boa:Frame:CollectionEditor
-print 'importing Views.CollectionEdit'
+print('importing Views.CollectionEdit')
 
 import os, sys
 
@@ -22,7 +22,8 @@ from Utils import _
 
 import sourceconst
 
-import InspectableViews
+from . import InspectableViews
+from functools import reduce
 
 # XXX 'Select Parent' from the Inspector should select the parent companion
 # XXX of the collection property
@@ -50,7 +51,7 @@ def getNextDefaultPos():
     return pos
 
 [wxID_COLLECTIONEDITOR, wxID_COLLECTIONEDITORTOOLBAR,
- wxID_COLLECTIONEDITORITEMLIST] = [wx.NewId() for _init_ctrls in range(3)]
+ wxID_COLLECTIONEDITORITEMLIST] = [wx.NewIdRef() for _init_ctrls in range(3)]
 
 class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
     def _init_ctrls(self, prnt):
@@ -121,11 +122,11 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
         acclst.append( (keyDefs['Refresh'][0], keyDefs['Refresh'][1], wId) )
         self.toolLst.append(wId)
 
-        wId = wx.NewId()
+        wId = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnSwitchToInspector, id=wId)
         acclst.append( (keyDefs['Inspector'][0], keyDefs['Inspector'][1], wId) )
 
-        wId = wx.NewId()
+        wId = wx.NewIdRef()
         self.Bind(wx.EVT_MENU, self.OnSwitchToDesigner, id=wId)
         acclst.append( (keyDefs['Designer'][0], keyDefs['Designer'][1], wId) )
 
@@ -160,7 +161,8 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
         self.itemList.DeleteAllItems()
 
     def addItem(self, idx, displayProp):
-        self.itemList.InsertStringItem(idx, displayProp)
+        # self.itemList.InsertStringItem(idx, displayProp)
+        self.itemList.InsertItem(idx, displayProp)
 
     def selectObject(self, idx):
         wxxSELECTED = wx.LIST_STATE_FOCUSED | wx.LIST_STATE_SELECTED
@@ -191,8 +193,8 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
     _block_selected = False
     def OnObjectSelect(self, event):
         if not self._block_selected:
-            self.selected = event.m_itemIndex
-            self.collEditView.selectObject(event.m_itemIndex)
+            self.selected = event.Index
+            self.collEditView.selectObject(event.Index)
 
     def OnObjectDeselect(self, event):
         if not self._block_selected:
@@ -245,7 +247,7 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
         for itemIdx in range(self.itemList.GetItemCount()):
             if self.itemList.GetItemState(itemIdx, 0) & wx.LIST_STATE_SELECTED:
                 result.append(itemIdx)
-        wx.MessageBox(`result`)
+        wx.MessageBox(repr(result))
 
     def OnCloseWindow(self, event):
         if self.selected != -1:
@@ -261,7 +263,7 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
             if item == '-':
                 menu.AppendSeparator()
             else:
-                wId = wx.NewId()
+                wId = wx.NewIdRef()
                 self.additIds[wId] = meth
                 self.Bind(wx.EVT_MENU, self.OnMoreNewItemClick, id=wId)
                 menu.Append(wId, item)
@@ -282,7 +284,7 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
 
     def OnSwitchToDesigner(self, event):
         # XXX Should switch to data view
-        if self.collEditView.model.views.has_key('Designer'):
+        if 'Designer' in self.collEditView.model.views:
             self.collEditView.model.views['Designer'].restore()
 
 class ImageListCollectionEditor(CollectionEditor):
@@ -318,7 +320,7 @@ class CollectionEditorView(InspectableViews.InspectableObjectView):
         self.initObjectsAndCompanions(objCol.creators, objCol, {}, {})
 
     def initObjEvts(self, events, name, creator):
-        if events.has_key(''):
+        if '' in events:
             self.companion.setEvents(events[''])
 
     def initObjCreator(self, constrPrs):
@@ -475,7 +477,7 @@ class CollectionEditorView(InspectableViews.InspectableObjectView):
         if not self.frame:
             if self.additMeths:
                 am = tuple([(methInfo[0], meth)
-                            for meth, methInfo in self.additMeths.items()])
+                            for meth, methInfo in list(self.additMeths.items())])
             else:
                 am = ()
 

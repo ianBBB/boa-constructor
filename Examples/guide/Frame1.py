@@ -7,13 +7,13 @@ def create(parent):
     return Frame1(parent)
 
 [wxID_FRAME1, wxID_FRAME1STATUSBAR1, wxID_FRAME1TEXTEDITOR, 
-] = [wx.NewId() for _init_ctrls in range(3)]
+] = [wx.NewIdRef() for _init_ctrls in range(3)]
 
 [wxID_FRAME1MENUFILECLOSE, wxID_FRAME1MENUFILEEXIT, wxID_FRAME1MENUFILEOPEN, 
  wxID_FRAME1MENUFILESAVE, wxID_FRAME1MENUFILESAVEAS, 
 ] = [wx.NewId() for _init_coll_menuFile_Items in range(5)]
 
-[wxID_FRAME1MENUHELPABOUT] = [wx.NewId() for _init_coll_menuHelp_Items in range(1)]
+[wxID_FRAME1MENUHELPABOUT] = [wx.NewIdRef() for _init_coll_menuHelp_Items in range(1)]
 
 class Frame1(wx.Frame):
     def _init_coll_menuBar1_Menus(self, parent):

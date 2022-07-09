@@ -36,8 +36,8 @@ class WindowConstr(PropertyKeywordConstructor):
 ##wxGrid(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style=0, const
 ##wxString& name="grid")
 
-##wxStatusBar(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize&
-##size = wxDefaultSize, long style = 0, const wxString& name = "statusBar")
+## wxStatusBar(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize&
+## size = wxDefaultSize, long style = 0, const wxString& name = "statusBar")
 
 ##wxToolBar(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size
 ##= wxDefaultSize, long style = wxTB_HORIZONTAL | wxNO_BORDER, const wxString& name =

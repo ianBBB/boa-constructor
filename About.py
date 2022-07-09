@@ -11,7 +11,7 @@
 #-----------------------------------------------------------------------------
 
 import sys, time, re, string
-from thread import start_new_thread
+from _thread import start_new_thread
 
 import wx
 import wx.html
@@ -58,7 +58,6 @@ progress_text = '''<p>
   <param name="label" value="  ">
   <param name="id"    value="%d">
   <param name="size"  value="(352, 20)">
-  <param name="style" value="wx.ALIGN_CENTER | wx.CLIP_CHILDREN | wx.ST_NO_AUTORESIZE">
 </wxp>
 <wxp module="wx" class="Window">
   <param name="id"    value="%d">
@@ -197,7 +196,7 @@ def createSplash(parent, modTot, fileTot):
 def createNormal(parent):
     return AboutBox(parent)
 
-wxID_ABOUTBOX = wx.NewId()
+wxID_ABOUTBOX = wx.NewIdRef(count=1)
 
 class AboutBoxMixin:
     border = 7
@@ -215,7 +214,8 @@ class AboutBoxMixin:
 
         self.html = Utils.wxUrlClickHtmlWindow(self.blackback, -1,
               style=wx.CLIP_CHILDREN | wx.html.HW_NO_SELECTION | extraStyle)
-        Utils.EVT_HTML_URL_CLICK(self.html, self.OnLinkClick)
+        #Utils.EVT_HTML_URL_CLICK(self.html, self.OnLinkClick)
+        self.html.Bind(Utils.EVT_HTML_URL_CLICK, self.OnLinkClick)
         self.setPage()
         self.blackback.SetAutoLayout(True)
         lc = wx.LayoutConstraints()
@@ -300,7 +300,7 @@ class AboutBox(AboutBoxMixin, wx.Dialog):
                  langlistctrl.GetLanguageFlag(wx.GetApp().locale.GetLanguage()),
                  wx.BITMAP_TYPE_PNG)
                 addImagesToFS.addedImages.append('Language.png')
-        except Exception, err:
+        except Exception as err:
             pass
 
     def setPage(self):
@@ -320,13 +320,14 @@ class AboutBoxSplash(AboutBoxMixin, wx.Frame):
         wx.Frame.__init__(self, size=wx.Size(418, 320), pos=(-1, -1),
               id=wxID_ABOUTBOX, title='Boa Constructor', parent=prnt,
               name='AboutBoxSplash', style=wx.SIMPLE_BORDER)
-        self.progressId = wx.NewId()
-        self.gaugePId = wx.NewId()
+        self.progressId = wx.NewIdRef(count=1)
+        self.gaugePId = wx.NewIdRef(count=1)
         self.SetBackgroundColour(wx.Colour(0x44, 0x88, 0xFF))  # wxColour(0x99, 0xcc, 0xff))
 
     def setPage(self):
         self.html.SetPage(about_html % ('memory:Boa.jpg',
-          __version__.version, progress_text % (self.progressId, self.gaugePId), ''))
+          __version__.version, progress_text % (self.progressId,
+                                                self.gaugePId), ''))
 
         self.initCtrlNames()
 
@@ -354,7 +355,8 @@ class AboutBoxSplash(AboutBoxMixin, wx.Frame):
         sys.stdout = StaticTextPF(self.label)
         start_new_thread(self.monitorModuleCount, ())
 
-        EVT_MOD_CNT_UPD(self, self.OnUpdateProgress)
+        #EVT_MOD_CNT_UPD(self, self.OnUpdateProgress)
+        self.Bind(EVT_MOD_CNT_UPD, self.OnUpdateProgress)
 
     def monitorModuleCount(self):
         self._live = True
@@ -390,14 +392,17 @@ class AboutBoxSplash(AboutBoxMixin, wx.Frame):
         if event.GetPosition().x < 10:
             self._gaugeClicks += 1
             if self._gaugeClicks >= 5:
-                print
-                print 'Received early abort...'
+                print()
+                print('Received early abort...')
                 sys.exit()
 
 class StaticTextPF(Utils.PseudoFile):
     def write(self, s):
-        if not wx.Thread_IsMain():
-            locker = wx.MutexGuiLocker()
+        # ###############
+        # Cannot work out why this us here, what its supposed to do or what should replace it.
+        # ###############
+        # if not wx.Thread_IsMain():
+        #     locker = wx.MutexGuiLocker()
 
         res = prog_update.search(s)
         if res:
@@ -406,7 +411,7 @@ class StaticTextPF(Utils.PseudoFile):
                   ModCntUpdateEvent(cnt, 'opening'))
             s = s[:res.start()]
 
-        ss = string.strip(s)
+        ss = str.strip(s)
         if ss:
             self.output.SetLabel(ss)
 
@@ -419,7 +424,7 @@ class StaticTextPF(Utils.PseudoFile):
 
         wx.Yield()
 
-wxEVT_MOD_CNT_UPD = wx.NewId()
+wxEVT_MOD_CNT_UPD = wx.NewIdRef(count=1)
 EVT_MOD_CNT_UPD = wx.PyEventBinder(wxEVT_MOD_CNT_UPD)
 
 class ModCntUpdateEvent(wx.PyEvent):
@@ -431,7 +436,7 @@ class ModCntUpdateEvent(wx.PyEvent):
 
 if __name__ == '__main__':
 
-    app = wx.PySimpleApp()
+    app = wx.App()
     wx.InitAllImageHandlers()
 
     # frame
