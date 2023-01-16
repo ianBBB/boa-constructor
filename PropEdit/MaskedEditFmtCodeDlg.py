@@ -28,7 +28,7 @@ formatCodes = [
  wxID_MASKEDEDITFORMATCODESDLGCLBFORMATCODES,
  wxID_MASKEDEDITFORMATCODESDLGSTATICTEXT1,
  wxID_MASKEDEDITFORMATCODESDLGTCFORMATCODEPROPVAL,
-] = [wx.NewId() for _init_ctrls in range(6)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class MaskedEditFormatCodesDlg(wx.Dialog):
     def _init_ctrls(self, prnt):

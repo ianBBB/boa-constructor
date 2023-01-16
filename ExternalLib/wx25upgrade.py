@@ -52,6 +52,8 @@
 from pyparsing import *
 import string
 import copy
+import importlib
+
 
 def lit(text):
     '''For when you want to return a literal value independent of the input'''
@@ -84,7 +86,7 @@ class Upgrade:
                              "PyGridCellRenderer": "wx.grid.PyGridCellRenderer",
                              "GridTableMessage": "wx.grid.GridTableMessage",
                              "Grid": "wx.grid.Grid",
-                             "EditableListBox": "wx.gizmos.EditableListBox",
+                             "EditableListBox": "wx.adv.EditableListBox",
                              "TreeListCtrl": "wx.gizmos.TreeListCtrl",
                              "ListCtrlAutoWidthMixin": "listmix.ListCtrlAutoWidthMixin",
                              "ColumnSorterMixin": "listmix.ColumnSorterMixin",
@@ -99,7 +101,7 @@ class Upgrade:
                               "wxPoint": "wx.Point",
                               "wxNewId": "wx.NewId",
                               "wxColour": "wx.Colour",
-                              "wxOPEN": "wx.OPEN",
+                              "wxOPEN": "wx.FD_OPEN",
                               "wxRED": "wx.RED",
                               "wxBLUE": "wx.BLUE",
                               "wxGREEN": "wx.GREEN",
@@ -292,7 +294,7 @@ class Upgrade:
         flags = OneOrMore( oneOf( "flag style orient kind" ) + "=" ) + flags
         flags.setParseAction(self.flagsAction)
 
-        # map(lambda... to wx.NewId() for etc
+        # map(lambda... to wx.NewIdRef(count=1) for etc
         RANGE = Suppress("range") + Suppress("(")
         COL = Suppress(":")
         repId1 = Suppress("map(lambda") + qualIdent2 + COL \
@@ -302,7 +304,7 @@ class Upgrade:
         # import
         imp = Literal("from wxPython.") + delimitedList(ident,".",combine=True)\
                 + Literal("import") + restOfLine
-        imp.setParseAction(self.impAction)
+        importlib.setParseAction(self.impAction)
 
         # Specific name space changes
         repWXSpec = Or(map(Literal, self.specialNames2.keys()))
@@ -432,7 +434,7 @@ class Upgrade:
 
     def repId1Action(self, s, l, t):
         a, b, c = t
-        return "[wx.NewId() for "+a+" in range("+c+")]"
+        return "[wx.NewIdRef(count=1) for "+a+" in range("+c+")]"
 
     def impAction(self, s, l, t):
         a, b, c, d = t
@@ -503,11 +505,12 @@ if __name__ == "__main__":
     import sys
     u = Upgrade()
     if len(sys.argv) < 2:
-        print "usage: python wx25update.py <boafile>"
+        print ("usage: python wx25update.py <boafile>")
         sys.exit(1)
     filename = sys.argv[1]
-    fin = file(filename, "r")
+    # fin = file(filename, "r")
+    fin = open(filename, "r")
     try:
-        print u.upgrade(fin.read())
+        print (u.upgrade(fin.read()))
     finally:
         fin.close()

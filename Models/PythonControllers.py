@@ -11,14 +11,14 @@
 #-----------------------------------------------------------------------------
 print('importing Models.PythonControllers')
 
-import os, sys, time, imp, marshal, stat
-
+import os, sys, time, marshal, stat
+import importlib
 import wx
 
 import Preferences, Utils, Plugins
 from Preferences import keyDefs
 from Utils import _
-
+import importlib.util
 import PaletteStore
 
 from . import Controllers
@@ -30,7 +30,8 @@ from Views import EditorViews, AppViews, SourceViews, PySourceView, OGLViews, Pr
 from ModRunner import ProcessModuleRunner
 import ErrorStack
 
-import methodparse, sourceconst
+import sourceconst
+import methodparse
 
 # TODO: Profile, Cyclops and other file runners should use the command-line
 # TODO: parameters whenever possible
@@ -83,7 +84,7 @@ class ModuleController(SourceController):
               (_('Associate with an open application'), self.OnAssosiateWithOpenApp, '-', '')])
 
         try:
-            imp.find_module('pychecker')
+            importlib.util.find_spec('pychecker')
         except ImportError:
             pass
         else:
@@ -610,7 +611,7 @@ class SetupController(ModuleController):
             actions.append(('setup.py bdist_wininst', self.OnSetupBDist_WinInst, '-', ''))
 
         try:
-            imp.find_module('py2exe')
+            importlib.abc.MetaPathFinder.find_spec('py2exe')
         except ImportError:
             pass
         else:

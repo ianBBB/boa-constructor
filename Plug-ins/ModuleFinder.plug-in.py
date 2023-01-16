@@ -13,24 +13,24 @@ from Utils import _, resetMinSize
 [wxID_MODULEFINDERDLG, wxID_MODULEFINDERDLGCANCELBTN, 
  wxID_MODULEFINDERDLGOKBTN, wxID_MODULEFINDERDLGSTATICTEXT1, 
  wxID_MODULEFINDERDLGTXTMODULENAME, 
-] = [wx.NewId() for _init_ctrls in range(5)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 class ModuleFinderDlg(wx.Dialog):
     def _init_coll_mainSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.staticText1, 0, border=10,
+        parent.Add(self.staticText1, 0, border=10,
               flag=wx.ALL | wx.EXPAND)
-        parent.AddWindow(self.txtModuleName, 0, border=10,
+        parent.Add(self.txtModuleName, 0, border=10,
               flag=wx.EXPAND | wx.RIGHT | wx.LEFT)
-        parent.AddSizer(self.buttonsSizer, 0, border=10,
+        parent.Add(self.buttonsSizer, 0, border=10,
               flag=wx.ALIGN_RIGHT | wx.ALL)
 
     def _init_coll_buttonsSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.okBtn, 0, border=10, flag=wx.RIGHT)
-        parent.AddWindow(self.cancelBtn, 0, border=0, flag=0)
+        parent.Add(self.okBtn, 0, border=10, flag=wx.RIGHT)
+        parent.Add(self.cancelBtn, 0, border=0, flag=0)
 
     def _init_sizers(self):
         # generated method, don't edit

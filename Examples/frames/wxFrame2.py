@@ -5,7 +5,7 @@ import wx
 def create(parent):
     return wxFrame2(parent)
 
-[wxID_WXFRAME2] = [wx.NewIdRef() for _init_ctrls in range(1)]
+[wxID_WXFRAME2] = [wx.NewId() for _init_ctrls in range(1)]
 
 class wxFrame2(wx.Frame):
     """ A reference to this frame is kept in frame1 therefor we have to

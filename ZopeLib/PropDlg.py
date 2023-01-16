@@ -9,7 +9,7 @@ def create(parent):
  wxID_NEWPROPDLGCHTYPE, wxID_NEWPROPDLGPANEL1, wxID_NEWPROPDLGSTATICTEXT1, 
  wxID_NEWPROPDLGSTATICTEXT2, wxID_NEWPROPDLGSTATICTEXT3, 
  wxID_NEWPROPDLGTCPROPNAME, wxID_NEWPROPDLGTCVALUE, 
-] = [wx.NewId() for _init_ctrls in range(10)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(10)]
 
 class NewPropDlg(wx.Dialog):
     def _init_ctrls(self, prnt):

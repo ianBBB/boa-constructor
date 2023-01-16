@@ -13,7 +13,7 @@ imgs = {'.bmp' : wx.BITMAP_TYPE_BMP,
         '.ico' : wx.BITMAP_TYPE_ICO}
 
 [wxID_IMAGEVIEWER, wxID_IMAGEVIEWERSASHWINDOW1, wxID_IMAGEVIEWERSTATICBITMAP1, 
-] = [wx.NewId() for _init_ctrls in range(3)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(3)]
 
 class ImageViewer(wx.MiniFrame):
     def _init_ctrls(self, prnt):
@@ -24,10 +24,10 @@ class ImageViewer(wx.MiniFrame):
               title='Image viewer')
         self.SetClientSize(wx.Size(119, 104))
 
-        self.sashWindow1 = wx.SashWindow(id=wxID_IMAGEVIEWERSASHWINDOW1,
+        self.sashWindow1 = wx.adv.SashWindow(id=wxID_IMAGEVIEWERSASHWINDOW1,
               name='sashWindow1', parent=self, pos=wx.Point(0, 0),
               size=wx.Size(119, 104),
-              style=wx.SW_BORDER | wx.SW_3D)
+              style=wx.adv.SW_BORDER | wx.adv.SW_3D)
         self.sashWindow1.SetExtraBorderSize(self.borderSize)
         self.sashWindow1.SetMinimumSizeX(24)
         self.sashWindow1.SetMinimumSizeY(24)

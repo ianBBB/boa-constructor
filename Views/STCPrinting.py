@@ -33,7 +33,7 @@ def create(parent):
  wxID_STCPRINTDLGBTNPRINTPREVIEW, wxID_STCPRINTDLGBTNPRINTSETUP, 
  wxID_STCPRINTDLGCKBFILENAME, wxID_STCPRINTDLGCKBPAGENUMBERS, 
  wxID_STCPRINTDLGRDBCOLOURMODE, 
-] = [wx.NewId() for _init_ctrls in range(8)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(8)]
 
 stcPrintColourModes = [0, wx.stc.STC_PRINT_BLACKONWHITE, 
                           wx.stc.STC_PRINT_COLOURONWHITE,
@@ -249,7 +249,7 @@ class STCPrintout(wx.Printout):
         # printing
         if not self.IsPreview():
             if ep < stcEndPos:
-                print _('warning: on page %s: not enough chars rendered, diff:')%(page, stcEndPos-ep)
+                print ('warning: on page %s: not enough chars rendered, diff:'%(page, stcEndPos-ep))
 
         return True
 

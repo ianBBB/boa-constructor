@@ -656,7 +656,7 @@ class FileDlgFolderList(Explorer.BaseExplorerList):
         #self.Bind(wx.EVT_RIGHT_DOWN, self.OnListRightUp)
 
         self.menu = wx.Menu()
-        menuId = wx.NewId()
+        menuId = wx.NewIdRef(count=1)
         self.menu.Append(menuId, _('New Folder'))
         self.Bind(wx.EVT_MENU, self.OnNewFolder, id=menuId)
 

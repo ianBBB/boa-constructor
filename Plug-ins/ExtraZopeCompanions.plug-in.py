@@ -78,7 +78,7 @@ class LFNode(LFSNode):
         zc = ZopeConnection()
         zc.connect(props['host'], props['httpport'],
                    props['username'], props['passwd'])
-        from cStringIO import StringIO
+        from io import StringIO
         file = StringIO(data)
         dirname, file.name = os.path.split(filename)
         zc.callkw(dirname, 'manage_upload',

@@ -23,7 +23,7 @@ def create(parent):
 [wxID_CONTROLALIGNMENTFRAME, wxID_CONTROLALIGNMENTFRAMECANCELBTN, 
  wxID_CONTROLALIGNMENTFRAMEOKBTN, wxID_CONTROLALIGNMENTFRAMEPANEL1, 
  wxID_CONTROLALIGNMENTFRAMERADIOBOX1, wxID_CONTROLALIGNMENTFRAMERADIOBOX2, 
-] = [wx.NewId() for _init_ctrls in range(6)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class ControlAlignmentFrame(wx.Dialog):
     def _init_ctrls(self, prnt):

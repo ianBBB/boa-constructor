@@ -12,11 +12,11 @@
 
 print('importing Models.PythonEditorModels')
 
-import os, sys, pprint, imp, stat, types, tempfile, codecs
+import os, sys, pprint, stat, types, tempfile, codecs
 from _thread import start_new_thread
 from time import time, localtime, strftime
 from io import StringIO
-
+import importlib
 import wx
 
 import Preferences, Utils
@@ -402,12 +402,12 @@ class ModuleModel(SourceModel):
         srchpath = stdPyPath[:]
         for name in modName.split('.'):
             try:
-                file, path, (ext, mode, tpe) = imp.find_module(name, srchpath)
+                file, path, (ext, mode, tpe) = importlib.abc.MetaPathFinder.find_spec(name, srchpath)
             except ImportError:
                 if srchpath == stdPyPath:
                     # else search module and app dirs
                     srchpath = self.buildImportSearchPath()
-                    file, path, (ext, mode, tpe) = imp.find_module(name, srchpath)
+                    file, path, (ext, mode, tpe) = importlib.abc.MetaPathFinder.find_spec(name, srchpath)
                 else:
                     raise
 

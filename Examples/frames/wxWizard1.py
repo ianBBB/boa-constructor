@@ -1,7 +1,7 @@
 #Boa:Wizard:wxWizard1
 
 import wx
-import wx.wizard
+import wx.adv as wizmod
 
 def create(parent):
     return wxWizard1(parent)
@@ -21,7 +21,7 @@ def run(parent):
     pwpage2._next = wspage1
     pwpage2._prev = pwpage1
     wspage1.SetPrev(pwpage2)
-    wx.wizard.WizardPageSimple.Chain(wspage1, wspage2)
+    wx.adv.WizardPageSimple.Chain(wspage1, wspage2)
 
     return wizard.RunWizard(pwpage1)
 
@@ -29,15 +29,15 @@ def run(parent):
 [wxID_WXWIZARD1, wxID_WXWIZARD1BUTTON1, wxID_WXWIZARD1STATICTEXT1, 
 ] = [wx.NewId() for _init_ctrls in range(3)]
 
-class wxWizard1(wx.wizard.Wizard):
+class wxWizard1(wx.adv.Wizard):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
-        wx.wizard.Wizard.__init__(self, bitmap=wx.Bitmap('WizImage.png',
+        wx.adv.Wizard.__init__(self, bitmap=wx.Bitmap('WizImage.png',
               wx.BITMAP_TYPE_PNG), id=wxID_WXWIZARD1, parent=prnt,
               pos=wx.Point(333, 205), title='wxWizard Example')
-        self.Bind(wx.wizard.EVT_WIZARD_PAGE_CHANGING,
+        self.Bind(wizmod.EVT_WIZARD_PAGE_CHANGING,
               self.OnWxwizard1WizardPageChanging, id=wxID_WXWIZARD1)
-        self.Bind(wx.wizard.EVT_WIZARD_PAGE_CHANGED,
+        self.Bind(wizmod.EVT_WIZARD_PAGE_CHANGED,
               self.OnWxwizard1WizardPageChanged, id=wxID_WXWIZARD1)
 
         self.button1 = wx.Button(id=wxID_WXWIZARD1BUTTON1, label='debug',
@@ -54,7 +54,7 @@ class wxWizard1(wx.wizard.Wizard):
         self._init_ctrls(parent)
 
     def OnButton1Button(self, event):
-        wx.LogMessage(`self.GetChildren()`) #GetSizer().
+        wx.LogMessage('self.GetChildren()') #GetSizer().
 
     def OnWxwizard1WizardPageChanging(self, event):
         self.staticText1.SetLabel('Changing...')

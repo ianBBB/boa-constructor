@@ -54,7 +54,7 @@ def test_wxFrame(palette):
                 break
 
         # resize designer
-        model.views['Designer'].SetDimensions(10, 10, 200, 200)
+        model.views['Designer'].SetSize(10, 10, 200, 200)
         model.views['Designer'].SetPosition( (0, 0) )
         wx.Yield()
 
@@ -73,7 +73,7 @@ def create(parent):
     return TestFrame(parent)
 
 [wxID_TESTFRAME, wxID_TESTFRAMESTATICTEXT1,
-] = [wx.NewId() for _init_ctrls in range(2)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(2)]
 
 class TestFrame(wx.Frame):
     def _init_utils(self):

@@ -34,7 +34,7 @@ def create(parent):
  wxID_BITMAPLISTEDITORDLGBUTTONEDIT, wxID_BITMAPLISTEDITORDLGBUTTONMOVEDOWN, 
  wxID_BITMAPLISTEDITORDLGBUTTONMOVEUP, wxID_BITMAPLISTEDITORDLGBUTTONREMOVE, 
  wxID_BITMAPLISTEDITORDLGLISTCTRL, 
-] = [wx.NewId() for _init_ctrls in range(9)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(9)]
 
 class BitmapListEditorDlg(wx.Dialog):
     def _init_coll_boxSizer3_Items(self, parent):

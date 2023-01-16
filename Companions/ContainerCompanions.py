@@ -58,8 +58,8 @@ class SashWindowDTC(ContainerDTC, Constructors.WindowConstr):
                              'SashVisibleTop' : SashVisiblePropEdit,
                              'SashVisibleRight' : SashVisiblePropEdit,
                              'SashVisibleBottom' : SashVisiblePropEdit})
-        self.windowStyles = ['wx.SW_3D', 'wx.SW_3DSASH', 'wx.SW_3DBORDER',
-                             'wx.SW_BORDER'] + self.windowStyles
+        self.windowStyles = ['wx.adv.SW_3D', 'wx.adv.SW_3DSASH', 'wx.adv.SW_3DBORDER',
+                             'wx.adv.SW_BORDER'] + self.windowStyles
         self.edgeNameMap = {'SashVisibleLeft'  : wx.adv.SASH_LEFT,
                             'SashVisibleTop'   : wx.adv.SASH_TOP,
                             'SashVisibleRight' : wx.adv.SASH_RIGHT,
@@ -78,7 +78,7 @@ class SashWindowDTC(ContainerDTC, Constructors.WindowConstr):
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
         return {'pos':   position,
                 'size': self.getDefCtrlSize(),
-                'style': 'wx.CLIP_CHILDREN | wx.SW_3D',
+                'style': 'wx.CLIP_CHILDREN | wx.adv.SW_3D',
                 'name':  repr(self.name)}
 
     def events(self):
@@ -124,7 +124,7 @@ class SashLayoutWindowDTC(SashWindowDTC):
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
         return {'pos':   position,
                 'size': self.getDefCtrlSize(),
-                'style': 'wx.CLIP_CHILDREN | wx.SW_3D',
+                'style': 'wx.CLIP_CHILDREN | wx.adv.SW_3D',
                 'name':  repr(self.name)}
 
     def properties(self):
@@ -152,7 +152,7 @@ class SashLayoutWindowDTC(SashWindowDTC):
     def defaultAction(self):
         # should be called from 'Relayout' command
         self.control.SetDefaultSize(self.control.GetSize())
-        wx.LayoutAlgorithm().LayoutWindow(self.control.GetParent())
+        wx.adv.LayoutAlgorithm().LayoutWindow(self.control.GetParent())
 
 class ScrolledWindowDTC(ContainerDTC, Constructors.WindowConstr):
     def __init__(self, name, designer, parent, ctrlClass):
@@ -1151,8 +1151,8 @@ Plugins.registerComponents('ContainersLayout',
       (wx.Panel, 'wx.Panel', PanelDTC),
       (wx.ScrolledWindow, 'wx.ScrolledWindow', ScrolledWindowDTC),
       (wx.SplitterWindow, 'wx.SplitterWindow', SplitterWindowDTC),
-      (wx.adv.SashWindow, 'wx.SashWindow', SashWindowDTC),
-      (wx.adv.SashLayoutWindow, 'wx.SashLayoutWindow', SashLayoutWindowDTC),
+      (wx.adv.SashWindow, 'wx.adv.SashWindow', SashWindowDTC),
+      (wx.adv.SashLayoutWindow, 'wx.adv.SashLayoutWindow', SashLayoutWindowDTC),
       (wx.ToolBar, 'wx.ToolBar', ToolBarDTC),
       (wx.StatusBar, 'wx.StatusBar', StatusBarDTC),
       (wx.Window, 'wx.Window', ContainerDTC),

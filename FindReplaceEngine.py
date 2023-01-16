@@ -194,7 +194,10 @@ class FindReplaceEngine:
                     names.append(p)
                 elif os.path.isdir(p) and os.path.isfile(os.path.join(base, "__init__.py")):
                     packages.append(p)
-        names.sort(lambda x, y : os.path.basename(x) > os.path.basename(y))
+
+        # names.sort(lambda x, y : os.path.basename(x) > os.path.basename(y))
+        names = sorted(names) #, lambda x, y: os.path.basename(x) > os.path.basename(y))
+
         return names
 
     def findAllInFiles(self, names, view, pattern):

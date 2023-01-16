@@ -36,7 +36,7 @@ class ConfigSTCMix(LanguageSTCMix):
         self.setStyles()
 
 
-wxID_CONFIGVIEW = wx.NewId()
+wxID_CONFIGVIEW = wx.NewIdRef(count=1)
 from Views.SourceViews import EditorStyledTextCtrl
 class ConfigView(EditorStyledTextCtrl, ConfigSTCMix):
     viewName = 'Config'

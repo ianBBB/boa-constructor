@@ -46,7 +46,7 @@ class FormulatorFormOrderView(wx.TreeCtrl, EditorView):
     moveDownBmp = 'Images/Shared/down.png'
 
     def __init__(self, parent, model):
-        wid = wx.NewId()
+        wid = wx.NewIdRef(count=1)
         wx.TreeCtrl.__init__(self, parent, wid,
          style = wx.TR_HAS_BUTTONS | wx.SUNKEN_BORDER | wx.TR_EDIT_LABELS)
         EditorView.__init__(self, model,

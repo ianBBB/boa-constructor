@@ -38,7 +38,7 @@ class I18NWrapViewPlugin:
             sel = self.view.GetText()[first:last]
             self.view.ReplaceSelection('_(%s)'%sel)
 
-wxID_POCOMPILE = wx.NewId()
+wxID_POCOMPILE = wx.NewIdRef(count=1)
 class POFileController(Controllers.TextController):
     Model = EditorModels.TextModel
 

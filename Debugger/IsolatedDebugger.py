@@ -11,14 +11,19 @@
 # Licence:      GPL
 #----------------------------------------------------------------------------
 
-import sys, thread, threading, Queue
+# import sys, thread, threading, Queue
+import sys
+import _thread
+import threading
+import queue
 import pprint
 from os import chdir
 from os import path
 import bdb
 from bdb import Bdb, BdbQuit, Breakpoint
-from repr import Repr
-from types import TupleType
+from reprlib import Repr
+# from repr import Repr
+# from types import TupleType
 
 
 # XXX Extend breakpoints to break on exception (like conditional breakpoints)
@@ -377,12 +382,12 @@ class MethodCall (ServerMessage):
         self.wait()
         if hasattr(self, 'exc'):
             try:
-                raise self.exc[0], self.exc[1], self.exc[2]
+                raise self.exc[0](self.exc[1], self.exc[2])
             finally:
                 # Circ ref
                 del self.exc
         if not hasattr(self, 'result'):
-            raise DebugError, 'Timed out while waiting for debug server.'
+            raise DebugError('Timed out while waiting for debug server.')
         return self.result
 
 
@@ -393,25 +398,25 @@ class ThreadChoiceLock:
 
     def __init__(self):
         self._owner = None
-        self._block = thread.allocate_lock()
+        self._block = _thread.allocate_lock()
 
     def acquire(self, blocking=1):
-        me = thread.get_ident()
+        me = _thread.get_ident()
         if self._owner == me:
             return 1
-        rc = self._block.acquire(blocking)
+        rc = self._block.acquire(blocking=True)
         if rc:
             self._owner = me
         return rc
 
     def release(self):
-        me = thread.get_ident()
+        me = _thread.get_ident()
         assert me == self._owner, "release of unacquired lock"
         self._owner = None
         self._block.release()
 
     def releaseIfOwned(self):
-        me = thread.get_ident()
+        me = _thread.get_ident()
         if me == self._owner:
             self.release()
 
@@ -453,7 +458,7 @@ class DebugServer (Bdb):
         self.fncache = {}
         self.botframe = None
 
-        self.__queue = Queue.Queue(0)
+        self.__queue = queue.Queue(0)
 
         # self._lock governs which thread the debugger will stop in.
         self._lock = ThreadChoiceLock()
@@ -504,7 +509,7 @@ class DebugServer (Bdb):
         if sm.doExecute():
             sm.execute(self)
         if sm.doExit():
-            thread.exit()
+            _thread.exit()
         if sm.doReturn():
             # Return to user code
             self.beforeResume()
@@ -584,10 +589,11 @@ class DebugServer (Bdb):
             # Don't stop in the bottom frame.
             return 0
         sf = self.stopframe
-        if sf is None:
+        if (sf is None):
             # Stop anywhere.
             return self.isTraceable(frame)
-        elif sf is ():
+        # elif sf is ():
+        elif (type(sf) is tuple) and (len(sf) == 0):
             # Stop nowhere.
             return 0
         # else stop in a specific frame.
@@ -620,7 +626,7 @@ class DebugServer (Bdb):
     def remove_trace_hooks(self):
         sys.settrace(None)
         try:
-            raise Exception, 'gen_exc_info'
+            raise Exception('gen_exc_info')
         except:
             frame = sys.exc_info()[2].tb_frame
             while frame:
@@ -654,7 +660,7 @@ class DebugServer (Bdb):
         this thread, but allow other threads to continue.
         """
         self.set_continue(1)
-        raise BdbQuit, 'Client disconnected'
+        raise BdbQuit('Client disconnected')
 
     def set_traceable(self, enable=1):
         """Allows user code to enable/disable tracing without changing the
@@ -665,7 +671,7 @@ class DebugServer (Bdb):
         if enable:
             # Add trace hooks.
             try:
-                raise Exception, 'gen_exc_info'
+                raise Exception('gen_exc_info')
             except:
                 frame = sys.exc_info()[2].tb_frame.f_back
             self.add_trace_hooks(frame)
@@ -697,7 +703,7 @@ class DebugServer (Bdb):
         Called by hard breakpoints.
         """
         try:
-            raise Exception, 'gen_exc_info'
+            raise Exception('gen_exc_info')
         except:
             frame = sys.exc_info()[2].tb_frame.f_back
         stop = self.hard_break_here(frame)
@@ -708,7 +714,7 @@ class DebugServer (Bdb):
             # The debugger is busy in another thread.
             return
 
-        if isinstance(stop, TupleType):
+        if isinstance(stop, tuple):
             # Add a soft breakpoint here so the user can manage the breakpoint.
             filename, lineno = stop
             self.set_break(filename, lineno)
@@ -1106,8 +1112,11 @@ class DebugServer (Bdb):
             else:
                 try:
                     value = eval(name, globalsDict, localsDict)
-                except Exception, message:
-                    value = '??? (%s)' % message
+                # except Exception, message:
+                #     value = '??? (%s)' % message
+                except Exception as message:
+                        value = '??? (%s)' %message
+
             svalue = self.safeRepr(value)
             rval[name] = svalue
         return {'frameno':frameno, 'watches':rval}
@@ -1127,12 +1136,14 @@ class DebugServer (Bdb):
         return inst_items + clss_items
 
     def pythonShell(self, code, globalsDict, localsDict, name='<debug>'):
-        from cStringIO import StringIO
+        from io import StringIO
 
         _ts, sys.stdout = sys.stdout, StringIO('')
         try:
             co = compile(code, name, 'single')
-            exec co in globalsDict, localsDict
+            # exec co in globalsDict, localsDict
+            exec(co, globalsDict, localsDict)
+
             return sys.stdout.getvalue()
 # lame attempt at handling None values
 ##            res = sys.stdout.getvalue()

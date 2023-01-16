@@ -45,7 +45,7 @@ class PyrexStyledTextCtrlMix(StyledTextCtrls.LanguageSTCMix):
               (0, Preferences.STCLineNumMarginWidth), 'pyrex', pyrex_cfgfile)
         self.setStyles()
 
-wxID_PYREXSOURCEVIEW = wx.NewId()
+wxID_PYREXSOURCEVIEW = wx.NewIdRef(count=1)
 class PyrexSourceView(SourceViews.EditorStyledTextCtrl, PyrexStyledTextCtrlMix):
     viewName = 'Source'
     viewTitle = _('Source')
@@ -56,7 +56,7 @@ class PyrexSourceView(SourceViews.EditorStyledTextCtrl, PyrexStyledTextCtrlMix):
         self.active = True
 
 
-#wxID_PYREXCOMPILE = wx.NewId()
+#wxID_PYREXCOMPILE = wx.NewIdRef(count=1)
 class PyrexController(Controllers.SourceController):
     Model = PyrexModel
     DefaultViews = [PyrexSourceView]

@@ -20,7 +20,7 @@ def create(parent):
  wxID_ZOPEFINDDLGMETATYPE, wxID_ZOPEFINDDLGOBJIDS, wxID_ZOPEFINDDLGRECURSE,
  wxID_ZOPEFINDDLGSEARCHTEXT, wxID_ZOPEFINDDLGSTATICTEXT1,
  wxID_ZOPEFINDDLGSTATICTEXT2, wxID_ZOPEFINDDLGSTATICTEXT3,
-] = [wx.NewId() for _init_ctrls in range(10)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(10)]
 
 class ZopeFindDlg(wx.Dialog):
     def _init_utils(self):

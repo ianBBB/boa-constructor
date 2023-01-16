@@ -116,21 +116,26 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
 
         self.componentSB = ComponentSelection(self)
 
-        if Preferences.showFrameTestButton:
-            self.toolBar.AddSeparator()
-            self.addTool('Images/Shared/CustomHelp', 'Test', 'Test', self.OnTest)
+        # A test button to check thing operate as I think they should
+        # if Preferences.showFrameTestButton:
+        #     self.toolBar.AddSeparator()
+        #     self.addTool('Images/Shared/CustomHelp', 'Test', 'Test', self.OnTest)
 
         # Add main helpbuttons defined in the config file
         conf = Utils.createAndReadConfig('Explorer')
         self.paletteHelpItems = eval(conf.get('help', 'palettehelp'), {})
 
         self.toolBar.AddSeparator()
-        self.addTool('Images/Shared/Help', _('Boa or selected component help'),
+        # Help for Boa, python and wxpython is integrated. N need for seperate button now.
+        # self.addTool('Images/Shared/Help', _('Boa or selected component help'),
+        #       _('Show help'), self.OnHelpToolClick)
+        # self.addTool('Images/Shared/wxWinHelp', _('wxPython help'),
+        #       _('Show help'), self.OnWxWinHelpToolClick)
+        # self.addTool('Images/Shared/PythonHelp', _('Python help'),
+        #       _('Show help'), self.OnPythonHelpToolClick)
+
+        self.addTool('Images/Shared/Help', _('Boa, python and wxpython help'),
               _('Show help'), self.OnHelpToolClick)
-        self.addTool('Images/Shared/wxWinHelp', _('wxPython help'),
-              _('Show help'), self.OnWxWinHelpToolClick)
-        self.addTool('Images/Shared/PythonHelp', _('Python help'),
-              _('Show help'), self.OnPythonHelpToolClick)
 
         # Add additional helpbuttons if defined in the config file
         customHelpItems = eval(conf.get('help', 'customhelp'), {})

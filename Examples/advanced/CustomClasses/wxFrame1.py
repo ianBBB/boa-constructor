@@ -6,7 +6,7 @@ def create(parent):
     return wxFrame1(parent)
 
 [wxID_WXFRAME1, wxID_WXFRAME1TREECTRL1, 
-] = [wx.NewId() for _init_ctrls in range(2)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(2)]
 
 class wxFrame1(wx.Frame):
     _custom_classes = {'wx.TreeCtrl': ['MyTreeCtrl']}

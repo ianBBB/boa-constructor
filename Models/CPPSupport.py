@@ -57,7 +57,7 @@ class CPPStyledTextCtrlMix(LanguageSTCMix):
         self.setStyles()
 
 
-wxID_CPPSOURCEVIEW = wx.NewId()
+wxID_CPPSOURCEVIEW = wx.NewIdRef(count=1)
 symbolFolding = 1
 from Views.SourceViews import EditorStyledTextCtrl
 class CPPSourceView(EditorStyledTextCtrl, CPPStyledTextCtrlMix, FoldingStyledTextCtrlMix):

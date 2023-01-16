@@ -73,7 +73,7 @@ def findAgain(parent, finder, view, invertFinderReverse = False):
  wxID_FINDREPLACEDLGSTATICTEXT3, wxID_FINDREPLACEDLGSTATICTEXT4, 
  wxID_FINDREPLACEDLGWHOLEWORDSCB, wxID_FINDREPLACEDLGWILDCARDCB, 
  wxID_FINDREPLACEDLGWRAPCB, 
-] = [wx.NewId() for _init_ctrls in range(27)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(27)]
 
 class FindReplaceDlg(wx.Dialog):    
     def _init_coll_topSizer_Growables(self, parent):
@@ -84,80 +84,106 @@ class FindReplaceDlg(wx.Dialog):
     def _init_coll_chekboxSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.caseSensitiveCB, 0, border=3, flag=wx.BOTTOM)
-        parent.AddWindow(self.wholeWordsCB, 0, border=3, flag=wx.BOTTOM)
-        parent.AddWindow(self.wildcardCB, 0, border=3, flag=wx.BOTTOM)
-        parent.AddWindow(self.regExprCB, 0, border=3, flag=wx.BOTTOM)
-        parent.AddWindow(self.wrapCB, 0, border=3, flag=wx.BOTTOM)
-        parent.AddWindow(self.closeOnFoundCB, 0, border=3, flag=wx.BOTTOM)
-        parent.AddWindow(self.chkRecursiveSearch, 0, border=3, flag=wx.BOTTOM)
+        parent.Add(self.caseSensitiveCB, 0, border=3, flag=wx.BOTTOM)
+        parent.Add(self.wholeWordsCB, 0, border=3, flag=wx.BOTTOM)
+        parent.Add(self.wildcardCB, 0, border=3, flag=wx.BOTTOM)
+        parent.Add(self.regExprCB, 0, border=3, flag=wx.BOTTOM)
+        parent.Add(self.wrapCB, 0, border=3, flag=wx.BOTTOM)
+        parent.Add(self.closeOnFoundCB, 0, border=3, flag=wx.BOTTOM)
+        parent.Add(self.chkRecursiveSearch, 0, border=3, flag=wx.BOTTOM)
 
     def _init_coll_topSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.staticText2, 0, border=0,
+        parent.Add(self.staticText2, 0, border=0,
               flag=wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddSizer(self.findTxtSizer, 1, border=0, flag=wx.EXPAND)
-        parent.AddWindow(self.staticText1, 0, border=0,
+        parent.Add(self.findTxtSizer, 1, border=0, flag=wx.EXPAND)
+        parent.Add(self.staticText1, 0, border=0,
               flag=wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddWindow(self.replaceTxt, 1, border=0, flag=wx.EXPAND)
-        parent.AddWindow(self.staticText3, 0, border=0,
+        parent.Add(self.replaceTxt, 1, border=0, flag=wx.EXPAND)
+        parent.Add(self.staticText3, 0, border=0,
               flag=wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddSizer(self.findFileSizer, 1, border=0, flag=wx.EXPAND)
-        parent.AddWindow(self.staticText4, 0, border=0,
+        parent.Add(self.findFileSizer, 1, border=0, flag=wx.EXPAND)
+        parent.Add(self.staticText4, 0, border=0,
               flag=wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddWindow(self.cmbFolder, 1, border=0, flag=wx.EXPAND)
+        parent.Add(self.cmbFolder, 1, border=0, flag=wx.EXPAND)
 
     def _init_coll_mainSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddSizer(self.topSizer, 0, border=5, flag=wx.ALL | wx.EXPAND)
-        parent.AddSizer(self.bottomSizer, 1, border=2, flag=wx.TOP | wx.EXPAND)
+        parent.Add(self.topSizer, 0, border=5, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.bottomSizer, 1, border=2, flag=wx.TOP | wx.EXPAND)
 
     def _init_coll_findFileSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.cmbFileFilter, 1, border=0, flag=wx.EXPAND)
-        parent.AddWindow(self.btnBrowse, 0, border=3,
+        # parent.Add(self.cmbFileFilter, 1, border=0, flag=wx.EXPAND)
+        # parent.AddWindow(self.btnBrowse, 0, border=3,
+        #       flag=wx.LEFT | wx.ALIGN_CENTER)
+        parent.Add(self.cmbFileFilter, 1, border=0, flag=wx.EXPAND)
+        parent.Add(self.btnBrowse, 0, border=3,
               flag=wx.LEFT | wx.ALIGN_CENTER)
 
     def _init_coll_findTxtSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.findTxt, 1, border=0, flag=wx.ALIGN_CENTER)
-        parent.AddWindow(self.btnBuildInFind, 0, border=3,
+        # parent.AddWindow(self.findTxt, 1, border=0, flag=wx.ALIGN_CENTER)
+        # parent.AddWindow(self.btnBuildInFind, 0, border=3,
+        #       flag=wx.LEFT | wx.ALIGN_CENTER)
+        parent.Add(self.findTxt, 1, border=0, flag=wx.ALIGN_CENTER)
+        parent.Add(self.btnBuildInFind, 0, border=3,
               flag=wx.LEFT | wx.ALIGN_CENTER)
 
     def _init_coll_radioBtnSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.directionRB, 0, border=0, flag=wx.ALIGN_CENTER)
-        parent.AddWindow(self.scopeRB, 0, border=10,
+        # parent.AddWindow(self.directionRB, 0, border=0, flag=wx.ALIGN_CENTER)
+        # parent.AddWindow(self.scopeRB, 0, border=10,
+        #       flag=wx.ALIGN_CENTER | wx.TOP)
+        parent.Add(self.directionRB, 0, border=0, flag=wx.ALIGN_CENTER)
+        parent.Add(self.scopeRB, 0, border=10,
               flag=wx.ALIGN_CENTER | wx.TOP)
 
     def _init_coll_buttonSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.findBtn, 0, border=4, flag=wx.EXPAND | wx.BOTTOM)
-        parent.AddWindow(self.findAllBtn, 0, border=4,
+        # parent.AddWindow(self.findBtn, 0, border=4, flag=wx.EXPAND | wx.BOTTOM)
+        # parent.AddWindow(self.findAllBtn, 0, border=4,
+        #       flag=wx.EXPAND | wx.BOTTOM)
+        # parent.AddWindow(self.btnFindInFiles, 0, border=4,
+        #       flag=wx.EXPAND | wx.BOTTOM)
+        # parent.AddWindow(self.replaceBtn, 0, border=4,
+        #       flag=wx.EXPAND | wx.BOTTOM)
+        # parent.AddWindow(self.replaceAllBtn, 0, border=4,
+        #       flag=wx.EXPAND | wx.BOTTOM)
+        # parent.AddWindow(self.cancelBtn, 0, border=4,
+        #       flag=wx.EXPAND | wx.BOTTOM)
+        parent.Add(self.findBtn, 0, border=4, flag=wx.EXPAND | wx.BOTTOM)
+        parent.Add(self.findAllBtn, 0, border=4,
               flag=wx.EXPAND | wx.BOTTOM)
-        parent.AddWindow(self.btnFindInFiles, 0, border=4,
+        parent.Add(self.btnFindInFiles, 0, border=4,
               flag=wx.EXPAND | wx.BOTTOM)
-        parent.AddWindow(self.replaceBtn, 0, border=4,
+        parent.Add(self.replaceBtn, 0, border=4,
               flag=wx.EXPAND | wx.BOTTOM)
-        parent.AddWindow(self.replaceAllBtn, 0, border=4,
+        parent.Add(self.replaceAllBtn, 0, border=4,
               flag=wx.EXPAND | wx.BOTTOM)
-        parent.AddWindow(self.cancelBtn, 0, border=4,
+        parent.Add(self.cancelBtn, 0, border=4,
               flag=wx.EXPAND | wx.BOTTOM)
 
     def _init_coll_bottomSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddSizer(self.radioBtnSizer, 0, border=5,
+        # parent.AddSizer(self.radioBtnSizer, 0, border=5,
+        #       flag=wx.EXPAND | wx.RIGHT | wx.LEFT)
+        # parent.AddSizer(self.chekboxSizer, 1, border=5,
+        #       flag=wx.BOTTOM | wx.EXPAND | wx.RIGHT)
+        # parent.AddSizer(self.buttonSizer, 0, border=5,
+        #       flag=wx.EXPAND | wx.RIGHT)
+        parent.Add(self.radioBtnSizer, 0, border=5,
               flag=wx.EXPAND | wx.RIGHT | wx.LEFT)
-        parent.AddSizer(self.chekboxSizer, 1, border=5,
+        parent.Add(self.chekboxSizer, 1, border=5,
               flag=wx.BOTTOM | wx.EXPAND | wx.RIGHT)
-        parent.AddSizer(self.buttonSizer, 0, border=5,
+        parent.Add(self.buttonSizer, 0, border=5,
               flag=wx.EXPAND | wx.RIGHT)
 
     def _init_sizers(self):
@@ -361,10 +387,10 @@ class FindReplaceDlg(wx.Dialog):
         self.engine = engine
         self.view = view
         # Bind enter event using acceleratorTable
-        wxID_FINDRETURN = wx.NewId()
+        wxID_FINDRETURN = wx.NewIdRef(count=1)
         self.Bind(wx.EVT_MENU, self.OnFindtxtTextEnter, id=wxID_FINDRETURN)
         self.findTxt.SetAcceleratorTable(wx.AcceleratorTable([(wx.ACCEL_NORMAL, wx.WXK_RETURN, wxID_FINDRETURN)]))
-        wxID_REPLACERETURN = wx.NewId()
+        wxID_REPLACERETURN = wx.NewIdRef(count=1)
         self.Bind(wx.EVT_MENU, self.OnReplacetxtTextEnter, id=wxID_REPLACERETURN)
         self.replaceTxt.SetAcceleratorTable(wx.AcceleratorTable([(wx.ACCEL_NORMAL, wx.WXK_RETURN, wxID_FINDRETURN)]))
         # Set controls based on engine
@@ -392,7 +418,7 @@ class FindReplaceDlg(wx.Dialog):
                 selStart, selEnd = self.view.GetSelection()
                 if selStart != selEnd and '\n' not in text:
                     self.findTxt.SetValue(text)
-                    self.findTxt.SetMark(0, len(text))
+                    self.findTxt.SetTextSelection(0, len(text))
                 # Use this region for future search replaces over selected.
                 engine.setRegion(view, view.GetSelection())
                 self.findBtn.SetDefault()
@@ -400,8 +426,8 @@ class FindReplaceDlg(wx.Dialog):
         # Give the find entry focus
         self.findTxt.SetFocus()
 
-        wxID_DOFIND = wx.NewId()
-        wxID_DOREPLACE = wx.NewId()
+        wxID_DOFIND = wx.NewIdRef(count=1)
+        wxID_DOREPLACE = wx.NewIdRef(count=1)
         self.Bind(wx.EVT_MENU, self.OnFindbtnButton, id=wxID_DOFIND)
         self.Bind(wx.EVT_MENU, self.OnReplacebtnButton, id=wxID_DOREPLACE)
         # bug in wxPython, esc key not working
@@ -451,7 +477,7 @@ class FindReplaceDlg(wx.Dialog):
         for x in history:
             self.findTxt.Append(x)
         self.findTxt.SetValue(history[0])
-        self.findTxt.SetMark(0, len(history[0]))
+        self.findTxt.SetTextSelection(0, len(history[0]))
 
         try:
             working_folder = os.path.dirname(self.view.model.localFilename())

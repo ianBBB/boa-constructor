@@ -8,7 +8,7 @@ def create(parent):
 
 [wxID_FRAME1, wxID_FRAME1BUTTON1, wxID_FRAME1BUTTON2, wxID_FRAME1STATICTEXT1, 
  wxID_FRAME1TEXTCTRL1, 
-] = [wx.NewId() for _init_ctrls in range(5)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 class Frame1(wx.Frame):
     def _init_ctrls(self, prnt):

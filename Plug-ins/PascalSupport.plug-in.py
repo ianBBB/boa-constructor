@@ -47,7 +47,7 @@ class PascalStyledTextCtrlMix(StyledTextCtrls.LanguageSTCMix):
               (0, Preferences.STCLineNumMarginWidth), 'pascal', pascal_cfgfile)
         self.setStyles()
 
-wxID_PASSOURCEVIEW = wx.NewId()
+wxID_PASSOURCEVIEW = wx.NewIdRef(count=1)
 class PascalSourceView(SourceViews.EditorStyledTextCtrl, PascalStyledTextCtrlMix):
     viewName = 'Source'
     viewTitle = _('Source')
@@ -62,7 +62,7 @@ Plugins.registerLanguageSTCStyle('Pascal', 'pascal', PascalStyledTextCtrlMix, pa
 
 # The compile action is just added as an example of how to add an action to
 # a controller and is not implemented
-wxID_PASCALCOMPILE = wx.NewId()
+wxID_PASCALCOMPILE = wx.NewIdRef(count=1)
 class PascalController(Controllers.SourceController):
     Model = PascalModel
     DefaultViews = [PascalSourceView]

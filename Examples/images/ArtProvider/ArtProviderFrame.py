@@ -13,7 +13,7 @@ def create(parent):
 
 [wxID_FRAME1, wxID_FRAME1BITMAPBUTTON1, wxID_FRAME1BITMAPBUTTON2, 
  wxID_FRAME1PANEL1, wxID_FRAME1STATICTEXT1, wxID_FRAME1STATICTEXT2, 
-] = [wx.NewId() for _init_ctrls in range(6)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class Frame1(wx.Frame):
     def _init_ctrls(self, prnt):
@@ -50,10 +50,10 @@ class Frame1(wx.Frame):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     
     # Install the art provider in your application
-    wx.ArtProvider.PushProvider(ArtProviderExample.ArtProviderExample())
+    wx.ArtProvider.Push(ArtProviderExample.ArtProviderExample())
     
     frame = create(None)
     frame.Show()

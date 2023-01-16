@@ -77,7 +77,7 @@ class ExternalMethodFinder:
 [wxID_EXTMETHDLG, wxID_EXTMETHDLGBTCANCEL, wxID_EXTMETHDLGBTOK, 
  wxID_EXTMETHDLGCBMODULE, wxID_EXTMETHDLGCHFUNCTION, wxID_EXTMETHDLGPANEL1, 
  wxID_EXTMETHDLGSTATICTEXT1, wxID_EXTMETHDLGSTATICTEXT2, 
-] = [wx.NewId() for _init_ctrls in range(8)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(8)]
 
 class ExtMethDlg(wx.Dialog):
     def _init_ctrls(self, prnt):

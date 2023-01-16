@@ -7,7 +7,7 @@ def create(parent):
 
 [wxID_DIALOG1, wxID_DIALOG1BUTTON1, wxID_DIALOG1STATICBITMAP1, 
  wxID_DIALOG1STATICTEXT1, wxID_DIALOG1STATICTEXT2, 
-] = [wx.NewId() for _init_ctrls in range(5)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 class Dialog1(wx.Dialog):
     def _init_ctrls(self, prnt):

@@ -26,7 +26,7 @@ def create(parent):
  wxID_ARTPROVIDERBROWSERBTNCANCEL, wxID_ARTPROVIDERBROWSERBTNFILEDLG, 
  wxID_ARTPROVIDERBROWSERBTNOK, wxID_ARTPROVIDERBROWSERCLIENTID, 
  wxID_ARTPROVIDERBROWSERIMGSIZE, wxID_ARTPROVIDERBROWSERLISTCTRL, 
-] = [wx.NewId() for _init_ctrls in range(8)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(8)]
 
 class ArtProviderBrowser(wx.Dialog):
     def _init_coll_boxSizer3_Items(self, parent):

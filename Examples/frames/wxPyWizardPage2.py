@@ -1,17 +1,17 @@
 #Boa:PyWizardPage:wxPyWizardPage2
 
 import wx
-import wx.wizard
+import wx.adv
+from wx.adv import Wizard
 
 [wxID_WXPYWIZARDPAGE2, wxID_WXPYWIZARDPAGE2BUTTON1, 
  wxID_WXPYWIZARDPAGE2BUTTON2, 
-] = [wx.NewIdRef() for _init_ctrls in range(3)]
+] = [wx.NewId() for _init_ctrls in range(3)]
 
-class wxPyWizardPage2(wx.wizard.PyWizardPage):
+class wxPyWizardPage2(wx.adv.WizardPage):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
-        wx.wizard.PyWizardPage.__init__(self, bitmap=wx.NullBitmap, parent=prnt,
-              resource='')
+        wx.adv.WizardPage.__init__(self, bitmap=wx.NullBitmap, parent=prnt)
         self.SetName('wxPyWizardPage2')
         self.SetBackgroundColour(wx.Colour(128, 128, 255))
 

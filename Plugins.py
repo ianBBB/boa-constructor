@@ -12,6 +12,7 @@
 
 #import os, glob, new, pprint
 import os, glob, pprint
+import types
 
 import Preferences, Utils
 from Utils import _
@@ -59,7 +60,8 @@ def importFromPlugins(name):
     else:
         raise ImportError(_('Module %s could not be found in Plug-ins')%modname)
 
-    mod = new.module(name)
+    # mod = new.module(name)
+    mod = types.ModuleType(name)
 
     exec(modpath, mod.__dict__)
 

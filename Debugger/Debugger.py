@@ -37,8 +37,8 @@ TEXTCTRL_GOODLEN = 20000
 
 STOP_GENTLY = 0
 
-wxID_PAGECHANGED = wx.NewId()
-wxID_TOPPAGECHANGED = wx.NewId()
+wxID_PAGECHANGED = wx.NewIdRef(count=1)
+wxID_TOPPAGECHANGED = wx.NewIdRef(count=1)
 class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
     debug_client = None
     _destroyed = 0
@@ -215,7 +215,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
             self.stream_timer = None
 
     def setDefaultDimensions(self):
-        self.SetDimensions(0, Preferences.underPalette,
+        self.SetSize(0, Preferences.underPalette,
               Preferences.inspWidth, Preferences.bottomHeight)
 
     _sashes_inited = 0
@@ -462,7 +462,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
         msg = '%s: %s.' % (t, v)
 
         confirm = wx.MessageBox(_('%s\n\nStop debugger?')%msg,
-                  _('Debugger Communication Exception'),
+                  _('Debugger CCommunication Exception'),
                   wx.YES_NO | wx.YES_DEFAULT | wx.ICON_EXCLAMATION |
                   wx.CENTRE) == wx.YES
 

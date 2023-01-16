@@ -99,7 +99,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
         if wId in args and args[wId] in Enumerations.wxStockIds:
             args[wId] = getattr(wx, args[wId].split('.')[1])
         elif doId: 
-            args[wId] = wx.NewId()
+            args[wId] = wx.NewIdRef(count=1)
 
         return args
 

@@ -14,7 +14,7 @@ def create(parent):
  wxID_FRAME1BUTTON7, wxID_FRAME1BUTTON8, wxID_FRAME1BUTTON9, 
  wxID_FRAME1NOTEBOOK1, wxID_FRAME1PANEL1, wxID_FRAME1PANEL2, 
  wxID_FRAME1PANEL3, wxID_FRAME1PANEL4, wxID_FRAME1STATICBOX1, 
-] = [wx.NewId() for _init_ctrls in range(28)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(28)]
 
 class Frame1(wx.Frame):
     def _init_coll_staticBoxSizer1_Items(self, parent):

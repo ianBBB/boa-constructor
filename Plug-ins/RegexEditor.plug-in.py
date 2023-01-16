@@ -23,7 +23,7 @@ def createRegexEditor(parent):
  wxID_REGEXEDITORFRMSTATICTEXT4, wxID_REGEXEDITORFRMSTATICTEXT5, 
  wxID_REGEXEDITORFRMSTATUSBAR, wxID_REGEXEDITORFRMTXTMATCH, 
  wxID_REGEXEDITORFRMTXTREGEX, wxID_REGEXEDITORFRMTXTSTRING, 
-] = [wx.NewId() for _init_ctrls in range(14)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(14)]
 
 class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
     def _init_coll_lcGroups_Columns(self, parent):
@@ -40,8 +40,8 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
         # generated method, don't edit
         parent.SetFieldsCount(2)
 
-        parent.SetStatusText(number=0, text='')
-        parent.SetStatusText(number=1, text='')
+        parent.SetStatusText(i=0, text='')
+        parent.SetStatusText(i=1, text='')
 
         parent.SetStatusWidths([16, -1])
 
@@ -103,7 +103,7 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
         self.rbAction = wx.RadioBox(choices=[_('Search'), _('Match')],
               id=wxID_REGEXEDITORFRMRBACTION, label=_('Action'),
               majorDimension=1, name='rbAction', parent=self.panel,
-              point=wx.Point(376, 176), size=wx.Size(112, 120),
+              pos=wx.Point(376, 176), size=wx.Size(112, 120),
               style=wx.RA_SPECIFY_COLS)
         self.rbAction.SetConstraints(LayoutAnchors(self.rbAction, False, True,
               True, False))
@@ -111,7 +111,7 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
               id=wxID_REGEXEDITORFRMRBACTION)
 
         self.statusBar = wx.StatusBar(id=wxID_REGEXEDITORFRMSTATUSBAR,
-              name='statusBar', parent=self, style=wx.ST_SIZEGRIP)
+              name='statusBar', parent=self, style=wx.STB_SIZEGRIP)
         self.statusBar.SetPosition(wx.Point(0, 462))
         self.statusBar.SetSize(wx.Size(495, 20))
         self._init_coll_statusBar_Fields(self.statusBar)
@@ -194,7 +194,7 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
 
             # now add the sorted list items to lcGroups 
             for idx, name, group in namedGroups:
-                self.lcGroups.InsertStringItem(idx-1, str(idx))
+                self.lcGroups.InsertItem(idx-1, str(idx))
                 self.lcGroups.SetStringItem(idx-1, 1, name)
                 self.lcGroups.SetStringItem(idx-1, 2, group)
 

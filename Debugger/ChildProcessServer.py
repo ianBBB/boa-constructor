@@ -1,7 +1,11 @@
 import sys, os, time
-import random, sha, threading
+# import random, sha, threading
+import random
+import hashlib
+import threading
 from time import sleep
-from SocketServer import TCPServer
+# from SocketServer import TCPServer
+import socketserver
 
 from IsolatedDebugger import DebugServer, DebuggerConnection
 from Tasks import ThreadedTaskHandler
@@ -15,7 +19,7 @@ if boa_root not in sys.path:
 try:
     from ExternalLib.xmlrpcserver import RequestHandler
 except ImportError:
-    from xmlrpcserver import RequestHandler
+    from ExternalLib.xmlrpcserver import RequestHandler
 
 serving = 1
 
@@ -31,7 +35,8 @@ class DebugRequestHandler (RequestHandler):
         h = self.headers
         if auth_str and (not h.has_key('x-auth')
                          or h['x-auth'] != auth_str):
-            raise Exception, 'Unauthorized: X-Auth header missing or incorrect'
+            # raise Exception, 'Unauthorized: X-Auth header missing or incorrect'
+            raise Exception ('Unauthorized: X-Auth header missing or incorrect')
 
     def call(self, method, params):
         # Override of xmlrpcserver.RequestHandler.call()
@@ -59,7 +64,8 @@ class TaskingMixIn:
         task_handler.addTask(self.finish_request,
                              args=(request, client_address))
 
-class TaskingTCPServer(TaskingMixIn, TCPServer): pass
+# class TaskingTCPServer(TaskingMixIn, TCPServer): pass
+class TaskingTCPServer(TaskingMixIn, socketserver.TCPServer): pass
 
 
 def streamFlushThread():
@@ -84,7 +90,8 @@ def main(args=None):
     connection.allowEnvChanges()  # Allow changing of sys.path, etc.
 
     # Create an authentication string, always 40 characters.
-    auth_str = sha.new(str(random.random())).hexdigest()
+    # auth_str = sha.new(str(random.random())).hexdigest()
+    auth_str = hashlib.sha256(str(random.random()).encode('utf-8')).hexdigest()
 
     # port is 0 to allocate any port.
     server = TaskingTCPServer(('', 0), DebugRequestHandler)

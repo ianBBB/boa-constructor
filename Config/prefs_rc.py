@@ -138,7 +138,7 @@ autoRefreshOnCodeComplete = True
 importOnCodeComplete = False
 
 # Should call tips be invoked after typing an open paren
-callTipsOnOpenParen = False
+callTipsOnOpenParen = True
 
 # Flag for turning on special checking for european keyboard characters by
 # checking for certain codes while ctrl alt is held.

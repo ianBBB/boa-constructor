@@ -12,7 +12,7 @@ def create(parent):
 [wxID_WXFRAME1, wxID_WXFRAME1NOTEBOOK1, wxID_WXFRAME1PANEL1, 
  wxID_WXFRAME1PANEL2, wxID_WXFRAME1PANEL3, wxID_WXFRAME1PANEL4, 
  wxID_WXFRAME1PANEL5, wxID_WXFRAME1PANEL6, wxID_WXFRAME1PANEL7, 
-] = [wx.NewId() for _init_ctrls in range(9)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(9)]
 
 class wxFrame1(wx.Frame):
     _custom_classes = {'wx.Panel': ['wxPanel1', 'wxPanel2', 'wxPanel3']}

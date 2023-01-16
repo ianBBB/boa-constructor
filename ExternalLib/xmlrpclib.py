@@ -372,7 +372,8 @@ class DateTime:
         return "<DateTime %s at %x>" % (repr(self.value), id(self))
 
     def decode(self, data):
-        self.value = string.strip(data)
+        # self.value = string.strip(data)
+        self.value = data.strip()
 
     def encode(self, out):
         out.write("<value><dateTime.iso8601>")
@@ -529,10 +530,10 @@ else:
             target.xml(encoding, None)
 
         def feed(self, data):
-            self._parser.Parse(data, 0)
+            self._parser.Parse(data, False)
 
         def close(self):
-            self._parser.Parse("", 1) # end of data
+            self._parser.Parse("", True) # end of data
             del self._target, self._parser # get rid of circular references
 
 class SlowParser:
@@ -540,18 +541,25 @@ class SlowParser:
     # this is about 10 times slower than sgmlop, on roundtrip
     # testing.
     def __init__(self, target):
-        import xmllib # lazy subclassing (!)
-        if xmllib.XMLParser not in SlowParser.__bases__:
-            SlowParser.__bases__ = (xmllib.XMLParser,)
+
+        # import xmllib # lazy subclassing (!)
+        # if xmllib.XMLParser not in SlowParser.__bases__:
+        #     SlowParser.__bases__ = (xmllib.XMLParser,)
+
+        import xml
+        if SlowParser.__bases__:
+            SlowParser.__bases__ = xml.parsers.expat.ParserCreate()
+
+
         self.handle_xml = target.xml
         self.unknown_starttag = target.start
         self.handle_data = target.data
         self.handle_cdata = target.data
         self.unknown_endtag = target.end
-        try:
-            xmllib.XMLParser.__init__(self, accept_utf8=1)
-        except TypeError:
-            xmllib.XMLParser.__init__(self) # pre-2.0
+        # try:
+        #     xmllib.XMLParser.__init__(self, accept_utf8=1)
+        # except TypeError:
+        #     xmllib.XMLParser.__init__(self) # pre-2.0
 
 # --------------------------------------------------------------------
 # XML-RPC marshalling and unmarshalling code
@@ -605,7 +613,8 @@ class Marshaller:
                 dump(v, write)
                 write("</param>\n")
             write("</params>\n")
-        result = string.join(out, "")
+        # result = string.join(out, "")
+        result = "".join(out)
         return result
 
     def __dump(self, value, write):
@@ -689,7 +698,7 @@ class Marshaller:
         write("<value><struct>\n")
         for k in list(value.keys()):
             write("<member>\n")
-            if not isinstance(k, StringType):
+            if not isinstance(k, str):
                 raise TypeError("dictionary key must be string")
             write("<name>%s</name>\n" % escape(k))
             dump(value[k], write)
@@ -939,12 +948,12 @@ def dumps(params, methodname=None, methodresponse=None, encoding=None):
     where necessary.
     """
 
-    assert isinstance(params, TupleType) or isinstance(params, Fault),\
+    assert isinstance(params, tuple) or isinstance(params, Fault),\
            "argument must be tuple or Fault instance"
 
     if isinstance(params, Fault):
         methodresponse = 1
-    elif methodresponse and isinstance(params, TupleType):
+    elif methodresponse and isinstance(params, tuple):
         assert len(params) == 1, "response tuple must be a singleton"
 
     if not encoding:
@@ -965,7 +974,7 @@ def dumps(params, methodname=None, methodresponse=None, encoding=None):
     # standard XML-RPC wrappings
     if methodname:
         # a method call
-        if not isinstance(methodname, StringType):
+        if not isinstance(methodname, str):
             methodname = methodname.encode(encoding)
         data = (
             xmlheader,
@@ -1098,11 +1107,12 @@ class Transport:
     def get_host_info(self, host):
 
         x509 = {}
-        if isinstance(host, TupleType):
+        if isinstance(host, tuple):
             host, x509 = host
 
         import urllib.request, urllib.parse, urllib.error
-        auth, host = urllib.parse.splituser(host)
+        # auth, host = urllib.parse.splituser(host)
+        auth, host = urllib.parse.urlparse(host)
 
         if auth:
             import base64
@@ -1148,7 +1158,7 @@ class Transport:
         host, extra_headers, x509 = self.get_host_info(host)
         connection.putheader("Host", host)
         if extra_headers:
-            if isinstance(extra_headers, DictType):
+            if isinstance(extra_headers, dict):
                 extra_headers = list(extra_headers.items())
             for key, value in extra_headers:
                 connection.putheader(key, value)

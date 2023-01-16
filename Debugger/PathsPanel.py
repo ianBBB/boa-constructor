@@ -7,21 +7,23 @@ from Utils import _
 
 [wxID_PATHSPANEL, wxID_PATHSPANELADD_BTN, wxID_PATHSPANELGRID, 
  wxID_PATHSPANELREMOVE_BTN, wxID_PATHSPANELSTATICBOX1, 
-] = [wx.NewId() for _init_ctrls in range(5)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 class PathsPanel(wx.Panel):
     def _init_coll_staticBoxSizer1_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.grid, 1, border=8, flag=wx.ALL | wx.GROW)
-        parent.AddSizer(self.boxSizer1, 0, border=0, flag=wx.ALIGN_RIGHT)
+        parent.Add(self.grid, 1, border=8, flag=wx.ALL | wx.GROW)
+        parent.Add(self.boxSizer1, 0, border=0, flag=wx.ALIGN_RIGHT)
 
     def _init_coll_boxSizer1_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.add_btn, 0, border=8,
-              flag=wx.ALL | wx.ALIGN_RIGHT)
-        parent.AddWindow(self.remove_btn, 0, border=8,
+        # parent.Add(self.add_btn, 0, border=8,
+        #       flag=wx.ALL | wx.ALIGN_RIGHT)
+        parent.Add(self.add_btn, 0, border=8,
+              flag=wx.ALL)
+        parent.Add(self.remove_btn, 0, border=8,
               flag=wx.BOTTOM | wx.TOP | wx.RIGHT)
 
     def _init_sizers(self):
@@ -71,7 +73,7 @@ class PathsPanel(wx.Panel):
     def __init__(self, parent, id, pos, size, style, name):
         self._init_ctrls(parent)
 
-        self.SetDimensions(pos.x, pos.y, size.x, size.y)
+        self.SetSize(pos.x, pos.y, size.x, size.y)
 
     def init_paths(self, paths):
         self.paths = paths

@@ -12,7 +12,7 @@ def create(parent):
     return FrameI18N(parent)
 
 [wxID_FRAMEI18N, wxID_FRAMEI18NSTATICTEXT1, 
-] = [wx.NewId() for _init_ctrls in range(2)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(2)]
 
 class FrameI18N(wx.Frame):
     def _init_ctrls(self, prnt):

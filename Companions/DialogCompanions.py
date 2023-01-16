@@ -98,7 +98,7 @@ finally:
 
 class FileDialogCDC(MessagedCDC):
     def body(self):
-        return '''dlg = wx.FileDialog(self, "Choose a file", ".", "", "*.*", wx.OPEN)
+        return '''dlg = wx.FileDialog(self, "Choose a file", ".", "", "*.*", wx.FD_OPEN)
 try:
     if dlg.ShowModal() == wx.ID_OK:
         filename = dlg.GetPath()

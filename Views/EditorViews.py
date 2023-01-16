@@ -656,7 +656,7 @@ class ListCtrlView(wx.ListView, EditorView, Utils.ListCtrlSelectionManagerMix):
                 # self.InsertImageStringItem(index, list[0], imgIdx)
                 self.InsertItem(index, list[0], imgIdx)
             else:
-                self.InsertStringItem(index, list[0])
+                self.InsertItem(index, list[0])
             self.SetItemData(index, index)
             self.sortData[index] = list
             col = 1
@@ -749,10 +749,10 @@ class VirtualListCtrlView(wx.ListCtrl, EditorView):
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelect)
         self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnItemDeselect)
 
-        self.attrPM = wx.ListItemAttr()
+        self.attrPM = wx.ItemAttr()
         self.attrPM.SetBackgroundColour(Preferences.pastelMedium)
 
-        self.attrPL = wx.ListItemAttr()
+        self.attrPL = wx.ItemAttr()
         self.attrPL.SetBackgroundColour(Preferences.pastelLight)
 
     selected = -1
@@ -785,7 +785,7 @@ class VirtualListCtrlView(wx.ListCtrl, EditorView):
             return None
 
 
-idGotoLine = wx.NewId()
+idGotoLine = wx.NewIdRef(count=1)
 class ToDoView(ListCtrlView):
     viewName = 'Todo'
     viewTitle = _('Todo')
@@ -1013,21 +1013,29 @@ class ExploreView(wx.TreeCtrl, EditorView):
 
         self.DeleteAllItems()
         rootItem = self.AddRoot(self.model.moduleName, 5, -1,
-              wx.TreeItemData(CodeBlock('', 0, 0)))
+
               # wx.Tree(CodeBlock('', 0, 0)))
+            CodeBlock('', 0, 0))
         if module.imports or module.from_imports_names:
-            importsItem = self.AppendItem(rootItem, 'Imports', 8, data=wx.TreeItemData(CodeBlock('', 0, 0)))
+            importsItem = self.AppendItem(rootItem, 'Imports', 8, data=CodeBlock('', 0, 0))
+            # for i in module.imports:
+            #     self.AppendItem(importsItem, i, 6, data=wx.TreeItemData(CodeBlock('', module.imports[i][0], 0)))
+            # for i in module.from_imports_names:
+            #     self.AppendItem(importsItem, i, 6, data=wx.TreeItemData(CodeBlock('', module.from_imports[module.from_imports_names[i]][0], 0)))
             for i in module.imports:
-                self.AppendItem(importsItem, i, 6, data=wx.TreeItemData(CodeBlock('', module.imports[i][0], 0)))
+                self.AppendItem(importsItem, i, 6, data=CodeBlock('', module.imports[i][0], 0))
             for i in module.from_imports_names:
-                self.AppendItem(importsItem, i, 6, data=wx.TreeItemData(CodeBlock('', module.from_imports[module.from_imports_names[i]][0], 0)))
-                
+                self.AppendItem(importsItem, i, 6, data=CodeBlock('', module.from_imports[module.from_imports_names[i]][0], 0))
+
         for className in module.class_order:
-            classItem = self.AppendItem(rootItem, className, 0, -1,
-                  wx.TreeItemData(module.classes[className].block))
+            # classItem = self.AppendItem(rootItem, className, 0, -1,
+            #       wx.TreeItemData(module.classes[className].block))
+            classItem = self.AppendItem(rootItem, className, 0, -1, module.classes[className].block)
             for attrib in list(module.classes[className].attributes.keys()):
+                # attribItem = self.AppendItem(classItem, attrib, 4, -1,
+                #   wx.TreeItemData(module.classes[className].attributes[attrib]))
                 attribItem = self.AppendItem(classItem, attrib, 4, -1,
-                  wx.TreeItemData(module.classes[className].attributes[attrib]))
+                  module.classes[className].attributes[attrib])
             brkStrt = module.classes[className].block.start
             for method in module.classes[className].method_order:
                 methBlock = module.classes[className].methods[method]
@@ -1040,32 +1048,38 @@ class ExploreView(wx.TreeCtrl, EditorView):
                         del breaks[brkLnNo]
 
                 if Utils.methodLooksLikeEvent(method):
-                    methodsItem = self.AppendItem(classItem, method, 2, -1, wx.TreeItemData(methBlock))
+                    # methodsItem = self.AppendItem(classItem, method, 2, -1, wx.TreeItemData(methBlock))
+                    methodsItem = self.AppendItem(classItem, method, 2, -1, methBlock)
                     if methBlock.locals:
                         for l in methBlock.locals:
                             methodLocalsItem = self.AppendItem(methodsItem, l, 6, -1,
-                                  wx.TreeItemData(CodeBlock('', methBlock.locals[l].lineno, 0)))
+                                  CodeBlock('', methBlock.locals[l].lineno, 0))
                 else:
-                    methodsItem = self.AppendItem(classItem, method, 1, -1, wx.TreeItemData(methBlock))
+                    # methodsItem = self.AppendItem(classItem, method, 1, -1, wx.TreeItemData(methBlock))
+                    methodsItem = self.AppendItem(classItem, method, 1, -1,methBlock)
                     if methBlock.locals:
                         for l in methBlock.locals:
                             methodLocalsItem = self.AppendItem(methodsItem, l, 6, -1,
-                                  wx.TreeItemData(CodeBlock('', methBlock.locals[l].lineno, 0)))
+                                  CodeBlock('', methBlock.locals[l].lineno, 0))
 
         functionList = list(module.functions.keys())
         functionList.sort()
         for func in functionList:
             funcBlock = module.functions[func]
-            funcItem = self.AppendItem(rootItem, func, 3, -1,
-              wx.TreeItemData(funcBlock))
+            # funcItem = self.AppendItem(rootItem, func, 3, -1,
+            #   wx.TreeItemData(funcBlock))
+            funcItem = self.AppendItem(rootItem, func, 3, -1, funcBlock)
             if funcBlock.locals:
                 for l in funcBlock.locals:
                     funcLocalsItem = self.AppendItem(funcItem, l, 6, -1,
-                          wx.TreeItemData(CodeBlock('', funcBlock.locals[l].lineno, 0)))
+                                                     # wx.TreeItemData(CodeBlock('', funcBlock.locals[l].lineno, 0)))
+                                                     CodeBlock('', funcBlock.locals[l].lineno, 0))
 
         for globalName in module.global_order:
             globalItem = self.AppendItem(rootItem, globalName, 6, -1,
-              wx.TreeItemData(module.globals[globalName]))
+                                         # wx.TreeItemData(module.globals[globalName]))
+                                         module.globals[globalName])
+
 
         self.Expand(rootItem)
 
@@ -1149,7 +1163,7 @@ class ExploreEventsView(ExploreView):
         module = model.getModule()
         self.DeleteAllItems()
         rootItem = self.AddRoot(model.main, 5, -1,
-              wx.TreeItemData(CodeBlock('', 0, 0)))
+              CodeBlock('', 0, 0))
         self.Expand(rootItem)
 
         evtMeths = []
@@ -1182,7 +1196,7 @@ class ExploreEventsView(ExploreView):
                 obj, prop = collName[:pv], collName[pv+1:]
                 name = self.stdCollMeths.get(oc, 'Collection: %s.%s'%(obj, prop))
             collMethItem = self.AppendItem(rootItem, name, 1, -1,
-                  wx.TreeItemData(main.methods[oc]))
+                  main.methods[oc])
             #self.Expand(collMethItem)
 
             idEvtMeths = {}
@@ -1213,20 +1227,17 @@ class ExploreEventsView(ExploreView):
                         evts.extend(idEvtMeths[crt.params['id']])
 
                     if evts:
-                        attrItem = self.AppendItem(collMethItem, name, 4, -1,
-                              wx.TreeItemData(cb))
+                        attrItem = self.AppendItem(collMethItem, name, 4, -1, cb)
                         #self.Expand(attrItem)
                         for evtMeth in evts:
-                            evtItem = self.AppendItem(attrItem, evtMeth, 2, -1,
-                                  wx.TreeItemData(main.methods[evtMeth]))
+                            evtItem = self.AppendItem(attrItem, evtMeth, 2, -1, main.methods[evtMeth])
 
                 elif 'id' in crt.params:
                     name = crt.params['id']
                     if name in idEvtMeths:
                         evts = idEvtMeths[name]
                         for evtMeth in evts:
-                            evtItem = self.AppendItem(collMethItem, evtMeth, 2, -1,
-                                  wx.TreeItemData(main.methods[evtMeth]))
+                            evtItem = self.AppendItem(collMethItem, evtMeth, 2, -1, main.methods[evtMeth])
 
         Utils.traverseTreeCtrl(self, rootItem, self.expandNode)
 
@@ -1240,7 +1251,7 @@ class HierarchyView(wx.TreeCtrl, EditorView):
     gotoLineBmp = 'Images/Editor/GotoLine.png'
 
     def __init__(self, parent, model):
-        id = wx.NewId()
+        id = wx.NewIdRef(count=1)
         wx.TreeCtrl.__init__(self, parent, id, style=wx.TR_HAS_BUTTONS | wx.SUNKEN_BORDER)
         EditorView.__init__(self, model,
           ((_('Goto line'), self.OnGoto, self.gotoLineBmp, ''),), 0)
@@ -1348,7 +1359,7 @@ class DistUtilManifestView(ListCtrlView):
         try:
             manifest = openEx(manifestPath).load()
         except TransportError as err:
-            self.InsertStringItem(0, _('Error'))
+            self.InsertItem(0, _('Error'))
             self.SetItem(0, 1, str(err))
             self.manifest = None
         else:
@@ -1361,7 +1372,7 @@ class DistUtilManifestView(ListCtrlView):
                     continue
                 self.manifest.append(path)
                 name = os.path.basename(path)
-                self.InsertStringItem(idx, name)
+                self.InsertItem(idx, name)
                 self.SetItem(idx, 1, path)
 
         self.pastelise()
@@ -1404,7 +1415,7 @@ class CVSConflictsView(ListCtrlView):
 
         confCnt = 0
         for rev, lineNo, size in self.conflicts:
-            self.InsertStringItem(confCnt, rev)
+            self.InsertItem(confCnt, rev)
             self.SetItem(confCnt, 1, repr(lineNo))
             self.SetItem(confCnt, 2, repr(size))
             confCnt = confCnt + 1

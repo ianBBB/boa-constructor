@@ -24,7 +24,7 @@ from Utils import _
  wxID_PYDOCHELPPAGEBTNSEARCH, wxID_PYDOCHELPPAGEBTNSTOP,
  wxID_PYDOCHELPPAGECHKRUNSERVER, wxID_PYDOCHELPPAGEPNLSTATUS,
  wxID_PYDOCHELPPAGESTXSTATUS, wxID_PYDOCHELPPAGETXTSEARCH,
-] = [wx.NewId() for _init_ctrls in range(8)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(8)]
 
 class PyDocHelpPage(wx.Panel):
     def _init_utils(self):
@@ -262,6 +262,7 @@ def tagEater(strg):
 def showMainHelp(bookname):
     getHelpController().Display(bookname).ExpandBook(bookname)
 
+
 def showCtrlHelp(wxClass, method=''):
     getHelpController().Display(wxClass).ExpandCurrAsWxClass(method)
 
@@ -283,7 +284,8 @@ def showContextHelp(word):
 ##        else:
 ##            if os.path.isfile('%s/%s.py'%(libPath, word)):
 ##                word = '%s (standard module)'%word
-    if string.strip(word):
+    # if string.strip(word):
+    if str.strip(word):
         getHelpController().Display(word).IndexFind(word)
     else:
         getHelpController().DisplayContents()
@@ -355,19 +357,31 @@ class _CloseEvtHandler(wx.EvtHandler):
             config.WriteInt('pdRunServer', self.frameEx.pydocPage.runServer)
             config.Flush()
 
-        # catching the close event when running standalone
-        if __name__ == '__main__':
-            if not canClosePydocServer():
-                if pydocWarning():
-                    return
-            event.Skip()
-            self.frame.PopEventHandler().Destroy()
+        # Original code.
+        # # catching the close event when running standalone
+        # if __name__ == '__main__':
+        #     if not canClosePydocServer():
+        #         if pydocWarning():
+        #             return
+        #     event.Skip()
+        #     self.frame.PopEventHandler().Destroy()
+        #
+        # if self.controller:
+        #     self.controller.frameX = None
+        # event.Skip()#self.frame.Hide()
+
+        # updated code to properly close down without error
+        if not canClosePydocServer():
+            if pydocWarning():
+                return
+        # event.Skip()
+        self.frame.PopEventHandler().Destroy()
 
         if self.controller:
             self.controller.frameX = None
         event.Skip()#self.frame.Hide()
 
-wxID_COPYTOCLIP =wx.NewId()
+wxID_COPYTOCLIP =wx.NewIdRef(count=1)
 
 # Note, this works nicely because of OOR
 class wxHelpFrameEx:
@@ -376,7 +390,8 @@ class wxHelpFrameEx:
         self.frame = helpctrlr.GetFrame()
         #self.frame.frameEx = self
 
-        wxID_QUITHELP, wxID_FOCUSHTML = wx.NewId(), wx.NewId()
+        wxID_QUITHELP, wxID_FOCUSHTML = wx.NewIdRef(count=1), wx.NewIdRef(count=1)
+        self.frame.Bind(wx.EVT_MENU, self.OnQuitHelp, id=wxID_QUITHELP)
         self.frame.Bind(wx.EVT_MENU, self.OnQuitHelp, id=wxID_QUITHELP)
         self.frame.Bind(wx.EVT_MENU, self.OnFocusHtml, id=wxID_FOCUSHTML)
 
@@ -478,7 +493,9 @@ class wxHelpFrameEx:
             self.controller.Display('%s#%s' % (page, string.lower(anchor)))
 
     def OnQuitHelp(self, event):
-        self.frame.Close()
+        self.frame.Close
+
+
 
     def OnFocusHtml(self, event):
         self.html.SetFocus()
@@ -595,13 +612,16 @@ def delHelp():
     
             f = _hc.GetFrame()
             if f:
-                #f.PopEventHandler().Destroy()
+                # f.PopEventHandler().Destroy()   # orig
+                # f.Destroy()                     # orig
+                f.PopEventHandler().Destroy()
                 f.Destroy()
+                f.PopEventHandler(True)
         _hc.Destroy()
         _hc = None
 
 def main(args):
-    app = wx.PySimpleApp()
+    app = wx.App()
     initHelp()
     if args:
         showContextHelp(args[0])
@@ -611,7 +631,7 @@ def main(args):
     delHelp()
 
 def _test(word):
-    app = wx.PySimpleApp()
+    app = wx.App()
     initHelp()
     if word:
         showContextHelp(word)
@@ -622,6 +642,6 @@ def _test(word):
 
 
 if __name__ == '__main__':
-    #initWxPyDocStrs()
+    # initWxPyDocStrs()
     main(sys.argv[1:])
-    #_test('Window deletion overview')
+    # _test('Window deletion overview')

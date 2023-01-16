@@ -10,10 +10,10 @@ process.  The debug server does the dirty work of stepping and
 stopping at breakpoints.
 '''
 
-wxEVT_DEBUGGER_OK = wx.NewId()
-wxEVT_DEBUGGER_EXC = wx.NewId()
-wxEVT_DEBUGGER_START = wx.NewId()
-wxEVT_DEBUGGER_STOPPED = wx.NewId()
+wxEVT_DEBUGGER_OK = wx.NewIdRef(count=1)
+wxEVT_DEBUGGER_EXC = wx.NewIdRef(count=1)
+wxEVT_DEBUGGER_START = wx.NewIdRef(count=1)
+wxEVT_DEBUGGER_STOPPED = wx.NewIdRef(count=1)
 
 EVT_DEBUGGER_OK = wx.PyEventBinder(wxEVT_DEBUGGER_OK)
 EVT_DEBUGGER_EXC = wx.PyEventBinder(wxEVT_DEBUGGER_EXC)
@@ -119,7 +119,11 @@ class DebuggerTask:
     def __call__(self):
         evt = None
         try:
-            result = self.client.invoke(self.m_name, self.m_args)
+            #TODO there is some drama here about encoding
+            # import inspect
+            # print(inspect.getfullargspec(self.client.invoke))
+            # result = self.client.invoke(b'proceedAndRequestStatus', self.m_args)   # orig
+            result = self.client.invoke('proceedAndRequestStatus', self.m_args)
         except:
             t, v = sys.exc_info()[:2]
             evt = self.client.createEvent(wxEVT_DEBUGGER_EXC)

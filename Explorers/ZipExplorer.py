@@ -26,7 +26,7 @@ from ExternalLib import tarfile
 def isZip(file):
     return os.path.splitext(file)[1] == '.zip'
 
-wxID_ZIPOPEN = wx.NewId()
+wxID_ZIPOPEN = wx.NewIdRef(count=1)
 
 class ZipController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControllerMix):
     def __init__(self, editor, list, inspector, controllers):

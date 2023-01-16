@@ -66,7 +66,8 @@ def AddToolButtonBmpIS(frame, toolbar, name, hint, triggermeth, toggleBmp = ''):
 
 def AddToggleToolButtonBmpObject(frame, toolbar, thebitmap, hint, triggermeth):
     nId = wx.NewIdRef(count=1)
-    toolbar.AddTool(nId, thebitmap, thebitmap, shortHelpString = hint, isToggle = True)
+    # toolbar.AddTool(nId, thebitmap, thebitmap, shortHelpString = hint, isToggle = True)
+    toolbar.AddTool(toolId=nId, label='', bitmap=wx.BitmapBundle(thebitmap), shortHelp=hint, kind=wx.ITEM_NORMAL)
     frame.Bind(wx.EVT_TOOL, triggermeth, id=nId)
     return nId
 
@@ -82,11 +83,15 @@ class BoaFileDropTarget(wx.FileDropTarget):
 
     def OnDropFiles(self, x, y, filenames):
         wx.BeginBusyCursor()
+        error_occurred = True
         try:
             for filename in filenames:
                 self.editor.openOrGotoModule(filename)
+        except:
+            error_occurred = False
         finally:
             wx.EndBusyCursor()
+            return error_occurred
 
 def split_seq(seq, pivot, transformFunc = None):
     result = []
@@ -166,7 +171,17 @@ def ctrlNameFromSrcRef(srcRef):
 def getWxPyNameForClass(Class):
     """ Strips away _modules from the class identifier """
     classPathSegs = Class.__module__.split('.') + [Class.__name__]
-    return '.'.join([pathSeg for pathSeg in classPathSegs if pathSeg[0] != '_'])
+
+    # INFO This is causing a problem with wx.stc.StyledTextCtrl ; it stripps out the _stc however the 'stc' part
+    # is needed to get the correct name of the wx item being created.
+    # I think this was intended to remove '_core' from wx class names however it will also take out '_adv' and '_stc'
+    # which are needed to build the full wx class name for items in those modules.
+    # Trying this fix to simply remove the underscore from affected class names.
+    if classPathSegs[1] in {'_adv','_stc'}:
+        classname = '.'.join(classPathSegs)
+        return classname.replace('_','')
+    else:
+        return '.'.join([pathSeg for pathSeg in classPathSegs if pathSeg[0] != '_'])
 
 def winIdRange(count):
     return [wx.NewIdRef(count=1) for x in range(count)]
@@ -833,7 +848,7 @@ class ListCtrlSelectionManagerMix:
 
 ### Does this version leak event handlers?
 ##def wxCallAfter(callable, *args, **kw):
-##    handler, evtType = wx.EvtHandler(), wx.NewId()
+##    handler, evtType = wx.EvtHandler(), wx.NewIdRef(count=1)
 ##    handler.Connect(-1, -1, evtType, lambda event, handler=handler,
 ##          callable=callable, args=args, kw=kw: callable(*args, **kw) )
 ##    evt = wx.PyEvent()
@@ -847,7 +862,7 @@ class ListCtrlSelectionManagerMix:
 ##
 ##    global _wxCallAfterId
 ##    if _wxCallAfterId is None:
-##        _wxCallAfterId = wx.NewId()
+##        _wxCallAfterId = wx.NewIdRef(count=1)
 ##        app.Connect(-1, -1, _wxCallAfterId,
 ##              lambda event: event.callable(*event.args, **event.kw) )
 ##    evt = wx.PyEvent()

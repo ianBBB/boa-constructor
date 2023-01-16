@@ -49,7 +49,7 @@ class CancelClose(Exception): pass
 
 [wxID_EDITORFRAME, wxID_EDITORFRAMESTATUSBAR, wxID_EDITORFRAMETABS, 
  wxID_EDITORFRAMETABSSPLITTER, wxID_EDITORFRAMETOOLBAR, 
-] = [wx.NewId() for _init_ctrls in range(5)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
     """ Source code editor and host for the Model/View/Controller classes"""
@@ -521,7 +521,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
             self.SetAcceleratorTable(wx.AcceleratorTable(accLst))
 
     def addToolMenu(self, accelLst, name, eventFunc, bmp='-', key=''):
-        wId =wx.NewId()
+        wId = wx.NewIdRef(count=1)
         self.Bind(wx.EVT_MENU, self.OnActivateTool, id=wId)
         if key:
             code = keyDefs[key]
@@ -1178,7 +1178,9 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
 #---Help events-----------------------------------------------------------------
     def OnHelp(self, event):
-        Help.showHelp('Editor.html')
+        # Help.showHelp('Editor.html')
+        pos_pid = Help.main('')
+        print ('possible pid = ' + str(pos_pid))
 
     def OnHelpGuide(self, event):
         Help.showMainHelp('Boa Constructor Getting Started Guide')
@@ -1531,7 +1533,8 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    # app = wx.PySimpleApp()
+    app = wx.App()
 
     import Palette
     palette = Palette.BoaFrame(None, -1, app)

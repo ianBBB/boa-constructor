@@ -42,7 +42,7 @@ class HTMLStyledTextCtrlMix(BaseHTMLStyledTextCtrlMix):
         self.setStyles()
 
 
-wxID_HTMLSOURCEVIEW = wx.NewId()
+wxID_HTMLSOURCEVIEW = wx.NewIdRef(count=1)
 from Views.SourceViews import EditorStyledTextCtrl
 class HTMLSourceView(EditorStyledTextCtrl, HTMLStyledTextCtrlMix):
     viewName = 'HTML'

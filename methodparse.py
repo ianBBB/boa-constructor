@@ -59,6 +59,8 @@ class frame1(wxFrame):
 
 import re, string
 
+import wx
+
 import Preferences, Utils
 from Utils import _
 
@@ -486,6 +488,12 @@ class CollectionItemInitParse(PerLineParser):
         self.method = method
         if params is None: self.params = {}
         else: self.params = params
+        # TODO update menuitem constructor params here
+        # if params:
+        #     if 'kind' in params.keys() and 'text' in params.keys():
+        #         if params['kind'] == 'wx.ITEM_NORMAL':
+        #             params['item'] = params['text']
+        #             params.pop('text')
         if line:
             self.m = is_coll_item_init.search(line)
             if self.m:

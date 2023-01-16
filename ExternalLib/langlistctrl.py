@@ -284,7 +284,7 @@ def CreateLanguagesResourceLists(filter=LC_AVAILABLE, only=()):
                  if wxLangId in langIdNameMap]
 
     for lc, wxli in langCodes:
-        l, cnt = lc.split('_')
+        l, cnt = lc.split('_', 1)
 
         if cnt in flagart.catalog:
             bmp = flagart.catalog[cnt].getBitmap()

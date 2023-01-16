@@ -47,7 +47,7 @@ class JavaStyledTextCtrlMix(StyledTextCtrls.LanguageSTCMix):
               (0, Preferences.STCLineNumMarginWidth), 'java', java_cfgfile)
         self.setStyles()
 
-wxID_JAVASOURCEVIEW = wx.NewId()
+wxID_JAVASOURCEVIEW = wx.NewIdRef(count=1)
 class JavaSourceView(SourceViews.EditorStyledTextCtrl, JavaStyledTextCtrlMix):
     viewName = 'Source'
     viewTitle = _('Source')
@@ -60,7 +60,7 @@ class JavaSourceView(SourceViews.EditorStyledTextCtrl, JavaStyledTextCtrlMix):
 
 # The compile action is just added as an example of how to add an action to
 # a controller and is not implemented
-wxID_JAVACOMPILE = wx.NewId()
+wxID_JAVACOMPILE = wx.NewIdRef(count=1)
 class JavaController(Controllers.SourceController):
     Model = JavaModel
     DefaultViews = [JavaSourceView]

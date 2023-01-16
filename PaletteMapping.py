@@ -138,7 +138,7 @@ compInfo = PaletteStore.compInfo
 
 class DesignTimeExpressionError(Exception): pass
 
-_NB = None
+_NB = None  # Null Bitmap ?
 def evalCtrl(expr, localsDct=None, preserveExc=True):
     """ Function usually used to evaluate source snippets.
 

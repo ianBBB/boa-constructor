@@ -71,7 +71,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
               ('-', None, '-', ''),
               (_('Context help'), self.OnContextHelp, '-', 'ContextHelp'))
 
-        wxID_PYTHONSOURCEVIEW = wx.NewId()
+        wxID_PYTHONSOURCEVIEW = wx.NewIdRef(count=1)
 
         EditorStyledTextCtrl.__init__(self, parent, wxID_PYTHONSOURCEVIEW,
           model, a1, -1)
@@ -898,27 +898,27 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             err.lineno = lineNo
             errstr = err.__class__.__name__+': '+str(err)
             indentpl = prevline.find(stripprevline)
-            if err[0] == 'unexpected EOF while parsing':
+            if err.msg == 'unexpected EOF while parsing':
                 errstr = 'incomplete (%d)'%lineNo
-            elif err[0] == "'return' outside function":
+            elif err.msg == "'return' outside function":
                 self.checkSyntax(prevlines, lineNo, getPrevLine,
                       'def func():\n', ' ')
                 return
-            elif err[0] == "'yield' outside function":
+            elif err.msg == "'yield' outside function":
                 self.checkSyntax(prevlines, lineNo, getPrevLine,
                       'def func():\n', ' ')
                 return
-            elif err[0] == 'expected an indented block':
+            elif err.msg == 'expected an indented block':
                 errstr = errstr + ' ignored'
-            elif err[0] in ("'break' outside loop",
+            elif err.msg in ("'break' outside loop",
                   "'continue' not properly in loop"):
                 self.checkSyntax(prevlines, lineNo, getPrevLine,
                       'while 1:\n', ' ')
                 return
-            elif err[0] == 'invalid token':
+            elif err.msg == 'invalid token':
                 self.indicateError(lineNo,
                       err.offset + indentpl - len(indent) - contLinesOffset,
-                      'SyntaxError: %s'%err[0])
+                      'SyntaxError: %s'%err.msg)
             #"can't assign to function call"
             # Invalid syntax
             else:
@@ -1278,7 +1278,7 @@ class PythonDisView(EditorStyledTextCtrl, PythonStyledTextCtrlMix):
     
     breakBmp = 'Images/Debug/Breakpoints.png'
     def __init__(self, parent, model):
-        wxID_PYTHONDISVIEW = wx.NewId()
+        wxID_PYTHONDISVIEW = wx.NewIdRef(count=1)
 
         EditorStyledTextCtrl.__init__(self, parent, wxID_PYTHONDISVIEW,
           model, (), -1)

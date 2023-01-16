@@ -72,7 +72,7 @@ class DesignTimeCompanion(Companion):
         self.parentCompanion = None
         self.designer = designer
         # Design time window id
-        self.dId = wx.NewId()
+        self.dId = wx.NewIdRef(count=1)
         self.id = None
 
         # Property editors for properties whose types cannot be deduced
@@ -640,7 +640,7 @@ class ControlDTC(DesignTimeCompanion):
     def generateWindowId(self):
         if self.designer:
             self.id = Utils.windowIdentifier(self.designer.GetName(), self.name)
-        else: self.id = repr(wx.NewId())
+        else: self.id = repr(wx.NewIdRef(count=1))
 
     def SetName(self, oldValue, newValue):
         DesignTimeCompanion.SetName(self, oldValue, newValue)
@@ -1221,7 +1221,16 @@ class CollectionDTC(DesignTimeCompanion):
             else:
                 return '-'
         else:
-            displayProp = self.displayProp
+            #INFO Code to take care of different parameter names in a menu item for item text. When Appending to a menu,
+            # it's called an 'item' but in the menu item properties, its called 'text'.
+            displayProp = None
+            if 'kind' in tcl.params.keys():
+                if tcl.params['kind'] == 'wx.ITEM_NORMAL':
+                    displayProp = 'item'
+                else:
+                    displayProp = self.displayProp
+            else:
+                displayProp = self.displayProp
 
         if displayProp in tcl.params:
             propSrc = tcl.params[displayProp]
@@ -1249,16 +1258,28 @@ class CollectionDTC(DesignTimeCompanion):
         collItemInit = methodparse.CollectionItemInitParse(None,
           self.sourceObjName, method, src)
 
+### change txt to item.
+
         self.textConstrLst.append(collItemInit)
         self.setConstr(collItemInit)
 
-        #self.applyDesignTimeDefaults(collItemInit.params, method)
-        # Removing text field from dic to match wx append call.
-        intermediate_dic = collItemInit.params.copy()
-        intermediate_dic.pop('text')
-        self.applyDesignTimeDefaults(intermediate_dic, method)
+#PRUNE
+# currently working in this area. The fields/properties collected by the code cause an error.
+# A field called "text" causes the problem. The initial solution was to just remove the field from
+# the dic to stop the error but this causes other problems downstream when the item is added to the menu.
+#  I need to revert this code back to original and look at it more closely. These fields are found by
+#  introspection so they should be correct. Maybe its the adding process. More work here to understand
+#  it and resolve.
+        self.applyDesignTimeDefaults(collItemInit.params, method)
 
-        return intermediate_dic
+        return collItemInit
+#prune
+        #Removing text field from dic to match wx append call.
+        # intermediate_dic = collItemInit.params.copy()  # temp work around.
+        # intermediate_dic.pop('text')
+        # self.applyDesignTimeDefaults(intermediate_dic, method)
+        #
+        # return intermediate_dic
 
     def deleteItem(self, idx):
         # remove from ctrl
@@ -1292,13 +1313,20 @@ class CollectionDTC(DesignTimeCompanion):
             method = self.insertionMethod
         args = []
         kwargs = {}
-        paramItems = list(self.designTimeDefaults(params, method).items())
+        paramItems_dict= self.designTimeDefaults(params, method).items()
+        paramItems = list(paramItems_dict)
         paramItems.sort()
         for k, v in paramItems:
             if isinstance(k, type(0)):
                 args.append(v)
             else:
                 kwargs[k] = v
+# PRUNE
+#         if 'kind' in kwargs.keys() and 'text' in kwargs.keys():
+#             if kwargs['kind'] == 0:
+#                 kwargs['item'] = kwargs['text']
+#                 kwargs.pop('text')
+
         getattr(self.control, method)(*args, **kwargs)
 
     def SetName(self, oldValue, newValue):
@@ -1505,9 +1533,9 @@ class CollectionIddDTC(CollectionDTC):
             Derived classes should only call this base method if method
             requires an id parameter. This is usually the case."""
         values = copy.copy(vals)
-        values[self.idProp] = repr(wx.NewId())
+        values[self.idProp] = repr(wx.NewIdRef(count=1))
         dts = CollectionDTC.designTimeDefaults(self, values)
-        dts[self.idProp] = wx.NewId()
+        dts[self.idProp] = wx.NewIdRef(count=1)
         return dts
 
     def GetItemId(self, x):

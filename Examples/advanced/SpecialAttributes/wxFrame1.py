@@ -7,7 +7,7 @@ def create(parent, title):
 
 [wxID_WXFRAME1, wxID_WXFRAME1BUTTON1, wxID_WXFRAME1SPLITTERWINDOW1, 
  wxID_WXFRAME1TEXTCTRL1, wxID_WXFRAME1TEXTCTRL2, wxID_WXFRAME1TEXTCTRL3, 
-] = [wx.NewId() for _init_ctrls in range(6)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class wxFrame1(wx.Frame):
     def _init_ctrls(self, prnt):
@@ -28,7 +28,7 @@ class wxFrame1(wx.Frame):
               size=wx.Size(280, 72), style=0, value='textCtrl1')
 
         self.splitterWindow1 = wx.SplitterWindow(id=wxID_WXFRAME1SPLITTERWINDOW1,
-              name='splitterWindow1', parent=self, point=wx.Point(8, 144),
+              name='splitterWindow1', parent=self, pos=wx.Point(8, 144),
               size=wx.Size(280, 120), style=wx.SP_3D)
 
         self.textCtrl2 = wx.TextCtrl(id=wxID_WXFRAME1TEXTCTRL2,
@@ -53,7 +53,7 @@ class wxFrame1(wx.Frame):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = create(None, 'Hello World')
     frame.Show(True)
     app.MainLoop()

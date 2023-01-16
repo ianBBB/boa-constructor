@@ -22,7 +22,7 @@ def create(parent):
  wxID_CONTROLSIZEFRAMEHEIGHTTC, wxID_CONTROLSIZEFRAMEOKBTN, 
  wxID_CONTROLSIZEFRAMEPANEL1, wxID_CONTROLSIZEFRAMERADIOBOX1, 
  wxID_CONTROLSIZEFRAMERADIOBOX2, wxID_CONTROLSIZEFRAMEWIDTHTC, 
-] = [wx.NewId() for _init_ctrls in range(8)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(8)]
 
 class ControlSizeFrame(wx.Dialog):
     def _init_ctrls(self, prnt):

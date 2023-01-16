@@ -9,7 +9,7 @@ def create(parent):
  wxID_FRAME1SASHLAYOUTWINDOW2, wxID_FRAME1SASHLAYOUTWINDOW3, 
  wxID_FRAME1SASHLAYOUTWINDOW4, wxID_FRAME1STATICTEXT1, wxID_FRAME1TEXTCTRL1, 
  wxID_FRAME1TEXTCTRL2, 
-] = [wx.NewId() for _init_ctrls in range(9)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(9)]
 
 class Frame1(wx.Frame):
     def _init_ctrls(self, prnt):
@@ -24,9 +24,9 @@ class Frame1(wx.Frame):
               pos=wx.Point(248, 50), size=wx.Size(262, 234),
               style=wx.TAB_TRAVERSAL)
 
-        self.sashLayoutWindow1 = wx.SashLayoutWindow(id=wxID_FRAME1SASHLAYOUTWINDOW1,
+        self.sashLayoutWindow1 = wx.adv.SashLayoutWindow(id=wxID_FRAME1SASHLAYOUTWINDOW1,
               name='sashLayoutWindow1', parent=self, pos=wx.Point(0, 0),
-              size=wx.Size(510, 50), style=wx.CLIP_CHILDREN | wx.SW_3D)
+              size=wx.Size(510, 50), style=wx.CLIP_CHILDREN | wx.adv.SW_3D)
         self.sashLayoutWindow1.SetBackgroundColour(wx.Colour(255, 0, 0))
         self.sashLayoutWindow1.SetOrientation(wx.LAYOUT_HORIZONTAL)
         self.sashLayoutWindow1.SetAlignment(wx.LAYOUT_TOP)
@@ -36,9 +36,9 @@ class Frame1(wx.Frame):
               self.OnSashlayoutwindow1SashDragged,
               id=wxID_FRAME1SASHLAYOUTWINDOW1)
 
-        self.sashLayoutWindow4 = wx.SashLayoutWindow(id=wxID_FRAME1SASHLAYOUTWINDOW4,
+        self.sashLayoutWindow4 = wx.adv.SashLayoutWindow(id=wxID_FRAME1SASHLAYOUTWINDOW4,
               name='sashLayoutWindow4', parent=self, pos=wx.Point(0, 284),
-              size=wx.Size(510, 65), style=wx.CLIP_CHILDREN | wx.SW_3D)
+              size=wx.Size(510, 65), style=wx.CLIP_CHILDREN | wx.adv.SW_3D)
         self.sashLayoutWindow4.SetBackgroundColour(wx.Colour(0, 0, 255))
         self.sashLayoutWindow4.SetAlignment(wx.LAYOUT_BOTTOM)
         self.sashLayoutWindow4.SetSashVisible(wx.SASH_TOP, True)
@@ -49,9 +49,9 @@ class Frame1(wx.Frame):
               self.OnSashlayoutwindow4SashDragged,
               id=wxID_FRAME1SASHLAYOUTWINDOW4)
 
-        self.sashLayoutWindow2 = wx.SashLayoutWindow(id=wxID_FRAME1SASHLAYOUTWINDOW2,
+        self.sashLayoutWindow2 = wx.adv.SashLayoutWindow(id=wxID_FRAME1SASHLAYOUTWINDOW2,
               name='sashLayoutWindow2', parent=self, pos=wx.Point(0, 50),
-              size=wx.Size(112, 234), style=wx.CLIP_CHILDREN | wx.SW_3D)
+              size=wx.Size(112, 234), style=wx.CLIP_CHILDREN | wx.adv.SW_3D)
         self.sashLayoutWindow2.SetBackgroundColour(wx.Colour(128, 255, 0))
         self.sashLayoutWindow2.SetExtraBorderSize(20)
         self.sashLayoutWindow2.SetAlignment(wx.LAYOUT_LEFT)
@@ -62,9 +62,9 @@ class Frame1(wx.Frame):
               self.OnSashlayoutwindow2SashDragged,
               id=wxID_FRAME1SASHLAYOUTWINDOW2)
 
-        self.sashLayoutWindow3 = wx.SashLayoutWindow(id=wxID_FRAME1SASHLAYOUTWINDOW3,
+        self.sashLayoutWindow3 = wx.adv.SashLayoutWindow(id=wxID_FRAME1SASHLAYOUTWINDOW3,
               name='sashLayoutWindow3', parent=self, pos=wx.Point(112, 50),
-              size=wx.Size(136, 234), style=wx.CLIP_CHILDREN | wx.SW_3D)
+              size=wx.Size(136, 234), style=wx.CLIP_CHILDREN | wx.adv.SW_3D)
         self.sashLayoutWindow3.SetBackgroundColour(wx.Colour(0, 255, 255))
         self.sashLayoutWindow3.SetAlignment(wx.LAYOUT_LEFT)
         self.sashLayoutWindow3.SetOrientation(wx.LAYOUT_VERTICAL)

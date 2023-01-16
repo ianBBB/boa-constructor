@@ -1,14 +1,13 @@
 # Important: This file should be placed in the site-packages directory or an
 #            equivalent place, so that both the plug-in and your code can import it
 
-import cStringIO
-
+import io
 import wx
 
 ART_IDS = ['wxART_BOA_ICON']
 
 def getBoaBitmapSmall():
-    return wx.BitmapFromImage(wx.ImageFromStream(cStringIO.StringIO(
+    return wx.Bitmap(wx.Image(io.BytesIO(
 b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x06\
 \x00\x00\x00\x1f\xf3\xffa\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\
 \x00\x01\x95IDATx\x9c}\x93}\x91\x1b1\x0c\xc5\x7f{\x13\x00\x86`\x08b\xb0\n\

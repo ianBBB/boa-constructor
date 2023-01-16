@@ -1,17 +1,17 @@
 #Boa:PyWizardPage:wxPyWizardPage1
 
 import wx
-import wx.wizard 
+import wx.adv
+from wx.adv import WizardPage 
 
 [wxID_WXPYWIZARDPAGE1, wxID_WXPYWIZARDPAGE1BUTTON1, 
  wxID_WXPYWIZARDPAGE1BUTTON2, wxID_WXPYWIZARDPAGE1STATICTEXT1, 
-] = [wx.NewIdRef() for _init_ctrls in range(4)]
+] = [wx.NewId() for _init_ctrls in range(4)]
 
-class wxPyWizardPage1(wx.wizard.PyWizardPage):
+class wxPyWizardPage1(wx.adv.WizardPage):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
-        wx.wizard.PyWizardPage.__init__(self, bitmap=wx.NullBitmap, parent=prnt,
-              resource='')
+        wx.adv.WizardPage.__init__(self, bitmap=wx.NullBitmap, parent=prnt)
 
         self.staticText1 = wx.StaticText(id=wxID_WXPYWIZARDPAGE1STATICTEXT1,
               label='PyWizardPage1', name='staticText1', parent=self,
@@ -45,4 +45,4 @@ class wxPyWizardPage1(wx.wizard.PyWizardPage):
     Prev = property(GetPrev, SetPrev)
 
     def OnButton1Button(self, event):
-        self.staticText1.SetLabel(`self.GetSize()`)
+        self.staticText1.SetLabel('self.GetSize()')

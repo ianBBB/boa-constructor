@@ -28,7 +28,7 @@ import Utils
  wxID_WX25CODEUPGRADEDLGSTFILE, wxID_WX25CODEUPGRADEDLGSTSOURCEFOLDER, 
  wxID_WX25CODEUPGRADEDLGSTTARGETFOLDER, wxID_WX25CODEUPGRADEDLGTARGETFOLDER, 
  wxID_WX25CODEUPGRADEDLGUPGRADEGUIDE, 
-] = [wx.NewId() for _init_ctrls in range(15)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(15)]
 
 class Wx25CodeUpgradeDlg(wx.Dialog):
     def _init_coll_flexGridSizer1_Items(self, parent):
@@ -198,7 +198,7 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
             dlg.Destroy()
 
     def OnSetFileButton(self, event):
-        dlg = wx.FileDialog(self, "Choose a file to convert", self.defaultDir, "", "*.py", wx.OPEN)
+        dlg = wx.FileDialog(self, "Choose a file to convert", self.defaultDir, "", "*.py", wx.FD_OPEN)
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 filename = dlg.GetPath()

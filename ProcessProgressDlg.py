@@ -29,7 +29,7 @@ from wxPopen import ProcessRunnerMix
  wxID_PROCESSPROGRESSDLGKILLBTN, wxID_PROCESSPROGRESSDLGOUTPUTTCTRL, 
  wxID_PROCESSPROGRESSDLGSPLITTERWINDOW, wxID_PROCESSPROGRESSDLGSTATUSGGE, 
  wxID_PROCESSPROGRESSDLGSTATUSSTXT, 
-] = [wx.NewId() for _init_ctrls in range(9)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(9)]
 
 class ProcessProgressDlg(wx.Dialog, ProcessRunnerMix):
     def _init_ctrls(self, prnt):

@@ -25,7 +25,7 @@ from Utils import _
 
 [wxID_ERRORSTACKMFSTATUSBAR, wxID_ERRORSTACKMFERRORSTACKTC, wxID_ERRORSTACKMF,
  wxID_ERRORSTACKMFNOTEBOOK, wxID_ERRORSTACKMFOUTPUTTC,
- wxID_ERRORSTACKMFERRORTC] = [wx.NewId() for _init_ctrls in range(6)]
+ wxID_ERRORSTACKMFERRORTC] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
     def _init_coll_notebook_Pages(self, parent):

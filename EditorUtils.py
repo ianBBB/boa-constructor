@@ -217,8 +217,8 @@ class ModulePage:
         the model instance. """
     def __init__(self, parent, model, defViews, views, idx, editor):
         self.editor = editor
-        self.defViews = [(v, wx.NewId()) for v in defViews]
-        self.adtViews = [(v, wx.NewId()) for v in views]
+        self.defViews = [(v, wx.NewIdRef(count=1)) for v in defViews]
+        self.adtViews = [(v, wx.NewIdRef(count=1)) for v in views]
         self.viewIds = []
         self.model = model
         self.parent = parent
@@ -227,7 +227,7 @@ class ModulePage:
         self.tIdx = idx
         self.updatePageName()
 
-        self.windowId = wx.NewId()
+        self.windowId = wx.NewIdRef(count=1)
         self.editor.winMenu.Append(self.windowId, self.getMenuLabel(),
               _('Switch to highlighted file'))
         self.editor.Bind(wx.EVT_MENU, self.editor.OnGotoModulePage, id=self.windowId)

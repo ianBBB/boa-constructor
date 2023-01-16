@@ -6,7 +6,7 @@ def create(parent):
     return wxPanel1(parent)
 
 [wxID_WXPANEL1, wxID_WXPANEL1STATICTEXT1, wxID_WXPANEL1TEXTCTRL1, 
-] = [wx.NewId() for _init_ctrls in range(3)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(3)]
 
 class wxPanel1(wx.Panel):
     def _init_ctrls(self, prnt):

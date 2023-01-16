@@ -297,7 +297,7 @@ class BaseFrameModel(ClassModel):
                         assert isinstance(custClasses, type({}))
                         break
                     except SyntaxError as err:
-                        if err[0] == 'unexpected EOF while parsing':
+                        if err.msg == 'unexpected EOF while parsing':
                             attr_val = attr_val + mod.source[srcline].strip()
                             srcline = srcline + 1
                         else:
@@ -548,8 +548,8 @@ sourceconst.defWizardImport = sourceconst.wsfix('\nimport wx.wizard\n')
 
 class WizardModel(DialogModel):
     modelIdentifier = 'Wizard'
-    defaultName = 'wx.wizard.Wizard'
-    bitmap = 'wx.wizard.Wizard.png'
+    defaultName = 'wx.adv.wizard.Wizard'
+    bitmap = 'wx.adv.wizard.Wizard.png'
     imgIdx = imgWizardModel
     dialogLook = True
     Companion = WizardCompanions.WizardDTC
@@ -572,8 +572,8 @@ sourceconst.defPyWizPageClass = sourceconst.defClass+sourceconst.wsfix('''
 
 class PyWizardPageModel(FramePanelModel):
     modelIdentifier = 'PyWizardPage'
-    defaultName = 'wx.wizard.PyWizardPage'
-    bitmap = 'wx.wizard.PyWizardPage.png'
+    defaultName = 'wx.adv.wizard.PyWizardPage'
+    bitmap = 'wx.adv.wizard.PyWizardPage.png'
     imgIdx = imgPyWizardPageModel
     dialogLook = True
     Companion = WizardCompanions.PyWizardPageDTC
@@ -589,8 +589,8 @@ class PyWizardPageModel(FramePanelModel):
 
 class WizardPageSimpleModel(FramePanelModel):
     modelIdentifier = 'WizardPageSimple'
-    defaultName = 'wx.wizard.WizardPageSimple'
-    bitmap = 'wx.wizard.WizardPageSimple.png'
+    defaultName = 'wx.adv.wizard.WizardPageSimple'
+    bitmap = 'wx.adv.wizard.WizardPageSimple.png'
     imgIdx = imgWizardPageSimpleModel
     dialogLook = True
     Companion = WizardCompanions.WizardPageSimpleDTC

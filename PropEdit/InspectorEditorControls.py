@@ -211,10 +211,10 @@ class ButtonIEC(BevelIEC):
 
     def setIdx(self, idx):
         if self.editorCtrl:
-            self.editorCtrl.SetDimensions(self.editorCtrl.GetPosition().x,
+            self.editorCtrl.SetSize(self.editorCtrl.GetPosition().x,
               idx*Preferences.oiLineHeight +2, self.btnSize,
               Preferences.oiLineHeight-2)
-            self.propValLabel.SetDimensions(
+            self.propValLabel.SetSize(
               self.propValLabel.GetPosition().x,
               idx*Preferences.oiLineHeight +1, self.propValLabel.GetSize().x,
               Preferences.oiLineHeight-3)

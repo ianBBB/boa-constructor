@@ -1,7 +1,10 @@
 #Boa:PyImgResource:
 
-from wx import ImageFromStream, BitmapFromImage
-import cStringIO
+import io
+import wx
+# from wx import ImageFromStream, BitmapFromImage
+# import cStringIO
+
 
 #----------------------------------------------------------------------
 def getBoaData():
@@ -27,8 +30,11 @@ ry\xd9\x1f\xdb1\x89\xcb\xb2@\xf8|q\xd8?\xe5\xcb\xd2\x03\xf3z\xb1@\x8a\xfe\
 \x82\x9a\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def getBoaBitmap():
-    return BitmapFromImage(getBoaImage())
+    # return BitmapFromImage(getBoaImage())
+    return wx.Bitmap(getBoaImage())
 
 def getBoaImage():
-    stream = cStringIO.StringIO(getBoaData())
-    return ImageFromStream(stream)
+    # stream = io.StringIO(getBoaData())
+    # return ImageFromStream(stream)
+    stream = io.BytesIO(getBoaData())
+    return wx.Image(stream)

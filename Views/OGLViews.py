@@ -588,10 +588,10 @@ class UMLView(PersistentOGLView, SortedUMLViewMix):
             (_('Force layout'), self.OnForceLayout, '-', ''),
         ))
         self.menuStdClass = wx.Menu()
-        id = wx.NewId()
+        id = wx.NewIdRef(count=1)
         self.menuStdClass.Append(id, _('Goto Source'))
         self.Bind(wx.EVT_MENU, self.OnGotoSource, id=id)
-        id = wx.NewId()
+        id = wx.NewIdRef(count=1)
         self.menuStdClass.Append(id, _('Goto Documentation'),)
         self.Bind(wx.EVT_MENU, self.OnGotoDoc, id=id)
 

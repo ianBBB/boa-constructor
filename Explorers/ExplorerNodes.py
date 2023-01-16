@@ -826,7 +826,7 @@ class MRUCatController(Controller):
         menu = wx.Menu()
         for node in self.list.node.openList():
             if node.name not in list(self.recentItemsMenuIds.values()):
-                wid = wx.NewId()
+                wid = wx.NewIdRef(count=1)
                 self.recentItemsMenuIds[wid] = node.name
                 self.list.Bind(wx.EVT_MENU, self.OnMRUMenuItemSelect, id=wid)
             else:

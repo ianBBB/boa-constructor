@@ -19,7 +19,7 @@ def create(parent):
     return AttrMixinFrame(parent)
 
 [wxID_ATTRMIXINFRAME, wxID_ATTRMIXINFRAMEBUTTON1, 
-] = [wx.NewId() for _init_ctrls in range(2)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(2)]
 
 # Note: Inherits from the AttrMixin class after wxFrame
 class AttrMixinFrame(wx.Frame, Test_AttrMixin):
@@ -42,7 +42,7 @@ class AttrMixinFrame(wx.Frame, Test_AttrMixin):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     wx.InitAllImageHandlers()
     frame = create(None)
     frame.Show()

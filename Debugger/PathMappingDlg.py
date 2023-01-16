@@ -13,7 +13,7 @@ def create(parent):
 
 [wxID_PATHSMAPPINGDLG, wxID_PATHSMAPPINGDLGCANCELBTN, 
  wxID_PATHSMAPPINGDLGOKBTN, wxID_PATHSMAPPINGDLGPATHSPANEL, 
-] = [wx.NewId() for _init_ctrls in range(4)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(4)]
 
 class PathsMappingDlg(wx.Dialog):
     _custom_classes = {'wx.Panel': ['PathsPanel'],}

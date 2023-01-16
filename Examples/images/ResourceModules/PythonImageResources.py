@@ -13,13 +13,13 @@ def create(parent):
 
 [wxID_RESOURCEMODULEFRM, wxID_RESOURCEMODULEFRMBITMAPBUTTON, 
  wxID_RESOURCEMODULEFRMLISTVIEW, 
-] = [wx.NewId() for _init_ctrls in range(3)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(3)]
 
 [wxID_RESOURCEMODULEFRMTOOLBAR1TOOLS0, wxID_RESOURCEMODULEFRMTOOLBAR1TOOLS1,
  wxID_RESOURCEMODULEFRMTOOLBAR1TOOLS2, wxID_RESOURCEMODULEFRMTOOLBAR1TOOLS3,
  wxID_RESOURCEMODULEFRMTOOLBAR1TOOLS4, wxID_RESOURCEMODULEFRMTOOLBAR1TOOLS5,
  wxID_RESOURCEMODULEFRMTOOLBAR1TOOLS6,
-] = [wx.NewId() for _init_coll_toolBar_Tools in range(7)]
+] = [wx.NewIdRef(count=1) for _init_coll_toolBar_Tools in range(7)]
 
 class ResourceModuleFrm(wx.Frame):
     def _init_coll_images_Images(self, parent):
@@ -63,7 +63,7 @@ class ResourceModuleFrm(wx.Frame):
         self.bitmapButton.Bind(wx.EVT_BUTTON, self.OnBitmapbuttonButton,
               id=wxID_RESOURCEMODULEFRMBITMAPBUTTON)
 
-        self.listView = wx.ListView(id=wxID_RESOURCEMODULEFRMLISTVIEW,
+        self.listView = wx.ListView(winid=wxID_RESOURCEMODULEFRMLISTVIEW,
               name='listView', parent=self, pos=wx.Point(148, 27),
               size=wx.Size(247, 176), style=wx.LC_SINGLE_SEL|wx.LC_ICON)
         self.listView.SetImageList(self.images, wx.IMAGE_LIST_NORMAL)
@@ -75,7 +75,7 @@ class ResourceModuleFrm(wx.Frame):
     def __init__(self, parent):
         self._init_ctrls(parent)
         for i, name in zip(range(len(BoaSectionIcons)), BoaSectionIcons):
-            self.listView.InsertImageStringItem(i, name, i)
+            self.listView.InsertItem(i, name, i)
 
     def OnBitmapbuttonButton(self, event):
         self.Close()
@@ -85,7 +85,7 @@ class ResourceModuleFrm(wx.Frame):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     wx.InitAllImageHandlers()
     frame = create(None)
     frame.Show()

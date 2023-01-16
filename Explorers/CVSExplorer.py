@@ -29,7 +29,7 @@ import ProcessProgressDlg
 from . import scrm
 
 cvs_environ_vars = ['CVSROOT', 'CVS_RSH', 'HOME']
-cvs_environ_ids  = [wx.NewId() for ev in cvs_environ_vars]
+cvs_environ_ids  = [wx.NewIdRef(count=1) for ev in cvs_environ_vars]
 
 (wxID_CVSUPDATE, wxID_CVSCOMMIT, wxID_CVSADD, wxID_CVSADDBINARY, wxID_CVSREMOVE,
  wxID_CVSDIFF, wxID_CVSLOG, wxID_CVSSTATUS, wxID_FSCVSIMPORT, wxID_FSCVSCHECKOUT,

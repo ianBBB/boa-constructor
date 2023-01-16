@@ -13,7 +13,7 @@ def create(parent):
 [wxID_LANGUAGESELECTDLG, wxID_LANGUAGESELECTDLGBUTTON2, 
  wxID_LANGUAGESELECTDLGLANGCTRLCONTAINER, wxID_LANGUAGESELECTDLGLANGFILTERRB, 
  wxID_LANGUAGESELECTDLGOKBTN, wxID_LANGUAGESELECTDLGSTATICTEXT1, 
-] = [wx.NewId() for _init_ctrls in range(6)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class LanguageSelectDlg(wx.Dialog):
     def _init_coll_mainSizer_Items(self, parent):

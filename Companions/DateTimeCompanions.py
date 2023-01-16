@@ -40,7 +40,7 @@ class CalendarDTC(CalendarConstr, BaseCompanions.WindowDTC):
         return BaseCompanions.WindowDTC.events(self) + ['CalendarEvent']
 
     def writeImports(self):
-        return 'import wx.calendar'
+        return 'import wx.lib.calendar'
 
 
 class DateTimePropEditor(PropertyEditors.BITPropEditor):

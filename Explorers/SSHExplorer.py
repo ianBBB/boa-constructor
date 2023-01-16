@@ -22,7 +22,7 @@ from . import ExplorerNodes
 from Models import Controllers, EditorHelper
 from ProcessProgressDlg import ProcessProgressDlg
 
-wxID_SSHOPEN = wx.NewId()
+wxID_SSHOPEN = wx.NewIdRef(count=1)
 
 class SSHController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControllerMix):
     def __init__(self, editor, list, inspector, controllers):

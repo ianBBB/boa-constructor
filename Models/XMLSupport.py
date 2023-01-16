@@ -36,7 +36,7 @@ class XMLStyledTextCtrlMix(LanguageSTCMix):
         self.setStyles()
 
 
-wxID_XMLSOURCEVIEW = wx.NewId()
+wxID_XMLSOURCEVIEW = wx.NewIdRef(count=1)
 from Views.SourceViews import EditorStyledTextCtrl
 class XMLSourceView(EditorStyledTextCtrl, XMLStyledTextCtrlMix):
     viewName = 'XML'

@@ -14,6 +14,13 @@ langlistctrl.py
 # 2to3
 warnings (but still some left)
 
+
+# raise Exception, 'Unauthorized: X-Auth header missing or incorrect'
+raise Exception ('Unauthorized: X-Auth header missing or incorrect')
+
+
+
+
 FramesConstr, FrameDTC
 
 

@@ -19,7 +19,7 @@ ddGrid = 2
  wxID_IMAGEEDITORPANELPENBRUSHWINDOW, wxID_IMAGEEDITORPANELSLIDER1, 
  wxID_IMAGEEDITORPANELSPINBUTTON1, wxID_IMAGEEDITORPANELSPINBUTTON2, 
  wxID_IMAGEEDITORPANELSPINBUTTON3, wxID_IMAGEEDITORPANELSTATICTEXT1, 
-] = [wx.NewId() for _init_ctrls in range(12)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(12)]
 
 class ImageEditorPanel(wx.Panel):
     def _init_utils(self):

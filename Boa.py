@@ -17,7 +17,7 @@
 
 Handles creation/initialisation of main objects and commandline arguments """
 
-import sys, os, string, time, warnings
+import sys, os, string, time, warnings, datetime
 import importlib
 
 #sys.stdout = sys.__stdout__#open('stdout.txt', 'w')
@@ -25,6 +25,7 @@ import importlib
 
 #try: import psyco; psyco.full()
 #except ImportError: pass
+import Boa
 
 t1 = time.time()
 
@@ -32,21 +33,55 @@ t1 = time.time()
 # already running instance of Boa. There is another flag under Preferences
 # which determines if Boa should create and listen on the socket.
 server_mode = 1
-# trace_mode_paused = True
+
 main_script = 'Boa.py'
 
+class pauseVariable:
+# A vain attempt at developing a trace facility to control when/what was written out to the trace log file
+    def __init__(self, int_state):
+       self.paused=int_state
 
-trace_mode = 'functions' # 'lines'
+    def trace_on(self):
+        self.paused=False
+
+    def trace_off(self):
+        self.paused = True
+
+    def trace_flip(self):
+        if self.paused:
+            self.paused=False
+        else:
+            self.paused=True
+
+myPaused = pauseVariable(True)
+
+trace_mode = 'functions' # 'lines'  'functions'
 trace_save = 'all'#'lastline' # 'all'
+trace_file_detail = 'filenameOnly' # 'filenameOnly'  ' pathAndFileName
 def trace_func(frame, event, arg):
     """ Callback function when Boa runs in tracing mode"""
     if frame and tracefile :
-        info = '%s|%d|%d|%s|\n' % (frame.f_code.co_filename, frame.f_lineno,
+        # Change original info line to include timestamp
+        # info = '%s|%d|%d|%s|\n' % (frame.f_code.co_filename, frame.f_lineno,
+        #       id(frame), event)
+
+        now = datetime.datetime.now()
+
+        #fileDetail
+        info = '%s|%s|%d|%d|%s|\n' % (now, frame.f_code.co_filename, frame.f_lineno,
               id(frame), event)
-        if trace_save == 'lastline':
-            tracefile.seek(0)
-        tracefile.write(info)
-        tracefile.flush()
+
+        # isPaused = Boa.myPaused.paused
+        # if not isPaused:
+        #     if trace_save == 'lastline':
+        #         tracefile.seek(0)
+        #     tracefile.write(info)
+        #     tracefile.flush()
+
+    if trace_save == 'lastline':
+        tracefile.seek(0)
+    tracefile.write(info)
+    tracefile.flush()
     return trace_func
 
 def get_current_frame():
@@ -176,7 +211,7 @@ def processArgs(argv):
             print('-U encoding, --UnicodeEncoding encoding:')
             print('\tSpecify a specific encoding to use.')
             print('-W version, --wxVersionSelect version:')
-            print('\tSpecify a spesific version of wxPython to use.')
+            print('\tSpecify a specific version of wxPython to use.')
             print('-H, --Help, -h, --help:')
             print('\tThis page.')
     
@@ -272,7 +307,12 @@ if wxVersion < __version__.wx_version:
     raise Exception('wxPython >= %d.%d.%d.%d required'%__version__.wx_version)
 
 if __version__.wx_version_max and wxVersion > __version__.wx_version_max:
-    wx.PySimpleApp()
+    #wx.PySimpleApp()
+    app = wx.App(0)
+
+    frame = wx.Frame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
     wx.MessageBox('Sorry! This version of Boa does not work under '\
                  'wxPython %d.%d.%d.%d, please downgrade to '\
                  'wxPython %d.%d.%d.%d'% tuple(wxVersion+__version__.wx_version_max),

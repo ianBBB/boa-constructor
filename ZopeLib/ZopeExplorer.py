@@ -614,7 +614,7 @@ class ZopeController(ExplorerNodes.Controller, ExplorerNodes.ClipboardController
                 if item:
                     from FileDlg import wxFileDialog
                     dlg = wxFileDialog(self.list, 'Upload '+item.name, currPath,
-                          item.name, '', wx.OPEN)
+                          item.name, '', wx.FD_OPEN)
                     try:
                         if dlg.ShowModal() == wx.ID_OK:
                             try:

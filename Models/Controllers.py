@@ -98,7 +98,7 @@ class BaseEditorController:
 
         for name, event, bmp, key in actions:
             if name != '-':
-                wId = wx.NewId()
+                wId = wx.NewIdRef(count=1)
                 self.addEvt(wId, event)
                 if key: code = keyDefs[key]
                 else:   code = ()

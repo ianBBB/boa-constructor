@@ -14,7 +14,7 @@ def create(parent):
  wxID_CREATIONORDERDLGBTOK, wxID_CREATIONORDERDLGCONTEXTHELPBUTTON1, 
  wxID_CREATIONORDERDLGLBOBJECTS, wxID_CREATIONORDERDLGPANEL1, 
  wxID_CREATIONORDERDLGSTATICBOX1, 
-] = [wx.NewId() for _init_ctrls in range(11)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(11)]
 
 class CreationOrderDlg(wx.Dialog):
     def _init_ctrls(self, prnt):

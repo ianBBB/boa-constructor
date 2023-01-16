@@ -217,7 +217,7 @@ class ViewItemNode(ExplorerNodes.ExplorerNode):
 
 #-------------------------------------------------------------------------------
 
-wxID_NEWCREATE = wx.NewId()
+wxID_NEWCREATE = wx.NewIdRef(count=1)
 class EditorNewController(ExplorerNodes.Controller):
     createBmp = 'Images/Editor/Close.png'
 

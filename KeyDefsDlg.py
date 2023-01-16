@@ -15,7 +15,7 @@ class InvalidValueError(Exception): pass
  wxID_KEYDEFSDIALOGSHIFTFLAGCHB, wxID_KEYDEFSDIALOGSHORTCUTTC, 
  wxID_KEYDEFSDIALOGSTATICBOX1, wxID_KEYDEFSDIALOGSTATICTEXT1, 
  wxID_KEYDEFSDIALOGSTATICTEXT2, 
-] = [wx.NewId() for _init_ctrls in range(11)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(11)]
 
 class KeyDefsDialog(wx.Dialog):
     def _init_ctrls(self, prnt):

@@ -190,7 +190,7 @@ class PopenModuleRunner(ModuleRunner):
 
 PreferredRunner = PopenModuleRunner
 
-wxEVT_EXEC_FINISH = wx.NewId()
+wxEVT_EXEC_FINISH = wx.NewIdRef(count=1)
 
 EVT_EXEC_FINISH = wx.PyEventBinder(wxEVT_EXEC_FINISH)
 

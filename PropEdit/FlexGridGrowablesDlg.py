@@ -19,7 +19,7 @@ from Utils import _
 [wxID_FLEXGRIDGROWABLESDLG, wxID_FLEXGRIDGROWABLESDLGBUTTON1, 
  wxID_FLEXGRIDGROWABLESDLGBUTTON2, wxID_FLEXGRIDGROWABLESDLGBUTTON3, 
  wxID_FLEXGRIDGROWABLESDLGGRIDWIN, 
-] = [wx.NewId() for _init_ctrls in range(5)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 if wx.Platform == '__WXMAC__':
     ToggleButton = wx.lib.buttons.GenToggleButton
@@ -103,7 +103,7 @@ class FlexGridGrowablesDlg(wx.Dialog):
         self.colIds = {}
         self.colBtns = []
         for idx, col in zip(range(len(cols)), cols):
-            wid = wx.NewId()
+            wid = wx.NewIdRef(count=1)
             tb = ToggleButton(self, wid, str(idx))
             if col: tb.SetValue(1)
             self.colIds[wid] = (idx, col)
@@ -113,7 +113,7 @@ class FlexGridGrowablesDlg(wx.Dialog):
         self.rowIds = {}
         self.rowBtns = []
         for idx, row in zip(range(len(rows)), rows):
-            wid =wx.NewId()
+            wid =wx.NewIdRef(count=1)
             tb = ToggleButton(self, wid, str(idx))
             if row: tb.SetValue(1)
             self.rowIds[wid] = (idx, row)

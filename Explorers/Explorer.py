@@ -342,7 +342,7 @@ class ExplorerTree(BaseExplorerTree):
 
     def buildTree(self):
         rootItem = self.AddRoot('', EditorHelper.imgBoaLogo, -1,
-              (self.store.boaRoot))
+              self.store.boaRoot)
 
     def destroy(self):
         self.defaultBookmarkItem = None

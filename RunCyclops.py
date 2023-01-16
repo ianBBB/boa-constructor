@@ -88,5 +88,5 @@ def handle_error(f):
       '<br>'.join(traceback.format_exception(tp, vl, tb))
     f.write(err)
 
-print 'RunCyclops'
+print ('RunCyclops')
 run()

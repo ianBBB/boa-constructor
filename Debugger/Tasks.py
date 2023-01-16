@@ -110,5 +110,5 @@ if __name__ == '__main__':
     start = time()
     tth.addTask(t)
     evt.wait()
-    print 'Performed %d tasks in %d ms' % (count,
-                                           int((end - start) * 1000))
+    print('Performed %d tasks in %d ms' % (count,
+                                           int((end - start) * 1000)))

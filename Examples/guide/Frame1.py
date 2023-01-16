@@ -11,7 +11,7 @@ def create(parent):
 
 [wxID_FRAME1MENUFILECLOSE, wxID_FRAME1MENUFILEEXIT, wxID_FRAME1MENUFILEOPEN, 
  wxID_FRAME1MENUFILESAVE, wxID_FRAME1MENUFILESAVEAS, 
-] = [wx.NewId() for _init_coll_menuFile_Items in range(5)]
+] = [wx.NewIdRef(count=1) for _init_coll_menuFile_Items in range(5)]
 
 [wxID_FRAME1MENUHELPABOUT] = [wx.NewIdRef() for _init_coll_menuHelp_Items in range(1)]
 
@@ -25,24 +25,24 @@ class Frame1(wx.Frame):
     def _init_coll_menuHelp_Items(self, parent):
         # generated method, don't edit
 
-        parent.Append(help='Display general information about Notebook',
-              id=wxID_FRAME1MENUHELPABOUT, kind=wx.ITEM_NORMAL, text='About')
+        parent.Append(helpString='Display general information about Notebook',
+              id=wxID_FRAME1MENUHELPABOUT, kind=wx.ITEM_NORMAL, item='About')
         self.Bind(wx.EVT_MENU, self.OnMenuHelpAboutMenu,
               id=wxID_FRAME1MENUHELPABOUT)
 
     def _init_coll_menuFile_Items(self, parent):
         # generated method, don't edit
 
-        parent.Append(help='Open a file', id=wxID_FRAME1MENUFILEOPEN,
-              kind=wx.ITEM_NORMAL, text='Open')
-        parent.Append(help='Save file', id=wxID_FRAME1MENUFILESAVE,
-              kind=wx.ITEM_NORMAL, text='Save')
-        parent.Append(help='Save file as', id=wxID_FRAME1MENUFILESAVEAS,
-              kind=wx.ITEM_NORMAL, text='Save as')
-        parent.Append(help='Close file', id=wxID_FRAME1MENUFILECLOSE,
-              kind=wx.ITEM_NORMAL, text='Close')
-        parent.Append(help='Close program', id=wxID_FRAME1MENUFILEEXIT,
-              kind=wx.ITEM_NORMAL, text='Exit')
+        parent.Append(helpString='Open a file', id=wxID_FRAME1MENUFILEOPEN,
+              kind=wx.ITEM_NORMAL, item='Open')
+        parent.Append(helpString='Save file', id=wxID_FRAME1MENUFILESAVE,
+              kind=wx.ITEM_NORMAL, item='Save')
+        parent.Append(helpString='Save file as', id=wxID_FRAME1MENUFILESAVEAS,
+              kind=wx.ITEM_NORMAL, item='Save as')
+        parent.Append(helpString='Close file', id=wxID_FRAME1MENUFILECLOSE,
+              kind=wx.ITEM_NORMAL, item='Close')
+        parent.Append(helpString='Close program', id=wxID_FRAME1MENUFILEEXIT,
+              kind=wx.ITEM_NORMAL, item='Exit')
         self.Bind(wx.EVT_MENU, self.OnMenuFileOpenMenu,
               id=wxID_FRAME1MENUFILEOPEN)
         self.Bind(wx.EVT_MENU, self.OnMenuFileSaveMenu,
@@ -58,7 +58,7 @@ class Frame1(wx.Frame):
         # generated method, don't edit
         parent.SetFieldsCount(1)
 
-        parent.SetStatusText(number=0, text='status')
+        parent.SetStatusText(i=0, text='status')
 
         parent.SetStatusWidths([-1])
 
@@ -97,7 +97,7 @@ class Frame1(wx.Frame):
         self.FileName=None
 
     def OnMenuFileOpenMenu(self, event):
-        dlg = wx.FileDialog(self, "Choose a file", ".", "", "*.*", wx.OPEN)
+        dlg = wx.FileDialog(self, "Choose a file", ".", "", "*.*", wx.FD_OPEN)
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 filename = dlg.GetPath()
@@ -115,7 +115,7 @@ class Frame1(wx.Frame):
             self.textEditor.SaveFile(self.FileName)
 
     def OnMenuFileSaveasMenu(self, event):
-        dlg = wx.FileDialog(self, "Save file as", ".", "", "*.*", wx.SAVE)
+        dlg = wx.FileDialog(self, "Save file as", ".", "", "*.*", wx.FD_SAVE)
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 filename = dlg.GetPath()

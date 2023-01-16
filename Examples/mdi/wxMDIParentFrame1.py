@@ -10,9 +10,9 @@ def create(parent):
 
 [wxID_WXMDIPARENTFRAME1, wxID_WXMDIPARENTFRAME1SASHLAYOUTWINDOW1, 
  wxID_WXMDIPARENTFRAME1TREECTRL1, 
-] = [wx.NewId() for _init_ctrls in range(3)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(3)]
 
-[wxID_WXMDIPARENTFRAME1MENU1ITEMS0] = [wx.NewId() for _init_coll_menu1_Items in range(1)]
+[wxID_WXMDIPARENTFRAME1MENU1ITEMS0] = [wx.NewIdRef(count=1) for _init_coll_menu1_Items in range(1)]
 
 class wxMDIParentFrame1(wx.MDIParentFrame):
     def _init_coll_menuBar1_Menus(self, parent):
@@ -49,9 +49,9 @@ class wxMDIParentFrame1(wx.MDIParentFrame):
         self.SetClientSize(wx.Size(536, 291))
         self.Bind(wx.EVT_SIZE, self.OnWxmdiparentframe1Size)
 
-        self.sashLayoutWindow1 = wx.SashLayoutWindow(id=wxID_WXMDIPARENTFRAME1SASHLAYOUTWINDOW1,
+        self.sashLayoutWindow1 = wx.adv.SashLayoutWindow(id=wxID_WXMDIPARENTFRAME1SASHLAYOUTWINDOW1,
               name='sashLayoutWindow1', parent=self, pos=wx.Point(0, 0),
-              size=wx.Size(137, 272), style=wx.CLIP_CHILDREN | wx.SW_3D)
+              size=wx.Size(137, 272), style=wx.CLIP_CHILDREN | wx.adv.SW_3D)
         self.sashLayoutWindow1.SetOrientation(wx.LAYOUT_VERTICAL)
         self.sashLayoutWindow1.SetAlignment(wx.LAYOUT_LEFT)
         self.sashLayoutWindow1.SetSashVisible(wx.SASH_RIGHT, True)

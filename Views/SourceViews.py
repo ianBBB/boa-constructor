@@ -32,7 +32,7 @@ from .StyledTextCtrls import TextSTCMix, idWord, object_delim, eols as endOfLine
 markPlaceMrk, linePtrMrk = (1, 2)
 markerCnt = 2
 
-wxID_TEXTVIEW = wx.NewId()
+wxID_TEXTVIEW = wx.NewIdRef(count=1)
 
 [wxID_STC_WS, wxID_STC_EOL, wxID_STC_BUF, wxID_STC_IDNT,
  wxID_STC_EOL_MODE, wxID_STC_EOL_CRLF, wxID_STC_EOL_LF, wxID_STC_EOL_CR,
@@ -458,7 +458,8 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
         eolModeMenu.Append(wxID_STC_EOL_CR, 'CR', '', kind=wx.ITEM_RADIO)
         eolModeMenu.Check(wxID_STC_EOL_CR, self.GetEOLMode() == wx.stc.STC_EOL_CR)
 
-        menu.AppendMenu(wxID_STC_EOL_MODE, _('EOL mode'), eolModeMenu)
+        # menu.AppendMenu(wxID_STC_EOL_MODE, _('EOL mode'), eolModeMenu)
+        menu.Append(wxID_STC_EOL_MODE, _('EOL mode'), eolModeMenu)
 
         s = self.GetClientSize()
 

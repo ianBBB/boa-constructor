@@ -13,45 +13,49 @@ def create(parent):
  wxID_ADDRESSENTRYSTADDRESS, wxID_ADDRESSENTRYSTCITY, 
  wxID_ADDRESSENTRYSTCOUNTRY, wxID_ADDRESSENTRYSTFIRSTNAME, 
  wxID_ADDRESSENTRYSTLASTNAME, wxID_ADDRESSENTRYSTPOSTAL, 
-] = [wx.NewId() for _init_ctrls in range(19)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(19)]
 
 class AddressEntry(wx.Frame):
     def _init_coll_fgsFields_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.stFirstName, 0, border=2,
+        parent.Add(self.stFirstName, 0, border=2,
               flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddWindow(self.firstName, 0, border=2, flag=wx.ALL | wx.EXPAND)
-        parent.AddWindow(self.stLastName, 0, border=2,
+        parent.Add(self.firstName, 0, border=2, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.stLastName, 0, border=2,
               flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddWindow(self.lastName, 0, border=2, flag=wx.ALL | wx.EXPAND)
-        parent.AddWindow(self.stAddress, 0, border=2,
+        parent.Add(self.lastName, 0, border=2, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.stAddress, 0, border=2,
               flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddWindow(self.address, 0, border=2, flag=wx.ALL | wx.EXPAND)
-        parent.AddWindow(self.stPostal, 0, border=2,
+        parent.Add(self.address, 0, border=2, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.stPostal, 0, border=2,
               flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddWindow(self.postal, 0, border=2, flag=wx.ALL | wx.EXPAND)
-        parent.AddWindow(self.stCity, 0, border=2,
+        parent.Add(self.postal, 0, border=2, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.stCity, 0, border=2,
               flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddWindow(self.City, 0, border=2, flag=wx.ALL | wx.EXPAND)
-        parent.AddWindow(self.stCountry, 0, border=2,
+        parent.Add(self.City, 0, border=2, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.stCountry, 0, border=2,
               flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL)
-        parent.AddWindow(self.Country, 0, border=2, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.Country, 0, border=2, flag=wx.ALL | wx.EXPAND)
 
     def _init_coll_fgsButtons_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.add, 0, border=2, flag=wx.ALL)
-        parent.AddWindow(self.delete, 0, border=2, flag=wx.ALL)
-        parent.AddWindow(self.save, 0, border=2, flag=wx.ALL)
-        parent.AddWindow(self.close, 0, border=2, flag=wx.ALL)
+        parent.Add(self.add, 0, border=2, flag=wx.ALL)
+        parent.Add(self.delete, 0, border=2, flag=wx.ALL)
+        parent.Add(self.save, 0, border=2, flag=wx.ALL)
+        parent.Add(self.close, 0, border=2, flag=wx.ALL)
 
     def _init_coll_bsMain_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.listCtrl1, 1, border=2, flag=wx.ALL | wx.EXPAND)
-        parent.AddSizer(self.fgsFields, 0, border=0, flag=wx.EXPAND)
-        parent.AddSizer(self.fgsButtons, 0, border=0, flag=0)
+##        parent.AddWindow(self.listCtrl1, 1, border=2, flag=wx.ALL | wx.EXPAND)
+##        parent.AddSizer(self.fgsFields, 0, border=0, flag=wx.EXPAND)
+##        parent.AddSizer(self.fgsButtons, 0, border=0, flag=0)
+        
+        parent.Add(self.listCtrl1, 1, border=2, flag=wx.ALL | wx.EXPAND)
+        parent.Add(self.fgsFields, 0, border=0, flag=wx.EXPAND)
+        parent.Add(self.fgsButtons, 0, border=0, flag=0)        
 
     def _init_coll_fgsFields_Growables(self, parent):
         # generated method, don't edit
@@ -176,7 +180,7 @@ class AddressEntry(wx.Frame):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = create(None)
     frame.Show()
 

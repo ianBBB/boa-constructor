@@ -5,7 +5,7 @@ import wx
 def create(parent):
     return wxFrame3(parent)
 
-[wxID_WXFRAME3] = [wx.NewIdRef() for _init_ctrls in range(1)]
+[wxID_WXFRAME3] = [wx.NewId() for _init_ctrls in range(1)]
 
 class wxFrame3(wx.Frame):
     def _init_utils(self):

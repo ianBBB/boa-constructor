@@ -179,7 +179,7 @@ class TimerDTC(UtilityDTC):
     def designTimeObject(self, args=None):
         return UtilityDTC.designTimeObject(self, self.designTimeDefaults())
     def designTimeDefaults(self):
-        return {'owner': self.designer, 'id': wx.NewId()}
+        return {'owner': self.designer, 'id': wx.NewIdRef(count=1)}
     def events(self):
         return ['TimerEvent']
     def defaultAction(self):
@@ -337,9 +337,13 @@ class MenuItemsCIDTC(CollectionIddDTC):
     def constructor(self):
         tcl = self.textConstrLst[self.index]
         if tcl.method == 'Append':
+
+            # PRUNE - original
             # return {'Text': 'text', 'Help': 'help',
             #         'Kind': 'kind', 'ItemId': 'id'}
-            return {'Text': 'text', 'Item': 'item', 'Help': 'helpString',
+
+
+            return {'Text': 'item', 'Help': 'helpString',
                     'Kind': 'kind', 'ItemId': 'id'}
         elif tcl.method == 'AppendSeparator':
             return {}
@@ -364,15 +368,15 @@ class MenuItemsCIDTC(CollectionIddDTC):
             method = self.insertionMethod
 
         newItemName, winId = self.newUnusedItemNames(wId)
-
+#PRUNE
         if method == 'Append':
             # return {'id': winId,
             #         'text': repr(newItemName),
             #         'help': repr(''),
             #         'kind': 'wx.ITEM_NORMAL'}
             return {'id': winId,
-                    'text': newItemName,
-                    'item': newItemName,
+                    # 'text': repr(newItemName),
+                    'item': repr(newItemName),
                     'helpString': repr(''),
                     'kind': 'wx.ITEM_NORMAL'}
         elif method == 'AppendSeparator':
@@ -398,7 +402,8 @@ class MenuItemsCIDTC(CollectionIddDTC):
                 else:
                     raise Exception(_('Invalid menu reference: %s')%name)
             elif param == self.idProp:
-                dtd[param] = wx.NewId()
+                dtd[param] = wx.NewIdRef(count=1)
+
             else:
                 dtd[param] = self.eval(vals[param])
 
@@ -422,7 +427,7 @@ class MenuItemsCIDTC(CollectionIddDTC):
 
     def deleteItem(self, idx):
         menuItm = self.control.GetMenuItems()[idx]
-        self.control.RemoveItem(menuItm)
+        self.control.Remove(menuItm)
         self.deleteItemEvents(idx)
         del self.textConstrLst[idx]
 

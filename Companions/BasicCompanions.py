@@ -466,7 +466,7 @@ class FilenameConstrPropEdit(ConstrPropEdit):
 
     def edit(self, event):
         dlg = wx.FileDialog(self.parent, self.dlgCaption, '.', self.value,
-              self.fileTypeFilter, wx.OPEN)
+              self.fileTypeFilter, wx.FD_OPEN)
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 value = dlg.GetPath()

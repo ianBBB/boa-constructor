@@ -22,7 +22,7 @@ from . import ExplorerNodes
 from Models import Controllers, EditorHelper
 import ftplib
 
-wxID_FTPOPEN = wx.NewId()
+wxID_FTPOPEN = wx.NewIdRef(count=1)
 
 class FTPController(ExplorerNodes.Controller, ExplorerNodes.ClipboardControllerMix):
     def __init__(self, editor, list, inspector, controllers):

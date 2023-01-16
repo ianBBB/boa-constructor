@@ -33,7 +33,7 @@ p2c = 'Type "copyright", "credits" or "license" for more information.'
 
 [wxID_SHELL_HISTORYUP, wxID_SHELL_HISTORYDOWN, wxID_SHELL_ENTER, wxID_SHELL_HOME,
  wxID_SHELL_CODECOMP, wxID_SHELL_CALLTIPS,
-] = [wx.NewId() for _init_ctrls in range(6)] 
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)] 
 
 only_first_block = 1
 

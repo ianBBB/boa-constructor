@@ -1,7 +1,7 @@
 import sys, os
 import threading
 import base64
-from SocketServer import TCPServer
+from socketserver import TCPServer
 
 from IsolatedDebugger import DebugServer, DebuggerConnection
 from Tasks import ThreadedTaskHandler
@@ -11,8 +11,8 @@ try:
     from ExternalLib.xmlrpcserver import RequestHandler
 except ImportError:
     # Add parent directory to the path search.
-    #sys.path[0:0] = [os.pardir]
-    from xmlrpcserver import RequestHandler
+    sys.path[0:0] = [os.pardir]
+    from ExternalLib.xmlrpcserver import RequestHandler
 
 
 debug_server = None
@@ -28,7 +28,7 @@ class DebugRequestHandler (RequestHandler):
         if auth_str:
             s = h.get('authentication')
             if not s or s.split()[-1] != auth_str:
-                raise Exception, 'Unauthorized: Authentication header missing or incorrect'
+                raise Exception('Unauthorized: Authentication header missing or incorrect')
 
     def call(self, method, params):
         # Override of xmlrpcserver.RequestHandler.call()
@@ -60,7 +60,7 @@ def start(username, password, host='127.0.0.1', port=26200,
     global auth_str, debug_server, connection
 
     if debug_server is not None:
-        raise RuntimeError, 'The debug server is already running'
+        raise RuntimeError('The debug server is already running')
 
     # Create the debug server.
     if server_type == 'zope':
@@ -69,7 +69,7 @@ def start(username, password, host='127.0.0.1', port=26200,
     elif server_type == 'basic':
         ds = DebugServer()
     else:
-        raise ValueError, 'Unknown debug server type: %s' % server_type
+        raise ValueError('Unknown debug server type: %s' % server_type)
 
     connection = DebuggerConnection(ds)
     connection.allowEnvChanges()  # Allow changing of sys.path, etc.

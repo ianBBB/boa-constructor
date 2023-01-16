@@ -22,7 +22,7 @@ from Utils import _
 [wxID_CLASSBROWSERFRAME, wxID_CLASSBROWSERFRAMEHIERARCHY, 
  wxID_CLASSBROWSERFRAMEPAGES, wxID_CLASSBROWSERFRAMESTATUSBAR, 
  wxID_CLASSBROWSERFRAMETREE, 
-] = [wx.NewId() for _init_ctrls in range(5)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 class ClassBrowserFrame(wx.Frame, Utils.FrameRestorerMixin):
     def _init_coll_pages_Pages(self, parent):
@@ -42,7 +42,7 @@ class ClassBrowserFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         self.statusBar = wx.StatusBar(id=wxID_CLASSBROWSERFRAMESTATUSBAR,
-              name='statusBar', parent=self, style=wx.ST_SIZEGRIP)
+              name='statusBar', parent=self, style=wx.STB_SIZEGRIP)
         self.SetStatusBar(self.statusBar)
 
         self.pages = wx.Notebook(id=wxID_CLASSBROWSERFRAMEPAGES, name='pages',
@@ -67,12 +67,19 @@ class ClassBrowserFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.SetIcon(IS.load('Images/Icons/ClassBrowser.ico'))
 
         self.classes = {}
-        for module in ('wx', 'wx.html', 'wx.calendar', 'wx.grid', 'wx.stc',
-                       'wx.gizmos', 'wx.wizard'):
+
+        # for module in ('wx', 'wx.html', 'wx.lib.calendar', 'wx.grid', 'wx.stc',
+        #                'wx.gizmos', 'wx.adv.Wizard'):
+        #     self.classes.update(pyclbr.readmodule(module))
+#DRAMA Have to remove 'wx.adv.Wizard' from this code because it generates this error;
+# 'ImportError: No package named wx.adv'
+
+        for module in ('wx', 'wx.html', 'wx.lib.calendar', 'wx.grid', 'wx.stc',
+                       'wx.gizmos'):
             self.classes.update(pyclbr.readmodule(module))
 
 
-        tID =wx.NewId()
+        tID =wx.NewIdRef(count=1)
         root = self.hierarchy.AddRoot('wx.Object')
 
         clsDict = {}
@@ -83,7 +90,7 @@ class ClassBrowserFrame(wx.Frame, Utils.FrameRestorerMixin):
         buildTree(self.hierarchy, root, clsDict)
         self.hierarchy.Expand(root)
 
-        tID =wx.NewId()
+        tID =wx.NewIdRef(count=1)
 
         root = self.tree.AddRoot(_('Modules'))
         modules = {}
@@ -111,12 +118,10 @@ class ClassBrowserFrame(wx.Frame, Utils.FrameRestorerMixin):
                         modules[moduleName][className]['Methods'][method] = self.classes[className].lineno
                 else:
                     modules[moduleName][className]['Methods'][method] = self.classes[className].lineno
-        moduleLst = modules.keys()
-        moduleLst.sort()
+        moduleLst = sorted(list(modules.keys()))
         for module in moduleLst:
             roots = self.tree.AppendItem(root, module)
-            classLst = modules[module].keys()
-            classLst.sort()
+            classLst = sorted(list(modules[module].keys()))
             for classes in classLst:
                 aClass = self.tree.AppendItem(roots, classes)
                 methItem = self.tree.AppendItem(aClass, _('Methods'))
@@ -138,7 +143,7 @@ class ClassBrowserFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.tree.Expand(root)
 
     def setDefaultDimensions(self):
-        self.SetDimensions(0, Preferences.underPalette,
+        self.SetSize(0, Preferences.underPalette,
           Preferences.inspWidth,
           Preferences.bottomHeight)
 
@@ -180,8 +185,8 @@ def travTilBase(name, classes, root):
         return c[name]
 
 def buildTree(tree, parent, dict):
-    items = dict.keys()
-    items.sort()
+    items = sorted(list(dict.keys()))
+
     for item in items:
         child = tree.AppendItem(parent, item)
         if len(dict[item].keys()):

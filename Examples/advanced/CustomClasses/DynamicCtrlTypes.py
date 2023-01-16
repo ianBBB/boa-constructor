@@ -21,7 +21,7 @@ def create(parent, DynCtrl):
     return Frame2(parent, DynCtrl)
 
 [wxID_FRAME2, wxID_FRAME2WINDOW1, 
-] = [wx.NewId() for _init_ctrls in range(2)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(2)]
 
    
 

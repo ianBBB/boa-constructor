@@ -73,7 +73,7 @@ class PythonSourceDiffView(wx.stc.StyledTextCtrl, EditorView,
     prevBmp = 'Images/Shared/Previous.png'
     nextBmp = 'Images/Shared/Next.png'
     def __init__(self, parent, model):
-        wxID_PYTHONSOURCEDIFFVIEW = wx.NewId()
+        wxID_PYTHONSOURCEDIFFVIEW = wx.NewIdRef(count=1)
 
         wx.stc.StyledTextCtrl.__init__(self, parent, wxID_PYTHONSOURCEDIFFVIEW,
           style = wx.CLIP_CHILDREN | wx.SUNKEN_BORDER)

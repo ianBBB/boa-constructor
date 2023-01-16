@@ -23,7 +23,7 @@ def create(parent):
  wxID_LOGINDIALOGSTATICTEXT2, wxID_LOGINDIALOGSTATICTEXT3, 
  wxID_LOGINDIALOGSTATICTEXT4, wxID_LOGINDIALOGSTATICTEXT5, 
  wxID_LOGINDIALOGUSERNAMETC, 
-] = [wx.NewId() for _init_ctrls in range(14)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(14)]
 
 class LoginDialog(wx.Dialog):
     def _init_ctrls(self, prnt):

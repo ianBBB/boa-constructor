@@ -11,7 +11,7 @@ def create(parent):
 [wxID_MAKEPYDIALOG, wxID_MAKEPYDIALOGBFORDEMAND, wxID_MAKEPYDIALOGCANCEL, 
  wxID_MAKEPYDIALOGDIRECTSPECIFICATION, wxID_MAKEPYDIALOGOK, 
  wxID_MAKEPYDIALOGTYPELIBRARYLIST, 
-] = [wx.NewId() for _init_ctrls in range(6)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class MakePyDialog(wx.Dialog):
     def _init_coll_typeLibraryList_Columns(self, parent):
@@ -160,7 +160,7 @@ class MakePyDialog(wx.Dialog):
             libraryList.sort()
             for index in range(len( libraryList)):
                 librarySpecification = libraryList[index]
-                self.typeLibraryList.InsertStringItem(
+                self.typeLibraryList.InsertItem(
                     index,
                     librarySpecification.desc
                 )

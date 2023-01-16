@@ -59,7 +59,12 @@ class PropertyWrapper:
     def getValue(self, *params):
         if self.routeType == 'CtrlRoute' and self.ctrl:
             # return self.getter(self.ctrl)
-            return self.getter()
+            # return self.getter()
+            #INFO Workaround for the Editable value for the wx.TextCtrl
+            if self.ctrl.ClassName == 'wxTextCtrl' and self.name == 'Editable':
+                return self.ctrl.IsEditable()
+            else:
+                return self.getter()
         elif self.routeType == 'CompnRoute' and self.compn:
             return self.getter(self.compn)
         elif self.routeType == 'EventRoute' and self.compn and len(params):

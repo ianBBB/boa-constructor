@@ -9,7 +9,7 @@ try:
 except ImportError:
     import xmlrpclib
 
-from DebugClient import DebugClient, MultiThreadedDebugClient, \
+from Debugger.DebugClient import DebugClient, MultiThreadedDebugClient, \
      EmptyResponseError, DebuggerTask, EVT_DEBUGGER_START, \
      wxEVT_DEBUGGER_START, wxEVT_DEBUGGER_EXC, wxEVT_DEBUGGER_STOPPED
 
@@ -47,12 +47,13 @@ class TransportWithAuth (xmlrpclib.Transport):
             else:
                 got_data = 1
             if self.verbose:
-                print "body:", repr(response)
+                print("body:", repr(response))
             p.feed(response)
 
         f.close()
         if not got_data:
-            raise EmptyResponseError, _('Empty response from debugger process')
+            #raise EmptyResponseError, _('Empty response from debugger process')
+            raise Exception ('Empty response from debugger process', EmptyResponseError)
 
         p.close()
         return u.close()
@@ -74,12 +75,14 @@ def spawnChild(monitor, process, args=''):
     pyIntpPath = Preferences.getPythonInterpreterPath()
     cmd = '%s "%s" %s' % (pyIntpPath, script_fn, args)
     try:
-        pid = wx.Execute(cmd, wx.EXEC_NOHIDE, process)
+        # pid = wx.Execute(cmd, wx.EXEC_NOHIDE, process)
+        pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE | wx.EXEC_ASYNC, process)
 
         line = ''
         if monitor.isAlive():
             istream = process.GetInputStream()
             estream = process.GetErrorStream()
+            ostream = process.GetOutputStream()
 
             err = ''
             # read in the port and auth hash
@@ -87,10 +90,14 @@ def spawnChild(monitor, process, args=''):
                 # don't take more time than the process we wait for ;)
                 time.sleep(0.00001)
                 if istream.CanRead():
-                    line = line + istream.read(1)
-                # test for tracebacks on stderr
+                    # line = line + istream.read(1)
+
+                    read_data = istream.read(1)
+                    line = line + read_data.decode('utf-8')
+                    # test for tracebacks on stderr
                 if estream.CanRead():
-                    err = estream.read()
+                    b_err = estream.read()
+                    err = b_err.decode('utf-8')
                     if LOG_TRACEBACKS:
                         if hasattr(sys, 'frozen'):
                             fn = os.path.join(os.path.dirname(sys.executable), 'DebugTracebacks.txt')
@@ -119,7 +126,7 @@ def spawnChild(monitor, process, args=''):
                         Error, val = __builtins__[exctype.strip()], (excvalue.strip()+errfile)
                     except KeyError:
                         Error, val = UnknownError, (exctype.strip()+':'+excvalue.strip()+errfile)
-                    raise Error, val
+                    raise Exception( val, Error)
 
         if not KEEP_STREAMS_OPEN:
             process.CloseOutput()
@@ -127,18 +134,18 @@ def spawnChild(monitor, process, args=''):
         if monitor.isAlive():
             line = line.strip()
             if not line:
-                raise RuntimeError, (
-                    _('The debug server address could not be read'))
+                raise Exception('The debug server address could not be read', RuntimeError)
             port, auth = line.strip().split()
 
             if USE_TCPWATCH:
                 # Start TCPWatch as a connection forwarder.
-                from thread import start_new_thread
+                #from thread import start_new_thread
+                from threading import Thread
                 new_port = 20202  # Hopefully free
                 def run_tcpwatch(port1, port2):
                     os.system("tcpwatch -L %d:127.0.0.1:%d" % (
                         int(port1), int(port2)))
-                start_new_thread(run_tcpwatch, (new_port, port))
+                Thread.start(run_tcpwatch, (new_port, port))
                 time.sleep(3)
                 port = new_port
 
@@ -147,7 +154,7 @@ def spawnChild(monitor, process, args=''):
                 'http://127.0.0.1:%d' % int(port), trans)
             return server, istream, estream, pid, pyIntpPath
         else:
-            raise RuntimeError, _('The debug server failed to start')
+            raise Exception('The debug server failed to start', RuntimeError)
     except:
         if monitor.isAlive():
             process.CloseOutput()
@@ -184,9 +191,16 @@ class ChildProcessClient(MultiThreadedDebugClient):
             self.taskHandler.addTask(task)
 
     def invoke(self, m_name, m_args):
-        m = getattr(self.server, m_name)
-        result = m(*m_args)
+        m = getattr(self.server, m_name)  #orig
+        # m = getattr(self.server, bytes(m_name, 'UTF-8'))
+
+        # convert string arg to bytes
+        str_arg=m_args[0]
+        m_args[0]=bytes(str_arg)
+        result = m(*m_args)    # orig
+        # result = m(m_args)
         return result
+
 
     def isAlive(self):
         return (self.process is not None)
@@ -213,7 +227,7 @@ class ChildProcessClient(MultiThreadedDebugClient):
 
 ##    def __del__(self):
 ##        pass#self.kill()
-
+#TODO stream read in bytes. these need to be converted to strings for the stdXX_text vars
     def pollStreams(self):
         stderr_text = ''
         stream = self.error_stream
@@ -240,8 +254,14 @@ class ChildProcessClient(MultiThreadedDebugClient):
                     process = wx.Process(self.event_handler, self.win_id)
                     process.Redirect()
                     self.process = process
-                    wx.EVT_END_PROCESS(self.event_handler, self.win_id,
-                                       self.OnProcessEnded)
+
+                    # self.process.Bind(wx.EVT_END_PROCESS, self.OnProcessEnded)
+
+                    # wx.EVT_END_PROCESS(self.event_handler, self.win_id,
+                    #                    self.OnProcessEnded)  # original
+
+                    self.event_handler.Bind(wx.EVT_END_PROCESS, self.OnProcessEnded)
+
                     (self.server, self.input_stream, self.error_stream,
                      self.processId, self.pyIntpPath) = spawnChild(
                         self, process, self.process_args)

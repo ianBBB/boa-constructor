@@ -56,7 +56,7 @@ class ZopeHTMLSourceView(EditorStyledTextCtrl, ZopeHTMLStyledTextCtrlMix):
     breakBmp = 'Images/Debug/Breakpoints.png'
     defaultEOL = '\n'
     def __init__(self, parent, model, actions=()):
-        wxID_ZOPEHTMLSOURCEVIEW = wx.NewId()
+        wxID_ZOPEHTMLSOURCEVIEW = wx.NewIdRef(count=1)
         EditorStyledTextCtrl.__init__(self, parent, wxID_ZOPEHTMLSOURCEVIEW,
           model, (('Refresh', self.OnRefresh, '-', 'Refresh'),) + actions, -1)
         ZopeHTMLStyledTextCtrlMix.__init__(self, wxID_ZOPEHTMLSOURCEVIEW)

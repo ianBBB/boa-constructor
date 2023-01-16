@@ -467,6 +467,13 @@ class ConstrPropEdit(ConstrPropEditFacade, PropertyEditor):
     def getDisplayValue(self):
         return self.getValue()
     def getCtrlValue(self):
+        # PRUNE
+        # For a menu item, the menu text in the constructor call is referred to as "item" whereas in the
+        # properties it is simply called "text". When collecting values for the Inspector, the values
+        # are based on the constructor values but for menu items, the returned value has to take into account
+        # this difference in parameter name.  test KIND and NAME
+
+
         paramName = self.companion.constructor()[self.name]
         return self.companion.textConstr.params[paramName]
     def setCtrlValue(self, oldValue, value):
@@ -653,7 +660,7 @@ class BitmapPropEditMix:
             else:
                 patchExplorerFileTypes(True)
                 dlg = wxFileDialog(self.parent, _('Choose an image'), dir, name,
-                      'ImageFiles', wx.OPEN)
+                      'ImageFiles', wx.FD_OPEN)
                 try:
                     if dlg.ShowModal() != wx.ID_OK:
                         return '', '', ''

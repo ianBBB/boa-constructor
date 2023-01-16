@@ -15,13 +15,15 @@ import string, sys
 
 import wx
 from wx.tools import img2py
+# import wx.lib.art.myimagemodule
+import wx.lib.art.img2pyartprov
 from wx.lib.anchors import LayoutAnchors
 
 from Utils import _
 
 [wxID_RESOURCESELECTDLG, wxID_RESOURCESELECTDLGBTNCANCEL, 
  wxID_RESOURCESELECTDLGBTNFILEDLG, wxID_RESOURCESELECTDLGBTNOK, 
-] = [wx.NewId() for _init_ctrls in range(4)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(4)]
 
 class ResourceSelectDlg(wx.Dialog):
     def _init_coll_boxSizerButtons_Items(self, parent):
@@ -180,7 +182,8 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
         self.imageSrcInfo = []
         self.images.RemoveAll()
         artProv = PyResourceArtProvider(self.functions)
-        wx.ArtProvider.PushProvider(artProv)
+        # wx.ArtProvider.PushProvider(artProv)
+        wx.ArtProvider.Push(artProv)
         try:
             m = self.model.getModule()
             self.cataloged = ('catalog' in m.globals) and ('index' in m.globals)
@@ -201,7 +204,7 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
                         (name, (m.functions[f].start, bmpFunctionStart),
                          compressed, iconFunction) )
         finally:
-            wx.ArtProvider.PopProvider()
+            wx.ArtProvider.Pop()
 
     def OnGoto(self, event):
         if self.selected != -1:

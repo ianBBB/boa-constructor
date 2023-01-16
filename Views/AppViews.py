@@ -438,7 +438,8 @@ class TextInfoFileView(SourceViews.EditorStyledTextCtrl):
         SourceViews.EditorStyledTextCtrl.__init__(self, parent, -1,
           model, (), 0)
         self.active = True
-        wx.stc.EVT_STC_UPDATEUI(self, self.GetId(), self.OnUpdateUI)
+        # wx.stc.EVT_STC_UPDATEUI(self, self.GetId(), self.OnUpdateUI)
+        self.Bind(wx.stc.EVT_STC_UPDATEUI, self.GetId(), self.OnUpdateUI)
         self.model.loadTextInfo(self.viewName)
 
     def OnUpdateUI(self, event):

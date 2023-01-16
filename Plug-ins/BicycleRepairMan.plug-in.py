@@ -417,8 +417,8 @@ class ReferencesMatcher(ErrorStack.StackErrorParser):
 ##        return []
 ##        return [
 ##         (-1, '-', None, '-'),
-##         (wx.NewId(), 'BRM - Import selection', self.OnImportItem, '-'),
-##         (wx.NewId(), 'BRM - Clear refactoring context', self.OnClearContext, '-'),
+##         (wx.NewIdRef(count=1), 'BRM - Import selection', self.OnImportItem, '-'),
+##         (wx.NewIdRef(count=1), 'BRM - Clear refactoring context', self.OnClearContext, '-'),
 ##         (-1, '-', None, '-'),
 ##        ]
 ##

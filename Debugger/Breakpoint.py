@@ -5,8 +5,11 @@ getBreakpointList()).
 
 import os
 
-try: from cPickle import Pickler, Unpickler
-except: from pickle import Pickler, Unpickler
+# try: from cPickle import Pickler, Unpickler
+# except: from pickle import Pickler, Unpickler
+
+# Now at Python 3.11, just use pickle.
+from pickle import Pickler, Unpickler
 
 
 class FileBreakpointList:

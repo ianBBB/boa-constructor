@@ -20,7 +20,7 @@ class DebuggerListCtrl(wx.ListView, Utils.ListCtrlSelectionManagerMix):
               style=wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.LC_VRULES | wx.CLIP_CHILDREN)
         Utils.ListCtrlSelectionManagerMix.__init__(self)
 
-wxID_STACKVIEW = wx.NewId()
+wxID_STACKVIEW = wx.NewIdRef(count=1)
 class StackViewCtrl(DebuggerListCtrl):
     def __init__(self, parent, flist, debugger):
         DebuggerListCtrl.__init__(self, parent, wxID_STACKVIEW)
@@ -64,7 +64,7 @@ class StackViewCtrl(DebuggerListCtrl):
             #    item = "> " + item
             if pos >= count:
                 # Insert.
-                self.InsertStringItem(pos, attrib)
+                self.InsertItem(pos, attrib)
                 count = count + 1
             else:
                 # Update.
@@ -239,10 +239,15 @@ class BreakViewCtrl(DebuggerListCtrl):
     def refreshList(self):
         self.DeleteAllItems()
         bps = bplist.getBreakpointList()
+
         # Sort by filename and lineno.
-        bps.sort(lambda a, b:
-                 cmp((a['filename'], a['lineno']),
-                     (b['filename'], b['lineno'])))
+        #TODO Don't sort at all for now. Fix this up later
+        # bps.sort(lambda a, b:
+        #          cmp((a['filename'], a['lineno']),
+        #              (b['filename'], b['lineno'])))
+
+
+
         self.bps = bps
         for p in range(len(bps)):
             bp = bps[p]
@@ -251,9 +256,13 @@ class BreakViewCtrl(DebuggerListCtrl):
             if not bp['enabled']: imgIdx = 2
             elif bp['temporary']: imgIdx = 3
 
-            self.InsertImageStringItem(
+            # self.InsertImageStringItem(
+            #     p, os.path.basename(bp['filename']), imgIdx)
+            # self.SetStringItem(p, 1, str(bp['lineno']))
+
+            self.InsertItem(
                 p, os.path.basename(bp['filename']), imgIdx)
-            self.SetStringItem(p, 1, str(bp['lineno']))
+            self.SetItem(p, 1, str(bp['lineno']))
 
             hits = ''
             ignore = ''
@@ -265,9 +274,13 @@ class BreakViewCtrl(DebuggerListCtrl):
                     ignore = str(item['ignore'])
                     cond = item['cond'] or ''
 
-            self.SetStringItem(p, 2, ignore)
-            self.SetStringItem(p, 3, hits)
-            self.SetStringItem(p, 4, cond)
+            # self.SetStringItem(p, 2, ignore)
+            # self.SetStringItem(p, 3, hits)
+            # self.SetStringItem(p, 4, cond)
+
+            self.SetItem(p, 2, ignore)
+            self.SetItem(p, 3, hits)
+            self.SetItem(p, 4, cond)
 
     def addBreakpoint(self, filename, lineno):
         self.refreshList()
@@ -382,7 +395,7 @@ class BreakViewCtrl(DebuggerListCtrl):
                         'conditionalBreakpoints', (server_fn, lineno, cond))
 
                     self.debugger.requestDebuggerStatus()
-                    #self.refreshList()
+                    self.refreshList()
             finally:
                 dlg.Destroy()
 
@@ -406,13 +419,13 @@ class BreakViewCtrl(DebuggerListCtrl):
                         'ignoreBreakpoints', (server_fn, lineno, ignore))
 
                     self.debugger.requestDebuggerStatus()
-                    #self.refreshList()
+                    self.refreshList()
             finally:
                 dlg.Destroy()
 
 # XXX Expose classes' dicts as indented items
 
-wxID_NSVIEW = wx.NewId()
+wxID_NSVIEW = wx.NewIdRef(count=1)
 class NamespaceViewCtrl(DebuggerListCtrl):
     def __init__(self, parent, debugger, is_local, name):
         DebuggerListCtrl.__init__(self, parent, wxID_NSVIEW)
@@ -424,13 +437,13 @@ class NamespaceViewCtrl(DebuggerListCtrl):
 
         self.menu = wx.Menu()
 
-        idAs = wx.NewId()
-        idA = wx.NewId()
+        idAs = wx.NewIdRef(count=1)
+        idA = wx.NewIdRef(count=1)
         self.menu.Append(idAs, _('Add as watch'))
         self.menu.Append(idA, _('Add a %s watch') % name)
         self.Bind(wx.EVT_MENU, self.OnAddAsWatch, id=idAs)
         self.Bind(wx.EVT_MENU, self.OnAddAWatch, id=idA)
-        outputId = wx.NewId()
+        outputId = wx.NewIdRef(count=1)
         self.menu.Append(outputId, _('Write value to Output'))
         self.Bind(wx.EVT_MENU, self.OnValueToOutput, id=outputId)
 
@@ -452,7 +465,7 @@ class NamespaceViewCtrl(DebuggerListCtrl):
 
     def showLoading(self):
         self.DeleteAllItems()
-        self.InsertStringItem(0, '...')
+        self.InsertItem(0, '...')
 
     def load_dict(self, nsdict, force=0):
         self.DeleteAllItems()
@@ -466,7 +479,7 @@ class NamespaceViewCtrl(DebuggerListCtrl):
             for name in self.names:
                 svalue = nsdict[name]
 
-                self.InsertStringItem(row, name)
+                self.InsertItem(row, name)
                 self.SetStringItem(row, 1, svalue, -1)
 
                 row = row + 1
@@ -493,7 +506,7 @@ class NamespaceViewCtrl(DebuggerListCtrl):
             self.OnAddAsWatch(event)
 
 
-wxID_WATCHVIEW = wx.NewId()
+wxID_WATCHVIEW = wx.NewIdRef(count=1)
 class WatchViewCtrl(DebuggerListCtrl):
     def __init__(self, parent, images, debugger):
         DebuggerListCtrl.__init__(self, parent, wxID_WATCHVIEW)
@@ -512,25 +525,25 @@ class WatchViewCtrl(DebuggerListCtrl):
 
         self.menu = wx.Menu()
 
-        wid = wx.NewId()
+        wid = wx.NewIdRef(count=1)
         self.menu.Append(wid, _('Add local watch'))
         self.Bind(wx.EVT_MENU, self.OnAddLocal, id=wid)
-        wid = wx.NewId()
+        wid = wx.NewIdRef(count=1)
         self.menu.Append(wid, _('Add global watch'))
         self.Bind(wx.EVT_MENU, self.OnAddGlobal, id=wid)
-        self.editId = wx.NewId()
+        self.editId = wx.NewIdRef(count=1)
         self.menu.Append(self.editId, _('Edit watch'))
         self.Bind(wx.EVT_MENU, self.OnEdit, id=self.editId)
-        self.outputId = wx.NewId()
+        self.outputId = wx.NewIdRef(count=1)
         self.menu.Append(self.outputId, _('Write value to Output'))
         self.Bind(wx.EVT_MENU, self.OnValueToOutput, id=self.outputId)
-        self.deleteId = wx.NewId()
+        self.deleteId = wx.NewIdRef(count=1)
         self.menu.Append(self.deleteId, _('Delete'))
         self.Bind(wx.EVT_MENU, self.OnDelete, id=self.deleteId)
-        self.expandId = wx.NewId()
+        self.expandId = wx.NewIdRef(count=1)
         self.menu.Append(self.expandId, _('Expand'))
         self.Bind(wx.EVT_MENU, self.OnExpand, id=self.expandId)
-        wid = wx.NewId()
+        wid = wx.NewIdRef(count=1)
         self.menu.Append(wid, _('Delete All'))
         self.Bind(wx.EVT_MENU, self.OnDeleteAll, id=wid)
 
@@ -581,12 +594,12 @@ class WatchViewCtrl(DebuggerListCtrl):
                 idx = 4
             if row >= count:
                 # Insert.
-                self.InsertImageStringItem(row, name, idx)
+                self.InsertItem(row, name, idx)
                 count = count + 1
             else:
                 # Update.
-                self.SetStringItem(row, 0, name, idx)
-            self.SetStringItem(row, 1, svalue, idx)
+                self.SetItem(row, 0, name, idx)
+            self.SetItem(row, 1, svalue, idx)
             row = row + 1
         while row < count:
             self.DeleteItem(count - 1)
@@ -662,7 +675,7 @@ class DebugStatusBar(wx.StatusBar):
         #self.SetStatusWidths([-1, -1, 16])
 
         self.stateCols = {'except': wx.Colour(0xFF, 0xFF, 0x44),#wxNamedColour('yellow'),
-                          'info':   wx.NamedColour('white'),
+                          'info':   wx.Colour('white'),
                           'break':  wx.Colour(0xFF, 0x44, 0x44),#wxNamedColour('red'),
                           'busy':   wx.Colour(0xBB, 0xE0, 0xFF)}
 
@@ -685,7 +698,7 @@ class DebugStatusBar(wx.StatusBar):
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
     def _setCtrlDims(self, ctrl, rect):
-        ctrl.SetDimensions(rect.x+2, rect.y+2, rect.width-4, rect.height-4)
+        ctrl.SetSize(rect.x+2, rect.y+2, rect.width-4, rect.height-4)
 
     def updateState(self, message, sts_type='except'):
         if message:

@@ -20,7 +20,7 @@ def create(parent):
 [wxID_DIALOG2, wxID_DIALOG2BUTTON1, wxID_DIALOG2STATICBITMAP1, 
  wxID_DIALOG2STATICBITMAP2, wxID_DIALOG2STATICBITMAP3, 
  wxID_DIALOG2STATICTEXT1, wxID_DIALOG2STATICTEXT2, 
-] = [wx.NewId() for _init_ctrls in range(7)]
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(7)]
 
 class Dialog2(wx.Dialog):
     def _init_coll_fgsButton_Items(self, parent):
@@ -31,8 +31,8 @@ class Dialog2(wx.Dialog):
     def _init_coll_bsDialog_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddSizer(self.fsTextctrls, 0, border=2, flag=wx.ALL)
-        parent.AddSizer(self.fgsImages, 2, border=2,
+        parent.Add(self.fsTextctrls, 0, border=2, flag=wx.ALL)
+        parent.Add(self.fgsImages, 2, border=2,
               flag=wx.ALIGN_CENTER_HORIZONTAL | wx.ALL)
         parent.AddSizer(self.fgsButton, 0, border=2,
               flag=wx.ALIGN_CENTER_HORIZONTAL | wx.ALL)

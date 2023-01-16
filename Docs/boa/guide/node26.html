@@ -102,7 +102,7 @@ get destroyed!</li>
 event):<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dlg = wx.FileDialog(self,
-"Choose a file", ".", "", "*.*", wx.OPEN)<br>
+"Choose a file", ".", "", "*.*", wx.FD_OPEN)<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try:<br>
 
@@ -196,7 +196,7 @@ shows our new code.</li>
 OnMenuFileOpenMenu(self, event):<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dlg = wx.FileDialog(self,
-"Choose a file", ".", "", "*.*", wx.OPEN)<br>
+"Choose a file", ".", "", "*.*", wx.FD_OPEN)<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try:<br>
 
@@ -244,7 +244,7 @@ functionality. Insert a file dialog into the body of
 
   <li>This is a File Save dialog. Change the prompt, parameter 2 to the
 wx.FileDialog
-to "Save File As". Change the style, parameter 6 to wx.SAVE. The method
+to "Save File As". Change the style, parameter 6 to wx.FD_SAVE. The method
 to save the file is called SaveFile.</li>
 
   <li>Again, we save the filename value for use by the 'Save' menu
@@ -268,7 +268,7 @@ listing below shows the code.</li>
       <td style="vertical-align: top;">def
 OnMenuFileSaveasMenu(self, event):<br>
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dlg = wx.FileDialog(self, "<span style="font-weight: bold;">Save file as</span>", ".", "", "*.*", <span style="font-weight: bold;">wx.SAVE</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dlg = wx.FileDialog(self, "<span style="font-weight: bold;">Save file as</span>", ".", "", "*.*", <span style="font-weight: bold;">wx.FD_SAVE</span>)<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try:<br>
 

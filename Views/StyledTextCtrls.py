@@ -21,6 +21,7 @@ eols = {  wx.stc.STC_EOL_CRLF : '\r\n',
 
 import Preferences
 from Utils import _
+from wx import TextCtrl
 
 import methodparse
 from . import STCStyleEditor
@@ -188,8 +189,11 @@ class BrowseStyledTextCtrlMix:
         self.handCrs = 1
         self.stndCrs = 0
 
+        # self.IndicatorSetStyle(indicator, wx.stc.STC_INDIC_PLAIN)
+        # self.IndicatorSetForeground(indicator, wx.BLUE)
         self.IndicatorSetStyle(indicator, wx.stc.STC_INDIC_PLAIN)
         self.IndicatorSetForeground(indicator, wx.BLUE)
+
         self._indicator = indicator
         self.styleStart = 0
         self.styleLength = 0
@@ -213,11 +217,17 @@ class BrowseStyledTextCtrlMix:
 
     # XXX Setting the cursor irrevocably changes the cursor for the whole STC
     def underlineWord(self, start, length):
-        #self.SetCursor(self.handCrs)
-        self.SetLexer(wx.stc.STC_LEX_NULL)
 
-        self.StartStyling(start, wx.stc.STC_INDICS_MASK)
-        self.SetStyling(length, wx.stc.STC_INDIC0_MASK)
+        # PRUNE
+        # #self.SetCursor(self.handCrs)
+        # self.SetLexer(wx.stc.STC_LEX_NULL)
+        print ('start : ' + str(start))
+
+
+        self.SetCursor(self.handCrs)
+        self. SetStyle(start, (start+length), wx.TextAttr(wx.BLACK, wx.RED))
+
+
         return start, length
 
     def clearUnderline(self, start, length):

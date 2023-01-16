@@ -447,7 +447,7 @@ class _CyclopsRepr(_repr.Repr):
 
     def repr_instance(self, x, level):
         try:
-            return `x`
+            return 'x'
             # Bugs in x.__repr__() can cause arbitrary
             # exceptions -- then make up something
         except:
@@ -455,7 +455,7 @@ class _CyclopsRepr(_repr.Repr):
                    hex(id(x))[2:] + '>'
 
     def repr_class(self, x, level):
-        return `x`
+        return 'x'
 
     repr_instance_method = repr_class
 

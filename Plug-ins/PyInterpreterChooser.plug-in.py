@@ -31,29 +31,29 @@ class PyInterpreterChooserDlg(wx.Dialog):
     def _init_coll_browserSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.lcInstallations, 1, border=10,
+        parent.Add(self.lcInstallations, 1, border=10,
               flag=wx.GROW | wx.ALL)
-        parent.AddWindow(self.gdcInstallPath, 1, border=10,
+        parent.Add(self.gdcInstallPath, 1, border=10,
               flag=wx.GROW | wx.ALL)
 
     def _init_coll_buttonsSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.btnOK, 0, border=10, flag=wx.ALL | wx.ALIGN_RIGHT)
-        parent.AddWindow(self.btnCancel, 0, border=10,
-              flag=wx.ALL | wx.ALIGN_RIGHT)
+        parent.Add(self.btnOK, 0, border=10, flag=wx.ALL)
+        parent.Add(self.btnCancel, 0, border=10,
+              flag=wx.ALL)
 
     def _init_coll_mainSizer_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.staticText1, 0, border=10,
+        parent.Add(self.staticText1, 0, border=10,
               flag=wx.EXPAND | wx.ALL)
-        parent.AddSizer(self.browserSizer, 1, border=0, flag=wx.GROW)
-        parent.AddWindow(self.staticText2, 0, border=10,
+        parent.Add(self.browserSizer, 1, border=0, flag=wx.GROW)
+        parent.Add(self.staticText2, 0, border=10,
               flag=wx.EXPAND | wx.ALL)
-        parent.AddWindow(self.txtPyIntpPath, 0, border=10,
+        parent.Add(self.txtPyIntpPath, 0, border=10,
               flag=wx.GROW | wx.ALL)
-        parent.AddSizer(self.buttonsSizer, 0, border=0,
+        parent.Add(self.buttonsSizer, 0, border=0,
               flag=wx.ALIGN_RIGHT | wx.ALL)
 
     def _init_coll_lcInstallations_Columns(self, parent):
@@ -159,7 +159,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
     def populateFoundInstallations(self):
         paths = self.installedPaths = self.getInstallations()
         for idx, (version, path) in zip(list(range(len(paths))), paths):
-            self.lcInstallations.InsertStringItem(idx, version)
+            self.lcInstallations.InsertItem(idx, version)
             self.lcInstallations.SetStringItem(idx, 1, path)
 
         if not hasattr(sys, 'frozen'):
