@@ -42,7 +42,7 @@ riaan@e.co.za
 
 
 Release history:
-2023-01-13 - Boa Constructor 0.8.0 beta
+2023-01-13 - Boa Constructor 0.8.0 alpha
 
 2014-08-18 - Boa Constructor 0.7.2 beta
 
