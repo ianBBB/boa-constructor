@@ -1,6 +1,6 @@
 - Boa Constructor -
 
-This project aims to update the Boa Constructor IDE to operate with versions of Python and wxPython in common use at this time (they are Python 3.x and wxPython 4.2.x). The orignal Boa Constructor was written for earlier versions of Python and wxPython which are no longer supported. Boa underwent a major update when Python 2.7 was released. This work is to develop the next iteration of the software.
+this project aims to update the Boa Constructor IDE to operate with versions of Python and wxPython in common use at this time (they are Python 3.x and wxPython 4.2.x). The orignal Boa Constructor was written for earlier versions of Python and wxPython which are no longer supported. Boa underwent a major update when Python 2.7 was released. This work is to develop the next iteration of the software.
 
 A description of Boa Constructor is given below in the original README, retained here for historic continuity. Please note that many of the features mentioned below do not yet work under Python 3 as this is still a work in progress. Despite this, I have added my versioning and copyright message.
 
