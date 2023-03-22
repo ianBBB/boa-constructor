@@ -1,4 +1,4 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Name:        ErrorStack.py
 # Purpose:
 #
@@ -8,7 +8,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 import string, re, os, sys, pprint
 import Utils
 
@@ -21,8 +21,9 @@ else:
 
 fileLine = re.compile('  File "(?P<filename>.+)", line (?P<lineno>[0-9]+)')
 
+
 class StackEntry:
-    def __init__(self, file = '', lineNo = 0, line = '', error = ()):
+    def __init__(self, file='', lineNo=0, line='', error=()):
         self.file = file
         self.line = line
         self.lineNo = lineNo
@@ -53,11 +54,11 @@ class StackErrorParser:
             print(se)
 
     def __repr__(self):
-        return repr(self.error)+'\n'+pprint.pformat(self.stack)
+        return repr(self.error) + '\n' + pprint.pformat(self.stack)
 
+    def write(self, s):
+        self.lines.append(s)
 
-#    def write(self, s):
-#        self.lines.append(s)
 
 class StdErrErrorParser(StackErrorParser):
     def parse(self):
@@ -68,11 +69,12 @@ class StdErrErrorParser(StackErrorParser):
             if len(self.error) == 1:
                 self.error.insert(0, 'String exception')
             self.error[1] = self.error[1].strip()
-            for idx in range(len(self.lines)-1):
+            for idx in range(len(self.lines) - 1):
                 mo = fileLine.match(self.lines[idx].rstrip())
                 if mo:
                     self.stack.append(StackEntry(mo.group('filename'),
-                      int(mo.group('lineno')), self.lines[idx + 1], self.error))
+                                                 int(mo.group('lineno')), self.lines[idx + 1], self.error))
+
 
 class PyCheckerErrorParser(StackErrorParser):
     def parse(self):
@@ -86,7 +88,8 @@ class PyCheckerErrorParser(StackErrorParser):
             else:
                 self.error[:] = [warng]
                 self.stack.append(StackEntry(os.path.abspath(filename), lineNo,
-                      linecache.getline(filename, lineNo), self.error))
+                                             linecache.getline(filename, lineNo), self.error))
+
 
 class PyLintErrorParser(StackErrorParser):
     def parse(self):
@@ -95,13 +98,15 @@ class PyLintErrorParser(StackErrorParser):
             filename, lineNo, msg = self.lines.pop()
             self.error[:] = [msg]
             self.stack.append(StackEntry(os.path.abspath(filename), lineNo,
-                  linecache.getline(filename, lineNo), self.error))
+                                         linecache.getline(filename, lineNo), self.error))
+
 
 def buildLintWarningList(lines):
     res = []
     for line in lines:
         res.append(PyLintErrorParser([line]))
     return res
+
 
 #    return [PyLintErrorParser([line]) for line in lines]
 
@@ -110,14 +115,16 @@ def buildLintWarningList(lines):
 max_stack_depth = 100
 max_lines_to_process = 20000
 
+
 # XXX Look into speeding this up a bit :) !
 class CrashTraceLogParser(StackErrorParser):
     """ Build a stack from a trace file built with option -T """
+
     def parse(self):
         lines = self.lines
         stack = self.stack = []
         fileSize = len(lines)
-        self.error[:] = ['Core dump stack', 'trace file size: '+repr(fileSize)]
+        self.error[:] = ['Core dump stack', 'trace file size: ' + repr(fileSize)]
 
         baseDir = lines[0].strip()
         del lines[0]
@@ -139,9 +146,11 @@ class CrashTraceLogParser(StackErrorParser):
             if event == 'call':
                 if not os.path.isabs(file):
                     file = os.path.join(baseDir, file)
-                try: code = open(file).readlines()[int(lineno)-1]
-                except IOError: code = ''
-                stack.append( StackEntry(file, int(lineno), code) )
+                try:
+                    code = open(file).readlines()[int(lineno) - 1]
+                except IOError:
+                    code = ''
+                stack.append(StackEntry(file, int(lineno), code))
                 if max_stack_depth and len(stack) >= max_stack_depth:
                     break
             elif event == 'return':
@@ -149,13 +158,13 @@ class CrashTraceLogParser(StackErrorParser):
                 while True:
                     try:
                         _file, _lineno, _frameid, _event, _rest = lines[idx].split('|', 4)
-                        #print _file, _lineno, _frameid, _event
+                        # print _file, _lineno, _frameid, _event
                     except Exception as error:
                         print('Error on find', cnt, idx, lines[idx], str(error))
                         break
 
                     if _file == file and _frameid == frameid and _event == 'call':
-                        del lines[:idx+1]
+                        del lines[:idx + 1]
                         cnt = cnt + idx
                         break
 
@@ -168,9 +177,10 @@ class CrashTraceLogParser(StackErrorParser):
         if len(stack):
             stack.reverse()
         else:
-            self.error[:] = ['Empty (resolved) stack', 'trace file size: '+repr(fileSize)]
+            self.error[:] = ['Empty (resolved) stack', 'trace file size: ' + repr(fileSize)]
 
-def buildErrorList(lines, Parser = StdErrErrorParser):
+
+def buildErrorList(lines, Parser=StdErrErrorParser):
     errs = []
     currerr = None
 
@@ -197,6 +207,7 @@ def buildErrorList(lines, Parser = StdErrErrorParser):
         res.append(Parser(err))
     return res
 
+
 def errorList(stderr):
     return buildErrorList(stderr.readlines())
 
@@ -205,12 +216,14 @@ def crashError(file):
     try:
         lines = open(file).readlines()
         ctlp = CrashTraceLogParser(lines)
-        open(file+'.stack', 'w').write(repr(ctlp))
+        open(file + '.stack', 'w').write(repr(ctlp))
         return [ctlp]
     except IOError:
         return []
 
-resp = {0 : 'failed', 1: 'succeeded'}
+
+resp = {0: 'failed', 1: 'succeeded'}
+
 
 def test_buildErrorList(name, err_lines, answer):
     err_list = str(buildErrorList(err_lines))
@@ -223,8 +236,9 @@ def test_buildErrorList(name, err_lines, answer):
         print(answer)
         print('--')
 
+
 def test():
-    tb = [tb_id+'\n',
+    tb = [tb_id + '\n',
           '  File "Views\\AppViews.py", line 172, in OnRun\n',
           '    self.model.run()\n',
           '  File "EditorModels.py", line 548, in run\n',
@@ -232,7 +246,7 @@ def test():
           '  File "EditorModels.py", line 513, in checkError\n',
           '    err.parse()\n',
           'AttributeError: parse\n',
-          tb_id+'\n',
+          tb_id + '\n',
           '  File "Views\\AppViews.py", line 172, in OnRun\n',
           '    self.model.run()\n',
           '  File "EditorModels.py", line 548, in run\n',
@@ -262,11 +276,10 @@ def test():
     # Normal trace backs
     test_buildErrorList('Long traceback', tb, tb_answ)
 
-
     tb2 = ['  File "Views\\SelectionTags.py", line 23\012',
-            '    :\012',
-            '    ^\012',
-            'SyntaxError: invalid syntax\012']
+           '    :\012',
+           '    ^\012',
+           'SyntaxError: invalid syntax\012']
     tb2_answ = '''[['SyntaxError', 'invalid syntax']
 [File "Views\\SelectionTags.py", line 23
     :
@@ -282,6 +295,7 @@ def test():
     # the libraries have already unloaded
 
     test_buildErrorList('Single line exception', [single_line_excp], single_line_excp_answ)
+
 
 if __name__ == '__main__':
     test()

@@ -16,8 +16,6 @@ import os, sys
 
 import wx
 
-import Boa
-
 import Preferences, Utils
 from Preferences import IS, keyDefs
 from Utils import _

@@ -18,10 +18,10 @@ process.Redirect()
 def pollStreams():
     stream = process.GetInputStream()
     if not stream.eof():
-        print '<<' + stream.read() + '>>'
+        print('<<' + stream.read() + '>>')
     stream = process.GetErrorStream()
     if not stream.eof():
-        print '<<<' + stream.read() + '>>>'
+        print('<<<' + stream.read() + '>>>')
 
 poll_streams = 1
 
@@ -30,14 +30,14 @@ def streamPollThread():
         pollStreams()
         sleep(0.15)
 
-print 'spawning...'
+print('spawning...')
 s, input, output, processId = spawnChild(monitor, process)
 
 t = threading.Thread(target=streamPollThread)
 t.setDaemon(1)
 t.start()
 
-print 'starting... (via %s)' % s
+print('starting... (via %s)' % s)
 status = s.runFileAndRequestStatus('test.py', (), 0, (),
                                    ({'filename':'test.py',
                                      'lineno':15,
@@ -45,11 +45,11 @@ status = s.runFileAndRequestStatus('test.py', (), 0, (),
                                      'enabled':1,
                                      'temporary':0},
                                     ))
-print status
-print 'running...'
+print(status)
+print('running...')
 status = s.proceedAndRequestStatus('set_continue')
 sleep(0.5)
-print status
+print(status)
 poll_streams = 0
 sleep(0.3)
 

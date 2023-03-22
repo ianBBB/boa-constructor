@@ -191,15 +191,21 @@ class ChildProcessClient(MultiThreadedDebugClient):
             self.taskHandler.addTask(task)
 
     def invoke(self, m_name, m_args):
-        m = getattr(self.server, m_name)  #orig
-        # m = getattr(self.server, bytes(m_name, 'UTF-8'))
+        # m = getattr(self.server, m_name)    # orig
+        # result = m(*m_args)    # orig
+        # return result    # orig
 
-        # convert string arg to bytes
-        str_arg=m_args[0]
-        m_args[0]=bytes(str_arg)
-        result = m(*m_args)    # orig
-        # result = m(m_args)
+        m = getattr(self.server, m_name)
+        result = m(*m_args)
         return result
+
+        # attempt to fix
+        # convert string arg to bytes
+        # str_arg=m_args[0]
+        # m_args[0]=bytes(str_arg)
+        # result = m(*m_args)    # orig
+        # # result = m(m_args)
+        # return result
 
 
     def isAlive(self):
@@ -288,7 +294,7 @@ class ChildProcessClient(MultiThreadedDebugClient):
 
 
 if __name__ == '__main__':
-    a = wx.PySimpleApp()
+    a = wx.App()
     f = wx.Frame(None, -1, '')
     f.Show()
     cpc = ChildProcessClient(f)

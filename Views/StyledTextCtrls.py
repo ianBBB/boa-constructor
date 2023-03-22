@@ -233,7 +233,8 @@ class BrowseStyledTextCtrlMix:
     def clearUnderline(self, start, length):
         #self.SetCursor(self.stndCrs)
 
-        self.StartStyling(start, wx.stc.STC_INDICS_MASK)
+        # self.StartStyling(start, wx.stc.STC_INDICS_MASK)   # orig
+        self.StartStyling(start)
         self.SetStyling(length, 0)
         self.SetLexer(wx.stc.STC_LEX_PYTHON)
         self.Refresh(False)

@@ -40,6 +40,7 @@ class DebugRequestHandler (RequestHandler):
 
     def call(self, method, params):
         # Override of xmlrpcserver.RequestHandler.call()
+        print("t1")
         self._authenticate()
         if method == 'exit_debugger':
             global serving
@@ -109,7 +110,9 @@ def main(args=None):
 
     def serve_forever(server):
         while 1:
+            print("r1")  # debug line
             server.handle_request()
+            print("r2")  # debug line
 
     def startDaemon(target, args=()):
         t = threading.Thread(target=target, args=args)
@@ -126,7 +129,7 @@ def main(args=None):
 
     while serving:
         time.sleep(0.1)
-
+        # print("time")
     sys.exit(0)
 
 

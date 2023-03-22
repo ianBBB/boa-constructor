@@ -27,7 +27,7 @@ GPL
 
 Version:
 0.8.0 - Beta
-Requires wxPython 4.2 or higher, Python 3.11 or higher.
+Requires wxPython 4.2 or higher, Python 3.9 or higher.
 
 
 Copyright:

@@ -664,14 +664,20 @@ class Marshaller:
         write("</string></value>\n")
     # dispatch[StringType] = dump_string
     dispatch[str] = dump_string
-    if str:
-        def dump_unicode(self, value, write, escape=escape):
-            value = value.encode(self.encoding)
-            write("<value><string>")
-            write(escape(value))
-            write("</string></value>\n")
-        # dispatch[UnicodeType] = dump_unicode
-        dispatch[str] = dump_unicode
+
+    # TODO
+    # I am removing unicode marshalling for now to first get debugging working
+    # Need to revisit this later.
+    #
+    # original code follows.
+    # if str:
+    #     def dump_unicode(self, value, write, escape=escape):
+    #         value = value.encode(self.encoding)
+    #         write("<value><string>")
+    #         write(escape(value))
+    #         write("</string></value>\n")
+    #     # dispatch[UnicodeType] = dump_unicode
+    #     dispatch[unicode] = dump_unicode
 
     def dump_array(self, value, write):
         i = id(value)
@@ -993,7 +999,11 @@ def dumps(params, methodname=None, methodresponse=None, encoding=None):
             )
     else:
         return data # return as is
-    return string.join(data, "")
+
+    # return string.join(data, "")
+    return "".join(data)
+
+
 
 ##
 # Convert an XML-RPC packet to a Python object.  If the XML-RPC packet
@@ -1110,12 +1120,14 @@ class Transport:
         if isinstance(host, tuple):
             host, x509 = host
 
-        import urllib.request, urllib.parse, urllib.error
-        # auth, host = urllib.parse.splituser(host)
-        auth, host = urllib.parse.urlparse(host)
+        # import urllib.request, urllib.parse, urllib.error  #orig
+        # auth, host = urllib.parse.splituser(host)  #orig
+
+        user, delim, host = host.rpartition('@')
+        auth, host = (user if delim else None), host
 
         if auth:
-            import base64
+            import base64, urllib.parse
             auth = base64.encodestring(urllib.parse.unquote(auth))
             auth = string.join(string.split(auth), "") # get rid of whitespace
             extra_headers = [
@@ -1136,7 +1148,7 @@ class Transport:
         # create a HTTP connection object from a host descriptor
         import http.client
         host, extra_headers, x509 = self.get_host_info(host)
-        return http.client.HTTP(host)
+        return http.client.HTTPConnection(host)
 
     ##
     # Send request header.
@@ -1146,8 +1158,11 @@ class Transport:
     # @param request_body XML-RPC body.
 
     def send_request(self, connection, handler, request_body):
-        connection.putrequest("POST", handler)
-
+        # connection.putrequest("POST", handler)   # orig
+        connection.request("POST", handler)
+        response = connection.getresponse()
+        data = response.read()
+        a=9
     ##
     # Send host name.
     #

@@ -10,7 +10,7 @@ from Utils import _
 
 from Explorers import Explorer
 
-from .Breakpoint import bplist
+from Debugger.Breakpoint import bplist
 
 SEL_STATE = wx.LIST_STATE_SELECTED | wx.LIST_STATE_FOCUSED
 
@@ -246,7 +246,10 @@ class BreakViewCtrl(DebuggerListCtrl):
         #          cmp((a['filename'], a['lineno']),
         #              (b['filename'], b['lineno'])))
 
-
+        # Sort by filename and lineno.
+        # bps.sort(key = lambda x:
+        #          cmp((a['filename'], a['lineno']),
+        #              (b['filename'], b['lineno'])))
 
         self.bps = bps
         for p in range(len(bps)):

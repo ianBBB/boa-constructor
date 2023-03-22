@@ -25,7 +25,7 @@ import importlib
 
 #try: import psyco; psyco.full()
 #except ImportError: pass
-import Boa
+
 
 t1 = time.time()
 
@@ -36,52 +36,22 @@ server_mode = 1
 
 main_script = 'Boa.py'
 
-class pauseVariable:
-# A vain attempt at developing a trace facility to control when/what was written out to the trace log file
-    def __init__(self, int_state):
-       self.paused=int_state
-
-    def trace_on(self):
-        self.paused=False
-
-    def trace_off(self):
-        self.paused = True
-
-    def trace_flip(self):
-        if self.paused:
-            self.paused=False
-        else:
-            self.paused=True
-
-myPaused = pauseVariable(True)
 
 trace_mode = 'functions' # 'lines'  'functions'
 trace_save = 'all'#'lastline' # 'all'
-trace_file_detail = 'filenameOnly' # 'filenameOnly'  ' pathAndFileName
 def trace_func(frame, event, arg):
     """ Callback function when Boa runs in tracing mode"""
     if frame and tracefile :
-        # Change original info line to include timestamp
-        # info = '%s|%d|%d|%s|\n' % (frame.f_code.co_filename, frame.f_lineno,
-        #       id(frame), event)
-
         now = datetime.datetime.now()
 
         #fileDetail
         info = '%s|%s|%d|%d|%s|\n' % (now, frame.f_code.co_filename, frame.f_lineno,
               id(frame), event)
 
-        # isPaused = Boa.myPaused.paused
-        # if not isPaused:
-        #     if trace_save == 'lastline':
-        #         tracefile.seek(0)
-        #     tracefile.write(info)
-        #     tracefile.flush()
-
-    if trace_save == 'lastline':
-        tracefile.seek(0)
-    tracefile.write(info)
-    tracefile.flush()
+        if trace_save == 'lastline':
+            tracefile.seek(0)
+        tracefile.write(info)
+        tracefile.flush()
     return trace_func
 
 def get_current_frame():
@@ -657,7 +627,7 @@ class BoaApp(wx.App):
 
         editor.setupToolBar()
 
-        #editor.setStatus('Startup time: %5.2f' % (time.time() - t1))
+        editor.setStatus('Startup time: %5.2f' % (time.time() - t1))
 
         Utils.showTip(self.main.editor)
 

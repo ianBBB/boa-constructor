@@ -6,7 +6,9 @@ import wx
 
 from Utils import _
 
-from .PathsPanel import PathsPanel
+# from .PathsPanel import PathsPanel
+
+import Debugger.PathsPanel as PathsPanel
 
 def create(parent):
     return PathsMappingDlg(parent)

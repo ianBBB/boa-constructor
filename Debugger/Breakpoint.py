@@ -236,4 +236,5 @@ class BreakpointList:
 
 
 # ??? Should this really be a global variable?
+# ISB can't see any need for it myself.
 bplist = BreakpointList()

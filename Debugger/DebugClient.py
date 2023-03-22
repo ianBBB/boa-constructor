@@ -1,6 +1,6 @@
 import sys
 
-from .Tasks import ThreadedTaskHandler
+from Debugger.Tasks import ThreadedTaskHandler
 
 import wx
 
@@ -119,9 +119,7 @@ class DebuggerTask:
     def __call__(self):
         evt = None
         try:
-            #TODO there is some drama here about encoding
-            # import inspect
-            # print(inspect.getfullargspec(self.client.invoke))
+
             # result = self.client.invoke(b'proceedAndRequestStatus', self.m_args)   # orig
             result = self.client.invoke('proceedAndRequestStatus', self.m_args)
         except:

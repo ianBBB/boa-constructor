@@ -23,12 +23,14 @@ import Preferences, Utils
 from Preferences import pyPath, IS, flatTools, keyDefs
 from Utils import _
 
-from .DebuggerControls import StackViewCtrl, BreakViewCtrl, NamespaceViewCtrl,\
+from Debugger.DebuggerControls import StackViewCtrl, BreakViewCtrl, NamespaceViewCtrl,\
                              WatchViewCtrl, DebugStatusBar
-from . import PathMappingDlg
 
-from .Breakpoint import bplist
-from .DebugClient import EVT_DEBUGGER_OK, EVT_DEBUGGER_EXC, \
+# from . import PathMappingDlg
+import Debugger.PathMappingDlg as PathMappingDlg
+
+from Debugger.Breakpoint import bplist
+from Debugger.DebugClient import EVT_DEBUGGER_OK, EVT_DEBUGGER_EXC, \
      EVT_DEBUGGER_STOPPED, EmptyResponseError
 
 # When an output window surpasses these limits, it will be trimmed.
