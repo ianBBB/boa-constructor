@@ -386,7 +386,8 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
             # Encourage a redraw
             wx.Yield()
             time.sleep(0.125)
-            self.MarkerDelete(lineno, markPlaceMrk)
+            # self.MarkerDelete(lineno, markPlaceMrk)   # Seems to remove marker immediately after adding it. Comment out
+            #                                             for now.
         finally:
             self._marking = False
 
