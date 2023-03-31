@@ -4,6 +4,7 @@ getBreakpointList()).
 """
 
 import os
+# import trace
 
 # try: from cPickle import Pickler, Unpickler
 # except: from pickle import Pickler, Unpickler
@@ -52,7 +53,12 @@ class FileBreakpointList:
             pass
 
     def addBreakpoint(self, lineno, temp=0, cond='', ignore=0):
+        import trace
+
         newbrk = {'temporary':temp, 'cond':cond, 'enabled':1, 'ignore':ignore}
+
+
+
         if lineno in self.lines.keys():
             linebreaks = self.lines[lineno]
             for brk in linebreaks:
@@ -62,6 +68,9 @@ class FileBreakpointList:
             linebreaks.append(newbrk)
         else:
             self.lines[lineno] = linebreaks = [newbrk]
+
+        trace.trace_is_on=False
+
 
     def deleteBreakpoints(self, lineno):
         if lineno in self.lines.keys():

@@ -26,6 +26,7 @@ import importlib
 #try: import psyco; psyco.full()
 #except ImportError: pass
 
+# import trace
 
 t1 = time.time()
 
@@ -37,21 +38,25 @@ server_mode = 1
 main_script = 'Boa.py'
 
 
+# t_test.trace_is_on=False
 trace_mode = 'functions' # 'lines'  'functions'
 trace_save = 'all'#'lastline' # 'all'
+
 def trace_func(frame, event, arg):
     """ Callback function when Boa runs in tracing mode"""
     if frame and tracefile :
+        import trace
         now = datetime.datetime.now()
 
-        #fileDetail
-        info = '%s|%s|%d|%d|%s|\n' % (now, frame.f_code.co_filename, frame.f_lineno,
+        # fileDetail
+        info = '%s|%s|%d|%d|%s\n' % (now, frame.f_code.co_filename, frame.f_lineno,
               id(frame), event)
 
-        if trace_save == 'lastline':
-            tracefile.seek(0)
-        tracefile.write(info)
-        tracefile.flush()
+        if trace.trace_is_on:
+            if trace_save == 'lastline':
+                tracefile.seek(0)
+            tracefile.write(info)
+            tracefile.flush()
     return trace_func
 
 def get_current_frame():
@@ -128,6 +133,7 @@ def processArgs(argv):
                 sys.setprofile(trace_func)
             elif trace_mode == 'lines':
                 sys.settrace(trace_func)
+
     
         if opt in ('-S', '--StartupFile'):
             _startupfile = startupEnv
