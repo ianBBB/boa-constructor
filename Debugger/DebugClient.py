@@ -34,38 +34,48 @@ class DebuggerCommEvent(wx.PyCommandEvent):
     v = None
     tb = ('', 0)
 
+
     def __init__(self, evtType, id):
         wx.PyCommandEvent.__init__(self, evtType, id)
 
     def SetResult(self, result):
-        self.result = result
+        # self.result = result # orig
+        DebuggerCommEvent.result = result
 
     def GetResult(self):
-        return self.result
+        # return self.result # orig
+        return DebuggerCommEvent.result
 
     def SetTask(self, task):
-        self.task = task
+        DebuggerCommEvent.task = task
 
     def GetTask(self):
-        return self.task
+        # return self.task
+        return DebuggerCommEvent.task # orig
 
     def SetReceiverName(self, name):
-        self.receiver_name = name
+        # self.receiver_name = name
+        DebuggerCommEvent.receiver_name = name
 
     def GetReceiverName(self):
-        return self.receiver_name
+        # return self.receiver_name
+        return DebuggerCommEvent.receiver_name
 
     def SetReceiverArgs(self, args):
-        self.receiver_args = args
+        # self.receiver_args = args
+        DebuggerCommEvent.receiver_args = args
 
     def GetReceiverArgs(self):
-        return self.receiver_args
+        # return self.receiver_args
+        return DebuggerCommEvent.receiver_args
 
     def SetExc(self, t, v):
-        self.t, self.v = t, v
+        # self.t, self.v = t, v
+        DebuggerCommEvent.t, DebuggerCommEvent.v = t, v
 
     def GetExc(self):
-        return self.t, self.v
+        # return self.t, self.v
+        return DebuggerCommEvent.t, DebuggerCommEvent.v
 
 
 class DebugClient:
@@ -121,7 +131,7 @@ class DebuggerTask:
         try:
 
             # result = self.client.invoke(b'proceedAndRequestStatus', self.m_args)   # orig
-            result = self.client.invoke('proceedAndRequestStatus', self.m_args)
+            result = self.client.invoke(self.m_name, self.m_args)
         except:
             t, v = sys.exc_info()[:2]
             evt = self.client.createEvent(wxEVT_DEBUGGER_EXC)

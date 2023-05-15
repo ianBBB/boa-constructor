@@ -33,6 +33,8 @@ from Debugger.Breakpoint import bplist
 from Debugger.DebugClient import EVT_DEBUGGER_OK, EVT_DEBUGGER_EXC, \
      EVT_DEBUGGER_STOPPED, EmptyResponseError
 
+
+
 # When an output window surpasses these limits, it will be trimmed.
 TEXTCTRL_MAXLEN = 30000
 TEXTCTRL_GOODLEN = 20000
@@ -571,9 +573,14 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
         fn = self.clientFNToServerFN(filename)
         self.invokeInDebugger('addBreakpoint', (fn, lineno, tmp))
         self.breakpts.refreshList()
+        t1=2
 
     def requestDebuggerStatus(self):
         self.sb.updateState('Waiting...', 'busy')
+
+        # TODO DEBUG
+        PRINT('Debug_status here.')
+
         self.invokeInDebugger('getStatusSummary', (),
                               'receiveDebuggerStatus')
 
@@ -773,6 +780,7 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
         else:
             if temp_breakpoint:
                 self.setBreakpoint(temp_breakpoint[0], temp_breakpoint[1], 1)
+
 
     def OnDebug(self, event):
         if Preferences.minimizeOnDebug:

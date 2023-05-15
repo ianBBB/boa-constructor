@@ -19,6 +19,7 @@ Handles creation/initialisation of main objects and commandline arguments """
 
 import sys, os, string, time, warnings, datetime
 import importlib
+import trace
 
 #sys.stdout = sys.__stdout__#open('stdout.txt', 'w')
 #sys.stderr = sys.__stderr__#open('stderr.txt', 'w')
@@ -45,16 +46,18 @@ trace_save = 'all'#'lastline' # 'all'
 def trace_func(frame, event, arg):
     """ Callback function when Boa runs in tracing mode"""
     if frame and tracefile :
-        import trace
+
         now = datetime.datetime.now()
 
         # fileDetail
         info = '%s|%s|%d|%d|%s\n' % (now, frame.f_code.co_filename, frame.f_lineno,
               id(frame), event)
 
+
         if trace.trace_is_on:
             if trace_save == 'lastline':
                 tracefile.seek(0)
+                print(info)
             tracefile.write(info)
             tracefile.flush()
     return trace_func

@@ -812,7 +812,8 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         lenAfterErr = lineLen-errOffset+1
         styleLen = min(3, lenAfterErr)
 
-        self.StartStyling(errPos+errOffset-2, wx.stc.STC_INDICS_MASK)
+        # self.StartStyling(errPos+errOffset-2, wx.stc.STC_INDICS_MASK)   # orig
+        self.StartStyling(errPos+errOffset-2)
         self.SetStyling(styleLen, wx.stc.STC_INDIC1_MASK)
         # XXX I have to set the styling past the cursor position, why????
         self.SetStyling(lenAfterErr+nextLineLen, 0)#wx.stc.STC_INDIC0_MASK)

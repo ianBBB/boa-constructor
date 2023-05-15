@@ -555,7 +555,7 @@ class DebuggingViewSTCMix:
         if temp: mrk = self.tmpBrkPtMrk
         else: mrk = self.brkPtMrk
         self.MarkerAdd(lineNo - 1, mrk)
-
+        t1=2
     def moveBreakpoint(self, bpt, delta):
         # remove
         index = (bpt.file, bpt.line)

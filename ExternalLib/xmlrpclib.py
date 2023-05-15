@@ -973,7 +973,7 @@ def dumps(params, methodname=None, methodresponse=None, encoding=None):
     data = m.dumps(params)
 
     if encoding != "utf-8":
-        xmlheader = "<?xml version='1.0' encoding='%s'?>\n" % str(encoding)
+        xmlheader = "<?xml version='1.0' encoding='%s'?>\n" % repr(encoding)
     else:
         xmlheader = "<?xml version='1.0'?>\n" # utf-8 is default
 
@@ -1129,7 +1129,7 @@ class Transport:
         if auth:
             import base64, urllib.parse
             auth = base64.encodestring(urllib.parse.unquote(auth))
-            auth = string.join(string.split(auth), "") # get rid of whitespace
+            auth = string.join(string.split(auth), "") # get rid of whitespace  # TODO fix up Python2 code here
             extra_headers = [
                 ("Authorization", "Basic " + auth)
                 ]
@@ -1146,9 +1146,10 @@ class Transport:
 
     def make_connection(self, host):
         # create a HTTP connection object from a host descriptor
-        import http.client
+        import ExternalLib.WebDAV.httplib as httplib
         host, extra_headers, x509 = self.get_host_info(host)
-        return http.client.HTTPConnection(host)
+        return httplib.HTTP(host)
+
 
     ##
     # Send request header.
@@ -1158,11 +1159,12 @@ class Transport:
     # @param request_body XML-RPC body.
 
     def send_request(self, connection, handler, request_body):
-        # connection.putrequest("POST", handler)   # orig
-        connection.request("POST", handler)
-        response = connection.getresponse()
-        data = response.read()
-        a=9
+        connection.putrequest("POST", handler,)   # orig
+        # connection.request("POST", handler, request_body)  # updated
+        # response = connection.getresponse()   # orig
+        response = connection.getreply()
+        response.read()
+
     ##
     # Send host name.
     #
@@ -1194,7 +1196,8 @@ class Transport:
 
     def send_content(self, connection, request_body):
         connection.putheader("Content-Type", "text/xml")
-        connection.putheader("Content-Length", str(len(request_body)))
+        # connection.putheader("Content-Length", str(len(request_body)))  # orig
+        connection.putheader("Content-Length", repr(len(request_body)))
         connection.endheaders()
         if request_body:
             connection.send(request_body)
@@ -1327,13 +1330,21 @@ class ServerProxy:
         # call a method on the remote server
 
         request = dumps(params, methodname, encoding=self.__encoding)
+        request_in_bytes =  request.encode()
 
-        response = self.__transport.request(
+        response = self.__transport.request(  # orig
             self.__host,
             self.__handler,
             request,
             verbose=self.__verbose
             )
+
+        # response = self.__transport.request(
+        #     self.__host,
+        #     self.__handler,
+        #     request_in_bytes,
+        #     verbose=self.__verbose
+        #     )
 
         if len(response) == 1:
             response = response[0]

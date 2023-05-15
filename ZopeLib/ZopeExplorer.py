@@ -18,14 +18,19 @@ import wx
 
 from Explorers import ExplorerNodes
 from Models import EditorHelper, Controllers
-from ExternalLib import xmlrpclib, BasicAuthTransport
+from ExternalLib import xmlrpclib
+from ExternalLib import BasicAuthTransport
 from Preferences import IS
+
 import Utils, Preferences
 import Views, Views.SourceViews, Views.PySourceView
 import PaletteStore
 
+
 from . import ZopeEditorModels, ZopeViews, Client, ExtMethDlg
 from .ZopeCompanions import ZopeConnection, ZopeCompanion, FolderZC
+
+
 
 # XXX Add owner property
 

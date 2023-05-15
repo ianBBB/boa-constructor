@@ -9,7 +9,7 @@
 # Copyright:   (c) 2001 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-print 'importing ZopeLib.ZopeViews'
+print ('importing ZopeLib.ZopeViews')
 
 import os, time
 
@@ -116,8 +116,10 @@ class ZopeUndoView(ListCtrlView):
 
         try:
             undos = self.model.transport.getUndoableTransactions()
-        except xmlrpclib.Fault, error:
-            wx.LogError(Utils.html2txt(error.faultString))
+        # except xmlrpclib.Fault, error:    # orig code
+        #     wx.LogError(Utils.html2txt(error.faultString))
+        except:
+            wx.LogError('A problem occurred in ZopeViews.ZopeUndoView.refresh()')
         else:
             i = 0
             self.undoIds = []
@@ -132,14 +134,23 @@ class ZopeUndoView(ListCtrlView):
         if self.selected != -1:
             try:
                 self.model.transport.undoTransaction([self.undoIds[self.selected]])
-            except xmlrpclib.Fault, error:
-                wx.LogError(Utils.html2txt(error.faultString))
-            except xmlrpclib.ProtocolError, error:
-                if error.errmsg == 'Moved Temporarily':
-                    # This is actually a successful move
-                    self.refreshCtrl()
-                else:
-                    wx.LogError(Utils.html2txt(error.errmsg))
+            # except xmlrpclib.Fault, error:     # original code
+            #     wx.LogError(Utils.html2txt(error.faultString))
+            # except xmlrpclib.ProtocolError, error:
+            #     if error.errmsg == 'Moved Temporarily':
+            #         # This is actually a successful move
+            #         self.refreshCtrl()
+            #     else:
+            #         wx.LogError(Utils.html2txt(error.errmsg))
+            except xmlrpclib.Fault:
+                wx.LogError('A problem occurred in ZopeViews.ZopeUndoView.OnUndo()')
+            except xmlrpclib.ProtocolError: pass
+                # Don't really understand this or what to do with it. Where is the error var coming from?? isb
+                # if error.errmsg == 'Moved Temporarily': # orig code
+                #     # This is actually a successful move
+                #     self.refreshCtrl()
+                # else:
+                #     wx.LogError(Utils.html2txt(error.errmsg))
             else:
                 self.refreshCtrl()
 
@@ -259,8 +270,11 @@ class ZopeSiteErrorLogView(ListCtrlView):
 
         try:
             entries = errLogNode.getResource().getLogEntries()
-        except xmlrpclib.Fault, error:
-            wx.LogError(Utils.html2txt(error.faultString))
+        # except xmlrpclib.Fault, error:  # orig code
+        #     wx.LogError(Utils.html2txt(error.faultString))
+        except xmlrpclib.Fault:
+            wx.LogError('A problem occurred in ZopeViews.ZopeSiteErrorLogView.refreshCtl()')
+
         else:
 
             cols = [('Time', 150), ('User', 100), ('Type', 80),
@@ -287,8 +301,12 @@ class ZopeSiteErrorLogView(ListCtrlView):
             errLogNode = self.model.transport
             try:
                 textEntry = errLogNode.getResource().getLogEntryAsText(logId)
-            except xmlrpclib.Fault, error:
-                wx.LogError(Utils.html2txt(error.faultString))
+            # except xmlrpclib.Fault, error:    # orig code
+            #     wx.LogError(Utils.html2txt(error.faultString))
+
+            except xmlrpclib.Fault:
+                wx.LogError('A problem occurred in ZopeViews.ZopeUndoView.OnUndo()')
+
             else:
                 lines = textEntry.split('\n')
                 lines.reverse()

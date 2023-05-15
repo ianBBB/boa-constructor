@@ -3,7 +3,7 @@ import wx
 
 import Preferences, Utils
 from Utils import _
-
+import trace
 try:
     from ExternalLib import xmlrpclib
 except ImportError:
@@ -76,7 +76,8 @@ def spawnChild(monitor, process, args=''):
     cmd = '%s "%s" %s' % (pyIntpPath, script_fn, args)
     try:
         # pid = wx.Execute(cmd, wx.EXEC_NOHIDE, process)
-        pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE | wx.EXEC_ASYNC, process)
+        # pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE | wx.EXEC_ASYNC, process)
+        pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE, process)
 
         line = ''
         if monitor.isAlive():
@@ -195,6 +196,7 @@ class ChildProcessClient(MultiThreadedDebugClient):
         # result = m(*m_args)    # orig
         # return result    # orig
 
+
         m = getattr(self.server, m_name)
         result = m(*m_args)
         return result
@@ -261,8 +263,6 @@ class ChildProcessClient(MultiThreadedDebugClient):
                     process.Redirect()
                     self.process = process
 
-                    # self.process.Bind(wx.EVT_END_PROCESS, self.OnProcessEnded)
-
                     # wx.EVT_END_PROCESS(self.event_handler, self.win_id,
                     #                    self.OnProcessEnded)  # original
 
@@ -271,6 +271,11 @@ class ChildProcessClient(MultiThreadedDebugClient):
                     (self.server, self.input_stream, self.error_stream,
                      self.processId, self.pyIntpPath) = spawnChild(
                         self, process, self.process_args)
+
+                    # TODO Debugging
+                    # wx.MessageBox(_('The debugger process data. '+repr(self.processId)),
+                    #               _('Debugger pid'), wx.OK | wx.ICON_EXCLAMATION | wx.CENTRE)
+
                 self.taskHandler.addTask(evt.GetTask())
             except:
                 t, v, tb = sys.exc_info()

@@ -20,7 +20,9 @@ class ThreadedTaskHandler:
         task is a callable object which will be executed in another
         thread.
         '''
-        if 0:  # Set to 1 to get equivalent but slower processing.
+
+        # if 0:  # Set to 1 to get equivalent but slower processing.  # orig code
+        if False:  # Set to True to get equivalent but slower processing.
             if kw is None: kw = {}
             t = threading.Thread(target=task, args=args, kwargs=kw)
             t.setDaemon(1)

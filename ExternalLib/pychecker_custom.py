@@ -4,7 +4,7 @@ warnings = []
 class WarningWx(Warning.Warning) :
     """ Warning redirector """
     def output(self, stream=None) :
-        warnings.append(`(self.file, self.line, self.err)`)
+        warnings.append('(self.file, self.line, self.err)')
 
 Warning.Warning = WarningWx
 

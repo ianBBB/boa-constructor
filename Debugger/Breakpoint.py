@@ -54,7 +54,7 @@ class FileBreakpointList:
 
     def addBreakpoint(self, lineno, temp=0, cond='', ignore=0):
         import trace
-
+        trace.trace_is_on = True
         newbrk = {'temporary':temp, 'cond':cond, 'enabled':1, 'ignore':ignore}
 
 

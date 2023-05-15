@@ -1,6 +1,7 @@
 import sys, os
 import threading
 import base64
+import time
 from socketserver import TCPServer
 
 from IsolatedDebugger import DebugServer, DebuggerConnection
@@ -24,6 +25,8 @@ task_handler = ThreadedTaskHandler()
 class DebugRequestHandler (RequestHandler):
 
     def _authenticate(self):
+        # TODO Debugging
+        time.sleep(20)
         h = self.headers
         if auth_str:
             s = h.get('authentication')
@@ -32,6 +35,8 @@ class DebugRequestHandler (RequestHandler):
 
     def call(self, method, params):
         # Override of xmlrpcserver.RequestHandler.call()
+        # TODO Debugging
+        time.sleep(20)
         self._authenticate()
         m = getattr(connection, method)
         result = m(*params)
@@ -48,6 +53,10 @@ class TaskingMixIn:
 
     def process_request(self, request, client_address):
         """Start a task to process the request."""
+
+        # TODO Debugging
+        time.sleep(20)
+
         task_handler.addTask(self.finish_request,
                              args=(request, client_address))
 
@@ -99,8 +108,10 @@ def start(username, password, host='127.0.0.1', port=26200,
     startDaemon(serve_forever, (server,))
     #startDaemon(debug_server.servicerThread)
 
-    print >> sys.stderr, "Debug server listening on %s:%s" % tuple(
-        server.socket.getsockname()[:2])
+    # print >> sys.stderr, "Debug server listening on %s:%s" % tuple(
+    #     server.socket.getsockname()[:2])
+    sys.stderr.write("Debug server listening on %s:%s" % tuple(
+        server.socket.getsockname()[:2]))
 
     try:
         import atexit

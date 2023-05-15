@@ -16,7 +16,7 @@ import sys
 import _thread
 import threading
 import queue
-import pprint
+import time
 from os import chdir
 from os import path
 import bdb
@@ -138,6 +138,8 @@ class DebuggerConnection:
                       cond='', enabled=1, ignore=0):
         """Sets a breakpoint.  Non-blocking and immediate.
         """
+        time.sleep(20)
+
         self._ds.addBreakpoint(filename, lineno, temporary,
                                cond, enabled, ignore)
 
@@ -194,6 +196,10 @@ class DebuggerConnection:
     def proceedAndRequestStatus(self, command, temp_breakpoint=0, args=()):
         """Executes one non-blocking command then returns
         getStatusSummary().  Blocking."""
+
+        # TODO DEBUG
+        time.sleep(20)
+
         if temp_breakpoint:
             self.addBreakpoint(temp_breakpoint[0], temp_breakpoint[1], 1)
         if command:
@@ -211,12 +217,17 @@ class DebuggerConnection:
         """Calls setAllBreakpoints(), runFile(), and
         getStatusSummary().  Blocking."""
         self.setAllBreakpoints(breaks)
+
+        time.sleep(20)  # TODO DEBUG
+
         self._callNoWait('runFile', 1, filename, params, autocont, add_paths)
         return self.getStatusSummary()
 
     def setupAndRequestStatus(self, autocont=0, breaks=()):
         """Calls setAllBreakpoints() and
         getStatusSummary().  Blocking."""
+        # # TODO DEBUG
+        time.sleep(20)
         self.setAllBreakpoints(breaks)
         if autocont:
             self.set_continue()

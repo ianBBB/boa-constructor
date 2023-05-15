@@ -30,7 +30,8 @@ connection for each request.)
 
 import socket
 import string
-import mimetools
+# import mimetools   # orig
+import email
 
 HTTP_VERSION = 'HTTP/1.0'
 HTTP_PORT = 80
@@ -67,21 +68,32 @@ class HTTP:
 
         """
         if not port:
-            i = string.find(host, ':')
+            # i = string.find(host, ':')  # orig
+            i = host.find(':')
             if i >= 0:
                 host, port = host[:i], host[i+1:]
-                try: port = string.atoi(port)
-                except string.atoi_error:
-                    raise socket.error, "nonnumeric port"
+
+                # try: port = string.atoi(port)   # orig code
+                # except string.atoi_error:
+                #     raise socket.error, "nonnumeric port"
+
+                try: port = int(port)
+                except (ValueError, TypeError):
+                    raise Exception( socket.error, "nonnumeric port")
+
+
         if not port: port = HTTP_PORT
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        if self.debuglevel > 0: print 'connect:', (host, port)
+        if self.debuglevel > 0: print ('connect:', (host, port))
         self.sock.connect( (host, port) )
 
-    def send(self, str):
+
+
+    def send(self, str_to_send):
         """Send `str' to the server."""
-        if self.debuglevel > 0: print 'send:', `str`
-        self.sock.send(str)
+        if self.debuglevel > 0: print ('send:', str_to_send)
+        # self.sock.send(str)    # org
+        self.sock.send(str_to_send.encode())    # updated
 
     def putrequest(self, request, selector):
         """Send a request to the server.
@@ -101,7 +113,8 @@ class HTTP:
         For example: h.putheader('Accept', 'text/html')
 
         """
-        str = '%s: %s\r\n' % (header, string.joinfields(args,'\r\n\t'))
+        # str = '%s: %s\r\n' % (header, string.joinfields(args,'\r\n\t'))  # orig
+        str = '%s: %s\r\n' % (header, '\r\n\t'.join(args))
         self.send(str)
 
     def endheaders(self):
@@ -119,7 +132,7 @@ class HTTP:
         """
         self.file = self.sock.makefile('rb')
         line = self.file.readline()
-        if self.debuglevel > 0: print 'reply:', `line`
+        if self.debuglevel > 0: print ('reply:', repr(line))
         try:
             [ver, code, msg] = string.split(line, None, 2)
         except ValueError:
@@ -132,9 +145,9 @@ class HTTP:
         if ver[:5] != 'HTTP/':
             self.headers = None
             return -1, line, self.headers
-        errcode = string.atoi(code)
+        errcode = int(code)
         errmsg = string.strip(msg)
-        self.headers = mimetools.Message(self.file, 0)
+        self.headers = email.message_from_file(self.file, 0)
         return errcode, errmsg, self.headers
 
     def getfile(self):
@@ -180,13 +193,15 @@ def test():
     h.putrequest('GET', selector)
     h.endheaders()
     errcode, errmsg, headers = h.getreply()
-    print 'errcode =', errcode
-    print 'errmsg  =', errmsg
-    print
+    print ('errcode =', errcode)
+    print ('errmsg  =', errmsg)
+    print ('\n')
+    # if headers:   # orig code
+    #     for header in headers.headers: print string.strip(header)
     if headers:
-        for header in headers.headers: print string.strip(header)
-    print
-    print h.getfile().read()
+        for header in headers.headers: print (header.strip())
+    print ('\n')
+    print (h.getfile().read())
 
 
 if __name__ == '__main__':

@@ -259,6 +259,7 @@ class BreakViewCtrl(DebuggerListCtrl):
             if not bp['enabled']: imgIdx = 2
             elif bp['temporary']: imgIdx = 3
 
+            # FIXME
             # self.InsertImageStringItem(
             #     p, os.path.basename(bp['filename']), imgIdx)
             # self.SetStringItem(p, 1, str(bp['lineno']))
@@ -280,7 +281,6 @@ class BreakViewCtrl(DebuggerListCtrl):
             # self.SetStringItem(p, 2, ignore)
             # self.SetStringItem(p, 3, hits)
             # self.SetStringItem(p, 4, cond)
-
             self.SetItem(p, 2, ignore)
             self.SetItem(p, 3, hits)
             self.SetItem(p, 4, cond)

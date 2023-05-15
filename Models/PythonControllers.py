@@ -33,6 +33,8 @@ import ErrorStack
 import sourceconst
 import methodparse
 
+import trace
+
 # TODO: Profile, Cyclops and other file runners should use the command-line
 # TODO: parameters whenever possible
 
@@ -269,7 +271,9 @@ class ModuleController(SourceController):
             params = methodparse.safesplitfields(debugModel.lastRunParams, ' ')
         else:
             params = None
+
         debugModel.debug(params, cont_if_running=1)
+        a=1
 
     def OnDebugStepIn(self, event):
         if self.editor.debugger:

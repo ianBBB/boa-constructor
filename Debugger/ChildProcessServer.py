@@ -5,7 +5,7 @@ import hashlib
 import threading
 from time import sleep
 # from SocketServer import TCPServer
-import socketserver
+from socketserver import TCPServer
 
 from IsolatedDebugger import DebugServer, DebuggerConnection
 from Tasks import ThreadedTaskHandler
@@ -40,7 +40,13 @@ class DebugRequestHandler (RequestHandler):
 
     def call(self, method, params):
         # Override of xmlrpcserver.RequestHandler.call()
-        print("t1")
+
+        # DEBUG
+        # print("t1")
+
+        # TODO DEBUG
+        time.sleep(20)
+
         self._authenticate()
         if method == 'exit_debugger':
             global serving
@@ -65,8 +71,7 @@ class TaskingMixIn:
         task_handler.addTask(self.finish_request,
                              args=(request, client_address))
 
-# class TaskingTCPServer(TaskingMixIn, TCPServer): pass
-class TaskingTCPServer(TaskingMixIn, socketserver.TCPServer): pass
+class TaskingTCPServer(TaskingMixIn, TCPServer): pass
 
 
 def streamFlushThread():
@@ -78,6 +83,9 @@ def streamFlushThread():
 
 def main(args=None):
     global auth_str, debug_server, connection, serving
+
+    # TODO DEBUG
+    # time.sleep(20)
 
     # Create the debug server.
     if args is None:
@@ -98,6 +106,13 @@ def main(args=None):
     server = TaskingTCPServer(('', 0), DebugRequestHandler)
     port = int(server.socket.getsockname()[1])
 
+    # # TODO DEBUG
+    # myserver=open('test1.txt', 'w')
+    # myserver.write('My test file')
+    # myserver.flush()
+    # myserver.close()
+
+
     # Tell the client what port to connect to and the auth string to send.
     sys.stdout.write('%010d %s%s' % (port, auth_str, os.linesep))
     sys.stdout.flush()
@@ -108,11 +123,11 @@ def main(args=None):
     sys.debugger_control = debug_server
     sys.boa_debugger = debug_server
 
+
+
     def serve_forever(server):
         while 1:
-            print("r1")  # debug line
             server.handle_request()
-            print("r2")  # debug line
 
     def startDaemon(target, args=()):
         t = threading.Thread(target=target, args=args)
@@ -129,7 +144,6 @@ def main(args=None):
 
     while serving:
         time.sleep(0.1)
-        # print("time")
     sys.exit(0)
 
 
