@@ -48,7 +48,7 @@ class HTTP(http.client.HTTPConnection):
             return -1, line, None
         code = int(code)
         msg = msg.strip()
-        headers = mimetools.Message(self.file, 0)
+        headers = mimetools.message.Message(self.file, 0)
         return ver, code, msg, headers
 
 

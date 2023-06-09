@@ -41,11 +41,7 @@ class DebugRequestHandler (RequestHandler):
     def call(self, method, params):
         # Override of xmlrpcserver.RequestHandler.call()
 
-        # DEBUG
-        # print("t1")
 
-        # TODO DEBUG
-        time.sleep(20)
 
         self._authenticate()
         if method == 'exit_debugger':
@@ -71,7 +67,13 @@ class TaskingMixIn:
         task_handler.addTask(self.finish_request,
                              args=(request, client_address))
 
-class TaskingTCPServer(TaskingMixIn, TCPServer): pass
+class TaskingTCPServer(TaskingMixIn, TCPServer):
+    """Mix-in class to handle each request in a task thread."""
+
+    def process_request(self, request, client_address):
+        """Start a task to process the request."""
+        task_handler.addTask(self.finish_request,
+                             args=(request, client_address))
 
 
 def streamFlushThread():
@@ -83,9 +85,6 @@ def streamFlushThread():
 
 def main(args=None):
     global auth_str, debug_server, connection, serving
-
-    # TODO DEBUG
-    # time.sleep(20)
 
     # Create the debug server.
     if args is None:
@@ -115,6 +114,8 @@ def main(args=None):
 
     # Tell the client what port to connect to and the auth string to send.
     sys.stdout.write('%010d %s%s' % (port, auth_str, os.linesep))
+    sys.stdout.flush()
+    sys.stdout.write('%s' % port)
     sys.stdout.flush()
 
     # Provide a hard breakpoint hook.  Use it like this:

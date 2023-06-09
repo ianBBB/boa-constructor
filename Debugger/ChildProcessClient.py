@@ -137,6 +137,7 @@ def spawnChild(monitor, process, args=''):
             if not line:
                 raise Exception('The debug server address could not be read', RuntimeError)
             port, auth = line.strip().split()
+            print(port)
 
             if USE_TCPWATCH:
                 # Start TCPWatch as a connection forwarder.
@@ -245,7 +246,7 @@ class ChildProcessClient(MultiThreadedDebugClient):
         stream = self.input_stream
         if stream is not None and stream.CanRead():
             stdin_text = stream.read()
-        
+        print(stdin_text, stderr_text)
         return (stdin_text, stderr_text)
 
     def getProcessId(self):
@@ -273,8 +274,8 @@ class ChildProcessClient(MultiThreadedDebugClient):
                         self, process, self.process_args)
 
                     # TODO Debugging
-                    # wx.MessageBox(_('The debugger process data. '+repr(self.processId)),
-                    #               _('Debugger pid'), wx.OK | wx.ICON_EXCLAMATION | wx.CENTRE)
+                    wx.MessageBox(_('The debugger process data. PID = '+repr(self.processId)),
+                                  _('Debugger pid'), wx.OK | wx.ICON_EXCLAMATION | wx.CENTRE)
 
                 self.taskHandler.addTask(evt.GetTask())
             except:

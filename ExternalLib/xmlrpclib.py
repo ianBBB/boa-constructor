@@ -1332,19 +1332,19 @@ class ServerProxy:
         request = dumps(params, methodname, encoding=self.__encoding)
         request_in_bytes =  request.encode()
 
-        response = self.__transport.request(  # orig
-            self.__host,
-            self.__handler,
-            request,
-            verbose=self.__verbose
-            )
-
-        # response = self.__transport.request(
+        # response = self.__transport.request(  # orig
         #     self.__host,
         #     self.__handler,
-        #     request_in_bytes,
+        #     request,
         #     verbose=self.__verbose
         #     )
+
+        response = self.__transport.request(
+            self.__host,
+            self.__handler,
+            request_in_bytes,
+            verbose=self.__verbose
+            )
 
         if len(response) == 1:
             response = response[0]
