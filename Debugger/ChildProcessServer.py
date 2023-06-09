@@ -101,7 +101,7 @@ def main(args=None):
     # auth_str = sha.new(str(random.random())).hexdigest()
     auth_str = hashlib.sha256(str(random.random()).encode('utf-8')).hexdigest()
 
-    # port is 0 to allocate any port.
+    # port is 0 to allocate any port.   TODO blocked out for now while ty
     server = TaskingTCPServer(('', 0), DebugRequestHandler)
     port = int(server.socket.getsockname()[1])
 

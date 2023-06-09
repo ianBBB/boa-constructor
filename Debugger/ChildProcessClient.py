@@ -139,6 +139,16 @@ def spawnChild(monitor, process, args=''):
             port, auth = line.strip().split()
             print(port)
 
+            ## TODO This is a text entry point to add change the port, if required.
+            dlg = wx.TextEntryDialog(None, 'The current port is : ' + repr(port), 'Change ports?', 'Default answer')
+            try:
+                if dlg.ShowModal() == wx.ID_OK:
+                    result = dlg.GetValue()
+                    # Your code
+                    port = int(result)
+            finally:
+                dlg.Destroy()
+
             if USE_TCPWATCH:
                 # Start TCPWatch as a connection forwarder.
                 #from thread import start_new_thread
@@ -153,7 +163,7 @@ def spawnChild(monitor, process, args=''):
 
             trans = TransportWithAuth(auth)
             server = xmlrpclib.Server(
-                'http://127.0.0.1:%d' % int(port), trans)
+                'http://127.0.0.1:%d' % port, trans)
             return server, istream, estream, pid, pyIntpPath
         else:
             raise Exception('The debug server failed to start', RuntimeError)

@@ -1,2 +1,6 @@
 /TestArea/
 *.bak
+trace.*
+Frame1.py
+App1.py
+notes.txt
