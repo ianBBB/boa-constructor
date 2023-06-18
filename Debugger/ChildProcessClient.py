@@ -137,10 +137,10 @@ def spawnChild(monitor, process, args=''):
             if not line:
                 raise Exception('The debug server address could not be read', RuntimeError)
             port, auth = line.strip().split()
-            print(port)
+            port = port.strip("0")
 
             ## TODO This is a text entry point to add change the port, if required.
-            dlg = wx.TextEntryDialog(None, 'The current port is : ' + repr(port), 'Change ports?', 'Default answer')
+            dlg = wx.TextEntryDialog(None, 'The current port is : ' + port, 'Change ports?', port)
             try:
                 if dlg.ShowModal() == wx.ID_OK:
                     result = dlg.GetValue()
