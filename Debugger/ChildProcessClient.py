@@ -77,7 +77,9 @@ def spawnChild(monitor, process, args=''):
     try:
         # pid = wx.Execute(cmd, wx.EXEC_NOHIDE, process)
         # pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE | wx.EXEC_ASYNC, process)
-        pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE, process)
+
+
+        pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE, process)   #TODO DEBOG while testing server.
 
         line = ''
         if monitor.isAlive():
@@ -139,7 +141,7 @@ def spawnChild(monitor, process, args=''):
             port, auth = line.strip().split()
             port = port.strip("0")
 
-            ## TODO This is a text entry point to add change the port, if required.
+            ## TODO This is a text entry point to add change the port, if required. To be removed
             dlg = wx.TextEntryDialog(None, 'The current port is : ' + port, 'Change ports?', port)
             try:
                 if dlg.ShowModal() == wx.ID_OK:

@@ -198,7 +198,8 @@ class DebuggerConnection:
         getStatusSummary().  Blocking."""
 
         # TODO DEBUG
-        time.sleep(20)
+        sys.stdout.write('reached proceedAndRequestStatus')
+        sys.stdout.flush()
 
         if temp_breakpoint:
             self.addBreakpoint(temp_breakpoint[0], temp_breakpoint[1], 1)
@@ -214,11 +215,16 @@ class DebuggerConnection:
 
     def runFileAndRequestStatus(self, filename, params=(), autocont=0,
                                 add_paths=(), breaks=()):
+
+
+        # TODO DEBUG
+        sys.stdout.write('reached runFileAndRequestStatus')
+        sys.stdout.flush()
+
+
         """Calls setAllBreakpoints(), runFile(), and
         getStatusSummary().  Blocking."""
         self.setAllBreakpoints(breaks)
-
-        time.sleep(20)  # TODO DEBUG
 
         self._callNoWait('runFile', 1, filename, params, autocont, add_paths)
         return self.getStatusSummary()
@@ -226,8 +232,7 @@ class DebuggerConnection:
     def setupAndRequestStatus(self, autocont=0, breaks=()):
         """Calls setAllBreakpoints() and
         getStatusSummary().  Blocking."""
-        # # TODO DEBUG
-        time.sleep(20)
+
         self.setAllBreakpoints(breaks)
         if autocont:
             self.set_continue()

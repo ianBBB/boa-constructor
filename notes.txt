@@ -8,18 +8,14 @@ About
 # 2to3
 warnings (but still some left)
 
-List of activities on current file
-==================================
-langlistctrl.py
-# 2to3
-warnings (but still some left)
-
 
 # raise Exception, 'Unauthorized: X-Auth header missing or incorrect'
 raise Exception ('Unauthorized: X-Auth header missing or incorrect')
 
 errcode = string.atoi(code)
 errcode = int(code)
+
+
 
 
 FramesConstr, FrameDTC

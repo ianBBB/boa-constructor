@@ -1077,7 +1077,8 @@ class Transport:
         self.send_user_agent(h)
         self.send_content(h, request_body)
 
-        errcode, errmsg, headers = h.getreply()
+        # errcode, errmsg, headers = h.getreply()    #orig
+        errcode, errmsg, headers = h.getresponse()
 
         if errcode != 200:
             raise ProtocolError(
@@ -1146,10 +1147,14 @@ class Transport:
 
     def make_connection(self, host):
         # create a HTTP connection object from a host descriptor
-        import ExternalLib.WebDAV.httplib as httplib
+        import http.client     # orig
         host, extra_headers, x509 = self.get_host_info(host)
-        return httplib.HTTP(host)
+        return http.client.HTTPConnection(host)
 
+        #
+        # import httplib.client as httplib
+        # host, extra_headers, x509 = self.get_host_info(host)
+        # return httplib.HTTP(host)
 
     ##
     # Send request header.
@@ -1160,10 +1165,10 @@ class Transport:
 
     def send_request(self, connection, handler, request_body):
         connection.putrequest("POST", handler,)   # orig
-        # connection.request("POST", handler, request_body)  # updated
+
         # response = connection.getresponse()   # orig
-        response = connection.getreply()
-        response.read()
+        # response = connection.getreply()
+        # response.read()
 
     ##
     # Send host name.
@@ -1235,7 +1240,7 @@ class Transport:
             if not response:
                 break
             if self.verbose:
-                print("body:", repr(response))
+                print(("body:", repr(response)))
             p.feed(response)
 
         file.close()
@@ -1383,6 +1388,6 @@ if __name__ == "__main__":
     print(server)
 
     try:
-        print(server.examples.getStateName(41))
+        print((server.examples.getStateName(41)))
     except Error as v:
-        print("ERROR", v)
+        print(("ERROR", v))

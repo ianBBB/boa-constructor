@@ -41,9 +41,10 @@ class DebugRequestHandler (RequestHandler):
     def call(self, method, params):
         # Override of xmlrpcserver.RequestHandler.call()
 
+        sys.stdout.write('Now is the time')
+        sys.stdout.flush()
 
-
-        self._authenticate()
+        self._authenticate()    #org
         if method == 'exit_debugger':
             global serving
             serving = 0
@@ -104,13 +105,6 @@ def main(args=None):
     # port is 0 to allocate any port.   TODO blocked out for now while ty
     server = TaskingTCPServer(('', 0), DebugRequestHandler)
     port = int(server.socket.getsockname()[1])
-
-    # # TODO DEBUG
-    # myserver=open('test1.txt', 'w')
-    # myserver.write('My test file')
-    # myserver.flush()
-    # myserver.close()
-
 
     # Tell the client what port to connect to and the auth string to send.
     sys.stdout.write('%010d %s%s' % (port, auth_str, os.linesep))
