@@ -1087,9 +1087,9 @@ def moduleFile(module, path=[], inpackage=0):
 
         fullpath = path + sys.path
         f, file, (suff, mode, type) = importlib.abc.MetaPathFinder.find_spec(module, fullpath)
-        if type == imp.PKG_DIRECTORY:
+        if type == importlib.PKG_DIRECTORY:
             return Module(module, [], {'__path__': [file]}, ['__path__'])
-        if type != imp.PY_SOURCE:
+        if type != importlib.PY_SOURCE:
             # not Python source, can't do anything with this module
             f.close()
             return Module(module, [])

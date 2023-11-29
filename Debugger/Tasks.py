@@ -71,7 +71,7 @@ class ThreadedTaskHandler:
                 cond.release()
 
             if task is not None:
-                #print 'performing task: %s(%s, %s)'%(task, args, kw)
+                print ('performing task: %s(%s, %s)\n\r'%(task, args, kw))
                 try:
                     if kw is not None:
                         task(*args, **kw)

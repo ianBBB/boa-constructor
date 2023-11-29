@@ -67,7 +67,9 @@ def AddToolButtonBmpIS(frame, toolbar, name, hint, triggermeth, toggleBmp = ''):
 def AddToggleToolButtonBmpObject(frame, toolbar, thebitmap, hint, triggermeth):
     nId = wx.NewIdRef(count=1)
     # toolbar.AddTool(nId, thebitmap, thebitmap, shortHelpString = hint, isToggle = True)
-    toolbar.AddTool(toolId=nId, label='', bitmap=wx.BitmapBundle(thebitmap), shortHelp=hint, kind=wx.ITEM_NORMAL)
+    # toolbar.AddTool(toolId=nId, label='', bitmap=wx.BitmapBundle(thebitmap), shortHelp=hint, kind=wx.ITEM_NORMAL)
+    # frame.Bind(wx.EVT_TOOL, triggermeth, id=nId)
+    toolbar.AddCheckTool(toolId=nId, label='', bitmap1=wx.BitmapBundle(thebitmap),shortHelp=hint)
     frame.Bind(wx.EVT_TOOL, triggermeth, id=nId)
     return nId
 

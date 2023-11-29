@@ -310,7 +310,7 @@ def decorateWxPythonWithDocStrs(dbfile):
 
         for name, doc in list(db['methods'].items()):
             try:
-                cls, mth = string.split(name, '.')
+                cls, mth = str.split(name, '.')
                 wxMeth = getattr(namespace[cls], mth)
                 wxMeth.__func__.__doc__ = doc
 

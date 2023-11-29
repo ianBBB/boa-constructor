@@ -195,8 +195,8 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
             # now add the sorted list items to lcGroups 
             for idx, name, group in namedGroups:
                 self.lcGroups.InsertItem(idx-1, str(idx))
-                self.lcGroups.SetStringItem(idx-1, 1, name)
-                self.lcGroups.SetStringItem(idx-1, 2, group)
+                self.lcGroups.SetItem(idx-1, 1, name)
+                self.lcGroups.SetItem(idx-1, 2, group)
 
     def setStatus(self, mo):
         if mo:

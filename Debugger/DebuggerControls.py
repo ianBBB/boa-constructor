@@ -47,7 +47,7 @@ class StackViewCtrl(DebuggerListCtrl):
         for entry in stack:
             lineno = entry['lineno']
             modname = entry['modname']
-            filename = entry['client_filename']
+            filename = entry['client_filename'][7:]
             funcname = entry['funcname']
             sourceline = linecache.getline(filename, lineno)
             sourceline = sourceline.strip()
@@ -68,9 +68,9 @@ class StackViewCtrl(DebuggerListCtrl):
                 count = count + 1
             else:
                 # Update.
-                self.SetStringItem(pos, 0, attrib, -1)
-            self.SetStringItem(pos, 1, repr(lineno), -1)
-            self.SetStringItem(pos, 2, sourceline, -1)
+                self.SetItem(pos, 0, attrib, -1)
+            self.SetItem(pos, 1, repr(lineno), -1)
+            self.SetItem(pos, 2, sourceline, -1)
             pos = pos + 1
 
         while pos < count:
@@ -90,12 +90,14 @@ class StackViewCtrl(DebuggerListCtrl):
         if newsel != selection:
             if selection >= 0:
                 item = self.GetItem(selection)
-                item.m_state = item.m_state & ~wx.LIST_STATE_SELECTED
-                self.SetItem(item)
+                # item.m_state = item.m_state & ~wx.LIST_STATE_SELECTED    # orig
+                # self.SetItem(item)
+                item.SetState(wx.LIST_STATE_DONTCARE)
             if newsel >= 0:
                 item = self.GetItem(newsel)
-                item.m_state = item.m_state | wx.LIST_STATE_SELECTED
-                self.SetItem(item)
+                # item.m_state = item.m_state | wx.LIST_STATE_SELECTED       # orig
+                # self.SetItem(item)
+                item.SetState(wx.LIST_STATE_SELECTED)
         if newsel >= 0:
             self.EnsureVisible(newsel)
 
@@ -259,11 +261,6 @@ class BreakViewCtrl(DebuggerListCtrl):
             if not bp['enabled']: imgIdx = 2
             elif bp['temporary']: imgIdx = 3
 
-            # FIXME
-            # self.InsertImageStringItem(
-            #     p, os.path.basename(bp['filename']), imgIdx)
-            # self.SetStringItem(p, 1, str(bp['lineno']))
-
             self.InsertItem(
                 p, os.path.basename(bp['filename']), imgIdx)
             self.SetItem(p, 1, str(bp['lineno']))
@@ -278,9 +275,6 @@ class BreakViewCtrl(DebuggerListCtrl):
                     ignore = str(item['ignore'])
                     cond = item['cond'] or ''
 
-            # self.SetStringItem(p, 2, ignore)
-            # self.SetStringItem(p, 3, hits)
-            # self.SetStringItem(p, 4, cond)
             self.SetItem(p, 2, ignore)
             self.SetItem(p, 3, hits)
             self.SetItem(p, 4, cond)
@@ -483,7 +477,7 @@ class NamespaceViewCtrl(DebuggerListCtrl):
                 svalue = nsdict[name]
 
                 self.InsertItem(row, name)
-                self.SetStringItem(row, 1, svalue, -1)
+                self.SetItem(row, 1, svalue, -1)
 
                 row = row + 1
 

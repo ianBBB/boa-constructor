@@ -120,7 +120,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.tabsSplitter = BottomAligningSplitterWindow(id=wxID_EDITORFRAMETABSSPLITTER,
               name='tabsSplitter', parent=self, size=wx.Size(802, 421), pos=wx.DefaultPosition,
               style=wx.CLIP_CHILDREN | wx.SP_LIVE_UPDATE | wx.SP_3DSASH)
-        self.tabsSplitter.SetMinimumPaneSize(1)
+        self.tabsSplitter.SetMinimumPaneSize(100)
 
         self.tabs = wx.Notebook(id=wxID_EDITORFRAMETABS, name='tabs',
               parent=self.tabsSplitter, pos=wx.Point(2, 2), size=wx.Size(798,
@@ -1535,8 +1535,8 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 if __name__ == '__main__':
     # app = wx.PySimpleApp()
     app = wx.App()
-
     import Palette
+    Preferences.initScreenVars()
     palette = Palette.BoaFrame(None, -1, app)
 
     editor = palette.editor = EditorFrame(palette, -1, None, None, None, app, palette)

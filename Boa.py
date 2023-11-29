@@ -285,7 +285,8 @@ if wxVersion < __version__.wx_version:
                  'Version error', wx.OK | wx.ICON_ERROR)
     raise Exception('wxPython >= %d.%d.%d.%d required'%__version__.wx_version)
 
-if __version__.wx_version_max and wxVersion > __version__.wx_version_max:
+# if __version__.wx_version_max and (wxVersion >= __version__.wx_version_max):
+if __version__.wx_version_max and (wxVersion > __version__.wx_version_max):
     #wx.PySimpleApp()
     app = wx.App(0)
 

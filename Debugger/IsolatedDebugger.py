@@ -54,10 +54,18 @@ class DebuggerConnection:
 
     def _callMethod(self, func_name, do_return, *args, **kw):
         sm = MethodCall(func_name, args, kw, do_return)
+
         sm.setupEvent()
+
         self._ds.queueServerMessage(sm)
+        # DEBUG MESSAGE
+        sys.stdout.write('#_callMethod queueServerMessage ')
+        sys.stdout.flush()
         # Block.
         res = sm.getResult()
+        # DEBUG MESSAGE
+        sys.stdout.write('#_callMethod getResult ')
+        sys.stdout.flush()
         return res
 
     ### Non-blocking calls.
@@ -138,8 +146,6 @@ class DebuggerConnection:
                       cond='', enabled=1, ignore=0):
         """Sets a breakpoint.  Non-blocking and immediate.
         """
-        time.sleep(20)
-
         self._ds.addBreakpoint(filename, lineno, temporary,
                                cond, enabled, ignore)
 
@@ -218,7 +224,7 @@ class DebuggerConnection:
 
 
         # TODO DEBUG
-        sys.stdout.write('reached runFileAndRequestStatus')
+        sys.stdout.write('reached runFileAndRequestStatus ')
         sys.stdout.flush()
 
 
@@ -367,10 +373,12 @@ class MethodCall (ServerMessage):
     def execute(self, ob):
         try:
             result = getattr(ob, self.func_name)(*self.args, **self.kw)
+            a=result
         except (SystemExit, BdbQuit):
             raise
         except:
-            if hasattr(self, 'callback'):
+            if hasattr(self, 'callback'):    # orig
+            # if 'callback' in self:
                 self.callback.notifyException()
             else:
                 if self.waiting:
@@ -380,13 +388,18 @@ class MethodCall (ServerMessage):
                     import traceback
                     traceback.print_exc()
         else:
-            if hasattr(self, 'callback'):
+            if hasattr(self, 'callback'):    # orig
+            # if 'callback' in self:
                 self.callback.notifyReturn(result)
             else:
                 self.result = result
 
+        # if 'event' in self:     # orig
+        #     self.event.set()
+
         if hasattr(self, 'event'):
             self.event.set()
+
 
     def doReturn(self):
         return self.do_return
@@ -396,17 +409,23 @@ class MethodCall (ServerMessage):
 
     def getResult(self, timeout=None):
         self.wait()
+        # DEBUG MESSAGE
+        sys.stdout.write('#getResult wait ')
+        sys.stdout.flush()
         if hasattr(self, 'exc'):
             try:
                 raise self.exc[0](self.exc[1], self.exc[2])
             finally:
                 # Circ ref
                 del self.exc
-        if not hasattr(self, 'result'):
+
+        # if 'result' not in self:            #orig
+        #     raise DebugError('Timed out while waiting for debug server.')
+        # return self.result
+
+        if not hasattr(self, 'result'):            #orig
             raise DebugError('Timed out while waiting for debug server.')
         return self.result
-
-
 
 class ThreadChoiceLock:
     """A reentrant lock designed for simply choosing a thread.
@@ -579,7 +598,7 @@ class DebugServer (Bdb):
 
     def break_here(self, frame):
         filename, lineno = self.getFilenameAndLine(frame)
-        if not self.breaks.has_key(filename):
+        if not (filename in self.breaks):
             return 0
 
         if not lineno in self.breaks[filename]:
@@ -597,7 +616,8 @@ class DebugServer (Bdb):
 
     def break_anywhere(self, frame):
         filename, lineno = self.getFilenameAndLine(frame)
-        return self.breaks.has_key(filename)
+        # return self.breaks.has_key(filename)     #orig
+        return (filename in self.breaks)
 
     def stop_here(self, frame):
         # Redefine stopping.
@@ -748,7 +768,8 @@ class DebugServer (Bdb):
 
     def set_internal_breakpoint(self, filename, lineno, temporary=0,
                                 cond=None):
-        if not self.breaks.has_key(filename):
+        # if not self.breaks.has_key(filename):    #orig
+        if filename not in self.breaks:
             self.breaks[filename] = []
         list = self.breaks[filename]
         if not lineno in list:
@@ -765,7 +786,8 @@ class DebugServer (Bdb):
 
     def clearTemporaryBreakpoints(self, filename, lineno):
         filename = self.canonic(filename)
-        if not self.breaks.has_key(filename):
+        # if not self.breaks.has_key(filename):
+        if filename not in self.breaks:
             return
         if lineno not in self.breaks[filename]:
             return
@@ -774,7 +796,8 @@ class DebugServer (Bdb):
         for bp in Breakpoint.bplist[filename, lineno][:]:
             if bp.temporary:
                 bp.deleteMe()
-        if not Breakpoint.bplist.has_key((filename, lineno)):
+        # if not Breakpoint.bplist.has_key((filename, lineno)):
+        if not ((filename, lineno) in Breakpoint.bplist):
             self.breaks[filename].remove(lineno)
         if not self.breaks[filename]:
             del self.breaks[filename]
@@ -835,8 +858,19 @@ class DebugServer (Bdb):
 
         self.autocont = autocont
 
-        self.run("execfile(fn, d)", {
-            'fn':fn, 'd':d, '__debugger__': self})
+        # self.run("execfile(fn, d)", {
+        #     'fn':fn, 'd':d, '__debugger__': self})     # orig
+        file_code=open(fn).read()
+        cmd_str='exec(' + repr(file_code) + ' , d)'
+        self.run(cmd_str, {
+            'fn': fn, 'd': d, '__debugger__': self})
+
+
+
+        # self.run("exec(open(fn).read(), d)", {        # 1st pass
+        #     'fn':repr(fn), 'd':d, '__debugger__': self})
+        # self.run("print(5test)", {
+        #     'fn':fn, 'd':d, '__debugger__': self})
 
     def run(self, cmd, globals=None, locals=None):
         try:
@@ -989,7 +1023,8 @@ class DebugServer (Bdb):
                 brk.line = brk.line + delta
                 breaklines.append(brk.line)
                 # merge in moved breaks
-                if bplist.has_key((filename, brk.line)):
+                # if bplist.has_key((filename, brk.line)):     #orig
+                if (filename, brk.line) in bplist:
                     bplist[filename, brk.line].append(brk)
                 else:
                     bplist[filename, brk.line] = [brk]
@@ -1123,7 +1158,7 @@ class DebugServer (Bdb):
                 primaryDict = localsDict
             else:
                 primaryDict = globalsDict
-            if primaryDict.has_key(name):
+            if name in primaryDict:
                 value = primaryDict[name]
             else:
                 try:

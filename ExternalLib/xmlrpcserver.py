@@ -28,13 +28,14 @@ import http.server
 import ExternalLib.xmlrpclib as xmlrpclib
 import sys
 
-class RequestHandler(http.server.HTTPServer, http.server.BaseHTTPRequestHandler):
+# class RequestHandler(http.server.HTTPServer, http.server.BaseHTTPRequestHandler):
+class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 	def do_POST(self):
 		try:
 			# get arguments
 			data = self.rfile.read(int(self.headers["content-length"]))
-			params, method = xmlrpclib.loads(data)
+			params, method = xmlrpclib.loads(data.decode("utf-8"))
 
 			# generate response
 			try:
@@ -51,7 +52,11 @@ class RequestHandler(http.server.HTTPServer, http.server.BaseHTTPRequestHandler)
 					response,
 					methodresponse=1
 					)
-		except:
+		except Exception as e:
+			if hasattr(e, 'message'):
+				print(e.message)
+			else:
+				print(e)
 			# internal error, report as HTTP server error
 			self.send_response(500)
 			self.end_headers()

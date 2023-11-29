@@ -414,13 +414,13 @@ class ModuleModel(SourceModel):
             if srchpath == stdPyPath:
                 srchpath = []
 
-            if tpe == imp.PKG_DIRECTORY:
+            if tpe == importlib.PKG_DIRECTORY:
                 srchpath.append(path)
                 continue
-            elif tpe == imp.PY_SOURCE:
+            elif tpe == importlib.PY_SOURCE:
                 # handle from [package.]module import name
                 return path, 'name'
-            if tpe == imp.PY_COMPILED:
+            if tpe == importlib.PY_COMPILED:
                 self.editor.setStatus(_('Compiled file found, check sys.path!'),
                       'Warning', True)
                 raise ImportError(_('Compiled file found'))

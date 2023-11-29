@@ -105,7 +105,7 @@ __languages = { 'english'   : 'en',
   All of the available language names.
 """
 #available_languages = [ x.title() for x in __languages.keys() ]
-available_languages = map(string.capitalize, __languages.keys())
+available_languages = map(str.capitalize, __languages.keys())
 
 """
   Calling translate() or babelize() can raise a BabelizerError
@@ -121,29 +121,38 @@ class BabelizerIOError(BabelizerError):
     pass
 
 def clean(text):
-#    return ' '.join(string.replace(text.strip(), "\n", ' ').split())
-    return string.join(string.split(string.replace(string.strip(text), "\n", ' ')))
+    #    return ' '.join(string.replace(text.strip(), "\n", ' ').split())
+    #     return string.join(string.split(string.replace(string.strip(text), "\n", ' ')))
+    Just_text = text.strip()
+    No_new_lines = Just_text.relace('\n',' ')
+    split_up = No_new_lines.split()
+    result = split_up.join()
+    return result
+    # return string.join(string.split(string.replace(string.strip(text), "\n", ' ')))
 
 def translate(phrase, from_lang, to_lang):
     phrase = clean(phrase)
     try:
-##        from_code = __languages[from_lang.lower()]
-##        to_code = __languages[to_lang.lower()]
-        from_code = __languages[string.lower(from_lang)]
-        to_code = __languages[string.lower(to_lang)]
-    except KeyError, lang:
+        lang = from_lang
+        from_code = __languages[from_lang.lower()]
+        lang=to_lang
+        to_code = __languages[to_lang.lower()]
+        # from_code = __languages[string.lower(from_lang)]
+        # to_code = __languages[string.lower(to_lang)]
+    except (KeyError, lang):
         raise LanguageNotAvailableError(lang)
 
     params = urllib.urlencode( { 'BabelFishFrontPage' : 'yes',
                                  'doit' : 'done',
                                  'urltext' : phrase,
                                  'lp' : from_code + '_' + to_code } )
+    what = 'http://babelfish.altavista.com/tr'
     try:
-        response = urllib.urlopen('http://babelfish.altavista.com/tr', params)
-    except IOError, what:
+        response = urllib.urlopen(what, params)
+    except (IOError, what):
         raise BabelizerIOError("Couldn't talk to server: %s" % what)
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        print ("Unexpected error:", sys.exc_info()[0])
 
     html = response.read()
     for regex in __where:
@@ -175,11 +184,11 @@ def babelize(phrase, from_language, through_language, limit = 12, callback = Non
 if __name__ == '__main__':
     import sys
     def printer(x):
-        print x
+        print(x)
         sys.stdout.flush();
 
 
 ##    babelize("I won't take that sort of treatment from you, or from your doggie!",
 ##             'english', 'french', callback = printer)
-    babelize("Für die Validierung der Ausgabedatei catalog.xml sollte ebenfalls ein Perl-Modul zur Anwendung kommen", 'German', 'English', callback = printer)
+    babelize("Fï¿½r die Validierung der Ausgabedatei catalog.xml sollte ebenfalls ein Perl-Modul zur Anwendung kommen", 'German', 'English', callback = printer)
 

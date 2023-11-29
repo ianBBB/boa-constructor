@@ -70,7 +70,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self,
-              #style=wx.SYSTEM_MENU | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX,
+              # style=wx.SYSTEM_MENU | wx.RESIZE_BORDER | wx.CAPTION | wx.MINIMIZE_BOX,
               id=wxID_BOAFRAME, name='', parent=prnt, pos=wx.Point(116, 275),
               size=wx.Size(645, 74),
               style=wx.DEFAULT_FRAME_STYLE | wx.MAXIMIZE_BOX,
@@ -116,7 +116,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
 
         self.componentSB = ComponentSelection(self)
 
-        # A test button to check thing operate as I think they should
+        # A test button to check things operate as I think they should
         # if Preferences.showFrameTestButton:
         #     self.toolBar.AddSeparator()
         #     self.addTool('Images/Shared/CustomHelp', 'Test', 'Test', self.OnTest)
@@ -126,7 +126,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.paletteHelpItems = eval(conf.get('help', 'palettehelp'), {})
 
         self.toolBar.AddSeparator()
-        # Help for Boa, python and wxpython is integrated. N need for seperate button now.
+        # Help for Boa, python and wxpython is integrated. No need for separate buttons now.
         # self.addTool('Images/Shared/Help', _('Boa or selected component help'),
         #       _('Show help'), self.OnHelpToolClick)
         # self.addTool('Images/Shared/wxWinHelp', _('wxPython help'),
@@ -540,6 +540,7 @@ class ZopePalettePage(PalettePage):
 if __name__ == '__main__':
     # app = wx.PySimpleApp()
     app = wx.App()
+    Preferences.initScreenVars()
     palette = BoaFrame(None, -1, app)
     palette.Show()
     palette.palette.AddPage(wx.Panel(palette.palette, -1), 'test')

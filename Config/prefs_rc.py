@@ -153,7 +153,7 @@ neverEmptyUndoBuffer = True
 
 # Auto correct indentation and EOL characters on load, save and refresh
 # This only works for Python 2.0 and up
-autoReindent = False
+autoReindent = True
 
 # Should the files open when closing Boa be reloaded at next startup?
 rememberOpenFiles = True

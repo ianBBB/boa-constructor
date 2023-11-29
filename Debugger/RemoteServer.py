@@ -25,8 +25,6 @@ task_handler = ThreadedTaskHandler()
 class DebugRequestHandler (RequestHandler):
 
     def _authenticate(self):
-        # TODO Debugging
-        time.sleep(20)
         h = self.headers
         if auth_str:
             s = h.get('authentication')
@@ -35,8 +33,6 @@ class DebugRequestHandler (RequestHandler):
 
     def call(self, method, params):
         # Override of xmlrpcserver.RequestHandler.call()
-        # TODO Debugging
-        time.sleep(20)
         self._authenticate()
         m = getattr(connection, method)
         result = m(*params)
@@ -53,10 +49,6 @@ class TaskingMixIn:
 
     def process_request(self, request, client_address):
         """Start a task to process the request."""
-
-        # TODO Debugging
-        time.sleep(20)
-
         task_handler.addTask(self.finish_request,
                              args=(request, client_address))
 

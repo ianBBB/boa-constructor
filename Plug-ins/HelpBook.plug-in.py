@@ -641,10 +641,10 @@ class HelpBookFilesView(EditorViews.VirtualListCtrlView):
         self.model.setModified()
         self.updateEditor()
 
-class FileListDropTarget(wx.PyDropTarget):
+class FileListDropTarget(wx.DropTarget):
     def __init__(self):
         wx.PyDropTarget.__init__(self)
-        self.fmt = wx.CustomDataFormat('FileList')
+        self.fmt = wx.DataFormat('FileList')
         self.data = wx.CustomDataObject(self.fmt)
         self.SetDataObject(self.data)
 
@@ -902,7 +902,7 @@ class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
 
         self.helpImgLst = wx.ImageList(16, 16)
         for artId in (wx.ART_HELP_BOOK, wx.ART_HELP_FOLDER, wx.ART_HELP_PAGE):
-            bmp = wx.ArtProvider_GetBitmap(artId, wx.ART_TOOLBAR, (16, 16))
+            bmp = wx.ArtProvider.GetBitmap(artId, wx.ART_TOOLBAR, (16, 16))
             self.helpImgLst.Add(bmp)
         self.AssignImageList(self.helpImgLst)
 

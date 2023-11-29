@@ -37,10 +37,10 @@ class HTTP(http.client.HTTPConnection):
         self.file = StringIO(data)
         line = self.file.readline()
         try:
-            [ver, code, msg] = string.split(line, None, 2)
+            [ver, code, msg] = str.split(line, None, 2)
         except ValueError:
             try:
-                [ver, code] = string.split(line, None, 1)
+                [ver, code] = str.split(line, None, 1)
                 msg = ""
             except ValueError:
                 return -1, line, None
@@ -354,7 +354,7 @@ class http_response:
         return '%s %s' % (self.code, self.msg)
 
     def get_header(self, name, val=None):
-        return self.headers.dict.get(string.lower(name), val)
+        return self.headers.dict.get(str.lower(name), val)
 
     def get_headers(self):
         return self.headers.dict

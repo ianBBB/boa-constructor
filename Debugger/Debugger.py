@@ -465,6 +465,8 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
             t = t.__name__
         msg = '%s: %s.' % (t, v)
 
+        # confirm = wx.MessageBox(_('%s\n%s\nStop debugger?')%msg, event.v.characters_written,
+        # confirm = wx.MessageBox(_(msg + '\n' + event.v.characters_written + '\nStop debugger?'),
         confirm = wx.MessageBox(_('%s\n\nStop debugger?')%msg,
                   _('Debugger CCommunication Exception'),
                   wx.YES_NO | wx.YES_DEFAULT | wx.ICON_EXCLAMATION |
@@ -577,9 +579,6 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
 
     def requestDebuggerStatus(self):
         self.sb.updateState('Waiting...', 'busy')
-
-        # TODO DEBUG
-        PRINT('Debug_status here.')
 
         self.invokeInDebugger('getStatusSummary', (),
                               'receiveDebuggerStatus')
@@ -894,11 +893,11 @@ class DebuggerFrame(wx.Frame, Utils.FrameRestorerMixin):
         if self.splitter.GetSplitMode() == wx.SPLIT_HORIZONTAL:
             self.splitter.SetSplitMode(wx.SPLIT_VERTICAL)
             self.splitter.SplitVertically(self.nbTop, self.nbBottom)
-            sashpos = self.splitter.GetClientSize().x / 2
+            sashpos = divmod(self.splitter.GetClientSize().x, 2)[0]
         else:
             self.splitter.SetSplitMode(wx.SPLIT_HORIZONTAL)
             self.splitter.SplitHorizontally(self.nbTop, self.nbBottom)
-            sashpos = self.splitter.GetClientSize().y / 2
+            sashpos = divmod( self.splitter.GetClientSize().y, 2)[0 ]
         self.splitter.SetSashPosition(sashpos)
 
     def OnPathMappings(self, event=None, paths=None):

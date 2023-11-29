@@ -130,7 +130,8 @@ class FileBreakpointList:
             return 0
 
     def clearTemporaryBreakpoints(self, lineno):
-        if self.lines.has_key(lineno):
+        # if self.lines.has_key(lineno):    orig
+        if lineno in self.lines:
             linebreaks = self.lines[lineno]
             idx = 0
             while idx < len(linebreaks):

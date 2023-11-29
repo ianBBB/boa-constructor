@@ -172,7 +172,8 @@ class ConfigParser:
         Raise DuplicateSectionError if a section by the specified name
         already exists.
         """
-        if self.__sections.has_key(section):
+
+        if section in self.__sections:
             raise DuplicateSectionError(section)
         self.__sections[section] = {}
 
@@ -181,7 +182,7 @@ class ConfigParser:
 
         The DEFAULT section is not acknowledged.
         """
-        return self.__sections.has_key(section)
+        return (section in self.__sections)
 
     def options(self, section):
         """Return a list of option names for the given section name."""
@@ -273,10 +274,12 @@ class ConfigParser:
         depth = 0
         while depth < 10:               # Loop through this until it's done
             depth = depth + 1
-            if string.find(value, "%(") >= 0:
+            if str.find(value, "%(") >= 0:
+                key = value
                 try:
+
                     value = value % d
-                except KeyError, key:
+                except (KeyError, key):
                     raise InterpolationError(key, option, section, rawval)
             else:
                 return value
@@ -292,9 +295,9 @@ class ConfigParser:
 
     def getboolean(self, section, option):
         v = self.get(section, option)
-        val = string.atoi(v)
+        val = int(v)
         if val not in (0, 1):
-            raise ValueError, 'Not a boolean: %s' % v
+            raise ValueError ('Not a boolean: %s' % v)
         return val
 
     def optionxform(self, optionstr):
@@ -389,14 +392,14 @@ class ConfigParser:
                 break
             lineno = lineno + 1
             # comment or blank line?
-            if string.strip(line) == '' or line[0] in '#;':
+            if line.strip() == '' or line[0] in '#;':
                 continue
-            if string.lower(string.split(line)[0]) == 'rem' \
+            if str.lower(str.split(line)[0]) == 'rem' \
                and line[0] in "rR":      # no leading whitespace
                 continue
             # continuation line?
             if line[0] in ' \t' and cursect is not None and optname:
-                value = string.strip(line)
+                value = line.strip()
                 if value:
                     cursect[optname] = cursect[optname] + '\n ' + value
             # a section header or option header?
@@ -405,7 +408,7 @@ class ConfigParser:
                 mo = self.SECTCRE.match(line)
                 if mo:
                     sectname = mo.group('header')
-                    if self.__sections.has_key(sectname):
+                    if sectname in self.__sections:
                         cursect = self.__sections[sectname]
                     elif sectname == DEFAULTSECT:
                         cursect = self.__defaults
@@ -416,7 +419,7 @@ class ConfigParser:
                     optname = None
                 # no section header in the file?
                 elif cursect is None:
-                    raise MissingSectionHeaderError(fpname, lineno, `line`)
+                    raise MissingSectionHeaderError(fpname, lineno, repr(line))
                 # an option line?
                 else:
                     mo = self.OPTCRE.match(line)
@@ -425,10 +428,11 @@ class ConfigParser:
                         if vi in ('=', ':') and ';' in optval:
                             # ';' is a comment delimiter only if it follows
                             # a spacing character
-                            pos = string.find(optval, ';')
+                            # pos = string.find(optval, ';')
+                            pos = optval.find(';')
                             if pos and optval[pos-1] in string.whitespace:
                                 optval = optval[:pos]
-                        optval = string.strip(optval)
+                        optval = optval.strip()
                         # allow empty values
                         if optval == '""':
                             optval = ''
@@ -440,7 +444,7 @@ class ConfigParser:
                         # list of all bogus lines
                         if not e:
                             e = ParsingError(fpname)
-                        e.append(lineno, `line`)
+                        e.append(lineno, repr(line))
         # if any parsing errors occurred, raise an exception
         if e:
             raise e

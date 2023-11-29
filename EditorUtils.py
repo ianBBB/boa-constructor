@@ -109,23 +109,21 @@ class EditorStatusBar(wx.StatusBar):
         self.img.Bind(wx.EVT_LEFT_DCLICK, self.OnShowHistory)
 
         rect = self.GetFieldRect(sbfBrwsBtns)
-        self.historyBtns = wx.SpinButton(self, -1, (rect.x+1, rect.y+1),
-                                                 (rect.width-2, rect.height-2))
+
+
         self.historyBtnBack = wx.BitmapButton(self, -1,
               Preferences.IS.load('Images/Shared/PreviousSmall.png'),
-              (rect.x+1, rect.y+1), (int(math.ceil(rect.width/2.0))-1, rect.height-2))
+                  (rect.x+1, rect.y+1), (16,16))
         self.historyBtnFwd = wx.BitmapButton(self, -1,
               Preferences.IS.load('Images/Shared/NextSmall.png'),
-              (rect.x+1+int(round(rect.width/2.0)), rect.y+1), (int(math.ceil(rect.width/2.0))-1, rect.height-2))
+              (rect.x+1+16, rect.y+1), (16,16))
 
-        self.historyBtns.SetToolTip('Browse the Traceback/Error/Output window history.')
+        # self.historyBtns.SetToolTip('Browse the Traceback/Error/Output window history.')
         tip = _('Browse the Traceback/Error/Output window history.')
         self.historyBtnBack.SetToolTip(tip)
-        self.historyBtnFwd.SetToolTip(tip)
-        self.historyBtns.Bind(wx.EVT_SPIN_DOWN, self.OnErrOutHistoryBack, id=self.historyBtns.GetId())
-        self.historyBtns.Bind(wx.EVT_SPIN_UP, self.OnErrOutHistoryFwd, id=self.historyBtns.GetId())
-        # self.historyBtnBack.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryBack, id=self.historyBtnBack.GetId())
-        # self.historyBtnFwd.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryFwd, id=self.historyBtnFwd.GetId())
+
+        self.historyBtnBack.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryBack, id=self.historyBtnBack.GetId())
+        self.historyBtnFwd.Bind(wx.EVT_BUTTON, self.OnErrOutHistoryFwd, id=self.historyBtnFwd.GetId())
 
         self.erroutFrm = None
 
@@ -200,7 +198,7 @@ def HistoryPopup(parent, hist, imgs):
     lc.SetColumnWidth(1, 750)
     for tpe, tme, msg, _bell in hist:
         lc.InsertImageStringItem(0, tme, idxs[tpe])
-        lc.SetStringItem(0, 1, msg)
+        lc.SetItem(0, 1, msg)
     f.Center()
     f.Show()
     wx.PostEvent(f, wx.SizeEvent(f.GetSize()))
@@ -544,6 +542,7 @@ def socketFileOpenServerListen(editor):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    # app = wx.PySimpleApp()
+    app = wx.App()
     frame = HistoryPopup(None, (), {})
     app.MainLoop()

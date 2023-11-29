@@ -23,7 +23,7 @@ import RTTI
 try:
     import _winreg
 except ImportError:
-    raise Plugins.SkipPluginSilently, 'Requires windows'
+    raise Plugins.SkipPluginSilently ('Requires windows')
 
 #---Explorer classes------------------------------------------------------------
 
@@ -103,7 +103,7 @@ class RegItemNode(ExplorerNodes.ExplorerNode):
         if self.resourcepath.find('\\') == -1:
             key, subkey = self.resourcepath, None
         else:    
-            key, subkey = string.split(self.resourcepath, '\\', 1)
+            key, subkey = str.split(self.resourcepath, '\\', 1)
         key =_winreg.__dict__[key]
         if self.properties['computername']:
             compName = self.properties['computername']
@@ -197,7 +197,7 @@ class RegPropReaderMixin:
             elif types.StringType is type(value[0]):
                 value = value[0]
 
-            items.append( (string.split(name, ':')[1], value) )
+            items.append( (str.split(name, ':')[1], value) )
         return items
 
 class RegCompanion(RegPropReaderMixin, ExplorerNodes.ExplorerCompanion):

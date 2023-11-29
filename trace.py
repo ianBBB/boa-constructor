@@ -11,7 +11,7 @@
 #-----------------------------------------------------------------------------
 # Purpose: This module defines a static  variable for controlling
 # the trace function
-trace_is_on = True
+trace_is_on = False
 
 #---------------------------------------------------------
 #

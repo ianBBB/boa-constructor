@@ -723,19 +723,21 @@ class STCStyleEditDlg(wx.Dialog):
             dlg.SetTitle(title)
             if dlg.ShowModal() == wx.ID_OK:
                 data = dlg.GetColourData()
-                return data.GetColour()
+                return data.GetColour().Get()
         finally:
             dlg.Destroy()
-        return None
+        # return None
+
 
     colDlgTitles = {'fore': _('Foreground'), 'back': _('Background')}
     def editColProp(self, colBtn, colCb, prop):
         col = self.getColourDlg(colBtn.GetBackgroundColour(),
-              self.colDlgTitles[prop]+ ' '+_('colour'))
+              self.colDlgTitles[prop]+ ' colour')
         if col:
+            new_col=wx.Colour(col)
             colBtn.SetForegroundColour(wx.Colour(0, 0, 0))
-            colBtn.SetBackgroundColour(col)
-            colStr = colToStr(col)
+            colBtn.SetBackgroundColour(new_col)
+            colStr = colToStr(new_col)
             colCb.SetValue(colStr)
             self.editProp(True, prop, colStr)
 
@@ -1065,10 +1067,15 @@ class CommonDefDlg(wx.Dialog):
               style=wx.DEFAULT_DIALOG_STYLE, title=_('Common definition'))
         self.SetClientSize(wx.Size(184, 200))
 
+        # self.propTypeRBx = wx.RadioBox(choices=[_('Colour value'), _('Font face'),
+        #       _('Size value')], id=wxID_COMMONDEFDLGPROPTYPERBX,
+        #       label=_('Property type'), majorDimension=1, name='propTypeRBx',
+        #       parent=self, point=wx.Point(8, 8), size=wx.Size(168, 92),
+        #       style=wx.RA_SPECIFY_COLS)    # orig
         self.propTypeRBx = wx.RadioBox(choices=[_('Colour value'), _('Font face'),
               _('Size value')], id=wxID_COMMONDEFDLGPROPTYPERBX,
               label=_('Property type'), majorDimension=1, name='propTypeRBx',
-              parent=self, point=wx.Point(8, 8), size=wx.Size(168, 92),
+              parent=self, pos=wx.Point(8, 8), size=wx.Size(168, 92),
               style=wx.RA_SPECIFY_COLS)
         self.propTypeRBx.SetSelection(self._propTypeIdx)
 

@@ -8,7 +8,7 @@ import __builtin__
 warnings = []
 
 def terse_warn(file, linenum, line, message, start=0, end=0):
-    print '%s:%d: %s' % (file, linenum, message)
+    print ('%s:%d: %s' % (file, linenum, message))
 
 def log_warn(file, linenum, line, message, start=0, end=0):
     warnings.append( (file, linenum, message) )
@@ -48,7 +48,7 @@ ignore_subobjs = 1
 try: 1/0
 except: tb = sys.exc_traceback
 special = {}
-for name in string.split('and break class continue def del elif else except '
+for name in str.split('and break class continue def del elif else except '
     'exec finally for from global if import in is lambda not or pass print '
     'raise return try while true false') + dir(__builtin__): special[name] = 1
 member = {}
@@ -58,7 +58,7 @@ for name in [].__methods__ + {}.__methods__ + [].append.__members__ + \
     ['__dict__', '__methods__', '__members__']: member[name] = 1
 #    file.__methods__ + file.__members__ + \
 reserved = {}
-for name in string.split('abs add and bases builtin builtins call class cmp '
+for name in str.split('abs add and bases builtin builtins call class cmp '
     'coerce copy copyright deepcopy del delattr delitem delslice div divmod '
     'file float getattr getinitargs getitem getslice getstate hash hello hex '
     'init int invert len long lshift main mod mul name neg nonzero oct or pos '

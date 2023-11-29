@@ -546,7 +546,10 @@ class DesignTimeCompanion(Companion):
                 elif module and not evt.trigger_meth in module.classes[model.main].methods:
                     module.addMethod(model.main, evt.trigger_meth,
                        'self, event', [sourceconst.bodyIndent + 'event.Skip()'])
-
+            else:
+                # remove the event if the trigger meth is 'delete'
+                if module and evt.prev_trigger_meth in module.classes[model.main].methods:
+                    module.removeMethod (model.main, evt.prev_trigger_meth)
     def writeCollections(self, output, collDeps, stripFrmId=''):
         """ Write out collection initialiser methods. """
         for collInit in self.textCollInitList:
@@ -556,8 +559,8 @@ class DesignTimeCompanion(Companion):
                     collDeps, sourceconst.bodyIndent)
             else:
                 self.addContinuedLine(
-                      sourceconst.bodyIndent + collInit.asText(stripFrmId),
-                      output, sourceconst.bodyIndent)
+                    sourceconst.bodyIndent + collInit.asText(stripFrmId),
+                    output, sourceconst.bodyIndent)
 
     def writeDependencies(self, output, ctrlName, depLinks, definedCtrls,
           stripFrmId=''):

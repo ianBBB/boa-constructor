@@ -552,7 +552,7 @@ class FindReplaceDlg(wx.Dialog):
         names = []
         pattern = self.findTxt.GetValue()
         bRecursive = self.chkRecursiveSearch.GetValue()
-        file_filter = string.split(self.cmbFileFilter.GetValue(), ';')
+        file_filter = str.split(self.cmbFileFilter.GetValue(), ';')
         folder = [self.cmbFolder.GetValue()]
         self.engine.addFolder(folder[0])
         self.engine.addSuffix(self.cmbFileFilter.GetValue())

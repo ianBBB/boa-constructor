@@ -160,7 +160,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
         paths = self.installedPaths = self.getInstallations()
         for idx, (version, path) in zip(list(range(len(paths))), paths):
             self.lcInstallations.InsertItem(idx, version)
-            self.lcInstallations.SetStringItem(idx, 1, path)
+            self.lcInstallations.SetItem(idx, 1, path)
 
         if not hasattr(sys, 'frozen'):
             # Bold the current installation

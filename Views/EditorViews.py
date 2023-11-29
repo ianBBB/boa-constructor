@@ -836,6 +836,7 @@ class ToDoView(ListCtrlView):
 
         self.pastelise()
 
+
 ##    def OnItemSelect(self, event):
 ##        ListCtrlView.OnItemSelect(self, event)
 ##        if not self.blockReentrant:

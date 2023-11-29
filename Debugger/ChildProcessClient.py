@@ -1,4 +1,6 @@
 import os, sys, time, socket
+import xmlrpc.client
+
 import wx
 
 import Preferences, Utils
@@ -79,7 +81,25 @@ def spawnChild(monitor, process, args=''):
         # pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE | wx.EXEC_ASYNC, process)
 
 
-        pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE, process)   #TODO DEBOG while testing server.
+        pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE, process)
+
+        ## DEBUG This is a text entry point to add change the port, pid and auth. To be removed
+        alt_pid=0
+        alt_auth=''
+        alt_port=0
+        dlg = wx.TextEntryDialog(None, 'The debug thread re-direct', 'Change all three?', "no")
+        try:
+            if dlg.ShowModal() == wx.ID_OK:
+                result = dlg.GetValue()
+                # Your code
+                if not (result=="no"):
+                    alt_port, alt_auth, alt_pid = result.split(' ')
+                # port = int(result)
+        finally:
+            dlg.Destroy()
+
+        if alt_pid:
+            pid= int(alt_pid)
 
         line = ''
         if monitor.isAlive():
@@ -138,11 +158,18 @@ def spawnChild(monitor, process, args=''):
             line = line.strip()
             if not line:
                 raise Exception('The debug server address could not be read', RuntimeError)
-            port, auth = line.strip().split()
-            port = port.strip("0")
+            # port, auth = line.strip().split()
+            # port = port.strip("0")
+            if alt_port:
+                port =int(alt_port)
+                auth = alt_auth
+            else:
+                port, auth = line.strip().split()
+                port = int(port.strip("0"))
 
-            ## TODO This is a text entry point to add change the port, if required. To be removed
-            dlg = wx.TextEntryDialog(None, 'The current port is : ' + port, 'Change ports?', port)
+
+            ## DEBUG This is a text entry point to add change the port, if required. To be removed
+            dlg = wx.TextEntryDialog(None, 'The current port is : ' + repr(port), 'Change ports?', repr(port))
             try:
                 if dlg.ShowModal() == wx.ID_OK:
                     result = dlg.GetValue()
@@ -163,9 +190,12 @@ def spawnChild(monitor, process, args=''):
                 time.sleep(3)
                 port = new_port
 
-            trans = TransportWithAuth(auth)
-            server = xmlrpclib.Server(
-                'http://127.0.0.1:%d' % port, trans)
+            # trans = TransportWithAuth(auth)   # orig
+            # server = xmlrpclib.Server(
+            #     'http://127.0.0.1:%d' % port, trans)
+
+            server = xmlrpc.client.ServerProxy('http://127.0.0.1:%d' % port)
+
             return server, istream, estream, pid, pyIntpPath
         else:
             raise Exception('The debug server failed to start', RuntimeError)
@@ -209,18 +239,17 @@ class ChildProcessClient(MultiThreadedDebugClient):
         # result = m(*m_args)    # orig
         # return result    # orig
 
+        # m = getattr(self.server, 'system.listMethods')
+        # result = m()
+        # print(repr(result))
 
         m = getattr(self.server, m_name)
         result = m(*m_args)
+        print(repr(result))
         return result
 
-        # attempt to fix
-        # convert string arg to bytes
-        # str_arg=m_args[0]
-        # m_args[0]=bytes(str_arg)
-        # result = m(*m_args)    # orig
-        # # result = m(m_args)
-        # return result
+
+
 
 
     def isAlive(self):
@@ -258,7 +287,7 @@ class ChildProcessClient(MultiThreadedDebugClient):
         stream = self.input_stream
         if stream is not None and stream.CanRead():
             stdin_text = stream.read()
-        print(stdin_text, stderr_text)
+        # print(stdin_text, stderr_text)
         return (stdin_text, stderr_text)
 
     def getProcessId(self):
@@ -285,9 +314,15 @@ class ChildProcessClient(MultiThreadedDebugClient):
                      self.processId, self.pyIntpPath) = spawnChild(
                         self, process, self.process_args)
 
-                    # TODO Debugging
-                    wx.MessageBox(_('The debugger process data. PID = '+repr(self.processId)),
-                                  _('Debugger pid'), wx.OK | wx.ICON_EXCLAMATION | wx.CENTRE)
+
+                    ## DEBUG This is a text entry point to add change the pid, if required. To be removed
+                    dlg = wx.TextEntryDialog(None, 'The current pid is : ' + repr(self.processId), 'Change PID?', repr(self.processId))
+                    try:
+                        if dlg.ShowModal() == wx.ID_OK:
+                            self.processId = int(dlg.GetValue())
+                            # Your code
+                    finally:
+                        dlg.Destroy()
 
                 self.taskHandler.addTask(evt.GetTask())
             except:

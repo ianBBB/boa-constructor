@@ -18,7 +18,7 @@ field_ids, field_objs = ctx.form.get_field_ids(), ctx.form.get_fields()
 for idx in _.range(_.len(field_ids)):
     fld_id = field_ids[idx]
     #m = ctx.get_override(fld_id);if m: m = m.method_name
-    tpe = _.string.split(`field_objs[idx]`[1:])[0]
+    tpe = _.str.split(repr(field_objs[idx])[1:])[0]
 ##        if tpe == 'DateTimeField':
 ##            fields.append( (fld_id, ctx.values[fld_id], tpe, ()) )
     if tpe not in skip_field_types:

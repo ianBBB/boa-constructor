@@ -132,6 +132,7 @@ class DebuggerTask:
 
             # result = self.client.invoke(b'proceedAndRequestStatus', self.m_args)   # orig
             result = self.client.invoke(self.m_name, self.m_args)
+
         except:
             t, v = sys.exc_info()[:2]
             evt = self.client.createEvent(wxEVT_DEBUGGER_EXC)

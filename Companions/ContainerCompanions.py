@@ -255,10 +255,14 @@ class BookCtrlPagesCDTC(CollectionDTC):
 
     def properties(self):
         props = CollectionDTC.properties(self)
+        # props.update({'Page': ('NoneRoute', None, None),
+        #               'Text': ('IndexRoute', wx.Notebook.GetPageText.__func__, wx.Notebook.SetPageText.__func__),
+        #               'Selected' : ('CompnRoute', self.GetPageSelected, self.SetPageSelected),
+        #               'ImageId': ('IndexRoute', wx.Notebook.GetPageImage.__func__, wx.Notebook.SetPageImage.__func__)})
         props.update({'Page': ('NoneRoute', None, None),
-                      'Text': ('IndexRoute', wx.Notebook.GetPageText.__func__, wx.Notebook.SetPageText.__func__),
+                      'Text': ('IndexRoute', wx.Notebook.GetPageText, wx.Notebook.SetPageText),
                       'Selected' : ('CompnRoute', self.GetPageSelected, self.SetPageSelected),
-                      'ImageId': ('IndexRoute', wx.Notebook.GetPageImage.__func__, wx.Notebook.SetPageImage.__func__)})
+                      'ImageId': ('IndexRoute', wx.Notebook.GetPageImage, wx.Notebook.SetPageImage)})
         return props
 
 ##    def appendItem(self):
@@ -446,7 +450,7 @@ class BlankWindowPage(wx.Window):
         if self.ctrl:
             p = self.GetPosition()
             s = self.GetSize()
-            self.ctrl.SetDimensions(0, 0, s.x, s.y)
+            self.ctrl.SetSize(0, 0, s.x, s.y)
         else:
             self.designer.ctrlEvtHandler.OnControlResize(event)
 
@@ -461,12 +465,13 @@ class BlankWindowPage(wx.Window):
                 sze = self.GetClientSize()
 
                 dc.SetPen(wx.RED_PEN)
-                dc.BeginDrawing()
+                # dc.BeginDrawing()  #DEPRECATED
                 try:
-                    for i in range((sze.x + sze.y) / self.dashSize):
+                    for i in range(int((sze.x + sze.y) / self.dashSize)):
                         dc.DrawLine(0, i*self.dashSize, i*self.dashSize, 0)
                 finally:
-                    dc.EndDrawing()
+                    pass
+                    # dc.EndDrawing() #DEPRECATED
         finally:
             event.Skip()
 
