@@ -591,7 +591,6 @@ class BoaApp(wx.App):
 
             self.main.initPalette(inspector, editor)
 
-    ##            editor.setupToolBar()
 
             import Help
             if not Preferences.delayInitHelp:
