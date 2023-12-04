@@ -83,23 +83,23 @@ def spawnChild(monitor, process, args=''):
 
         pid = wx.Execute(cmd, wx.EXEC_SHOW_CONSOLE, process)
 
-        ## DEBUG This is a text entry point to add change the port, pid and auth. To be removed
-        alt_pid=0
-        alt_auth=''
-        alt_port=0
-        dlg = wx.TextEntryDialog(None, 'The debug thread re-direct', 'Change all three?', "no")
-        try:
-            if dlg.ShowModal() == wx.ID_OK:
-                result = dlg.GetValue()
-                # Your code
-                if not (result=="no"):
-                    alt_port, alt_auth, alt_pid = result.split(' ')
-                # port = int(result)
-        finally:
-            dlg.Destroy()
-
-        if alt_pid:
-            pid= int(alt_pid)
+        # ## ZZZDEBUG This is a text entry point to add change the port, pid and auth. To be removed
+        # alt_pid=0
+        # alt_auth=''
+        # alt_port=0
+        # dlg = wx.TextEntryDialog(None, 'The debug thread re-direct', 'Change all three?', "no")
+        # try:
+        #     if dlg.ShowModal() == wx.ID_OK:
+        #         result = dlg.GetValue()
+        #         # Your code
+        #         if not (result=="no"):
+        #             alt_port, alt_auth, alt_pid = result.split(' ')
+        #         # port = int(result)
+        # finally:
+        #     dlg.Destroy()
+        #
+        # if alt_pid:
+        #     pid= int(alt_pid)
 
         line = ''
         if monitor.isAlive():
@@ -158,25 +158,28 @@ def spawnChild(monitor, process, args=''):
             line = line.strip()
             if not line:
                 raise Exception('The debug server address could not be read', RuntimeError)
-            # port, auth = line.strip().split()
-            # port = port.strip("0")
-            if alt_port:
-                port =int(alt_port)
-                auth = alt_auth
-            else:
-                port, auth = line.strip().split()
-                port = int(port.strip("0"))
+
+            ## ZZZDEBUG
+            # if alt_port:
+            #     port =int(alt_port)
+            #     auth = alt_auth
+            # else:
+            #     port, auth = line.strip().split()
+            #     port = int(port.strip("0"))
+
+            port, auth = line.strip().split()
+            port = int(port.strip("0"))
 
 
-            ## DEBUG This is a text entry point to add change the port, if required. To be removed
-            dlg = wx.TextEntryDialog(None, 'The current port is : ' + repr(port), 'Change ports?', repr(port))
-            try:
-                if dlg.ShowModal() == wx.ID_OK:
-                    result = dlg.GetValue()
-                    # Your code
-                    port = int(result)
-            finally:
-                dlg.Destroy()
+            # ## ZZZDEBUG This is a text entry point to add change the port, if required. To be removed
+            # dlg = wx.TextEntryDialog(None, 'The current port is : ' + repr(port), 'Change ports?', repr(port))
+            # try:
+            #     if dlg.ShowModal() == wx.ID_OK:
+            #         result = dlg.GetValue()
+            #         # Your code
+            #         port = int(result)
+            # finally:
+            #     dlg.Destroy()
 
             if USE_TCPWATCH:
                 # Start TCPWatch as a connection forwarder.
@@ -245,7 +248,8 @@ class ChildProcessClient(MultiThreadedDebugClient):
 
         m = getattr(self.server, m_name)
         result = m(*m_args)
-        print(repr(result))
+        # ## ZZZDEBUG
+        # print(repr(result))
         return result
 
 
@@ -315,14 +319,14 @@ class ChildProcessClient(MultiThreadedDebugClient):
                         self, process, self.process_args)
 
 
-                    ## DEBUG This is a text entry point to add change the pid, if required. To be removed
-                    dlg = wx.TextEntryDialog(None, 'The current pid is : ' + repr(self.processId), 'Change PID?', repr(self.processId))
-                    try:
-                        if dlg.ShowModal() == wx.ID_OK:
-                            self.processId = int(dlg.GetValue())
-                            # Your code
-                    finally:
-                        dlg.Destroy()
+                    # ## ZZZDEBUG This is a text entry point to add change the pid, if required. To be removed
+                    # dlg = wx.TextEntryDialog(None, 'The current pid is : ' + repr(self.processId), 'Change PID?', repr(self.processId))
+                    # try:
+                    #     if dlg.ShowModal() == wx.ID_OK:
+                    #         self.processId = int(dlg.GetValue())
+                    #         # Your code
+                    # finally:
+                    #     dlg.Destroy()
 
                 self.taskHandler.addTask(evt.GetTask())
             except:
