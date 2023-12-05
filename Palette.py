@@ -16,6 +16,7 @@ print('importing Palette')
 import sys
 
 import wx
+import wx.html2
 
 import PaletteStore
 import Help, Preferences, Utils, Plugins
@@ -32,6 +33,24 @@ currentMouseOverTip = ''
 
 [wxID_BOAFRAMETOOLBARTOOLS0, wxID_BOAFRAMETOOLBARTOOLS1, 
 ] = [wx.NewIdRef() for _init_coll_toolBar_Tools in range(2)]
+
+class MyBrowser(wx.Frame):
+    def __init__(self, *args, **kwds):
+        wx.Frame.__init__(self, *args, **kwds)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.browser = wx.html2.WebView.New(self)
+        sizer.Add(self.browser, 1, wx.EXPAND, 10)
+        self.SetSizer(sizer)
+        self.SetSize((700, 700))
+
+class MyZipBrowser(wx.Frame):
+    def __init__(self, *args, **kwds):
+        wx.Frame.__init__(self, *args, **kwds)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.browser = wx.html2.WebView.New(self)
+        sizer.Add(self.browser, 1, wx.EXPAND, 10)
+        self.SetSizer(sizer)
+        self.SetSize((700, 700))
 
 class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
 
@@ -127,15 +146,15 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
 
         self.toolBar.AddSeparator()
         # Help for Boa, python and wxpython is integrated. No need for separate buttons now.
-        # self.addTool('Images/Shared/Help', _('Boa or selected component help'),
-        #       _('Show help'), self.OnHelpToolClick)
-        # self.addTool('Images/Shared/wxWinHelp', _('wxPython help'),
-        #       _('Show help'), self.OnWxWinHelpToolClick)
-        # self.addTool('Images/Shared/PythonHelp', _('Python help'),
-        #       _('Show help'), self.OnPythonHelpToolClick)
-
-        self.addTool('Images/Shared/Help', _('Boa, python and wxpython help'),
+        self.addTool('Images/Shared/Help', _('Boa or selected component help'),
               _('Show help'), self.OnHelpToolClick)
+        self.addTool('Images/Shared/wxWinHelp', _('wxPython help'),
+              _('Show help'), self.OnWxWinHelpToolClick)
+        self.addTool('Images/Shared/PythonHelp', _('Python help'),
+              _('Show help'), self.OnPythonHelpToolClick)
+
+        # self.addTool('Images/Shared/Help', _('Boa, python and wxpython help'),
+        #       _('Show help'), self.OnHelpToolClick)
 
         # Add additional helpbuttons if defined in the config file
         customHelpItems = eval(conf.get('help', 'customhelp'), {})
@@ -245,10 +264,18 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
             Help.showMainHelp(self.paletteHelpItems['boa'])
 
     def OnWxWinHelpToolClick(self, event):
-        Help.showMainHelp(self.paletteHelpItems['wx'])
+        PyHelpBrowser = MyBrowser(None, -1,title = 'wxPython 4.2.1 Help', style=wx.DEFAULT_FRAME_STYLE )
+        PyHelpBrowser.browser.LoadURL(r"https://docs.wxpython.org/index.html")
+        PyHelpBrowser.Show()
+        event.Skip()
+        # Help.showMainHelp(self.paletteHelpItems['wx'])
 
     def OnPythonHelpToolClick(self, event):
-        Help.showMainHelp(self.paletteHelpItems['python'])
+        PyHelpBrowser = MyBrowser(None, -1,title = 'Python 3.9 Help', style=wx.DEFAULT_FRAME_STYLE )
+        PyHelpBrowser.browser.LoadURL(r"C:\Users\Ian-17\Documents\boa test area\HELP work area\python\python work area\python-3.9.17-docs-html\python-3.9.17-docs-html\index.html")
+        PyHelpBrowser.Show()
+        event.Skip()
+        ## Help.showMainHelp(self.paletteHelpItems['python'])
 
     def OnCustomHelpToolClick(self, event):
         caption, helpFile = self.customHelpItems[event.GetId()]
