@@ -508,17 +508,11 @@ try:
         raise ImportError
 except ImportError:
     ExpatParser = None # expat not available
-
-################################
-# there is no point in creating an expat parser if one was already successfully imported. Should comment this out.
-###########################
 else:
     class ExpatParser:
-
         # fast expat parser for Python 2.0 and later.  this is about
         # 50% slower than sgmlop, on roundtrip testing
         def __init__(self, target):
-            self._haveReadBefore = False
             try:
                 encoding = sys.getdefaultencoding()
                 if encoding not in expat_encodings:
@@ -530,24 +524,17 @@ else:
             parser.StartElementHandler = target.start
             parser.EndElementHandler = target.end
             parser.CharacterDataHandler = target.data
-            # encoding = None   # orig code
-            # if not parser.returns_unicode:
-            #     encoding = "utf-8"
-            encoding = "utf-8"
+            encoding = None
+            if not parser.returns_unicode:
+                encoding = "utf-8"
             target.xml(encoding, None)
 
         def feed(self, data):
-            self._haveReadBefore = True
             self._parser.Parse(data, False)
 
         def close(self):
-            # if this parser has been used before, then close it properly.
-            if self._haveReadBefore:
-                self._parser.Parse('', True) # end of data
-
+            self._parser.Parse("", True) # end of data
             del self._target, self._parser # get rid of circular references
-
-
 
 class SlowParser:
     """Default XML parser (based on xmllib.XMLParser)."""
@@ -800,8 +787,7 @@ class Unmarshaller:
         except KeyError:
             pass # unknown tag ?
         else:
-            # return f(self, self._data.join(""))
-            return f(self, "".join(self._data))
+            return f(self, self._data.join(""))
 
     #
     # accelerator support
@@ -1091,7 +1077,8 @@ class Transport:
         self.send_user_agent(h)
         self.send_content(h, request_body)
 
-        errcode, errmsg, headers = h.getreply()
+        # errcode, errmsg, headers = h.getreply()    #orig
+        errcode, errmsg, headers = h.getresponse()
 
         if errcode != 200:
             raise ProtocolError(
@@ -1103,9 +1090,7 @@ class Transport:
         self.verbose = verbose
 
         try:
-            # sock = h._conn.sock     # orig
-            sock = h.sock
-
+            sock = h._conn.sock
         except AttributeError:
             sock = None
 
@@ -1145,8 +1130,7 @@ class Transport:
         if auth:
             import base64, urllib.parse
             auth = base64.encodestring(urllib.parse.unquote(auth))
-            # auth = string.join(string.split(auth), "") # get rid of whitespace
-            auth = auth.strip()
+            auth = string.join(string.split(auth), "") # get rid of whitespace  # MYTODO fix up Python2 code here
             extra_headers = [
                 ("Authorization", "Basic " + auth)
                 ]
@@ -1163,16 +1147,14 @@ class Transport:
 
     def make_connection(self, host):
         # create a HTTP connection object from a host descriptor
-        # import http.client     # orig
-        # host, extra_headers, x509 = self.get_host_info(host)
-        # return http.client.HTTPConnection(host)
+        import http.client     # orig
+        host, extra_headers, x509 = self.get_host_info(host)
+        return http.client.HTTPConnection(host)
 
         #
-        # import ExternalLib.WebDAV.httplib as httplib
-        import http.client as httplib
-        host, extra_headers, x509 = self.get_host_info(host)
-        x=httplib.HTTPConnection(host)
-        return x
+        # import httplib.client as httplib
+        # host, extra_headers, x509 = self.get_host_info(host)
+        # return httplib.HTTP(host)
 
     ##
     # Send request header.
@@ -1182,9 +1164,11 @@ class Transport:
     # @param request_body XML-RPC body.
 
     def send_request(self, connection, handler, request_body):
-        # connection.putrequest("POST", handler,)   # orig
-        connection._output("POST" + ' ' + handler + ' HTTP/1.0')
+        connection.putrequest("POST", handler,)   # orig
 
+        # response = connection.getresponse()   # orig
+        # response = connection.getreply()
+        # response.read()
 
     ##
     # Send host name.

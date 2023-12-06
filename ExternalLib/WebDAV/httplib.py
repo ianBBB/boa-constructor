@@ -27,15 +27,13 @@ second request to the same server, you create a new HTTP object.
 (This is in accordance with the protocol, which uses a new TCP
 connection for each request.)
 """
-import email
+
 import socket
 import string
 import email as mimetools
-import http.client
 
 HTTP_VERSION = 'HTTP/1.0'
 HTTP_PORT = 80
-
 
 class HTTP:
     """This class manages a connection to an HTTP server."""
@@ -48,10 +46,9 @@ class HTTP:
         to connect.  By default, httplib.HTTP_PORT is used.
 
         """
-        self.debuglevel = 1   # DEBUG normally set 0. Set to 1 for now.
+        self.debuglevel = 0
         self.file = None
         if host: self.connect(host, port)
-        self._buffer=[]
 
     def set_debuglevel(self, debuglevel):
         """Set the debug output level.
@@ -83,14 +80,10 @@ class HTTP:
         if self.debuglevel > 0: print('connect:', (host, port))
         self.sock.connect( (host, port) )
 
-    def send(self, str_mess):
+    def send(self, str):
         """Send `str' to the server."""
-        if self.debuglevel > 0: print('send:', repr(str_mess))
-        if isinstance(str_mess,(bytes)):
-            self.sock.send(str_mess)
-        else:
-            self.sock.send(str.encode(str_mess))
-
+        if self.debuglevel > 0: print('send:', repr(str))
+        self.sock.send(str)
 
     def putrequest(self, request, selector):
         """Send a request to the server.
@@ -114,25 +107,12 @@ class HTTP:
         For example: h.putheader('Accept', 'text/html')
 
         """
-        # str = '%s: %s\r\n' % (header, string.joinfields(args,'\r\n\t'))   # orig
-        assembled_str = ""
-        if header in ["POST"]:
-            assembled_str = header + ' ' + args[0]
-        else:
-            assembled_str = '%s: %s' % (header, '\r\n\t'.join(args) )
-        # self.send(str)
-        self._output(assembled_str)
-
-    def _output(self, assembled_str):
-        self._buffer.append(assembled_str)
+        str = '%s: %s\r\n' % (header, string.joinfields(args,'\r\n\t'))
+        self.send(str)
 
     def endheaders(self):
         """Indicate that the last header line has been sent to the server."""
-        if len(self._buffer) > 1:
-            self._buffer.extend(("", ""))
-            msg = "\r\n".join(self._buffer)
-            del self._buffer
-            self.send(msg)
+        self.send('\r\n')
 
     def getreply(self):
         """Get a reply from the server.
@@ -144,15 +124,13 @@ class HTTP:
 
         """
         self.file = self.sock.makefile('rb')
-        lines = self.file.readlines()
-        line=lines[0]
+        line = self.file.readline()
         if self.debuglevel > 0: print('reply:', repr(line))
         try:
-            # [ver, code, msg] = string.split(line, None, 2)
-            [ver, code, msg] = str.split(line.decode(), None, 2)
+            [ver, code, msg] = string.split(line, None, 2)
         except ValueError:
             try:
-                [ver, code] = str.split(line.decode(), None, 1)
+                [ver, code] = string.split(line, None, 1)
                 msg = ""
             except ValueError:
                 self.headers = None
@@ -160,30 +138,9 @@ class HTTP:
         if ver[:5] != 'HTTP/':
             self.headers = None
             return -1, line, self.headers
-        errcode = int(code)
-        errmsg = str.strip(msg)
-
-        # self.headers = mimetools.message.Message(self.file, 0)   # orig
-
-        # process headers into a dictionary.
-        headers = {}
-        if lines[1:]:
-            for a_header in lines[1:-1]:
-                header_key, header_value = a_header.decode().strip().split(':',1)
-                headers[header_key]=header_value.strip()
-        self.headers=headers
-
-        # from email import message_from_string
-        # from email import parser
-        # from email.parser import BytesParser
-        # message_as_bytes = b''.join(lines)
-        #
-        # request_line, headers_alone = message_as_bytes.split(b'\r\n', 1)
-        #
-        # self.headers = BytesParser().parsebytes(headers_alone)
-        # myheaders = email.message_from_file(self.file)
-        # self.headers = message_from_string((lines, 'ASCII').split('\r\n', 1)[1])
-
+        errcode = string.atoi(code)
+        errmsg = string.strip(msg)
+        self.headers = mimetools.message.Message(self.file, 0)
         return errcode, errmsg, self.headers
 
     def getfile(self):
