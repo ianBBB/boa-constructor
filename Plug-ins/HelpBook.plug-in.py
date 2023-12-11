@@ -134,7 +134,7 @@ class HelpBookItemDlg(wx.Dialog):
             return value
 
 # import os, sys, htmllib, formatter
-import os, sys, formatter
+import os, sys
 from html.parser import HTMLParser
 
 
@@ -498,13 +498,20 @@ class HelpBookFilesView(EditorViews.VirtualListCtrlView):
                     if os.path.splitext(f)[1].lower() not in ('.htm', '.html'):
                         return ''
                     docsDir = os.path.dirname(self.model.filename)
-                    try: data = Explorer.openEx(os.path.join(docsDir, f)).load()
-                    except ExplorerNodes.TransportError: return ''
-                    fmtr = formatter.NullFormatter(formatter.NullWriter())
-                    try: HtmlDocDetailParser(fmtr, breakOnTitle=True).feed(data)
-                    except BreakOnTitle as title: return str(title)
-                    except: return ''
-                    else: return ''
+                    try:
+                        data = Explorer.openEx(os.path.join(docsDir, f)).load()
+                    except ExplorerNodes.TransportError:
+                        return ''
+                    # fmtr = formatter.NullFormatter(formatter.NullWriter())
+                    fmtr = HTMLParser()
+                    try:
+                        HtmlDocDetailParser(fmtr, breakOnTitle=True).feed(data)
+                    except BreakOnTitle as title:
+                        return str(title)
+                    except:
+                        return ''
+                    else:
+                        return ''
                 finally:
                     self.cached[item] = title
             else:
