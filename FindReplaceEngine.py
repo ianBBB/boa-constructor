@@ -90,9 +90,11 @@ class FindReplaceEngine:
            (result[0] > view.GetCurrentPos() and self.reverse and self.wrap):
             view.model.editor.setStatus(_('Search wrapped'), 'Warning', ringBell=1)
 
+        # find the line number, move to it and then highlight the pattern
+        targetLine = view.LineFromPosition(result[0])
+        view.GotoLine(targetLine)
         view.SetSelection(result[0], result[1])
 
-        view.EnsureVisible(view.LineFromPosition(result[0]))
 
     def findNextInSource(self, view):
         self.findInSource(view, self.findHistory[-1])
