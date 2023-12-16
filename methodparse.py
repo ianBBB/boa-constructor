@@ -281,13 +281,13 @@ idc = '[A-Za-z_][A-Za-z0-9_]*'
 idc2 = '[A-Za-z_][A-Za-z0-9_/.]*'
 # self.name=class(params)
 is_constr = re.compile('^[ \t]*self[.](?P<name>'+idc+')[ \t]*=[ \t]*(?P<class>'+\
-  idc2+')\(((?P<params>.*)(\)|,))?$')
+  idc2+r')\(((?P<params>.*)(\)|,))?$')
 # class.__init__(self,params)
 is_constr_frm = re.compile('^[ \t]*(?P<class>'+idc2+\
-  ')[.]__init__\(self,[ \t]*((?P<params>.*)(\)|,))?$')
+  r')[.]__init__\(self,[ \t]*((?P<params>.*)(\)|,))?$')
 # self.name=self.factory.method(params)
 is_constr_factory = re.compile('^[ \t]*self[.](?P<name>'+idc+')[ \t]*=[ \t]*self[.](?P<factory>'+\
-  idc+')[.](?P<method>'+idc+')\((?P<params>.*)(\)|,)$')
+  idc+r')[.](?P<method>'+idc+r')\((?P<params>.*)(\)|,)$')
 
 class ConstructorParse(PerLineParser):
     def __init__(self, line=None, comp_name='', class_name='', params=None):
@@ -370,7 +370,7 @@ class ConstructorParse(PerLineParser):
 coll_init = '_init_coll_'
 idp = '[A-Za-z_][A-Za-z0-9_.]*'
 # self.name(params)
-is_prop = re.compile('^[ \t]*self[.](?P<name>'+idp+')[ \t]*\([ \t]*(?P<params>.*)[ \t]*(\)|,)$')
+is_prop = re.compile(r'^[ \t]*self[.](?P<name>'+idp+r')[ \t]*\([ \t]*(?P<params>.*)[ \t]*(\)|,)$')
 class PropertyParse(PerLineParser):
     def __init__(self, line=None, comp_name='', prop_setter='', params=None, prop_name=''):
         self.comp_name = comp_name
@@ -439,8 +439,8 @@ def ctrlNameFromMeth(meth):
     return '_'.join(meth.split('_')[3:-1])
 
 # self._init_coll_method(comp_name, params)
-is_coll_init = re.compile('^[ \t]*self[.](?P<method>'+coll_init+idp+\
-      ')[ \t]*\((?P<comp_name>'+idp+')[ \t,]*(?P<params>.*)(\)|,)$')
+is_coll_init = re.compile(r'^[ \t]*self[.](?P<method>'+coll_init+idp+\
+      r')[ \t]*\((?P<comp_name>'+idp+r')[ \t,]*(?P<params>.*)(\)|,)$')
 
 class CollectionInitParse(PerLineParser):
     def __init__(self, line=None, comp_name='', method='', params=None, prop_name=''):
@@ -479,8 +479,8 @@ def decorateParseItems(parseItems, ctrlName, frameName):
 
 #item_parent = 'parent'
 # ident.method(params)
-is_coll_item_init = re.compile('^[ \t]*(?P<ident>'+idp+')[.](?P<method>'+idc+\
-      ')[ \t]*\([ \t,]*(?P<params>.*)(\)|,)')
+is_coll_item_init = re.compile(r'^[ \t]*(?P<ident>'+idp+r')[.](?P<method>'+idc+\
+      r')[ \t]*\([ \t,]*(?P<params>.*)(\)|,)')
 class CollectionItemInitParse(PerLineParser):
     def __init__(self, line=None, comp_name='', method='', params=None):
         self.comp_name = comp_name
@@ -548,7 +548,7 @@ class CollectionItemInitParse(PerLineParser):
 
 # EVT_evtname(params)
 #is_event = re.compile('^[ \t]*EVT_(?P<evtname>'+idc+')[ \t]*\([ \t]*(?P<params>.*)(\)|,)$')
-is_event = re.compile('^self(?P<compname>[.]'+idc2+')*\.Bind\([ \t]*(?P<evtname>'+idc2+'),[ \t]*(?P<otherparams>.*)(\)|,)$')
+is_event = re.compile(r'^self(?P<compname>[.]'+idc2+r')*\.Bind\([ \t]*(?P<evtname>'+idc2+r'),[ \t]*(?P<otherparams>.*)(\)|,)$')
 
 ##class EventParse(PerLineParser):
 ##    def __init__(self, line=None, comp_name='', event_name='',
