@@ -291,7 +291,7 @@ def openPyInterpChooser(editor):
         pyIntpPath = dlg.txtPyIntpPath.GetValue()
 
         if pyIntpPath != Preferences.pythonInterpreterPath:
-            Plugins.updateRcFile('prefs.rc.py', 'pythonInterpreterPath', repr(pyIntpPath))
+            Plugins.updateRcFile('prefs_rc.py', 'pythonInterpreterPath', repr(pyIntpPath))
 
             for ver, path in dlg.installedPaths:
                 if path == pyIntpPath:
@@ -301,7 +301,7 @@ def openPyInterpChooser(editor):
                     if path == pyIntpPath:
                         break
                 else:
-                    Plugins.updateRcFile('prefs.plug-ins.rc.py', 'picExtraPaths',
+                    Plugins.updateRcFile('prefs_plug-ins_rc.py', 'picExtraPaths',
                         repr(Preferences.picExtraPaths+[pyIntpPath]))
     finally:
         dlg.Destroy()

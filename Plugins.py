@@ -212,7 +212,7 @@ def registerLanguageSTCStyle(name, lang, STCClass, stylesFile, insertPos=None):
               (name, lang, STCClass, stylesFile ))
 
 def registerPreference(pluginName, prefName, defPrefValSrc, docs=[], info=''):
-    """ Define a plug-in preference. Added to prefs.plug-ins.rc.py in needed """
+    """ Define a plug-in preference. Added to prefs_plug-ins_rc.py in needed """
 
     def addBlankLine(module, lineNo):
         module.addLine('', lineNo)

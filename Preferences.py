@@ -1,6 +1,6 @@
 -4#----------------------------------------------------------------------
 # Name:        Preferences.py
-# Purpose:     Global settings. Populated by resource files *.rc.py
+# Purpose:     Global settings. Populated by resource files *_rc.py
 #
 # Author:      Riaan Booysen
 #
@@ -12,7 +12,7 @@
 
 """ The global preferences module shared by most Boa modules.
 
-This namespace is populated by *.rc.py files from the selected
+This namespace is populated by *_rc.py files from the selected
 resource configuration.
 
 The resource config files are version checked and updated from the
@@ -99,7 +99,7 @@ if os.path.isdir(path):
     rcPath=path
 
 
-# no editors for these settings yet, can be redefined in prefs.rc.py if needed
+# no editors for these settings yet, can be redefined in prefs_rc.py if needed
 # e.g. wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, 'Courier New')
 eoErrOutFont = wx.NORMAL_FONT
 

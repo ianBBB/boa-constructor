@@ -12,7 +12,7 @@
 
 print('importing Models.wxPythonEditorModels')
 
-import re, string, os, imp, sys   # , new
+import re, string, os, sys
 
 import wx
 

@@ -21,8 +21,8 @@ import sys, os, string, time, warnings, datetime
 import importlib
 import trace
 
-#sys.stdout = sys.__stdout__#open('stdout.txt', 'w')
-#sys.stderr = sys.__stderr__#open('stderr.txt', 'w')
+sys.stdout = sys.__stdout__#open('stdout.txt', 'w')
+sys.stderr = sys.__stderr__#open('stderr.txt', 'w')
 
 #try: import psyco; psyco.full()
 #except ImportError: pass
@@ -506,12 +506,12 @@ modules ={'About': [0, 'About box and Splash screen', 'About.py'],
                  'moduleparse.py'],
  'ndiff': [0, '', 'ExternalLib/ndiff.py'],
  'popen2import': [0, '', 'popen2import.py'],
- 'prefs.gtk.rc': [0, '', 'Config/prefs.gtk.rc.py'],
- 'prefs.keys.rc': [0, '', 'Config/prefs.keys.rc.py'],
- 'prefs.mac.rc': [0, '', 'Config/prefs.mac.rc.py'],
- 'prefs.msw.rc': [0, '', 'Config/prefs.msw.rc.py'],
- 'prefs.plug-ins.rc': [0, '', 'Config/prefs.plug-ins.rc.py'],
- 'prefs.rc': [0, '', 'Config/prefs.rc.py'],
+ 'prefs_gtk_rc': [0, '', 'Config/prefs_gtk_rc.py'],
+ 'prefs_keys_rc': [0, '', 'Config/prefs_keys_rc.py'],
+ 'prefs_mac_rc': [0, '', 'Config/prefs_mac_rc.py'],
+ 'prefs_msw_rc': [0, '', 'Config/prefs_msw_rc.py'],
+ 'prefs_plug-ins_rc': [0, '', 'Config/prefs_plug-ins_rc.py'],
+ 'prefs_rc': [0, '', 'Config/prefs_rc.py'],
  'reindent': [0, '', 'ExternalLib/reindent.py'],
  'relpath': [0, '', 'relpath.py'],
  'sourceconst': [0, 'Source generation constants', 'sourceconst.py'],
@@ -712,7 +712,7 @@ def main(argv=None):
             '    '+str(error),
             '\nMake sure you have sufficient rights to copy these files, and that ',
             'the files are not read only. You may turn off this attempted ',
-            'installation in prefs.rc.py : installBCRTL'])
+            'installation in prefs_rc.py : installBCRTL'])
 
     if argv is not None:
         global doDebug, startupfile, startupModules, constricted, emptyEditor, \

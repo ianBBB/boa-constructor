@@ -168,7 +168,7 @@ else:
             if dlg.ShowModal() == wx.ID_OK:
                 lang, ident = dlg.GetLanguageInfo()
                 Preferences.i18nLanguage = lang
-                Plugins.updateRcFile('prefs.rc.py', 'i18nLanguage', 'wx.'+ident)
+                Plugins.updateRcFile('prefs_rc.py', 'i18nLanguage', 'wx.'+ident)
         finally:
             dlg.Destroy()
     

@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Name:        prefs.plug-ins.rc.py
+# Name:        prefs_plug-ins_rc.py
 # Purpose:     A module for storing Plug-in file preferences
 #
 # Created:     2003

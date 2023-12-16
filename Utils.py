@@ -956,7 +956,7 @@ def wxPyExceptHook(type, value, trace):
 
 #-------------------------------------------------------------------------------
 
-coding_re = re.compile("coding[:=]\s*([-\w_.]+)")
+coding_re = re.compile(r"coding[:=]\s*([-\w_.]+)")
 
 def coding_spec(str):
     """Return the encoding declaration according to PEP 263.

@@ -45,8 +45,8 @@ def createStringsFile(comments, breaks):
 if __name__ == '__main__':
     comments = []
     breaks = {}
-    parsePrefsFile('../Config/prefs.rc.py', comments, breaks)
-    parsePrefsFile('../Config/prefs.msw.rc.py', comments, breaks)
+    parsePrefsFile('../Config/prefs_rc.py', comments, breaks)
+    parsePrefsFile('../Config/prefs_msw_rc.py', comments, breaks)
     
     createStringsFile(comments, breaks)
     #print comments
