@@ -1,6 +1,7 @@
 #Boa:Dialog:ModuleFinderDlg
 
-import sys, imp
+import sys
+import importlib as imp
 
 import wx
 import os

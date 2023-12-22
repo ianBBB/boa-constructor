@@ -10,7 +10,7 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 print('importing Explorers.PrefsExplorer')
-import os, sys, glob, pprint, imp
+import os, sys, glob, pprint
 import types
 
 import wx

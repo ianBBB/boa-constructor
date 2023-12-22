@@ -60,7 +60,8 @@ class CodeTemplateManager:
                 files.extend([os.path.join(cp, f) 
                               for f in glob.glob(os.path.join(cp, '*.cfg'))])
 
-        self.conf = configparser.SafeConfigParser()
+        # self.conf = configparser.SafeConfigParser()
+        self.conf = configparser.ConfigParser()
         self.conf.read(files)
     
     def getNames(self, language):
