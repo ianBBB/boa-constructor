@@ -462,7 +462,7 @@ class PseudoFileErrTC(Utils.PseudoFile):
 
 #-------------------------------------------------------------------------------
 
-EditorHelper.imgPyCrust = EditorHelper.addPluginImgs('Images\Editor\PyCrust.png')
+EditorHelper.imgPyCrust = EditorHelper.addPluginImgs(r'Images\Editor\PyCrust.png')
 
 class PyCrustShellEditor(wx.SplitterWindow):
     def __init__(self, parent, wId):

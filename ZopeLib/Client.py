@@ -119,6 +119,9 @@ from io import IOBase
 # from io.stringIO import strip, split, atoi, join, rfind, translate, maketrans, replace, lower
 from urllib.parse import urlparse
 
+class BadReply(Exception):
+    pass
+
 class Function:
     username=None
     password=None
@@ -277,7 +280,7 @@ class Function:
             rq.append('%s: %s' % (n,v))
         if self.username and self.password:
             # c=replace(encodestring('%s:%s' % (self.username,self.password)),'\012','')
-            c = standard_b64encode('%s:%s' % (self.username, self.password)).replace('\012', '')
+            c = standard_b64encode('%s:%s' % (self.username, self.password)).replace(r'\012', '')
             rq.append('Authorization: Basic %s' % c)
         rq.append(MultiPart(d).render())
         rq=str.join(rq,'\r\n')
@@ -294,10 +297,12 @@ class Function:
                 [ver, ec, em] = line.split(None, 2)  # split(line, None, 2)
             except ValueError:
                 # raise 'BadReply','Bad reply from server: '+line
-                raise 'BadReply'('Bad reply from server: ' + line)
+                # raise 'BadReply'('Bad reply from server: ' + line)
+                raise BadReply('Bad reply from server: ' + str(line))
             if ver[:5] != 'HTTP/':
                 # raise 'BadReply','Bad reply from server: '+line
-                raise 'BadReply'('Bad reply from server: ' + line)
+                # raise 'BadReply'('Bad reply from server: ' + line)
+                raise BadReply('Bad reply from server: ' + str(line))
 
             ec=int(ec)
             em=em.strip()

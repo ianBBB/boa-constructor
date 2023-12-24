@@ -255,7 +255,7 @@ def test():
           '    err.parse()\n',
           'AttributeError: parse\n']
 
-    tb_answ = '''[['AttributeError', 'parse']
+    tb_answ = r'''[['AttributeError', 'parse']
 [File "Views\AppViews.py", line 172
     self.model.run()
 ,

@@ -47,9 +47,9 @@ defCreateClass = wsfix('''def create(parent):
 
 ''')
 
-srchWindowIdsLC = '\[wx.NewIdRef\(\) for %s in range\((?P<count>\d+)\)\]'
-srchWindowIds = '\[(?P<winids>[A-Za-z0-9_, ]*)\] = ' + srchWindowIdsLC
-srchWindowIdsCont = '(?P<any>.*)\] = ' + srchWindowIdsLC
+srchWindowIdsLC = r'\[wx.NewIdRef\(\) for %s in range\((?P<count>\d+)\)\]'
+srchWindowIds = r'\[(?P<winids>[A-Za-z0-9_, ]*)\] = ' + srchWindowIdsLC
+srchWindowIdsCont = r'(?P<any>.*)\] = ' + srchWindowIdsLC
 defWindowIdsCont = wsfix('] = [wx.NewIdRef() for %(idIdent)s in range(%(idCount)d)]\n')
 defWindowIds = wsfix('[%(idNames)s') + defWindowIdsCont
 
