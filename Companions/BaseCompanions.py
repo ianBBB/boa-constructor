@@ -548,6 +548,7 @@ class DesignTimeCompanion(Companion):
                        'self, event', [sourceconst.bodyIndent + 'event.Skip()'])
             else:
                 # remove the event if the trigger meth is 'delete'
+                model = self.designer.model
                 if module and evt.prev_trigger_meth in module.classes[model.main].methods:
                     module.removeMethod (model.main, evt.prev_trigger_meth)
     def writeCollections(self, output, collDeps, stripFrmId=''):

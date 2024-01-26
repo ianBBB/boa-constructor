@@ -121,11 +121,11 @@ class ObjectCollection:
         self.renameFrameList(self.events, name, new_name)
 
     def deleteCtrl(self, name):
-        for list in (self.creators, self.properties, self.events):
+        for Cntrlist in (self.creators, self.properties, self.events):
             i = 0
-            while i < len(list):
-                if list[i].comp_name == name:
-                    del list[i]
+            while i < len(Cntrlist):
+                if Cntrlist[i].comp_name == name:
+                    del Cntrlist[i]
                 else:
                     i = i + 1
 

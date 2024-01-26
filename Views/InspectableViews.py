@@ -707,6 +707,11 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         pass
 
     def deleteCtrl(self, name, parentRef = None):
+        # remove the controls events first
+        for each_event in self.model.objectCollections[self.collectionMethod].events:
+            if each_event.comp_name == name:
+                self.model.getModule().removeMethod(self.model.main,each_event.trigger_meth)
+
         self.model.objectCollections[self.collectionMethod].deleteCtrl(name)
         del self.objectOrder[self.objectOrder.index(name)]
         del self.objects[name]

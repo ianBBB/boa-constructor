@@ -1538,7 +1538,9 @@ class InspectorNotebook(wx.Notebook):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
+    import Palette
+    Preferences.initScreenVars()
     frame = InspectorFrame(None)
     frame.Show(True)
     frame.initSashes()
