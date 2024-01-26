@@ -124,7 +124,7 @@ class ControlAlignmentFrame(wx.Dialog):
 #            elif self.choices[ver] == 'Center in window': pass
 
             if domove:
-                sel.position = wx.Point(newX, newY)
+                sel.position = wx.Point(int(round(newX)), int(round(newY)))
                 sel.dragging = True
                 sel.moveRelease()
                 sel.positionUpdate()
