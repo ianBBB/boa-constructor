@@ -151,7 +151,6 @@ class STCPrintDlg(wx.Dialog):
         frame.Initialize()
         frame.Show(True)
 
-
     def OnDoPrint(self, event):
         pdd = wx.PrintDialogData()
         pdd.SetPrintData(self.printData)
