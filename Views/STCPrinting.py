@@ -213,7 +213,7 @@ class STCPrintout(wx.Printout):
 
         # calculate sizes including margin and scale
         dc = self.GetDC()
-        # dw, dh = dc.GetSizeTuple()   # orig
+        # dw, dh = dc.GetSizeTuple()    # orig
         dw, dh = dc.GetSize()
 
         mw = self.margin*dw
