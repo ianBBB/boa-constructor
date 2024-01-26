@@ -37,7 +37,7 @@ Requires wxPython 4.2 or higher, Python 3.9 or higher.
 
 
 Copyright:
-Ian Baker 2022 - 2023
+Ian Baker 2022 - 2024
 ibak6837@bigpond.net.au
 
 Chaiwat Suttipongsakul 2012 - 2014
