@@ -47,12 +47,20 @@ class STCPrintDlg(wx.Dialog):
               style=wx.DEFAULT_DIALOG_STYLE, title=_('Print Source'))
         self.SetClientSize(wx.Size(394, 162))
 
+        # self.rdbColourMode = wx.RadioBox(choices=[_('Normal'), _('Black on white'),      #orig
+        #       _('Colour on white'), _('Colour on white default background')],
+        #       id=wxID_STCPRINTDLGRDBCOLOURMODE, label=_('Colour Mode'),
+        #       majorDimension=1, name='rdbColourMode', parent=self,
+        #       point=wx.Point(8, 8), size=wx.Size(216, 112),
+        #       style=wx.RA_SPECIFY_COLS)
+
         self.rdbColourMode = wx.RadioBox(choices=[_('Normal'), _('Black on white'),
               _('Colour on white'), _('Colour on white default background')],
               id=wxID_STCPRINTDLGRDBCOLOURMODE, label=_('Colour Mode'),
               majorDimension=1, name='rdbColourMode', parent=self,
-              point=wx.Point(8, 8), size=wx.Size(216, 112),
+              pos=wx.Point(8, 8), size=wx.Size(216, 112),
               style=wx.RA_SPECIFY_COLS)
+
 
         self.ckbFilename = wx.CheckBox(id=wxID_STCPRINTDLGCKBFILENAME,
               label=_('Filename at top'), name='ckbFilename', parent=self,
@@ -135,7 +143,7 @@ class STCPrintDlg(wx.Dialog):
         printout1 = self.createSTCPrintout()
         printout2 = self.createSTCPrintout()
         self.preview = wx.PrintPreview(printout1, printout2, self.printData)
-        if not self.preview.Ok():
+        if not self.preview.IsOk():
             wx.LogError(_('An error occured while preparing preview.'))
             return
 
@@ -205,7 +213,8 @@ class STCPrintout(wx.Printout):
 
         # calculate sizes including margin and scale
         dc = self.GetDC()
-        dw, dh = dc.GetSizeTuple()
+        # dw, dh = dc.GetSizeTuple()   # orig
+        dw, dh = dc.GetSize()
 
         mw = self.margin*dw
         mh = self.margin*dh
