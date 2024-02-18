@@ -128,7 +128,8 @@ class SizerItemsCDTC(CollectionDTC):
     propName = 'Items'
     displayProp = 0
     indexProp = '(None)'
-    insertionMethod = 'AddWindow'
+    # insertionMethod = 'AddWindow'   # orig
+    insertionMethod = 'Add'
     deletionMethod = 'Remove'
 
     additionalMethods = { 'AddSizer': (_('Add sizer'), 0, '(None)'),
@@ -170,7 +171,8 @@ class SizerItemsCDTC(CollectionDTC):
         if method is None:
             method = self.insertionMethod
 
-        if method == 'AddWindow':
+        # if method == 'AddWindow':   # orig
+        if method == 'Add':
             return {0: 'None', 1: '0', 'flag': '0', 'border': '0'}
         elif method == 'AddSizer':
             return {0: 'None', 1: '0', 'flag': '0', 'border': '0'}
