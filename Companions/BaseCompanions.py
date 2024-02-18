@@ -1317,9 +1317,18 @@ class CollectionDTC(DesignTimeCompanion):
             method = self.insertionMethod
         args = []
         kwargs = {}
-        paramItems_dict= self.designTimeDefaults(params, method).items()
-        paramItems = list(paramItems_dict)
-        paramItems.sort()
+        paramItems_list= list(self.designTimeDefaults(params, method).items())
+
+        int_list=[]
+        str_list=[]
+        for item in paramItems_list:
+            if isinstance(item[0], str):
+                str_list.append(item)
+            else:
+                int_list.append(item)
+        str_list.sort()
+        int_list.sort()
+        paramItems = int_list + str_list
         for k, v in paramItems:
             if isinstance(k, type(0)):
                 args.append(v)
