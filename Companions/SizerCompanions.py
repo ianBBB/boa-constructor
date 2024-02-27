@@ -155,7 +155,8 @@ class SizerItemsCDTC(CollectionDTC):
 
     def constructor(self):
         tcl = self.textConstrLst[self.index]
-        if tcl.method == 'AddWindow':
+        # if tcl.method == 'AddWindow':   #orig
+        if tcl.method == 'Add':
             return {'Window': 0, 'Proportion': 1, 'Flag': 'flag',
                     'Border': 'border'}
         elif tcl.method == 'AddSizer':
@@ -237,9 +238,15 @@ class SizerItemsCDTC(CollectionDTC):
         if method is None:
             method = self.insertionMethod
 
-        if method in ('AddWindow', 'AddSizer', 'Insert'):
-            if method in ('AddWindow', 'AddSizer'): ctrlIdx = 0
-            elif method == 'Insert':                ctrlIdx = 1
+        # if method in ('AddWindow', 'AddSizer', 'Insert'): #orig
+        #     if method in ('AddWindow', 'AddSizer'): ctrlIdx = 0
+        #     elif method == 'Insert':                ctrlIdx = 1
+
+        if method in ('Add', 'AddSizer', 'Insert'):
+            if method in ('Add', 'AddSizer'):
+                ctrlIdx = 0
+            elif method == 'Insert':
+                ctrlIdx = 1
 
             if vals[ctrlIdx] != 'None':
                 srcRef = vals[ctrlIdx]
@@ -253,7 +260,9 @@ class SizerItemsCDTC(CollectionDTC):
                     dtd[ctrlIdx] = self.designer.controllerView.getAllObjects()[srcRef]
                     if method == 'AddSizer':
                         dtd[ctrlIdx]._sub_sizer = self.control
-                    elif method == 'AddWindow':
+                    # elif method == 'AddWindow': #orig
+                    #     dtd[ctrlIdx]._in_sizer = self.control
+                    elif method == 'Add':
                         dtd[ctrlIdx]._in_sizer = self.control
                     return dtd
 
@@ -263,7 +272,8 @@ class SizerItemsCDTC(CollectionDTC):
         if method is None:
             method = self.insertionMethod
 
-        if (method in ('AddWindow', 'AddSizer') and params[0] == 'None') or \
+        # if (method in ('AddWindow', 'AddSizer') and params[0] == 'None') or \ # orig
+        if (method in ('Add', 'AddSizer') and params[0] == 'None') or \
            (method == 'Insert' and params[1] == 'None'):
             defaults = self.designTimeDefaults(params, method)
             if method == 'Insert':

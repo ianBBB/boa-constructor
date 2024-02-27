@@ -915,8 +915,11 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                                     self.inspector, destSizerCmpn,
                                     destSizerCmpn.designer, destSizer)
                                 if collEditView is not None:
+                                    # ci = collEditView.companion.appendItem(  #orig
+                                    #       method='AddSizer',
+                                    #       srcParams={0: 'self.%s'%ctrlName})
                                     ci = collEditView.companion.appendItem(
-                                          method='AddSizer',
+                                          method='Add',
                                           srcParams={0: 'self.%s'%ctrlName})
                                     collEditView.refreshCtrl()
                                     collEditView.selectObject(
@@ -981,8 +984,10 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                             self.inspector, destSizerCmpn,
                             destSizerCmpn.designer, destSizer)
                         if collEditView is not None:
-                            ci = collEditView.companion.appendItem(
+                            ci = collEditView.companion.appendItem(   #orig
                                   srcParams={0: 'self.%s'%ctrlName})
+                            # ci = collEditView.companion.appendItem(
+                            #       srcParams={0: f"'{ctrlName}'"})
                             collEditView.refreshCtrl()
                             collEditView.selectObject(
                                   collEditView.frame.itemList.GetItemCount() -1)
