@@ -986,8 +986,6 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                         if collEditView is not None:
                             ci = collEditView.companion.appendItem(   #orig
                                   srcParams={0: 'self.%s'%ctrlName})
-                            # ci = collEditView.companion.appendItem(
-                            #       srcParams={0: f"'{ctrlName}'"})
                             collEditView.refreshCtrl()
                             collEditView.selectObject(
                                   collEditView.frame.itemList.GetItemCount() -1)

@@ -170,7 +170,7 @@ class PropertyEditor:
                 self.setCtrlValue(cv, v)
                 self.refreshCompCtrl()
                 self.persistValue(self.valueAsExpr())
-                # When sub properties post, update their main properies
+                # When sub properties post, update their main properties
                 if self.ownerPropEdit:
                     self.companion.updateOwnerFromObj()
                     self.ownerPropEdit.initFromComponent()

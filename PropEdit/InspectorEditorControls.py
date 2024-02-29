@@ -127,11 +127,23 @@ class TextCtrlIEC(InspectorEditorControl):
 class SpinCtrlIEC(InspectorEditorControl):
     def createControl(self, parent, value, idx, sizeX):
         value = self.propEditor.valueToIECValue()
-        self.editorCtrl = wx.SpinCtrl(parent, self.wID, value,
-              (-2, idx*Preferences.oiLineHeight -2),
-              (sizeX, Preferences.oiLineHeight+3), style=wx.SP_VERTICAL,
-              # max=2L**31-1, min=-(2L**31-1))
-              max=sys.maxsize, min=-sys.maxsize)
+        # self.editorCtrl = wx.SpinCtrl(parent, self.wID, value,
+        #       (-2, idx*Preferences.oiLineHeight -2),
+        #       (sizeX, Preferences.oiLineHeight+3), style=wx.SP_VERTICAL,
+        #       # max=2L**31-1, min=-(2L**31-1))
+        #       max=sys.maxsize, min=-0)
+
+        # self.editorCtrl = wx.SpinCtrl(parent, self.wID, value,
+        #       (-2, idx*Preferences.oiLineHeight -2),
+        #       (sizeX, Preferences.oiLineHeight+3), style=wx.SP_VERTICAL,
+        #       max=sys.maxsize, min=-0)
+
+
+        self.editorCtrl = wx.SpinCtrl(parent, self.wID,
+                    value,
+                    (-2, idx * Preferences.oiLineHeight - 2),
+                    (sizeX, Preferences.oiLineHeight+3),
+                    wx.SP_VERTICAL)
         parent.Bind(wx.EVT_TEXT_ENTER, self.OnSelect, id=self.wID)
         parent.Bind(wx.EVT_SPINCTRL, self.OnSelect, id=self.wID)
         InspectorEditorControl.createControl(self)

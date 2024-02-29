@@ -262,7 +262,18 @@ class PerLineParser:
     def KVParamsAsText(self, params):
         kvlist = []
         sortedkeys = list(params.keys())
-        sortedkeys.sort()
+        # sortedkeys.sort()   #orig
+
+        int_list=[]
+        str_list=[]
+        for item in sortedkeys:
+            if isinstance(item, str):
+                str_list.append(item)
+            else:
+                int_list.append(item)
+        str_list.sort()
+        int_list.sort()
+        sortedkeys = int_list + str_list
         for key in sortedkeys:
             if isinstance(key, type(0)):
                 kvlist.append(params[key])

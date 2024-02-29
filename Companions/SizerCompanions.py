@@ -48,7 +48,8 @@ class BlankSizer(wx.BoxSizer):
         the window or sizer """
     def __init__(self):
         wx.BoxSizer.__init__(self, wx.VERTICAL)
-        self.AddSpacer((24, 24))
+        # self.AddSpacer((24, 24))    # orig
+        self.AddSpacer(24)
 
 class SizerDTC(UtilityDTC):
     host = 'Sizers'
@@ -281,7 +282,9 @@ class SizerItemsCDTC(CollectionDTC):
                 import warnings; warnings.warn('Insert called with BlankSizer')
             else:
                 proportion = defaults[1]
-            self.control.AddSizer(BlankSizer(), proportion, defaults['flag'],
+            # self.control.AddSizer(BlankSizer(), proportion, defaults['flag'],   # orig
+            #                       defaults['border'])                           # orig
+            self.control.Add(BlankSizer(), proportion, defaults['flag'],
                                   defaults['border'])
         else:
             CollectionDTC.applyDesignTimeDefaults(self, params, method)
