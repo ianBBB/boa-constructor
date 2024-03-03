@@ -49,7 +49,7 @@ class BlankSizer(wx.BoxSizer):
     def __init__(self):
         wx.BoxSizer.__init__(self, wx.VERTICAL)
         # self.AddSpacer((24, 24))    # orig
-        self.AddSpacer(24)
+        self.Add(24,24)
 
 
 class SizerDTC(UtilityDTC):
