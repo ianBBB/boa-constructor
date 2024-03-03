@@ -51,6 +51,7 @@ class BlankSizer(wx.BoxSizer):
         # self.AddSpacer((24, 24))    # orig
         self.AddSpacer(24)
 
+
 class SizerDTC(UtilityDTC):
     host = 'Sizers'
     def __init__(self, name, designer, objClass):
@@ -197,7 +198,7 @@ class SizerItemsCDTC(CollectionDTC):
         CollectionDTC.appendItem(self, method, srcParams)
         
         self.recreateSizers()
-        #self.updateGUI()
+        self.updateGUI()
 
     def deleteItem(self, idx):
         CollectionDTC.deleteItem(self, idx)

@@ -202,7 +202,6 @@ class CollectionEditor(wx.Frame, Utils.FrameRestorerMixin):
             self.collEditView.deselectObject()
 
     def OnNewClick(self, event):
-        # Boa.myPaused.trace_on()
         ni = self.collEditView.companion.appendItem()
         self.collEditView.refreshCtrl()
         self.selectObject(self.itemList.GetItemCount() -1)
