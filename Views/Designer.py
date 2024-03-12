@@ -964,7 +964,8 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                         if isinstance(destSizerCmpn, type(())):
                             destSizerCmpn, sizerItemIdx = destSizerCmpn
                             tcl = destSizerCmpn.textConstrLst[sizerItemIdx]
-                            tcl.method = 'AddWindow'
+                            # tcl.method = 'AddWindow'    #orig
+                            tcl.method = 'Add'
                             tcl.params[0] = 'self.%s'%ctrlName
                             if tcl.params[1] and tcl.params[1][0] != '(' and tcl.params[1][-1] != ')':
                                 tcl.params[1] = '0'
