@@ -226,7 +226,34 @@ class BaseConstrFlagsDTC(HelperDTC):
         flagsVal = self.eval(flagsSrc)
         ctrl = self.ownerCompn.control
         if hasattr(ctrl, 'SetWindowStyleFlag'):
-            ctrl.SetWindowStyleFlag(flagsVal)
+            if ctrl.ClassName == 'wxListCtrl':
+                try:
+                    ctrl.SetWindowStyleFlag(flagsVal)
+                except:
+                    # dlg = wx.MessageDialog(self,
+                    #                        'wxPython detected a problem with your style flags.\n' +
+                    #                        'Your flags are set to;\n\n' +
+                    #                        flagsSrc + '\n\n' +
+                    #                        'There can only be exactly one mode setting style. These are\n' +
+                    #                        'wx.LC_LIST, wx.LC_REPORT, wx.LC_VIRTUAL, wx.LC_ICON and wx.LC_SMALL_ICON.\n\n' +
+                    #                        'Another restriction is that you cannot set contradictory flags such as;\n\n' +
+                    #                        'wx.NO_BORDER | wx.RAISED_BORDER\n\n' +
+                    #                        'Please review your flags and try again.',
+                    #                        'Incorrect style flags', wx.OK | wx.ICON_INFORMATION)
+                    # try:
+                    #     result = dlg.ShowModal()
+                    # finally:
+                    #     dlg.Destroy()
+                    print('wxPython detected a problem with your style flags.\n' +
+                                           'Your flags are set to;\n\n' +
+                                           flagsSrc + '\n\n' +
+                                           'There can only be EXACTLY ONE mode setting style. These are;\n\n' +
+                                           'wx.LC_LIST, wx.LC_REPORT, wx.LC_VIRTUAL, wx.LC_ICON and wx.LC_SMALL_ICON.\n\n' +
+                                           'Another restriction is that you cannot set contradictory flags such as;\n\n' +
+                                           'wx.NO_BORDER | wx.RAISED_BORDER\n\n' +
+                                           'Please review your flags and try again.')
+            else:
+                ctrl.SetWindowStyleFlag(flagsVal)
 
 class WindowStyleDTC(BaseConstrFlagsDTC):
     paramName = 'style'

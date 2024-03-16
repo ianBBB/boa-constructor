@@ -36,7 +36,8 @@ class ListCtrlDTC(Constructors.MultiItemCtrlsConstr, WindowDTC):
         self.windowStyles = ['wx.LC_LIST', 'wx.LC_REPORT', 'wx.LC_VIRTUAL', 'wx.LC_ICON',
                              'wx.LC_SMALL_ICON', 'wx.LC_ALIGN_TOP',
                              'wx.LC_ALIGN_LEFT', 'wx.LC_AUTOARRANGE',
-                             'wx.LC_USER_TEXT', 'wx.LC_EDIT_LABELS',
+                             # 'wx.LC_USER_TEXT', 'wx.LC_EDIT_LABELS',   # orig
+                             'wx.LC_EDIT_LABELS',
                              'wx.LC_NO_HEADER', 'wx.LC_SINGLE_SEL',
                              'wx.LC_SORT_ASCENDING', 'wx.LC_SORT_DESCENDING',
                              'wx.LC_HRULES', 'wx.LC_VRULES'] + self.windowStyles
