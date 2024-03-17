@@ -230,6 +230,10 @@ class BaseConstrFlagsDTC(HelperDTC):
                 try:
                     ctrl.SetWindowStyleFlag(flagsVal)
                 except:
+                    # This does not work. The first parameter has to be the graphics container that the dialogue will be
+                    # displayed in (like a panel or frame) but "self" here is a list control and I do not know how to
+                    # get a reference to next level up graphic component.
+                    #
                     # dlg = wx.MessageDialog(self,
                     #                        'wxPython detected a problem with your style flags.\n' +
                     #                        'Your flags are set to;\n\n' +
@@ -251,7 +255,12 @@ class BaseConstrFlagsDTC(HelperDTC):
                                            'wx.LC_LIST, wx.LC_REPORT, wx.LC_VIRTUAL, wx.LC_ICON and wx.LC_SMALL_ICON.\n\n' +
                                            'Another restriction is that you cannot set contradictory flags such as;\n\n' +
                                            'wx.NO_BORDER | wx.RAISED_BORDER\n\n' +
-                                           'Please review your flags and try again.')
+                                           'Please review your flags and try again.\n\n' +
+                                            'P.S.  It is possible you may get this error message and\n\n' +
+                                            ' you DO HAVE EXACTLY ONE STYLE. This appears to be a problem with\n\n' +
+                                            ' wxPython and at this stage, I cannot fix it. In that case, just \n\n' +
+                                            ' ignore this message and continue.'
+                          )
             else:
                 ctrl.SetWindowStyleFlag(flagsVal)
 
