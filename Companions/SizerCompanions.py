@@ -134,7 +134,7 @@ class SizerItemsCDTC(CollectionDTC):
     insertionMethod = 'Add'
     deletionMethod = 'Remove'
 
-    additionalMethods = { 'AddSizer': (_('Add sizer'), 0, '(None)'),
+    additionalMethods = { 'Add': (_('Add'), 0, '(None)'),
                           'AddSpacer': (_('Add spacer'), '', '(None)'),
                           #'AddStretchSpacer': ('Add stretch spacer', '', '(None)')
                         }
@@ -161,9 +161,9 @@ class SizerItemsCDTC(CollectionDTC):
         if tcl.method == 'Add':
             return {'Window': 0, 'Proportion': 1, 'Flag': 'flag',
                     'Border': 'border'}
-        elif tcl.method == 'AddSizer':
-            return {'Sizer': 0, 'Proportion': 1, 'Flag': 'flag',
-                    'Border': 'border'}
+        # elif tcl.method == 'AddSizer':          # Now replaced by Add()
+        #     return {'Sizer': 0, 'Proportion': 1, 'Flag': 'flag',
+        #             'Border': 'border'}
         elif tcl.method == 'AddSpacer':
             return {'Size': 0, 'Flag': 'flag',
                     'Border': 'border'}
@@ -177,8 +177,8 @@ class SizerItemsCDTC(CollectionDTC):
         # if method == 'AddWindow':   # orig
         if method == 'Add':
             return {0: 'None', 1: '0', 'flag': '0', 'border': '0'}
-        elif method == 'AddSizer':
-            return {0: 'None', 1: '0', 'flag': '0', 'border': '0'}
+        # elif method == 'AddSizer':          # Now replaced by Add()
+        #     return {0: 'None', 1: '0', 'flag': '0', 'border': '0'}
         elif method == 'AddSpacer':
             return {0: 'wx.Size(8, 8)', 'flag': '0', 'border': '0'}
         #elif method == 'AddStretchSpacer':
@@ -226,15 +226,15 @@ class SizerItemsCDTC(CollectionDTC):
                 wx.CallAfter(designer.SetFocus)
                 return True
 
-        elif constr.method == 'AddSizer':
-            if constr.params[0] != 'None':
-                name = Utils.ctrlNameFromSrcRef(constr.params[0])
-                compn = self.designer.objects[name][0]
-                self.designer.inspector.selectObject(compn, True)
-                self.designer.selectCtrls([name])
-
-                wx.CallAfter(self.designer.SetFocus)
-                return True
+        # elif constr.method == 'AddSizer':     # orig  PRUNE
+        #     if constr.params[0] != 'None':    # AddSizer is no long used in wxPython so this commented out
+        #         name = Utils.ctrlNameFromSrcRef(constr.params[0])
+        #         compn = self.designer.objects[name][0]
+        #         self.designer.inspector.selectObject(compn, True)
+        #         self.designer.selectCtrls([name])
+        #
+        #         wx.CallAfter(self.designer.SetFocus)
+        #         return True
 
     def designTimeDefaults(self, vals, method=None):
         if method is None:
@@ -244,8 +244,8 @@ class SizerItemsCDTC(CollectionDTC):
         #     if method in ('AddWindow', 'AddSizer'): ctrlIdx = 0
         #     elif method == 'Insert':                ctrlIdx = 1
 
-        if method in ('Add', 'AddSizer', 'Insert'):
-            if method in ('Add', 'AddSizer'):
+        if method in ('Add', 'Insert'):
+            if method == 'Add':
                 ctrlIdx = 0
             elif method == 'Insert':
                 ctrlIdx = 1
@@ -260,11 +260,12 @@ class SizerItemsCDTC(CollectionDTC):
                     del params[ctrlIdx]
                     dtd = CollectionDTC.designTimeDefaults(self, params, method)
                     dtd[ctrlIdx] = self.designer.controllerView.getAllObjects()[srcRef]
-                    if method == 'AddSizer':
+                    # if method == 'AddSizer':    #orig
+                    #     dtd[ctrlIdx]._sub_sizer = self.control
+
+                    if method == 'Add':
                         dtd[ctrlIdx]._sub_sizer = self.control
-                    # elif method == 'AddWindow': #orig
-                    #     dtd[ctrlIdx]._in_sizer = self.control
-                    elif method == 'Add':
+                    elif method == 'AddWindow':
                         dtd[ctrlIdx]._in_sizer = self.control
                     return dtd
 
@@ -275,7 +276,7 @@ class SizerItemsCDTC(CollectionDTC):
             method = self.insertionMethod
 
         # if (method in ('AddWindow', 'AddSizer') and params[0] == 'None') or \ # orig
-        if (method in ('Add', 'AddSizer') and params[0] == 'None') or \
+        if (method  == 'Add' and params[0] == 'None') or \
            (method == 'Insert' and params[1] == 'None'):
             defaults = self.designTimeDefaults(params, method)
             if method == 'Insert':
@@ -659,9 +660,9 @@ class GBSizerItemsCDTC(SizerItemsCDTC):
         if tcl.method == 'AddWindow':
             return {'Window': 0, 'Position': 1, 
                     'Span': 'span', 'Flag': 'flag', 'Border': 'border'}
-        elif tcl.method == 'AddSizer':
-            return {'Sizer': 0, 'Position': 1, 
-                    'Span': 'span', 'Flag': 'flag', 'Border': 'border'}
+        # elif tcl.method == 'AddSizer':    # AddSizer not used in wxPython any more.  PRUNE
+        #     return {'Sizer': 0, 'Position': 1,
+        #             'Span': 'span', 'Flag': 'flag', 'Border': 'border'}
         elif tcl.method == 'AddSpacer':
             return {'Size': 0, 'Position': 1, 
                     'Span': 'span', 'Flag': 'flag', 'Border': 'border'}
@@ -675,9 +676,9 @@ class GBSizerItemsCDTC(SizerItemsCDTC):
         if method == 'AddWindow':
             return {0: 'None', 1: repr(pos),  'span': '(1, 1)', 
                     'flag': '0', 'border': '0'}
-        elif method == 'AddSizer':
-            return {0: 'None', 1: repr(pos), 'span': '(1, 1)', 
-                    'flag': '0', 'border': '0'}
+        # elif method == 'AddSizer':    # AddSizer not used in wxPython any more.  PRUNE
+        #     return {0: 'None', 1: repr(pos), 'span': '(1, 1)',
+        #             'flag': '0', 'border': '0'}
         elif method == 'AddSpacer':
             return {0: 'wx.Size(8, 8)', 1: repr(pos), 'span': '(1, 1)', 
                     'flag': '0', 'border': '0'}
@@ -703,10 +704,12 @@ class GBSizerItemsCDTC(SizerItemsCDTC):
             raise Exception(_('Span %s invalid, cannot contain negative values')%params[1])
         
 
-        if (method in ('AddWindow', 'AddSizer') and params[0] == 'None') or \
+        # if (method in ('AddWindow', 'AddSizer') and params[0] == 'None') or \   # orig
+        if (method in ('AddWindow', 'Add') and params[0] == 'None') or \
            (method == 'Insert' and params[1] == 'None'):
             defaults = self.designTimeDefaults(params, method)
-            self.control.AddSizer(BlankSizer(), defaults[1], 
+            # self.control.AddSizer(BlankSizer(), defaults[1],    # orig
+            self.control.Add(BlankSizer(), defaults[1],
                   defaults['span'], defaults['flag'], defaults['border'])
         else:
             SizerItemsCDTC.applyDesignTimeDefaults(self, params, method)

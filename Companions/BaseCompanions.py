@@ -1339,7 +1339,7 @@ class CollectionDTC(DesignTimeCompanion):
 #             if kwargs['kind'] == 0:
 #                 kwargs['item'] = kwargs['text']
 #                 kwargs.pop('text')
-
+#         print(repr(self.control) + '\n' + method)
         getattr(self.control, method)(*args, **kwargs)
 
     def SetName(self, oldValue, newValue):
