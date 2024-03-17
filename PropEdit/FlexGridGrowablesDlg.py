@@ -32,19 +32,28 @@ class FlexGridGrowablesDlg(wx.Dialog):
     def _init_coll_boxSizer1_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddSizer(self.flex, 1, border=0, flag=wx.GROW | wx.ALL)
-        parent.AddSizer(self.boxSizer2, 0, border=0, flag=wx.ALIGN_RIGHT)
+        # parent.AddSizer(self.flex, 1, border=0, flag=wx.GROW | wx.ALL)        # orig
+        # parent.AddSizer(self.boxSizer2, 0, border=0, flag=wx.ALIGN_RIGHT)     # orig
+
+        parent.Add(self.flex, 1, border=0, flag=wx.GROW | wx.ALL)
+        parent.Add(self.boxSizer2, 0, border=0, flag=wx.ALIGN_RIGHT)
 
     def _init_coll_boxSizer2_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.button3, 0, border=20,
-              flag=wx.ALL | wx.ALIGN_RIGHT)
-        parent.AddWindow(self.button1, 0, border=20,
-              flag=wx.RIGHT | wx.TOP | wx.BOTTOM | wx.ALIGN_RIGHT)
-        parent.AddWindow(self.button2, 0, border=20,
-              flag=wx.RIGHT | wx.TOP | wx.BOTTOM | wx.ALIGN_RIGHT)
+        # parent.AddWindow(self.button3, 0, border=20,      # orig
+        #       flag=wx.ALL | wx.ALIGN_RIGHT)
+        # parent.AddWindow(self.button1, 0, border=20,
+        #       flag=wx.RIGHT | wx.TOP | wx.BOTTOM | wx.ALIGN_RIGHT)
+        # parent.AddWindow(self.button2, 0, border=20,
+        #       flag=wx.RIGHT | wx.TOP | wx.BOTTOM | wx.ALIGN_RIGHT)
 
+        parent.Add(self.button3, 0, border=20,
+              flag=wx.ALL )
+        parent.Add(self.button1, 0, border=20,
+              flag=wx.RIGHT | wx.TOP | wx.BOTTOM)
+        parent.Add(self.button2, 0, border=20,
+              flag=wx.RIGHT | wx.TOP | wx.BOTTOM )
     def _init_sizers(self):
         # generated method, don't edit
         self.boxSizer1 = wx.BoxSizer(orient=wx.VERTICAL)
@@ -154,7 +163,7 @@ class FlexGridGrowablesDlg(wx.Dialog):
             trSize = self.colBtns[-1].GetSize()
             blPos = self.rowBtns[-1].GetPosition()
             blSize = self.rowBtns[-1].GetSize()
-            self.gridWin.SetDimensions(tlPos.x, tlPos.y + tlSize.height,
+            self.gridWin.SetSize(tlPos.x, tlPos.y + tlSize.height,
                   trPos.x + trSize.width - tlPos.x,
                   blPos.y + blSize.height - tlSize.height)
 
