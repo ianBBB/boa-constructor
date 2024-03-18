@@ -883,7 +883,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
 
                                 tcl = destSizerCmpn.textConstrLst[sizerItemIdx]
                                 if tcl.params[0] == 'None':
-                                    tcl.method = 'AddSizer'
+                                    tcl.method = 'Add'
                                     tcl.params[0] = 'self.%s'%ctrlName
                                     destSizerCmpn.recreateSizers()
 
@@ -902,7 +902,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                                         destSizerCmpn.designer, destSizerCmpn.parentCompanion.control)
                                     if collEditView is not None:
                                         ci = collEditView.companion.appendItem(
-                                              method='AddSizer',
+                                              method='AddS',
                                               srcParams={0: 'self.%s'%ctrlName})
                                         collEditView.refreshCtrl()
                                         collEditView.selectObject(
@@ -939,7 +939,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
                                 self.inspector, selCompn)
                             if collEditView is not None:
                                 ci = collEditView.companion.appendItem(
-                                      method='AddSizer',
+                                      method='Add',
                                       srcParams={0: 'self.%s'%ctrlName})
                                 collEditView.refreshCtrl()
                                 collEditView.selectObject(
