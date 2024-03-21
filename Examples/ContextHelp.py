@@ -39,7 +39,7 @@ if __name__ == '__main__':
     if float('%d.%d' % wx.VERSION[:2]) > 2.8:
         app = wx.App(False)
     else:
-        app = wx.PySimpleApp()
+        app = wx.App()
     # Note this help provider is needed and was added by hand
     provider = wx.SimpleHelpProvider()
     wx.HelpProvider.Set(provider)

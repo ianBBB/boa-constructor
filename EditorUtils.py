@@ -185,7 +185,7 @@ class EditorStatusBar(wx.StatusBar):
 
 
 def HistoryPopup(parent, hist, imgs):
-    f = wx.MiniFrame(parent, -1, _('Editor status history'), size = (350, 200))
+    f = wx.MiniFrame(parent, -1, title = _('Editor status history'), size = (350, 200), style=(wx.CLOSE_BOX | wx.RESIZE_BORDER))
     lc = wx.ListCtrl(f, style=wx.LC_REPORT | wx.LC_VRULES | wx.LC_NO_HEADER)
     lc.il = wx.ImageList(16, 16)
     idxs = {}
@@ -197,7 +197,8 @@ def HistoryPopup(parent, hist, imgs):
     lc.SetColumnWidth(0, 75)
     lc.SetColumnWidth(1, 750)
     for tpe, tme, msg, _bell in hist:
-        lc.InsertImageStringItem(0, tme, idxs[tpe])
+        # lc.InsertImageStringItem(0, tme, idxs[tpe]) # orig
+        lc.InsertItem(0, tme, idxs[tpe])
         lc.SetItem(0, 1, msg)
     f.Center()
     f.Show()
