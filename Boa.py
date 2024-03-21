@@ -280,7 +280,7 @@ wxVersion = tuple([int(v) for v in (wxVersion.split('.')+['0'])[:4]])
 
 if wxVersion < __version__.wx_version:
     # wx.PySimpleApp()    # orig
-    wx.PySimpleApp()
+    wx.App()
     wx.MessageBox('Sorry! This version of Boa requires at least '\
                  'wxPython %d.%d.%d.%d'%__version__.wx_version,
                  'Version error', wx.OK | wx.ICON_ERROR)
