@@ -124,7 +124,7 @@ if __name__ == '__main__':
 simpleAppFrameRunSrc = wsfix('''
 
 if __name__ == '__main__':
-\tapp = wx.PySimpleApp()
+\tapp = wx.App()
 \tframe = create(None)
 \tframe.Show()
 
