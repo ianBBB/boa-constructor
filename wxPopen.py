@@ -123,7 +123,7 @@ def wxPopen3(cmd, input, output, errors, finish, handler=None):
     return p
 
 def _test():
-    app = wx.PySimpleApp()
+    app = wx.App()
     f = wx.Frame(None, -1, 'asd')#, style=0)
     f.Show()
 

@@ -213,7 +213,7 @@ class FlexGridGrowablesDlg(wx.Dialog):
         wx.PostEvent(self, wx.SizeEvent(self.GetSize(), self.GetId()))
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
 
     dlg = FlexGridGrowablesDlg(None, [1, 0], [1, 0, 0])
     try:

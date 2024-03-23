@@ -210,7 +210,7 @@ class ProcessProgressDlg(wx.Dialog, ProcessRunnerMix):
             self.EndModal(wx.OK)
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     #cmd = '''python.exe -c "for i in range(2049):print '*',"'''
     cmd = '''python.exe -c "print '*'*5000"'''
     #cmd = '''python.exe -c "import time; time.sleep(10)"'''

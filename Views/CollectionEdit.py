@@ -487,7 +487,7 @@ class CollectionEditorView(InspectableViews.InspectableObjectView):
         self.frame.restore()
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     wx.InitAllImageHandlers()
     class PhonyCompanion: collectionMethod = 'None'
     class PhonyEditor: Disconnect = None

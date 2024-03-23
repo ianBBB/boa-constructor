@@ -30,7 +30,7 @@ class MyTreeCtrl(wx.TreeCtrl):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     wx.InitAllImageHandlers()
     frame = create(None)
     frame.Show()

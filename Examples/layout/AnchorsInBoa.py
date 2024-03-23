@@ -46,7 +46,7 @@ class Frame1(wx.Frame):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = create(None)
     frame.Show(True)
     app.MainLoop()

@@ -144,7 +144,7 @@ class LanguageSelectDlg(wx.Dialog):
 
 if __name__ == '__main__':
     # stand alone
-    app = wx.PySimpleApp()
+    app = wx.App()
     dlg = LanguageSelectDlg(None, lang=wx.LANGUAGE_ENGLISH, 
           boaLangs=(wx.LANGUAGE_AFRIKAANS, wx.LANGUAGE_DEFAULT, 
               wx.LANGUAGE_ENGLISH, wx.LANGUAGE_SPANISH))

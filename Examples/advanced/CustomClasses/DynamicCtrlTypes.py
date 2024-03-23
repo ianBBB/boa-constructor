@@ -51,7 +51,7 @@ class Frame2(wx.Frame):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     wx.InitAllImageHandlers()
     redFrame = create(None, RedDynCtrl)
     blueFrame = create(None, BlueDynCtrl)

@@ -74,7 +74,7 @@ def showPathsMappingDlg(parent, paths):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     wx.InitAllImageHandlers()
     print(showPathsMappingDlg(None, [('1', '2'), ('3', '4')]))
     app.MainLoop()

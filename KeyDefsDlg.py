@@ -212,7 +212,7 @@ for name in otherKeys2:
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     dlg = KeyDefsDialog(None, 'ContextHelp', "(wx.ACCEL_NORMAL, wx.WXK_F1, 'F1'),")
     try:
         if dlg.ShowModal() == wx.ID_OK:

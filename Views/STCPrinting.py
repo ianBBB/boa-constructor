@@ -266,7 +266,7 @@ class STCPrintout(wx.Printout):
 
 if __name__ == '__main__':
     testFile = 'STCPrinting.py'
-    app = wx.PySimpleApp()
+    app = wx.App()
     wx.InitAllImageHandlers()
     frame = wx.Frame(None, -1, '')
     # prepare an stc

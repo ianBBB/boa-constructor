@@ -756,7 +756,7 @@ class FileDlgFolderList(Explorer.BaseExplorerList):
 
 if __name__ == '__main__':
     # simple testing harness
-    app = wx.PySimpleApp()
+    app = wx.App()
     import PaletteMapping
     from Explorers import FTPExplorer, ZipExplorer
 

@@ -138,7 +138,7 @@ class ControlAlignmentFrame(wx.Dialog):
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
 
     dlg = ControlAlignmentFrame(None, [])
     try:

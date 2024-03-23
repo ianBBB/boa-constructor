@@ -33,7 +33,7 @@ if __name__ == '__main__':
     if float('%d.%d' % wx.VERSION[:2]) > 2.8:
         app = wx.App(False)
     else:
-        app = wx.PySimpleApp()
+        app = wx.App()
         wx.InitAllImageHandlers()
     frame = create(None)
     frame.Show()

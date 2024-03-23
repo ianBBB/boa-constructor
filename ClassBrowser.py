@@ -214,7 +214,7 @@ if not hasattr(sys, 'frozen'):
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = ClassBrowserFrame(None)
     frame.Show(True)
     app.MainLoop()
