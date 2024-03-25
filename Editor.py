@@ -250,8 +250,11 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
               _('Next page'), keyDefs['NextPage'], '-',
               _('Switch to the next page of the main notebook'))
         self.winMenu.AppendSeparator()
+        # self.winMenu.Append(EditorHelper.wxID_EDITORWINDIMS,     # orig
+        #       _('All window dimensions'), self.winDimsMenu,
+        #       _('Load, save or restore IDE windows dimensions'))
         self.winMenu.Append(EditorHelper.wxID_EDITORWINDIMS,
-              _('All window dimensions'), self.winDimsMenu,
+              _('All window dimensions'),
               _('Load, save or restore IDE windows dimensions'))
         self.winMenu.Append(EditorHelper.wxID_EDITORHIDEPALETTE,
               _('Hide Palette'), _('Hide the Palette frame'))
@@ -344,7 +347,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
         # quit server mode flag not guaranteed to be set (yet) even if there is
         # already a server running, but don't connect idle if not necessary
         if self.closed:
-            if self.closed.isSet():
+            if self.closed.is_set():
                 print('Not running in server mode')
 
     def __repr__(self):
