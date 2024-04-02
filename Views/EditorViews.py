@@ -1042,8 +1042,10 @@ class ExploreView(wx.TreeCtrl, EditorView):
                 methBlock = module.classes[className].methods[method]
                 for brkLnNo in list(breaks.keys()):
                     if brkLnNo > brkStrt and brkLnNo < methBlock.start:
+                        # brkItm = self.AppendItem(classItem, breaks[brkLnNo] , 7,
+                        #     -1, wx.TreeItemData(CodeBlock('', brkLnNo, brkLnNo)))
                         brkItm = self.AppendItem(classItem, breaks[brkLnNo] , 7,
-                            -1, wx.TreeItemData(CodeBlock('', brkLnNo, brkLnNo)))
+                            -1, CodeBlock('', brkLnNo, brkLnNo))
                         self.SetItemBold(brkItm)
                         self.SetItemTextColour(brkItm, Preferences.propValueColour)
                         del breaks[brkLnNo]
