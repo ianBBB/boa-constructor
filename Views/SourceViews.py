@@ -464,7 +464,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
 
         s = self.GetClientSize()
 
-        self.PopupMenu(menu, s.x/2, s.y/2)
+        self.PopupMenu(menu, int(s.x/2), int(s.y/2))
         menu.Destroy()
 
     def OnSTCSettingsWhiteSpace(self, event):
