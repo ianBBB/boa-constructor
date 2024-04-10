@@ -1155,7 +1155,8 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                     ls = self.PositionFromLine(ln)
                     st = pos - ls
                     if not line[:st].strip():
-                        self.SetSelection(ls + st/indtSze*indtSze, pos+1)
+                        # self.SetSelection(ls + st/indtSze*indtSze, pos+1)   # orig
+                        self.SetSelection(ls + (st % indtSze), pos+1)
                         self.ReplaceSelection('')
                         return
         #event.Skip()
