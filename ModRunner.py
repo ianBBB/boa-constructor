@@ -167,7 +167,7 @@ class PopenModuleRunner(ModuleRunner):
         in a frame. """
     def run(self, cmd, inpLines=[], execStart=None):
         inpLines.reverse()
-        inp, outp, errp = os.popen3(cmd)
+        inp, outp, errp = os.popen3(cmd)  # should this be a subprocess?
         pid = 0 # XXX only available on unix :(
         if execStart:
             wx.CallAfter(execStart, pid)
