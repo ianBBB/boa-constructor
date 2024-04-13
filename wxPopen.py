@@ -32,7 +32,7 @@ class ProcessRunnerMix:
 
     def execute(self, cmd):
         self.process = wx.Process(self.handler)
-        # self.process.Redirect() # TODO testing purposes
+        self.process.Redirect() # TODO testing purposes
 
         # self.pid = wx.Execute(cmd, wx.EXEC_NOHIDE, self.process)
         self.pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)

@@ -58,14 +58,14 @@ class DebuggerConnection:
         sm.setupEvent()
 
         self._ds.queueServerMessage(sm)
-        # DEBUG MESSAGE
-        sys.stdout.write('#_callMethod queueServerMessage ')
-        sys.stdout.flush()
+        # # DEBUG MESSAGE
+        # sys.stdout.write('#_callMethod queueServerMessage ')
+        # sys.stdout.flush()
         # Block.
         res = sm.getResult()
-        # DEBUG MESSAGE
-        sys.stdout.write('#_callMethod getResult ')
-        sys.stdout.flush()
+        # # DEBUG MESSAGE
+        # sys.stdout.write('#_callMethod getResult ')
+        # sys.stdout.flush()
         return res
 
     ### Non-blocking calls.
@@ -203,9 +203,9 @@ class DebuggerConnection:
         """Executes one non-blocking command then returns
         getStatusSummary().  Blocking."""
 
-        # TODO DEBUG
-        sys.stdout.write('reached proceedAndRequestStatus')
-        sys.stdout.flush()
+        # # TODO DEBUG
+        # sys.stdout.write('reached proceedAndRequestStatus')
+        # sys.stdout.flush()
 
         if temp_breakpoint:
             self.addBreakpoint(temp_breakpoint[0], temp_breakpoint[1], 1)
@@ -223,9 +223,9 @@ class DebuggerConnection:
                                 add_paths=(), breaks=()):
 
 
-        # TODO DEBUG
-        sys.stdout.write('reached runFileAndRequestStatus ')
-        sys.stdout.flush()
+        # # TODO DEBUG
+        # sys.stdout.write('reached runFileAndRequestStatus ')
+        # sys.stdout.flush()
 
 
         """Calls setAllBreakpoints(), runFile(), and
@@ -409,9 +409,9 @@ class MethodCall (ServerMessage):
 
     def getResult(self, timeout=None):
         self.wait()
-        # DEBUG MESSAGE
-        sys.stdout.write('#getResult wait ')
-        sys.stdout.flush()
+        # # DEBUG MESSAGE
+        # sys.stdout.write('#getResult wait ')
+        # sys.stdout.flush()
         if hasattr(self, 'exc'):
             try:
                 raise self.exc[0](self.exc[1], self.exc[2])
