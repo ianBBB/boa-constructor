@@ -162,8 +162,8 @@ def main(args=None):
     # Tell the client what port to connect to and the auth string to send.
     sys.stdout.write('%010d %s%s' % (port, auth_str, os.linesep))
     sys.stdout.flush()
-    sys.stdout.write('%d %s %s' % (port, auth_str, str(os.getpid())))
-    sys.stdout.flush()
+    # sys.stdout.write('%d %s %s' % (port, auth_str, str(os.getpid())))
+    # sys.stdout.flush()
 
     # start server
 
