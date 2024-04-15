@@ -145,8 +145,11 @@ class wxPopenModuleRunner(ModuleRunner):
             err.append(val)
 
         def finFunc():
-            errors = StringIO(''.join(err)).readlines()
-            output = StringIO(''.join(out)).readlines()
+            output = errors = ""
+            if err:
+                errors = StringIO(''.join(str(err[0], 'UTF-8'))).readlines()
+            if out:
+                output = StringIO(''.join(str(out[0], 'UTF-8'))).readlines()
 
             serr = ErrorStack.buildErrorList(errors)
 
