@@ -271,9 +271,7 @@ class ModuleController(SourceController):
             params = methodparse.safesplitfields(debugModel.lastRunParams, ' ')
         else:
             params = None
-
         debugModel.debug(params, cont_if_running=1)
-        a=1
 
     def OnDebugStepIn(self, event):
         if self.editor.debugger:
