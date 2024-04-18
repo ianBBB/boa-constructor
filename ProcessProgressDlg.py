@@ -188,8 +188,8 @@ class ProcessProgressDlg(wx.Dialog, ProcessRunnerMix):
             event.Skip()
 
     def prepareResult(self):
-        self.output = io.StringIO(''.join(self.output)).readlines()
-        self.errors = io.StringIO(''.join(self.errors)).readlines()
+        self.output = io.StringIO(''.join(str(self.output))).readlines()
+        self.errors = io.StringIO(''.join(str(self.errors))).readlines()
 
     def OnCancelbtnButton(self, event):
         if not self.finished:
@@ -211,9 +211,9 @@ class ProcessProgressDlg(wx.Dialog, ProcessRunnerMix):
 
 if __name__ == '__main__':
     app = wx.App()
-    #cmd = '''python.exe -c "for i in range(2049):print '*',"'''
-    cmd = '''python.exe -c "print '*'*5000"'''
-    #cmd = '''python.exe -c "import time; time.sleep(10)"'''
+    #cmd = '''python.exe -c "for i in range(2049):print('*'),"'''
+    # cmd = '''python.exe -c "print('*'*5000000)"'''
+    cmd = '''python.exe -c "import time; time.sleep(10)"'''
     if 1:
         modal = 1
         dlg = ProcessProgressDlg(None, cmd, 'Test', True, autoClose=False)

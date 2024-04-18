@@ -264,9 +264,11 @@ class ChildProcessClient(MultiThreadedDebugClient):
         if server is not None:
             def call_exit(server=server):
                 try:
-                    server.exit_debugger()
+                    # server.exit_debugger()    #orig
+                    server.close()
                 except (EmptyResponseError, socket.error):
                     # Already stopped.
+                    a=1
                     pass
             self.taskHandler.addTask(call_exit)
             self.server = None
@@ -281,7 +283,6 @@ class ChildProcessClient(MultiThreadedDebugClient):
 
 ##    def __del__(self):
 ##        pass#self.kill()
-#TODO stream read in bytes. these need to be converted to strings for the stdXX_text vars
     def pollStreams(self):
         stderr_text = ''
         stream = self.error_stream

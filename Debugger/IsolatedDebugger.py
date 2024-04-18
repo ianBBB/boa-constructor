@@ -423,7 +423,7 @@ class MethodCall (ServerMessage):
         #     raise DebugError('Timed out while waiting for debug server.')
         # return self.result
 
-        if not hasattr(self, 'result'):            #orig
+        if not hasattr(self, 'result'):
             raise DebugError('Timed out while waiting for debug server.')
         return self.result
 
