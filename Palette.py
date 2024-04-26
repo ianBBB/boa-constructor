@@ -271,8 +271,8 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
         # Help.showMainHelp(self.paletteHelpItems['wx'])
 
     def OnPythonHelpToolClick(self, event):
-        PyHelpBrowser = MyBrowser(None, -1,title = 'Python 3.9 Help', style=wx.DEFAULT_FRAME_STYLE )
-        PyHelpBrowser.browser.LoadURL(r"C:\Users\Ian-17\Documents\boa test area\HELP work area\python\python work area\python-3.9.17-docs-html\python-3.9.17-docs-html\index.html")
+        PyHelpBrowser = MyBrowser(None, -1,title = 'Python 3 Help', style=wx.DEFAULT_FRAME_STYLE )
+        PyHelpBrowser.browser.LoadURL(r"https://docs.python.org/3/")
         PyHelpBrowser.Show()
         event.Skip()
         ## Help.showMainHelp(self.paletteHelpItems['python'])
