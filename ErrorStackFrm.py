@@ -391,15 +391,16 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
             if script:
                 name = '%s (%s)'%(name, script)
             self.processesPage.InsertItem(idx, '%s : %s'%(name, pid))
-            self.processesPage.SetItemData(idx, pid)
+            self.processesPage.GetItem(idx).SetData(pid)
+            # self.processesPage.SetItemData(idx, pid)   # orig
 
             self.checkProcesses()
 
     def processFinished(self, pid):
         if self.processesPage:
             for idx in range(self.processesPage.GetItemCount()):
-                if self.processesPage.GetItemData(0) == pid:
-                    self.processesPage.DeleteItem(0)
+                if self.processesPage.GetItemData(idx) == pid:
+                    self.processesPage.DeleteItem(idx)
                     break
             self.checkProcesses()
 
