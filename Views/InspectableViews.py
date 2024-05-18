@@ -147,6 +147,14 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
             raise DesignerError(_('%s is not defined on the Palette.')%constrPrs.class_name)
         try:
             ctrlCompnClass = PaletteMapping.compInfo[ctrlClass][1]
+            # fixup for Listview which uses a windowIdName of winid, not id.
+            if ctrlClass.__name__ == 'ListView':
+                # self.windowIdName = 'winid'
+                ctrlCompnClass.windowIdName = 'winid'
+                holding_list = list(ctrlCompnClass.handledConstrParams)
+                holding_list[0] = 'winid'
+                ctrlCompnClass.handledConstrParams = tuple(holding_list)
+                a=0
         except KeyError:
             raise DesignerError(_('%s is not defined on the Palette.')%ctrlClass.__name__)
         else:

@@ -622,9 +622,6 @@ class ControlDTC(DesignTimeCompanion):
         if not position: position = wx.DefaultPosition
         if not size: size = wx.DefaultSize
 
-        # change windowIDName for those controls that require a different name.
-        if self.ctrlClass.__name__ == 'ListView':
-            self.windowIdName = 'winid'
 
         dts = self.designTimeSource('wx.Point(%s, %s)'%(position.x, position.y),
           'wx.Size(%s, %s)'%(size.x, size.y))
@@ -632,10 +629,11 @@ class ControlDTC(DesignTimeCompanion):
         for param in list(dts.keys()):
             dts[param] = self.eval(dts[param])
 
+        # # change windowIDName for those controls that require a different name.
+        if self.ctrlClass.__name__ == 'ListView':
+            self.windowIdName = 'winid'
+
         dts[self.windowParentName] = self.parent
-
-
-
 
         if not self.suppressWindowId:
             dts[self.windowIdName] = self.dId

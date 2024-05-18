@@ -48,6 +48,12 @@ class ListCtrlDTC(Constructors.MultiItemCtrlsConstr, WindowDTC):
             self.customPropEvaluators[name] = self.EvalImageList
         self.customPropEvaluators['ImageList'] = self.EvalImageList
 
+        # # change windowIDName for those controls that require a different name.
+        if self.ctrlClass.__name__ == 'ListView':
+            self.windowIdName = 'winid'
+            holding_list = list(self.handledConstrParams)
+            holding_list[0] = 'winid'
+            self.handledConstrParams = tuple(holding_list)
     def properties(self):
         props = WindowDTC.properties(self)
         props['Columns'] = ('NoneRoute', None, None)
@@ -169,7 +175,8 @@ class ListCtrlColumnsCDTC(CollectionDTC):
         del self.textConstrLst[idx]
 
 
-class ListViewDTC(ListCtrlDTC): pass
+# class ListViewDTC(ListCtrlDTC): pass   # orig
+class ListViewDTC(ListCtrlDTC):pass
 
 
 class TreeCtrlDTC(Constructors.MultiItemCtrlsConstr, WindowDTC):
