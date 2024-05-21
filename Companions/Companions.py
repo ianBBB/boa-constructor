@@ -21,7 +21,10 @@ from PropEdit import PropertyEditors
 from PropEdit.Enumerations import *
 from .BaseCompanions import HelperDTC
 
-import PaletteStore, RTTI
+import PaletteStore
+
+import traceback
+import logging
 
 #---Helpers---------------------------------------------------------------------
 
@@ -226,41 +229,19 @@ class BaseConstrFlagsDTC(HelperDTC):
         flagsVal = self.eval(flagsSrc)
         ctrl = self.ownerCompn.control
         if hasattr(ctrl, 'SetWindowStyleFlag'):
-            if ctrl.ClassName == 'wxListCtrl':
-                try:
-                    ctrl.SetWindowStyleFlag(flagsVal)
-                except:
-                    # This does not work. The first parameter has to be the graphics container that the dialogue will be
-                    # displayed in (like a panel or frame) but "self" here is a list control and I do not know how to
-                    # get a reference to next level up graphic component.
-                    #
-                    # dlg = wx.MessageDialog(self,
-                    #                        'wxPython detected a problem with your style flags.\n' +
-                    #                        'Your flags are set to;\n\n' +
-                    #                        flagsSrc + '\n\n' +
-                    #                        'There can only be exactly one mode setting style. These are\n' +
-                    #                        'wx.LC_LIST, wx.LC_REPORT, wx.LC_VIRTUAL, wx.LC_ICON and wx.LC_SMALL_ICON.\n\n' +
-                    #                        'Another restriction is that you cannot set contradictory flags such as;\n\n' +
-                    #                        'wx.NO_BORDER | wx.RAISED_BORDER\n\n' +
-                    #                        'Please review your flags and try again.',
-                    #                        'Incorrect style flags', wx.OK | wx.ICON_INFORMATION)
-                    # try:
-                    #     result = dlg.ShowModal()
-                    # finally:
-                    #     dlg.Destroy()
-                    print('wxPython detected a problem with your style flags.\n' +
-                                           'Your flags are set to;\n\n' +
-                                           flagsSrc + '\n\n' +
-                                           'There can only be EXACTLY ONE mode setting style. These are;\n\n' +
-                                           'wx.LC_LIST, wx.LC_REPORT, wx.LC_VIRTUAL, wx.LC_ICON and wx.LC_SMALL_ICON.\n\n' +
-                                           'Another restriction is that you cannot set contradictory flags such as;\n\n' +
-                                           'wx.NO_BORDER | wx.RAISED_BORDER\n\n' +
-                                           'Please review your flags and try again.\n\n' +
-                                            'P.S.  It is possible you may get this error message and\n\n' +
-                                            ' you DO HAVE EXACTLY ONE STYLE. This appears to be a problem with\n\n' +
-                                            ' wxPython and at this stage, I cannot fix it. In that case, just \n\n' +
-                                            ' ignore this message and continue.'
-                          )
+            if ctrl.ClassName in ('wxListCtrl', 'wxListView'):
+                if '0' not in flags:
+                    try:
+                        ctrl.SetWindowStyleFlag(flagsVal)
+                    except Exception as e:
+                        logging.error(traceback.format_exc())
+                else:
+                    selectedStyles = flagsSrc.replace(" ", "").split("|")
+                    selectedModeStyles = set(selectedStyles).intersection(
+                        ['wx.LC_LIST', 'wx.LC_REPORT', 'wx.LC_VIRTUAL', 'wx.LC_ICON', 'wx.LC_SMALL_ICON'])
+                    selectedModeStyleCount = len(selectedModeStyles)
+                    if selectedModeStyleCount==1:
+                        ctrl.SetWindowStyleFlag(flagsVal)
             else:
                 ctrl.SetWindowStyleFlag(flagsVal)
 

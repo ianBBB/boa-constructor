@@ -204,10 +204,10 @@ class ErrorStackMF(wx.Frame, Utils.FrameRestorerMixin):
             for si in err.stack:
                 siTI = tree.AppendItem(errTI, '%d: %s: %s' % (si.lineNo,
                       os.path.basename(si.file), si.line.strip()))
-                tree.SetPyData(siTI, si)
+                tree.SetItemData(siTI, si)
             if err.stack:
                 tree.SetItemHasChildren(errTI, True)
-                tree.SetPyData(errTI, err.stack[-1])
+                tree.SetItemData(errTI, err.stack[-1])
                 parsedTracebacks += 1
         return parsedTracebacks
 

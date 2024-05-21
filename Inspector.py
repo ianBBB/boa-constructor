@@ -1258,21 +1258,55 @@ class InspectorScrollWin(NameValueEditorScrollWin):
         return wxClass, url
 
     def collapse(self, nameValue):
-        # delete all NameValues until the same indent, count them
+        # for Listview and Listctrl, the parameters should not be collapsed
+        # until EXACTLY one mode has been selected.
+        # This is a requirement for successful use of these controls.
+
         startIndent = nameValue.indent
         idx = nameValue.idx + 1
+        doCollapse=True
 
-        # Move deletion into method and use in removeEvent of EventWindow
-        i = idx
-        if i < len(self.nameValues):
-            while (i < len(self.nameValues)) and \
-                    (self.nameValues[i].indent > startIndent):
-                i = i + 1
-        count = i - idx
+        # first test if the control currently in the inspector is a listview or listctrl
+        if self.nameValues[0].propValue in 'wx.ListView wx.ListCtrl':
+            # yes it is. now test if the correct number of modes have been selected before collapsing.
+            # first establish what modes have been selected
 
-        self.deleteNameValues(idx, count)
-        self.refreshSplitter()
-        nameValue.propEditor.expanded = False
+            i = idx
+            selectedStyles = nameValue.value.Label.replace(" ","").split("|")
+            selectedModeStyles = set(selectedStyles).intersection(['wx.LC_LIST', 'wx.LC_REPORT', 'wx.LC_VIRTUAL', 'wx.LC_ICON' , 'wx.LC_SMALL_ICON'])
+
+            # test if there is exactly one mode selected.
+            selectedModeStyleCount = len(selectedModeStyles)
+            if selectedModeStyleCount != 1:
+                # there is a problem. do not collapse yet.
+                doCollapse = False
+                nameValue.expander.SetValue(False)
+                if selectedModeStyleCount == 0:
+                    # no modes selected. advise user accordingly.
+                    print('There is a problem with your style flags. You have not selected a mode for the control.\n' +
+                          'There can only be EXACTLY ONE mode style. This can be any of;\n\n' +
+                            'wx.LC_LIST, wx.LC_REPORT, wx.LC_VIRTUAL, wx.LC_ICON and wx.LC_SMALL_ICON.\n\n' +
+                          'Please select a mode for this control. (You may have to consult wxPython documentation to determine which one you want)')
+                else:
+                    # too many modes selected. advise user accordingly.
+                    print('There is a problem with your style flags. You have selected too many modes for the control\n' +
+                          'There can only be EXACTLY ONE mode setting. This can be any of;\n\n' +
+                            'wx.LC_LIST, wx.LC_REPORT, wx.LC_VIRTUAL, wx.LC_ICON and wx.LC_SMALL_ICON.\n\n' +
+                          'Please select a single mode for this control. (You may have to consult wxPython documentation to determine which one you want)')
+
+        if doCollapse:
+            # delete all NameValues until the same indent, count them
+            # Move deletion into method and use in removeEvent of EventWindow
+            i = idx
+            if i < len(self.nameValues):
+                while (i < len(self.nameValues)) and \
+                        (self.nameValues[i].indent > startIndent):
+                    i = i + 1
+            count = i - idx
+
+            self.deleteNameValues(idx, count)
+            self.refreshSplitter()
+            nameValue.propEditor.expanded = False
 
     def OnEnter(self, event):
         for nv in self.nameValues:
