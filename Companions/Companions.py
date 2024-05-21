@@ -235,20 +235,13 @@ class BaseConstrFlagsDTC(HelperDTC):
                         ctrl.SetWindowStyleFlag(flagsVal)
                     except Exception as e:
                         logging.error(traceback.format_exc())
-
-                    # print('wxPython detected a problem with your style flags.\n' +
-                    #                        'Your flags are set to;\n\n' +
-                    #                        flagsSrc + '\n\n' +
-                    #                        'There can only be EXACTLY ONE mode setting style. These are;\n\n' +
-                    #                        'wx.LC_LIST, wx.LC_REPORT, wx.LC_VIRTUAL, wx.LC_ICON and wx.LC_SMALL_ICON.\n\n' +
-                    #                        'Another restriction is that you cannot set contradictory flags such as;\n\n' +
-                    #                        'wx.NO_BORDER | wx.RAISED_BORDER\n\n' +
-                    #                        'Please review your flags and try again.\n\n' +
-                    #                         'P.S.  It is possible you may get this error message and\n\n' +
-                    #                         ' you DO HAVE EXACTLY ONE STYLE. This appears to be a problem with\n\n' +
-                    #                         ' wxPython and at this stage, I cannot fix it. In that case, just \n\n' +
-                    #                         ' ignore this message and continue.'
-                    #       )
+                else:
+                    selectedStyles = flagsSrc.replace(" ", "").split("|")
+                    selectedModeStyles = set(selectedStyles).intersection(
+                        ['wx.LC_LIST', 'wx.LC_REPORT', 'wx.LC_VIRTUAL', 'wx.LC_ICON', 'wx.LC_SMALL_ICON'])
+                    selectedModeStyleCount = len(selectedModeStyles)
+                    if selectedModeStyleCount==1:
+                        ctrl.SetWindowStyleFlag(flagsVal)
             else:
                 ctrl.SetWindowStyleFlag(flagsVal)
 
