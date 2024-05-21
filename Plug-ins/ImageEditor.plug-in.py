@@ -24,11 +24,11 @@ ddGrid = 2
 class ImageEditorPanel(wx.Panel):
     def _init_utils(self):
         # generated method, don't edit
-        self.cursorCross = wx.StockCursor(id=wx.CURSOR_CROSS)
+        self.cursorCross = wx.Cursor(id=wx.CURSOR_CROSS)
 
-        self.cursorMove = wx.StockCursor(id=wx.CURSOR_SIZING)
+        self.cursorMove = wx.Cursor(id=wx.CURSOR_SIZING)
 
-        self.cursorDraw = wx.StockCursor(id=wx.CURSOR_PENCIL)
+        self.cursorDraw = wx.Cursor(id=wx.CURSOR_PENCIL)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
