@@ -616,7 +616,8 @@ class ImageEditorPanel(wx.Panel):
             pen = wx.Pen(wx.BLACK, framesize, wx.PENSTYLE_SOLID)
             dc.SetPen(pen)
             # dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)     # orig
-            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
+            requiredBrshStyle = wx.Brush(wx.BLACK,wx.BRUSHSTYLE_TRANSPARENT)
+            dc.SetBrush(requiredBrshStyle)
             dc.DrawRectangle(xoffset-1 , yoffset-1, width+2, height+2)
 
             if (self.drawDest & ddGrid) and self.drawMeth:
