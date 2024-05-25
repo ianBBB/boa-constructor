@@ -24,11 +24,11 @@ ddGrid = 2
 class ImageEditorPanel(wx.Panel):
     def _init_utils(self):
         # generated method, don't edit
-        self.cursorCross = wx.Cursor(id=wx.CURSOR_CROSS)
+        self.cursorCross = wx.Cursor(cursorId =wx.CURSOR_CROSS)
 
-        self.cursorMove = wx.Cursor(id=wx.CURSOR_SIZING)
+        self.cursorMove = wx.Cursor(cursorId =wx.CURSOR_SIZING)
 
-        self.cursorDraw = wx.Cursor(id=wx.CURSOR_PENCIL)
+        self.cursorDraw = wx.Cursor(cursorId =wx.CURSOR_PENCIL)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
@@ -105,7 +105,7 @@ class ImageEditorPanel(wx.Panel):
               id=wxID_IMAGEEDITORPANELBGCOLBTN)
 
         self.slider1 = wx.Slider(id=wxID_IMAGEEDITORPANELSLIDER1, maxValue=25,
-              minValue=1, name='slider1', parent=self, point=wx.Point(244, 5),
+              minValue=1, name='slider1', parent=self, pos=wx.Point(244, 5),
               size=wx.Size(108, 24), style=wx.SL_HORIZONTAL, value=16)
         self.slider1.SetToolTip(_('Zoom factor'))
         self.slider1.Bind(wx.EVT_SCROLL, self.OnSlider1ScrollThumbtrack)
@@ -153,9 +153,9 @@ class ImageEditorPanel(wx.Panel):
         self.fgpen = wx.Pen(self.fgcol, 1, wx.SOLID)
         self.bgcol = wx.LIGHT_GREY
         self.bgbsh = wx.Brush(self.bgcol)
-        self.brush = wx.Brush(wx.WHITE, wx.TRANSPARENT)
-        self.invpen = wx.Pen(wx.BLUE, 0, wx.TRANSPARENT)
-        self.selpen = wx.Pen(wx.WHITE, 2, wx.SOLID)
+        self.brush = wx.Brush(wx.WHITE, wx.BRUSHSTYLE_TRANSPARENT)
+        self.invpen = wx.Pen(wx.BLUE, 0, wx.PENSTYLE_TRANSPARENT)
+        self.selpen = wx.Pen(wx.WHITE, 2, wx.PENSTYLE_SOLID)
 
         self.x = self.y = 0
 
@@ -356,7 +356,7 @@ class ImageEditorPanel(wx.Panel):
             scale = self.slider1.GetValue()
             dc.SetLogicalFunction(wx.XOR)
             dc.SetPen(self.selpen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawRectangle(xoffset + x1 * scale - 1, yoffset + y1 * scale - 1,
                    (x2 - x1 + 1) * scale + 4, (y2 - y1 + 1) * scale + 4)
 
@@ -445,7 +445,7 @@ class ImageEditorPanel(wx.Panel):
             scale = self.slider1.GetValue()
             dc.SetLogicalFunction(wx.XOR)
             dc.SetPen(self.selpen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawRectangle(xoffset + x1 * scale - 1, yoffset + y1 * scale - 1,
                        (x2 - x1 + 1) * scale + 4, (y2 - y1 + 1) * scale + 4)
 
@@ -484,7 +484,7 @@ class ImageEditorPanel(wx.Panel):
             scale = self.slider1.GetValue()
             dc.SetLogicalFunction(wx.XOR)
             dc.SetPen(self.selpen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawEllipse(int(xoffset + (x-rad+0.5) * scale),
                            int(yoffset + (y-rad+0.5) * scale),
                            int(rad*scale*2), int(rad*scale*2))
@@ -540,7 +540,7 @@ class ImageEditorPanel(wx.Panel):
             scale = self.slider1.GetValue()
             dc.SetLogicalFunction(wx.XOR)
             dc.SetPen(self.selpen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawRectangle(xoffset + dx * scale - 1, yoffset + dy * scale - 1,
                        (x2 - x1 + 1) * scale + 4, (y2 - y1 + 1) * scale + 4)
 
@@ -615,7 +615,7 @@ class ImageEditorPanel(wx.Panel):
             dc.SetLogicalFunction(wx.COPY)
             pen = wx.Pen(wx.BLACK, framesize, wx.SOLID)
             dc.SetPen(pen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawRectangle(xoffset-1 , yoffset-1, width+2, height+2)
 
             if (self.drawDest & ddGrid) and self.drawMeth:
