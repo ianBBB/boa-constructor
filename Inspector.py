@@ -1267,7 +1267,7 @@ class InspectorScrollWin(NameValueEditorScrollWin):
         doCollapse=True
 
         # first test if the control currently in the inspector is a listview or listctrl
-        if self.nameValues[0].propValue in 'wx.ListView wx.ListCtrl':
+        if self.nameValues[0].propValue in ['wx.ListView' , ' wx.ListCtrl']:
             # yes it is. now test if the correct number of modes have been selected before collapsing.
             # first establish what modes have been selected
 
