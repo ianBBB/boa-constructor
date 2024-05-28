@@ -24,11 +24,11 @@ ddGrid = 2
 class ImageEditorPanel(wx.Panel):
     def _init_utils(self):
         # generated method, don't edit
-        self.cursorCross = wx.StockCursor(id=wx.CURSOR_CROSS)
+        self.cursorCross = wx.Cursor(cursorId =wx.CURSOR_CROSS)
 
-        self.cursorMove = wx.StockCursor(id=wx.CURSOR_SIZING)
+        self.cursorMove = wx.Cursor(cursorId =wx.CURSOR_SIZING)
 
-        self.cursorDraw = wx.StockCursor(id=wx.CURSOR_PENCIL)
+        self.cursorDraw = wx.Cursor(cursorId =wx.CURSOR_PENCIL)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
@@ -105,7 +105,7 @@ class ImageEditorPanel(wx.Panel):
               id=wxID_IMAGEEDITORPANELBGCOLBTN)
 
         self.slider1 = wx.Slider(id=wxID_IMAGEEDITORPANELSLIDER1, maxValue=25,
-              minValue=1, name='slider1', parent=self, point=wx.Point(244, 5),
+              minValue=1, name='slider1', parent=self, pos=wx.Point(244, 5),
               size=wx.Size(108, 24), style=wx.SL_HORIZONTAL, value=16)
         self.slider1.SetToolTip(_('Zoom factor'))
         self.slider1.Bind(wx.EVT_SCROLL, self.OnSlider1ScrollThumbtrack)
@@ -113,6 +113,7 @@ class ImageEditorPanel(wx.Panel):
         self.editWindow = wx.ScrolledWindow(id=wxID_IMAGEEDITORPANELEDITWINDOW,
               name='editWindow', parent=self, pos=wx.Point(8, 34),
               size=wx.Size(561, 288), style=wx.SUNKEN_BORDER)
+        self.editWindow.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self.editWindow.SetBackgroundColour(wx.Colour(255, 255, 255))
         self.editWindow.SetConstraints(LayoutAnchors(self.editWindow, True,
               True, True, True))
@@ -153,9 +154,9 @@ class ImageEditorPanel(wx.Panel):
         self.fgpen = wx.Pen(self.fgcol, 1, wx.SOLID)
         self.bgcol = wx.LIGHT_GREY
         self.bgbsh = wx.Brush(self.bgcol)
-        self.brush = wx.Brush(wx.WHITE, wx.TRANSPARENT)
-        self.invpen = wx.Pen(wx.BLUE, 0, wx.TRANSPARENT)
-        self.selpen = wx.Pen(wx.WHITE, 2, wx.SOLID)
+        self.brush = wx.Brush(wx.WHITE, wx.BRUSHSTYLE_TRANSPARENT)
+        self.invpen = wx.Pen(wx.BLUE, 0, wx.PENSTYLE_TRANSPARENT)
+        self.selpen = wx.Pen(wx.WHITE, 2, wx.PENSTYLE_SOLID)
 
         self.x = self.y = 0
 
@@ -275,13 +276,13 @@ class ImageEditorPanel(wx.Panel):
         else: self.selundo = None
 
     def getImgPos(self, event):
-        x, y = event.GetPositionTuple()
+        x, y = event.GetPosition()
         x, y = self.editWindow.CalcUnscrolledPosition(x, y)
         scale = self.slider1.GetValue()
         return ((x-self.offset[0]) / scale, (y-self.offset[1]) / scale)
 
     def getTempMemDC(self, width, height):
-        bmp = wx.EmptyBitmap(width, height)
+        bmp = wx.Bitmap(width, height)
         memDC = wx.MemoryDC()
         memDC.SelectObject(bmp)
         return memDC, bmp
@@ -297,7 +298,7 @@ class ImageEditorPanel(wx.Panel):
         return None
 
     def setMemDCBmp(self, bmp):
-        if not bmp or not bmp.Ok():
+        if not bmp or not bmp.IsOk():
             raise Exception(_('Invalid bitmap'))
         self.mDC.SelectObject(wx.NullBitmap)
         self.bmp = bmp
@@ -319,7 +320,7 @@ class ImageEditorPanel(wx.Panel):
         if msk: m = 'Image is masked'
         else:   m = 'Image is not masked'
 
-        if self.bmp.Ok(): x = ''
+        if self.bmp.IsOk(): x = ''
         else:             x = 'The bitmap is not valid!'
 
         text = '%s: (%s, %s), depth: %s\n%s. %s'%(ext, w, h, d, m, x)
@@ -356,7 +357,7 @@ class ImageEditorPanel(wx.Panel):
             scale = self.slider1.GetValue()
             dc.SetLogicalFunction(wx.XOR)
             dc.SetPen(self.selpen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawRectangle(xoffset + x1 * scale - 1, yoffset + y1 * scale - 1,
                    (x2 - x1 + 1) * scale + 4, (y2 - y1 + 1) * scale + 4)
 
@@ -445,7 +446,7 @@ class ImageEditorPanel(wx.Panel):
             scale = self.slider1.GetValue()
             dc.SetLogicalFunction(wx.XOR)
             dc.SetPen(self.selpen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawRectangle(xoffset + x1 * scale - 1, yoffset + y1 * scale - 1,
                        (x2 - x1 + 1) * scale + 4, (y2 - y1 + 1) * scale + 4)
 
@@ -484,7 +485,7 @@ class ImageEditorPanel(wx.Panel):
             scale = self.slider1.GetValue()
             dc.SetLogicalFunction(wx.XOR)
             dc.SetPen(self.selpen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawEllipse(int(xoffset + (x-rad+0.5) * scale),
                            int(yoffset + (y-rad+0.5) * scale),
                            int(rad*scale*2), int(rad*scale*2))
@@ -540,7 +541,7 @@ class ImageEditorPanel(wx.Panel):
             scale = self.slider1.GetValue()
             dc.SetLogicalFunction(wx.XOR)
             dc.SetPen(self.selpen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)
             dc.DrawRectangle(xoffset + dx * scale - 1, yoffset + dy * scale - 1,
                        (x2 - x1 + 1) * scale + 4, (y2 - y1 + 1) * scale + 4)
 
@@ -588,20 +589,19 @@ class ImageEditorPanel(wx.Panel):
         # window that won't be covered by the bitmap (drawing the grid on top
         # will still flicker, though)
         dc = wx.AutoBufferedPaintDC(self.editWindow)
-
         self.editWindow.PrepareDC(dc)
 
         if not self.mDC or not self.bmp:
             return
 
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
         try:
             scale = self.slider1.GetValue()
             self.mDC.SetUserScale(1.0/scale, 1.0/scale)
             width = self.bmp.GetWidth()*scale
             height = self.bmp.GetHeight()*scale
-            xoffset = max((self.editWindow.GetSize().x - width) / 2, 0)
-            yoffset = max((self.editWindow.GetSize().y - height) / 2, 0)
+            xoffset = round(max((self.editWindow.GetSize().x - width) / 2, 0))
+            yoffset = round(max((self.editWindow.GetSize().y - height) / 2, 0))
             dc.Clear()
             dc.Blit(xoffset, yoffset, width, height, self.mDC, 0, 0)
             self.mDC.SetUserScale(1.0, 1.0)
@@ -613,29 +613,32 @@ class ImageEditorPanel(wx.Panel):
                 framesize = 1
 
             dc.SetLogicalFunction(wx.COPY)
-            pen = wx.Pen(wx.BLACK, framesize, wx.SOLID)
+            pen = wx.Pen(wx.BLACK, framesize, wx.PENSTYLE_SOLID)
             dc.SetPen(pen)
-            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            # dc.SetBrush(wx.BRUSHSTYLE_TRANSPARENT)     # orig
+            requiredBrshStyle = wx.Brush(wx.BLACK,wx.BRUSHSTYLE_TRANSPARENT)
+            dc.SetBrush(requiredBrshStyle)
             dc.DrawRectangle(xoffset-1 , yoffset-1, width+2, height+2)
 
             if (self.drawDest & ddGrid) and self.drawMeth:
                 self.drawMeth(None, '', dc)
         finally:
-            dc.EndDrawing()
+            pass
+            # dc.EndDrawing()
 
     def OnPenBrushWindowPaint(self, event):
         dc = wx.PaintDC(self.penBrushWindow)
         dc.SetBrush(self.brush)
         dc.SetBackground(self.bgbsh)
         dc.SetPen(self.invpen)
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
         try:
             cs = self.penBrushWindow.GetClientSize()
             dc.DrawRectangle(0, 0, cs.x, cs.y)
             dc.SetPen(self.fgpen)
-            dc.DrawRectangle(cs.x/3-3, cs.y/3-3, cs.x/3+8, cs.y/3+6)
-        finally:
-            dc.EndDrawing()
+            dc.DrawRectangle(round(cs.x/3-3), round(cs.y/3-3), round(cs.x/3+8), round(cs.y/3+6))
+        finally: pass
+            # dc.EndDrawing()
 
     def OnEditWindowLeftDown(self, event):
         self.editWindow.CaptureMouse()
