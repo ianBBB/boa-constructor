@@ -716,11 +716,12 @@ class ListCtrlView(wx.ListView, EditorView, Utils.ListCtrlSelectionManagerMix):
         self.selected = -1
 
     def OnColClick(self, event):
-        if event.m_col in self.sortOnColumns:
-            if self.sortCol == event.m_col:
+        # if event.m_col in self.sortOnColumns:   # orig
+        if event.Column in self.sortOnColumns:
+            if self.sortCol == event.Column:
                 self.flipDir = not self.flipDir
             else:
-                self.sortCol = event.m_col
+                self.sortCol = event.Column
                 self.flipDir = False
             self.SortItems(self.sortColumn)
             self.pastelise()
