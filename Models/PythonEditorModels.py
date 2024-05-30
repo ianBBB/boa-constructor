@@ -188,7 +188,7 @@ class ModuleModel(SourceModel):
             
             os.chdir(newCwd)
             try:
-                cmd = '"%s" %s %s'%(interp, basename, args)
+                cmd = '"%s" "%s" %s'%(interp, basename, args)
     
                 from ModRunner import wxPopenModuleRunner
 
