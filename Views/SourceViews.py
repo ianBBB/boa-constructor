@@ -495,7 +495,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
 
         s = self.GetClientSize()
 
-        self.PopupMenu(menu, s.x/2, s.y/2)
+        self.PopupMenu(menu, round(s.x/2), round(s.y/2))
         menu.Destroy()
 
     def OnConvertEols(self, event):
