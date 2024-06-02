@@ -342,7 +342,8 @@ def readTextFromClipboard():
     try:
         data = wx.TextDataObject()
         clip.GetData(data)
-        return data.GetText()
+        ret_data = data.GetText().replace('\n',os.linesep)
+        return ret_data
     finally:
         clip.Close()
 
@@ -350,7 +351,9 @@ def writeTextToClipboard(text):
     clip = wx.TheClipboard
     clip.Open()
     try:
-        clip.SetData(wx.TextDataObject(text))
+        # clip.SetData(wx.TextDataObject(text))
+        toBeSaved=wx.TextDataObject(text)
+        clip.SetData(toBeSaved)
     finally:
         clip.Close()
 

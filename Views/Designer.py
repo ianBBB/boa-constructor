@@ -1261,9 +1261,6 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
             if not self.selection.selCompn.container:
                 self.selectParent(self.selection.selection)
 
-            # DEBUG
-            print(str(Utils.readTextFromClipboard()).split(os.linesep))
-
             pasted = self.pasteCtrls(self.selection.name,
                   str(Utils.readTextFromClipboard()).split(os.linesep))
 
