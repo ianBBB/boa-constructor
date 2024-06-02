@@ -282,7 +282,7 @@ class TimeCtrlDTC(MaskedTextCtrlDTC):
         dts.update({'value': "'12:00:00 AM'",
                     'fmt24hr': 'False',
                     'display_seconds': 'True',
-                    'oob_color': "wx.NamedColour('Yellow')",
+                    'oob_color': "wx.Colour('Yellow')",
                     'useFixedWidthFont': 'True',
                    })
         return dts
