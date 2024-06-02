@@ -23,9 +23,9 @@ EventCollections.commandCategories.append('CalendarEvent')
 class CalendarDTC(CalendarConstr, BaseCompanions.WindowDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         BaseCompanions.WindowDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.calendar.CAL_SUNDAY_FIRST', 'wx.calendar.CAL_MONDAY_FIRST',
-              'wx.calendar.CAL_SHOW_HOLIDAYS', 'wx.calendar.CAL_NO_YEAR_CHANGE',
-              'wx.calendar.CAL_NO_MONTH_CHANGE'] + self.windowStyles
+        self.windowStyles = ['wx.adv.CAL_SUNDAY_FIRST', 'wx.adv.CAL_MONDAY_FIRST',
+              'wx.adv.CAL_SHOW_HOLIDAYS', 'wx.adv.CAL_NO_YEAR_CHANGE',
+              'wx.adv.CAL_NO_MONTH_CHANGE'] + self.windowStyles
 
         self.compositeCtrl = True
 
@@ -33,7 +33,7 @@ class CalendarDTC(CalendarConstr, BaseCompanions.WindowDTC):
         return {'date': 'wx.DateTime.Now()',
                 'pos': position,
                 'size': size,
-                'style': 'wx.calendar.CAL_SHOW_HOLIDAYS',
+                'style': 'wx.adv.CAL_SHOW_HOLIDAYS',
                 'name': repr(self.name)}
 
     def events(self):

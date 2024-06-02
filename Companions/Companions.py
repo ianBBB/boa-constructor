@@ -99,12 +99,12 @@ class PosDTC(HelperDTC):
     def GetX(self, comp):
         return self.obj.x
     def SetX(self, value):
-        self.obj.Set(value, self.obj.y)
+        self.obj.x = value
 
     def GetY(self, comp):
         return self.obj.y
     def SetY(self, value):
-        self.obj.Set(self.obj.x, value)
+        self.obj.y = value
 
 class SizeDTC(HelperDTC):
     def __init__(self, name, designer, cmpn, obj, ownerPW):

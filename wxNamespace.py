@@ -13,11 +13,11 @@ import Preferences as _Prefs
 
 import wx
 import wx.html
-# import wx.calendar  # does not appear to be used here
+import wx.lib.calendar
 import wx.grid
 import wx.stc
 import wx.gizmos
-# import wx.wizard  # does not appear to be used here
+# import wx.adv.Wizard
 
 def getWxClass(name):
     return getWxObjPath(name)
