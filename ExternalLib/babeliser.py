@@ -122,28 +122,31 @@ class BabelizerIOError(BabelizerError):
 
 def clean(text):
 #    return ' '.join(string.replace(text.strip(), "\n", ' ').split())
-    return string.join(string.split(string.replace(string.strip(text), "\n", ' ')))
+    return string.join(string.split(string.replace(text.strip(), "\n", ' ')))
 
 def translate(phrase, from_lang, to_lang):
     phrase = clean(phrase)
     try:
-##        from_code = __languages[from_lang.lower()]
-##        to_code = __languages[to_lang.lower()]
-        from_code = __languages[string.lower(from_lang)]
-        to_code = __languages[string.lower(to_lang)]
-    except KeyError, lang:
-        raise LanguageNotAvailableError(lang)
+       from_code = __languages[from_lang.lower()]
+    except KeyError:
+        raise LanguageNotAvailableError(from_lang)
+
+    try:
+       to_code = __languages[to_lang.lower()]
+    except KeyError:
+        raise LanguageNotAvailableError(to_lang)
 
     params = urllib.urlencode( { 'BabelFishFrontPage' : 'yes',
                                  'doit' : 'done',
                                  'urltext' : phrase,
                                  'lp' : from_code + '_' + to_code } )
     try:
-        response = urllib.urlopen('http://babelfish.altavista.com/tr', params)
-    except IOError, what:
+        what = 'http://babelfish.altavista.com/tr'
+        response = urllib.urlopen(what, params)
+    except IOError:
         raise BabelizerIOError("Couldn't talk to server: %s" % what)
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        print("Unexpected error:", sys.exc_info()[0])
 
     html = response.read()
     for regex in __where:
@@ -175,7 +178,7 @@ def babelize(phrase, from_language, through_language, limit = 12, callback = Non
 if __name__ == '__main__':
     import sys
     def printer(x):
-        print x
+        print(x)
         sys.stdout.flush();
 
 
