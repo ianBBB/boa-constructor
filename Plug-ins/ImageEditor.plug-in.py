@@ -368,7 +368,7 @@ class ImageEditorPanel(wx.Panel):
         imgx, imgy = self.getImgPos(event)
         self.mDC.SetPen(self.fgpen)
         self.mDC.SetUserScale(1.0, 1.0)
-        self.mDC.DrawPoint(imgx, imgy)
+        self.mDC.DrawPoint(int(imgx), int(imgy))
         self.editWindow.Refresh()
 
         if imgx >=0 and imgx < self.bmp.GetWidth() and \

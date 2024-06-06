@@ -168,6 +168,6 @@ if __name__ == '__main__':
                     [(0, 'ctrl1'), (1, 'ctrl2'), (2, 'ctrl4'), (3, 'ctrl5'), (5, 'ctrl3')])
     try:
         dlg.ShowModal()
-        print zip(dlg.allCtrlIdxs, dlg.allCtrlNames)
+        print(zip(dlg.allCtrlIdxs, dlg.allCtrlNames))
     finally:
         dlg.Destroy()
