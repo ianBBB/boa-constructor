@@ -650,7 +650,8 @@ class HelpBookFilesView(EditorViews.VirtualListCtrlView):
 
 class FileListDropTarget(wx.DropTarget):
     def __init__(self):
-        wx.PyDropTarget.__init__(self)
+        # wx.PyDropTarget.__init__(self)
+        wx.DropTarget.__init__(self)
         self.fmt = wx.DataFormat('FileList')
         self.data = wx.CustomDataObject(self.fmt)
         self.SetDataObject(self.data)
@@ -921,8 +922,10 @@ class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
     def refreshCtrl(self):
         self.DeleteAllItems()
         title = self.model.config.options['Title']
+        # rootItem = self.AddRoot(title, 0,
+        #       data=wx.TreeItemData((title, None, self.model.contents)))
         rootItem = self.AddRoot(title, 0,
-              data=wx.TreeItemData((title, None, self.model.contents)))
+              data=(title, None, self.model.contents))
 
         self.SetItemHasChildren(rootItem, True)
         self.Expand(rootItem)
@@ -957,7 +960,7 @@ class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
 
     def OnTreeSelChanged(self, event):
         item = event.GetItem()
-        if item.Ok():
+        if item.IsOk():
             location = self.GetItemData(item)[0]
             self.model.editor.setStatus(location)
 
@@ -1090,8 +1093,10 @@ class HelpBookController(Controllers.SourceController):
         wx.LogMessage(_('Written %s.')%zipfilename)
 
     def OnMakeCHM(self, event):
-        modelFile = model.localFilename()
-        dir, name = os.path.split(modelFile)
+        # modelFile = model.localFilename()
+        modelFile = EditorModels.localFilename()
+        # dir, name = os.path.split(modelFile)
+        runDir, name = os.path.split(modelFile)
         cmd = 'hhc %s'%name
         cwd = os.getcwd()
         try:
