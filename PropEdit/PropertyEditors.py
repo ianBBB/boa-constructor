@@ -1130,8 +1130,7 @@ class BaseFlagsConstrPropEdit(ConstrPropEdit):
             try:
                 anInt = self.companion.eval(self.editorCtrl.getValue())
                 if isinstance(anInt, int):
-                    # self.value = ' | '.join(map(string.strip,   # orig
-                    self.value = ' | '.join(map(string.strip(),
+                    self.value = ' | '.join(map(str.strip,
                         self.editorCtrl.getValue().split('|')))
                 else:
                     self.value = self.getCtrlValue()

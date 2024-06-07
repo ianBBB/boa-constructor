@@ -1,4 +1,5 @@
-import htmllib, formatter, string, os, pprint, types
+# import htmllib, formatter, string, os, pprint, types    #orig
+import html.parser, os
 
 api_path = '../Docs/wxpython/api'
 api_name = 'wxpyapi'
@@ -50,19 +51,21 @@ def build_project():
 def build_contents():
     def traverse(l, r):
         for i in l:
-            if type(i) is types.ListType:
+            if isinstance(type(i), list):
                 r.append('<UL>'+os.linesep)
                 traverse(i, r)
                 r.append('</UL>'+os.linesep)
-            elif type(i) is types.TupleType:
+            elif isinstance(type(i), tuple):
                 r.append(entry_hhx%i)
             else:
-                raise Exception, 'Unhandled type: %s'%type(i)
+                # raise Exception:
+                #     'Unhandled type: %s'%type(i)
+                raise TypeError( 'Unhandled type: %s'%type(i))
 
     data = read_segment(os.path.join(api_path, 'trees.html'),
           '<!-- =========== START OF CLASS HIERARCHY =========== -->',
           '<!-- =========== START OF NAVBAR =========== -->')
-    p = APIContentsParser(formatter.NullFormatter(formatter.NullWriter()))
+    p = APIContentsParser(html.parser.HTMLParser())
     p.feed(data)
 
     class_hierarchy = []
@@ -71,7 +74,7 @@ def build_contents():
     data = read_segment(os.path.join(api_path, 'wx-module.html'),
           '<!-- =========== START OF SUBMODULES =========== -->',
           '<!-- =========== START OF CLASSES =========== -->')
-    p = APIContentsParser(formatter.NullFormatter(formatter.NullWriter()))
+    p = APIContentsParser(html.parser.HTMLParser())
     p.feed(data)
     submodules = []
     traverse(p.current, submodules)
@@ -85,9 +88,9 @@ def build_contents():
     open(os.path.join(api_path, api_name+'.hhc'), 'w').write(hhc)
 
 
-class APIContentsParser(htmllib.HTMLParser):
+class APIContentsParser(html.parser.HTMLParser):
     def __init__(self, formatter, verbose=0):
-        htmllib.HTMLParser.__init__(self, formatter, verbose)
+        html.parser.HTMLParser.__init__(self, formatter, verbose)
         
         self.contents = []
         self.history = []
@@ -112,7 +115,7 @@ class APIContentsParser(htmllib.HTMLParser):
         self.save_bgn()
 
     def end_code(self):
-        text = string.strip(self.save_end())
+        text = self.save_end().strip()
         if self.cur_href and text:
             self.current.append( (self.cur_href, text) )
                 
@@ -131,7 +134,7 @@ def build_keywords():
     data = read_segment(os.path.join(api_path, 'indices.html'),
           '<!-- =========== START OF IDENTIFIER INDEX =========== -->',
           '<!-- =========== START OF NAVBAR =========== -->')
-    p = APIIndicesParser(formatter.NullFormatter(formatter.NullWriter()))
+    p = APIIndicesParser(html.parser.HTMLParser())
     p.feed(data)
     
     hhk = header_hhx+ '<UL>'+os.linesep+\
@@ -139,9 +142,12 @@ def build_keywords():
     open(os.path.join(api_path, api_name+'.hhk'), 'w').write(hhk)
 
 
-class APIIndicesParser(htmllib.HTMLParser):
-    def __init__(self, formatter, verbose=0):
-        htmllib.HTMLParser.__init__(self, formatter, verbose)
+class APIIndicesParser(html.parser.HTMLParser):
+    # def __init__(self, formatter, verbose=0):
+    #     html.parser.HTMLParser.__init__(self, formatter, verbose)
+
+    def __init__(self):
+        html.parser.HTMLParser.__init__(self)
         
         self.indices = []
         self.cur_href = None
@@ -166,16 +172,16 @@ class APIIndicesParser(htmllib.HTMLParser):
         self.save_bgn()
 
     def end_code(self):
-        text = string.strip(self.save_end())
+        text = self.save_end().strip()
         if self.cur_href and text:
             self.indices.append( (self.cur_href, text) )
 
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    print 'Building project...'
+    print('Building project...')
     build_project()    
-    print 'Building contents...'
+    print('Building contents...')
     build_contents()
-    print 'Building keywords...'
+    print('Building keywords...')
     build_keywords()

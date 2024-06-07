@@ -26,7 +26,7 @@ def copyFilePath(srcFilepath, dstFilepath):
         try:
             txtEntries = f.readlines()
             for txtEntry in txtEntries:
-                txtEntry = string.strip(txtEntry)
+                txtEntry = txtEntry.strip()
                 if txtEntry:
                     if txtEntry == 'D':
                         pass
