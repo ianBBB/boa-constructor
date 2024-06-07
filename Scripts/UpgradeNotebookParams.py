@@ -22,9 +22,9 @@ def UpdateNotebookParams(filename):
     if oldSrc != src:
         os.rename(filename, filename+'.bak')
         open(filename, 'w').write(src)
-        print 'Updated', filename
+        print('Updated', filename)
     else:
-        print 'Source for', filename, 'unchanged'
+        print('Source for', filename, 'unchanged')
     
 
 if __name__ == '__main__':

@@ -80,7 +80,8 @@ BabelizerIOError
 Version: $Id$
 Author: Jonathan Feinberg <jdf@pobox.com>
 """
-import re, string, urllib
+import re
+import urllib
 
 """
 Various patterns I have encountered in looking for the babelfish result.
@@ -88,9 +89,9 @@ We try each of them in turn, based on the relative number of times I've
 seen each of these patterns.  $1.00 to anyone who can provide a heuristic
 for knowing which one to use.   This includes AltaVista employees.
 """
-__where = [ re.compile(r'name=\"q\">([^<]*)'),
-            re.compile(r'td bgcolor=white>([^<]*)'),
-            re.compile(r'<\/strong><br>([^<]*)')
+__where = [re.compile(r'name=\"q\">([^<]*)'),
+           re.compile(r'td bgcolor=white>([^<]*)'),
+           re.compile(r'<\/strong><br>([^<]*)')
           ]
 
 __languages = { 'english'   : 'en',
@@ -104,25 +105,34 @@ __languages = { 'english'   : 'en',
 """
   All of the available language names.
 """
-#available_languages = [ x.title() for x in __languages.keys() ]
-available_languages = map(string.capitalize, __languages.keys())
+# available_languages = [ x.title() for x in __languages.keys() ]
+available_languages = map(str.capitalize, __languages.keys())
 
 """
   Calling translate() or babelize() can raise a BabelizerError
 """
+
+
 class BabelizerError(Exception):
     pass
 
+
 class LanguageNotAvailableError(BabelizerError):
     pass
+
+
 class BabelfishChangedError(BabelizerError):
     pass
+
+
 class BabelizerIOError(BabelizerError):
     pass
 
+
 def clean(text):
-#    return ' '.join(string.replace(text.strip(), "\n", ' ').split())
-    return string.join(string.split(string.replace(text.strip(), "\n", ' ')))
+    #    return ' '.join(string.replace(text.strip(), "\n", ' ').split())
+    return ' '.join(text.strip().replace("\n", ' ')).split()
+
 
 def translate(phrase, from_lang, to_lang):
     phrase = clean(phrase)
