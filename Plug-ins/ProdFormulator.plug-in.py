@@ -284,7 +284,7 @@ def fieldify(props, prefix='field_'):
     res = {}
     for n, v in list(props.items()):
         if isinstance(v, type([])):
-            res[prefix+n] = string.join(v, '\n')
+            res[prefix+n] = '\n'.join(v)
         else:
             res[prefix+n] = str(v)
     return res

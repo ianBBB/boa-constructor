@@ -219,7 +219,6 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
 
         xtrdir = ''
 
-        #mainSegs = string.split(dir, '://')
         mainSegs = dir.split('://')
         if len(mainSegs) == 1:
             prot = 'file'
@@ -267,8 +266,8 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             filepath2.append(file)
             textpathlst.append(file)
 
-            # htmlfilepath = string.join(filepath, '<b>%s</b>'%os.sep)
-            htmlfilepath = str.join('<b>%s</b>'%os.sep,filepath)
+            # htmlfilepath = string.join(, '<b>%s</b>'%os.sep)
+            htmlfilepath = ('<b>%s</b>'%os.sep).join(filepath)
 
             if segs2:
                 htmlfilepath = htmlfilepath + '<b>://</b>'+str.join('<b>/</b>', filepath2)
@@ -286,7 +285,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             textpathlst.append(file)
 
             # htmlfilepath = string.join(filepath, '<b>%s</b>'%self.lcFiles.node.pathSep)
-            htmlfilepath = str.join('<b>%s</b>'%self.lcFiles.node.pathSep,filepath)
+            htmlfilepath = ('<b>%s</b>'%self.lcFiles.node.pathSep).join(filepath)
 
 
         textfilepath = str.join( os.sep, textpathlst)
@@ -498,7 +497,6 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
                 res = os.path.dirname(res)
             return Explorer.getTransport(prot, cat, res, self.transports)
         except Explorer.TransportCategoryError as err:
-            # prot = string.split(uri, ':')[0]
             prot = uri.split(':')[0]
             # bare protocol entered, route to right toplevel node
             if err.args[0] == _('Category not found') and err.args[1]==catFile:

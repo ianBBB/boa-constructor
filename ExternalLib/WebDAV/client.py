@@ -32,7 +32,8 @@ class HTTP(http.client.HTTPConnection):
     def getreply(self):
         file = self.sock.makefile('rb')
         # data = string.join(file.readlines(), '')
-        data = file.readlines().join('')
+        # data = file.readlines().join('')
+        data = ''.join(file.readlines())
         file.close()
         self.file = StringIO(data)
         line = self.file.readline()
@@ -107,14 +108,14 @@ class Resource:
     def __enc_formdata(self, args={}):
         formdata = []
         for key, val in list(args.items()):
-            n = string.rfind(key, '__')
+            n = str.rfind(key, '__')
             if n > 0:
                 tag = key[n + 2:]
                 key = key[:n]
             else: tag = 'string'
             func = varfuncs.get(tag, marshal_string)
             formdata.append(func(key, val))
-        return string.join(formdata, '&')
+        return '&'.join(formdata)
 
     def __enc_multipart(self, args={}):
         return MultiPart(args).render()
@@ -290,7 +291,7 @@ class Resource:
 
     def getprops(self, *names):
         if not names: return self.propfind()
-        tags = string.join(names, '/>\n  <')
+        tags = '/>\n  <'.join(names)
         body = '<?xml version="1.0" encoding="utf-8"?>\n' \
               '<d:propfind xmlns:d="DAV:">\n' \
               '  <d:prop>\n' \
@@ -305,7 +306,7 @@ class Resource:
         tags = []
         for key, val in list(props.items()):
             tags.append('  <%s>%s</%s>' % (key, val, key))
-        tags = string.join(tags, '\n')
+        tags = '\n'.join(tags)
         body = '<?xml version="1.0" encoding="utf-8"?>\n' \
               '<d:propertyupdate xmlns:d="DAV:">\n' \
               '<d:set>\n' \
@@ -319,7 +320,7 @@ class Resource:
     def delprops(self, *names):
         if not names:
             raise ValueError('No property names specified.')
-        tags = string.join(names, '/>\n  <')
+        tags = '/>\n  <'.join(names)
         body = '<?xml version="1.0" encoding="utf-8"?>\n' \
               '<d:propertyupdate xmlns:d="DAV:">\n' \
               '<d:remove>\n' \
@@ -368,7 +369,7 @@ class http_response:
         list(map(data.append, self.headers.headers))
         data.append('\r\n')
         data.append(self.body)
-        return string.join(data, '')
+        return ''.join(data)
 
 
 set_xml = """<?xml version="1.0" encoding="utf-8"?>
@@ -460,7 +461,7 @@ def marshal_list(name, seq, tname='list', lt=type([]), tt=type(())):
         if tp in (lt, tt):
             raise TypeError('Invalid recursion in data to be marshaled.')
         result.append(marshal_var("%s:%s" % (name, tname), v))
-    return string.join(result, '&')
+    return '&'.join(result)
 
 def marshal_tuple(name, seq):
     return marshal_list(name, seq, 'tuple')
@@ -515,7 +516,7 @@ class MultiPart:
                 ct, enc = guess_type(val.name)
                 if not ct: ct = 'application/octet-stream'
                 fn = string.replace(val.name, '\\', '/')
-                fn = fn[(string.rfind(fn, '/') + 1):]
+                fn = fn[(str.rfind(fn, '/') + 1):]
             else:
                 ct = 'application/octet-stream'
                 enc = ''
@@ -534,7 +535,7 @@ class MultiPart:
                 d.append(l)
                 l = val.read(8192)
         else:
-            n = string.rfind(name, '__')
+            n = str.rfind(name, '__')
             if n > 0: name = '%s:%s' % (name[:n], name[n + 2:])
             h['Content-Disposition']['_v'] = 'form-data'
             h['Content-Disposition']['name'] = '"%s"' % name
@@ -550,7 +551,7 @@ class MultiPart:
         return '%s_%s_%s' % (int(time.time()), os.getpid(), random())
 
     def render(self):
-        join = string.join
+        # join = string.join  # No longer required.
         h = self._headers
         s = []
 
@@ -569,10 +570,10 @@ class MultiPart:
             t.append('--%s\n' % b)
             t.append(join(p, '\n--%s\n' % b))
             t.append('\n--%s--\n' % b)
-            t = join(t, '')
+            t = ''.join(t)
             s.append('Content-Length: %s\n\n' % len(t))
             s.append(t)
-            return join(s, '')
+            return ''.join(s)
 
         else:
             for n, v in list(h.items()):
@@ -591,9 +592,9 @@ class MultiPart:
                 s.append('--%s\n' % b)
                 s.append(join(p, '\n--%s\n' % b))
                 s.append('\n--%s--\n' % b)
-                return join(s, '')
+                return ''.join(s)
             else:
-                return join(s + self._data, '')
+                return ''.join(s + self._data)
 
 
     _extmap = {'':     'text/plain',

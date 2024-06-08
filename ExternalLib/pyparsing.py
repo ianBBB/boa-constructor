@@ -1620,8 +1620,8 @@ class TokenConverter(ParseElementEnhance):
 
 class Upcase(TokenConverter):
     """Converter to upper case all matching tokens."""
-    def postParse( self, instring, loc, tokenlist ):
-        return list(map( string.upper, tokenlist ))
+    def postParse(self, instring, loc, tokenlist):
+        return list(map(str.upper, tokenlist))
 
 
 class Combine(TokenConverter):

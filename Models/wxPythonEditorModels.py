@@ -124,7 +124,6 @@ class BaseFrameModel(ClassModel):
         if ObjCollection.isInitCollMeth(meth):
             ctrlName = methodparse.ctrlNameFromMeth(meth)
             try:
-                # res = Utils.split_seq(codeBody, '', string.strip)
                 res = Utils.split_seq(codeBody, '', "strip()")
                 inits, body, fins = res[:3]
             except ValueError:

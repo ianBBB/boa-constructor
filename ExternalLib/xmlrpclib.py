@@ -372,7 +372,6 @@ class DateTime:
         return "<DateTime %s at %x>" % (repr(self.value), id(self))
 
     def decode(self, data):
-        # self.value = string.strip(data)
         self.value = data.strip()
 
     def encode(self, out):
@@ -1129,8 +1128,9 @@ class Transport:
 
         if auth:
             import base64, urllib.parse
-            auth = base64.encodestring(urllib.parse.unquote(auth))
-            auth = string.join(string.split(auth), "") # get rid of whitespace  # MYTODO fix up Python2 code here
+            auth_bytes = base64.encodestring(urllib.parse.unquote(auth))
+            auth_strs = auth_bytes.decode('utf-8')
+            auth = "".join(auth_strs.split())
             extra_headers = [
                 ("Authorization", "Basic " + auth)
                 ]

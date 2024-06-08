@@ -1,11 +1,12 @@
 # -*- coding: iso-8859-1 -*-#
 #-----------------------------------------------------------------------------
 # Name:        wx25upgrade.py
-# Purpose:     Upgrade code from 2.4 style to 2.5
+# Purpose:     Upgrade code from 2.4 style to 3.12
 #
 # Author:      Paul Sorenson
 # Contrib.:    Werner F. Bruhin
 #              Riaan Booysen
+#              Ian Baker
 #
 # Special thanks to Paul McGuire for his help!
 #
@@ -18,8 +19,8 @@
 # requires: pyparsing
 # usage: python wx25upgrade myFrame.py > myNewFrame.py
 #
-# There are three dictionaries which allow for easy conversion for addtional
-# converstions, update the key section with the 2.4 name and the value with the
+# There are three dictionaries which allow for easy conversion for additional
+# conversations, update the key section with the 2.4 name and the value with the
 # 2.5 name.
 #
 # self.importNames, for import statements
@@ -412,7 +413,7 @@ class Upgrade:
             if kw == "kind":
                 arg = arg.replace("wx", "wx.")
             arglist.append("%s=%s" % (kw, arg))
-        return ".Append(" + string.join(arglist, ", ") + ")"
+        return ".Append(" + ", ".join(arglist) + ")"
 
     def wxfontAction(self, s, l, t):
         a, b, c, d = t
@@ -430,7 +431,7 @@ class Upgrade:
         return ".AddSpacer(wx.Size("+a+","+b+")"
     
     def flagsAction(self, s, l, t):
-        return t[0] + t[1] + "wx." + string.join(t[2:], " | wx.")
+        return t[0] + t[1] + "wx." + " | wx.".join(t[2:])
 
     def repId1Action(self, s, l, t):
         a, b, c = t

@@ -30,7 +30,8 @@ connection for each request.)
 
 import socket
 import string
-import email as mimetools
+import email
+import io
 
 HTTP_VERSION = 'HTTP/1.0'
 HTTP_PORT = 80
@@ -67,13 +68,12 @@ class HTTP:
 
         """
         if not port:
-            # i = string.find(host, ':')   # orig
             i = host.find(':')
             if i >= 0:
                 host, port = host[:i], host[i+1:]
-                # try: port = atoi(port)   # orig
-                try: port = int(port)
-                except string.atoi_error:
+                try:
+                    port = int(port)
+                except ValueError:
                     raise socket.error("nonnumeric port")
         if not port: port = HTTP_PORT
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -125,12 +125,14 @@ class HTTP:
         """
         self.file = self.sock.makefile('rb')
         line = self.file.readline()
-        if self.debuglevel > 0: print('reply:', repr(line))
+        all_lines = self.file.read()
+        if self.debuglevel > 0:
+            print('reply:', repr(line))
         try:
-            [ver, code, msg] = string.split(line, None, 2)
+            [ver, code, msg] = line.split(None, 2)
         except ValueError:
             try:
-                [ver, code] = string.split(line, None, 1)
+                [ver, code] = line.split(None, 1)
                 msg = ""
             except ValueError:
                 self.headers = None
@@ -138,9 +140,13 @@ class HTTP:
         if ver[:5] != 'HTTP/':
             self.headers = None
             return -1, line, self.headers
-        errcode = string.atoi(code)
-        errmsg = string.strip(msg)
-        self.headers = mimetools.message.Message(self.file, 0)
+        errcode = int(code)
+        errmsg = msg.strip()
+        stream = io.StringIO()
+        rxString = all_lines.decode("utf-8").split('\r\n', 1)[1]
+        stream.write(rxString)
+        # self.headers = mimetools.message.Message(self.file, 0)    # orig
+        self.headers = email.message_from_string(rxString)
         return errcode, errmsg, self.headers
 
     def getfile(self):
@@ -190,7 +196,7 @@ def test():
     print('errmsg  =', errmsg)
     print()
     if headers:
-        for header in headers.headers: print(string.strip(header))
+        for header in headers.headers: print(header.strip())
     print()
     print(h.getfile().read())
 

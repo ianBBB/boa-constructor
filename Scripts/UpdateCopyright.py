@@ -15,7 +15,7 @@ def update_copyright(old_date='2006', new_date='2007'):
                 if d != -1:
                     src = src[:c+d]+new_date+src[c+d+len(new_date):]
                     open(f, 'w').write(src)
-                    print 'updated', f
+                    print('updated', f)
             
 
 if __name__ == '__main__':

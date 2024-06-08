@@ -250,7 +250,7 @@ class SourceController(PersistentController):
             if self.checkUnsaved(model): return
             if not diffWithFilename:
                 diffWithFilename = self.editor.openFileDlg()
-            filename = model.assertLocalFile(filename)
+            # filename = model.assertLocalFile(filename)    # PRUNE unclear why this is necessary.
 
     def OnPatchFile(self, event, patchFilename=''):
         model = self.getModel()
@@ -258,7 +258,7 @@ class SourceController(PersistentController):
             if self.checkUnsaved(model): return
             if not patchFilename:
                 patchFilename = self.editor.openFileDlg()
-            filename = model.assertLocalFile(filename)
+            # filename = model.assertLocalFile(filename)     # PRUNE unclear why this is necessary.
 
 class TextController(PersistentController):
     Model           = EditorModels.TextModel
