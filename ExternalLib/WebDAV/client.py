@@ -107,7 +107,7 @@ class Resource:
     def __enc_formdata(self, args={}):
         formdata = []
         for key, val in list(args.items()):
-            n = string.rfind(key, '__')
+            n = str.rfind(key, '__')
             if n > 0:
                 tag = key[n + 2:]
                 key = key[:n]
@@ -515,7 +515,7 @@ class MultiPart:
                 ct, enc = guess_type(val.name)
                 if not ct: ct = 'application/octet-stream'
                 fn = string.replace(val.name, '\\', '/')
-                fn = fn[(string.rfind(fn, '/') + 1):]
+                fn = fn[(str.rfind(fn, '/') + 1):]
             else:
                 ct = 'application/octet-stream'
                 enc = ''
@@ -534,7 +534,7 @@ class MultiPart:
                 d.append(l)
                 l = val.read(8192)
         else:
-            n = string.rfind(name, '__')
+            n = str.rfind(name, '__')
             if n > 0: name = '%s:%s' % (name[:n], name[n + 2:])
             h['Content-Disposition']['_v'] = 'form-data'
             h['Content-Disposition']['name'] = '"%s"' % name
