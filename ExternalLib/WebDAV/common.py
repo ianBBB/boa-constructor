@@ -141,7 +141,8 @@ def tokenFinder(token):
     if not token: return None           # An empty string was passed in
     if token[0] == '[': return None     # An Etag was passed in
     if token[0] == '<': token = token[1:-1]
-    return token[string.find(token,':')+1:]
+    # return token[string.find(token,':')+1:] # orig
+    return token[token.find(':')+1:]
 
 
 ### If: header handling support.  IfParser returns a sequence of
