@@ -164,7 +164,7 @@ class Signature:
             l.append( '*' + specials['positional'] )
         if 'keyword' in specials:
             l.append( '**' + specials['keyword'] )
-        return "%s(%s)" % (self.name, string.join(l, ', '))
+        return "%s(%s)" % (self.name, ', '.join(l))
 
 def _getcode(f):
     """_getcode(f)

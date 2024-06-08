@@ -35,7 +35,6 @@ class PythonInterpreter:
                 self.lines.append(line)
                 return 1  # want more!
             else:
-                # line = string.join(self.lines, "\n") + "\n"
                 line = "\n".join(self.lines) + "\n"
         else:
             if not line:

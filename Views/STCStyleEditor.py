@@ -1146,16 +1146,12 @@ def strToCol(strCol):
                     int('0x'+strCol[3:5], 16),
                     int('0x'+strCol[5:7], 16))
 def colToStr(col):
-    # return '#%s%s%s' % (string.zfill(string.upper(hex(col.Red())[2:]), 2),
-    #                     string.zfill(string.upper(hex(col.Green())[2:]), 2),
-    #                     string.zfill(string.upper(hex(col.Blue())[2:]), 2))
     return '#%s%s%s' % (str.upper(hex(col.Red())[2:]).zfill(2),
                         str.upper(hex(col.Green())[2:]).zfill(2),
                         str.upper(hex(col.Blue())[2:]).zfill(2))
 
 def writeProp(num, style, lang):
     if num >= 0:
-        # return 'style.%s.%s='%(lang, string.zfill(repr(num), 3)) + style
         return 'style.%s.%s=' % (lang, repr(num).zfill(3)) + style
     else:
         return 'setting.%s.%d='%(lang, num) + style

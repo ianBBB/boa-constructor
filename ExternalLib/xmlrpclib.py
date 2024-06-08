@@ -1128,8 +1128,9 @@ class Transport:
 
         if auth:
             import base64, urllib.parse
-            auth = base64.encodestring(urllib.parse.unquote(auth))
-            auth = string.join(auth.split(), "") # get rid of whitespace  # MYTODO fix up Python2 code here
+            auth_bytes = base64.encodestring(urllib.parse.unquote(auth))
+            auth_strs = auth_bytes.decode('utf-8')
+            auth = "".join(auth_strs.split())
             extra_headers = [
                 ("Authorization", "Basic " + auth)
                 ]

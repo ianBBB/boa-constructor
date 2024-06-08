@@ -1,5 +1,6 @@
 from base64 import *
 import string
+import base64
 from ExternalLib.WebDAV import httplib
 import ExternalLib.xmlrpclib as xmlrpclib
 
@@ -17,7 +18,7 @@ class BasicAuthTransport(xmlrpclib.Transport):
         h.putheader("Content-Type","text/xml")
         h.putheader("Content-Length",str(len(request_body)))
         if self.username is not None and self.password is not None:
-            h.putheader("AUTHORIZATION", "Basic %s" % string.replace(encodestring("%s:%s" % (self.username, self.password)),"\012", "")) # TODO Fix this
+            h.putheader("AUTHORIZATION", "Basic %s" % str.replace(str(base64.encodestring("%s:%s" % (self.username, self.password))),"\012", ""))
         h.endheaders()
         if request_body:
             h.send(request_body)

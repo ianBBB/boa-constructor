@@ -266,8 +266,8 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             filepath2.append(file)
             textpathlst.append(file)
 
-            # htmlfilepath = string.join(filepath, '<b>%s</b>'%os.sep)
-            htmlfilepath = str.join('<b>%s</b>'%os.sep,filepath)
+            # htmlfilepath = string.join(, '<b>%s</b>'%os.sep)
+            htmlfilepath = ('<b>%s</b>'%os.sep).join(filepath)
 
             if segs2:
                 htmlfilepath = htmlfilepath + '<b>://</b>'+str.join('<b>/</b>', filepath2)
@@ -285,7 +285,7 @@ class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):
             textpathlst.append(file)
 
             # htmlfilepath = string.join(filepath, '<b>%s</b>'%self.lcFiles.node.pathSep)
-            htmlfilepath = str.join('<b>%s</b>'%self.lcFiles.node.pathSep,filepath)
+            htmlfilepath = ('<b>%s</b>'%self.lcFiles.node.pathSep).join(filepath)
 
 
         textfilepath = str.join( os.sep, textpathlst)
