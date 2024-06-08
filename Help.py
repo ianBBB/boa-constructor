@@ -489,7 +489,7 @@ class wxHelpFrameEx:
         self.contentsTree.Expand(self.contentsTree.GetSelection())
         page = self.html.GetOpenedPage()
         if anchor:
-            self.controller.Display('%s#%s' % (page, string.lower(anchor)))
+            self.controller.Display('%s#%s' % (page, str.lower(anchor)))
 
     def OnQuitHelp(self, event):
         self.frame.Close

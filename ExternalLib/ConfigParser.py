@@ -301,7 +301,7 @@ class ConfigParser:
         return val
 
     def optionxform(self, optionstr):
-        return string.lower(optionstr)
+        return str.lower(optionstr)
 
 
 
