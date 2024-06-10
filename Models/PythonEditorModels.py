@@ -182,7 +182,9 @@ class ModuleModel(SourceModel):
                       self.editor.erroutFrm.inputPage.GetValue()).readlines()
                 
             cwd = os.path.abspath(os.getcwd())
+            cwd = f"{cwd}"
             newCwd = os.path.dirname(os.path.abspath(filename))
+            newCwd = f"{newCwd}"
             interp = Preferences.getPythonInterpreterPath()
             basename = os.path.basename(filename)
             
