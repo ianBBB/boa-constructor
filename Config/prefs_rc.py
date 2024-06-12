@@ -67,7 +67,7 @@ recordModuleCallPoint = False
 # Path to an alternative Python Interpreter. By default (blank string) Boa
 # will use the same interpreter it is running on
 ## type: filepath
-pythonInterpreterPath = 'C:\\Users\\Ian-17\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+pythonInterpreterPath = ''
 
 # Should the initialisation of the help be delayed until first usage?
 delayInitHelp = True
