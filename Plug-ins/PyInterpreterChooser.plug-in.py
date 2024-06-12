@@ -259,7 +259,6 @@ class PyInterpreterChooserDlg(wx.Dialog):
 
 
 if __name__ == '__main__':
-    # app = wx.PySimpleApp()
     app = wx.App()
     dlg = PyInterpreterChooserDlg(None)
     try:
