@@ -16,7 +16,8 @@ print('importing Palette')
 import sys
 
 import wx
-import wx.html2
+# import wx.html2
+import webbrowser
 
 import PaletteStore
 import Help, Preferences, Utils, Plugins
@@ -264,17 +265,25 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
             Help.showMainHelp(self.paletteHelpItems['boa'])
 
     def OnWxWinHelpToolClick(self, event):
-        PyHelpBrowser = MyBrowser(None, -1,title = 'wxPython 4.2.1 Help', style=wx.DEFAULT_FRAME_STYLE )
-        PyHelpBrowser.browser.LoadURL(r"https://docs.wxpython.org/index.html")
-        PyHelpBrowser.Show()
+        webbrowser.open('https://docs.wxpython.org/index.html', new=2)
         event.Skip()
+
+        # PyHelpBrowser = MyBrowser(None, -1,title = 'wxPython 4.2.1 Help', style=wx.DEFAULT_FRAME_STYLE )
+        # PyHelpBrowser.browser.LoadURL(r"https://docs.wxpython.org/index.html")
+        # PyHelpBrowser.Show()
+        # event.Skip()
+
         # Help.showMainHelp(self.paletteHelpItems['wx'])
 
     def OnPythonHelpToolClick(self, event):
-        PyHelpBrowser = MyBrowser(None, -1,title = 'Python 3 Help', style=wx.DEFAULT_FRAME_STYLE )
-        PyHelpBrowser.browser.LoadURL(r"https://docs.python.org/3/")
-        PyHelpBrowser.Show()
+        webbrowser.open('https://docs.python.org/3/', new=2)
         event.Skip()
+
+        # PyHelpBrowser = MyBrowser(None, -1,title = 'Python 3 Help', style=wx.DEFAULT_FRAME_STYLE )
+        # PyHelpBrowser.browser.LoadURL(r"https://docs.python.org/3/")
+        # PyHelpBrowser.Show()
+        # event.Skip()
+
         ## Help.showMainHelp(self.paletteHelpItems['python'])
 
     def OnCustomHelpToolClick(self, event):
