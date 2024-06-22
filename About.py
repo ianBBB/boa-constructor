@@ -216,8 +216,7 @@ class AboutBoxMixin:
               style=wx.CLIP_CHILDREN | wx.html.HW_NO_SELECTION | extraStyle)
         #Utils.EVT_HTML_URL_CLICK(self.html, self.OnLinkClick)
         self.html.Bind(Utils.EVT_HTML_URL_CLICK, self.OnLinkClick)
-        # self.setPage()   # orig
-        super().setPage()
+        self.setPage()
         self.blackback.SetAutoLayout(True)
         lc = wx.LayoutConstraints()
         lc.top.SameAs(self.blackback, wx.Top, self.border)
@@ -335,9 +334,10 @@ class AboutBoxSplash(AboutBoxMixin, wx.Frame):
     def initCtrlNames(self):
         self.label = self.FindWindowById(self.progressId)
         self.label.SetBackgroundColour(wx.WHITE)
-        parentWidth = self.label.GetParent().GetClientSize().x
-        self.label.SetSize((parentWidth - 40, self.label.GetSize().y))
-
+        # parentWidth = self.label.GetParent().GetClientSize().x
+        # self.label.SetSize((parentWidth - 40, self.label.GetSize().y))
+        ReqdWidth = self.label.GetSize().x
+        self.label.SetSize((ReqdWidth - 40, self.label.GetSize().y))
         gaugePrnt = self.FindWindowById(self.gaugePId)
         gaugePrnt.SetBackgroundColour(wx.BLACK)  # wx.Colour(0x99, 0xcc, 0xff))
         gaugeSze = gaugePrnt.GetClientSize()
