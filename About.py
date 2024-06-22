@@ -216,7 +216,8 @@ class AboutBoxMixin:
               style=wx.CLIP_CHILDREN | wx.html.HW_NO_SELECTION | extraStyle)
         #Utils.EVT_HTML_URL_CLICK(self.html, self.OnLinkClick)
         self.html.Bind(Utils.EVT_HTML_URL_CLICK, self.OnLinkClick)
-        self.setPage()
+        # self.setPage()   # orig
+        super().setPage()
         self.blackback.SetAutoLayout(True)
         lc = wx.LayoutConstraints()
         lc.top.SameAs(self.blackback, wx.Top, self.border)
@@ -255,8 +256,8 @@ class AboutBoxMixin:
                                               'memory:FreeBSD.png',
                                              ))
         elif clicked == 'Back':
-            self.setPage()
-            # self.html.HistoryBack()
+            # self.setPage()
+            self.html.HistoryBack()
         elif clicked == 'Python':
             self.gotoInternetUrl('http://www.python.org')
         elif clicked == 'wxPython':
