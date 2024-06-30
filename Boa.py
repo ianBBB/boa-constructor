@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #----------------------------------------------------------------------
 # Name:        Boa.py
@@ -305,6 +305,8 @@ import Utils
 from Utils import _
 
 import About
+
+import wx.richtext   # needed to avoid error messages in Linux in Companions.BasicCompanions during startup.
 
 print('running main...')
 
