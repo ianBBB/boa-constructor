@@ -818,7 +818,7 @@ def BlankToolBitmap(width, height):
     dc.SetBrush(wx.Brush(wx.RED, wx.BDIAGONAL_HATCH))
     dc.SetBackground(wx.Brush(wx.WHITE))
     dc.SetPen(wx.Pen(wx.WHITE, 0, wx.TRANSPARENT))
-    dc.BeginDrawing()
+    # dc.BeginDrawing()  #DEPRECATED
     dc.DrawRectangle(0, 0, width, height)
 
     return bmp
