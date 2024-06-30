@@ -60,21 +60,12 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
     def _init_coll_toolBar_Tools(self, parent):
         # generated method, don't edit
 
-        # parent.AddTool(bitmap=IS.load('Images/Shared/Inspector.png'),
-        #       id=wxID_BOAFRAMETOOLBARTOOLS0, isToggle=False, # longHelpString='',
-        #       pushedBitmap=wx.NullBitmap,
-        #       shortHelpString=_('Brings the Inspector to the front'))    # ORIG
         parent.AddTool(toolId=wxID_BOAFRAMETOOLBARTOOLS0, label="New", bitmap=IS.load('Images/Shared/Inspector.png'),
                         bmpDisabled =wx.NullBitmap, kind=wx.ITEM_NORMAL,
                        shortHelp=_('Brings the Inspector to the front'),
                        longHelp='',clientData= None)
 
 
-
-        # parent.AddTool(bitmap=IS.load('Images/Shared/Editor.png'),
-        #       id=wxID_BOAFRAMETOOLBARTOOLS1, isToggle=False, longHelpString='',
-        #       pushedBitmap=wx.NullBitmap,
-        #       shortHelpString=_('Brings the Editor to the front'))
         parent.AddTool(toolId=wxID_BOAFRAMETOOLBARTOOLS1, label="New", bitmap=IS.load('Images/Shared/Editor.png'),
                         bmpDisabled =wx.NullBitmap, kind=wx.ITEM_NORMAL,
                        shortHelp=_('Brings the Editor to the front'),
