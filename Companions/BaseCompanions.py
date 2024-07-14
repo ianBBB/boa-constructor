@@ -264,7 +264,7 @@ class DesignTimeCompanion(Companion):
         self.textConstr = methodparse.ConstructorParse('self.%s = %s(%s)' %(
               self.name, className, ', '.join(paramStrs)))
 
-        # if className == 'wx.StatusBar':
+        # if className == 'wx.StatusBar':  # PRUNE
         #     self.textConstr = methodparse.ConstructorParse('self.%s = %s(%s)' %(
         #           self.name, className, ', '.join(paramStrs)) + '\nself.SetStatusBar(self.%s)'%(self.name))
         #
