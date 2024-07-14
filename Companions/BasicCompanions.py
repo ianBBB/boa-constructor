@@ -24,6 +24,7 @@ from Utils import _
 from .BaseCompanions import WindowDTC, ChoicedDTC, CollectionDTC
 
 from . import Constructors
+from . import EventCollections
 from .EventCollections import *
 
 from PropEdit.PropertyEditors import *
@@ -503,6 +504,17 @@ class GIFAnimationCtrlDTC(WindowDTC):
         return '\n'.join( (WindowDTC.writeImports(self),
                            'import wx.adv.Animation') )
 
+
+EventCollections.EventCategories['MediaEvent'] = (
+    'wx.media.EVT_MEDIA_LOADED',
+    'wx.media.EVT_MEDIA_STOP',
+    'wx.media.EVT_MEDIA_FINISHED',
+    'wx.media.EVT_MEDIA_STATECHANGED',
+    'wx.media.EVT_MEDIA_PLAY',
+    'wx.media.EVT_MEDIA_PAUSE')
+EventCollections.commandCategories.append('MediaEvent')
+
+
 class MediaCtrlDTC(WindowDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         WindowDTC.__init__(self, name, designer, parent, ctrlClass)
@@ -514,7 +526,8 @@ class MediaCtrlDTC(WindowDTC):
         self.names['Backend'] = ['wx.media.MEDIABACKEND_DIRECTSHOW',
                                  'wx.media.MEDIABACKEND_MCI',
                                  'wx.media.MEDIABACKEND_QUICKTIME',
-                                 'wx.media.MEDIABACKEND_GSTREAMER', "''"]
+                                 'wx.media.MEDIABACKEND_GSTREAMER',
+                                 'wx.media.MEDIABACKEND_WMP10', "''"]
 
     def constructor(self):
         return {'Position': 'pos', 'Size': 'size', 'Name': 'name', 'Style': 'style',
@@ -531,6 +544,9 @@ class MediaCtrlDTC(WindowDTC):
     def writeImports(self):
         return '\n'.join( (WindowDTC.writeImports(self),
                            'import wx.media') )
+
+    def events(self):
+        return WindowDTC.events(self) + ['MediaEvent']
 
 
 EventCategories['RichTextEvent'] = (
