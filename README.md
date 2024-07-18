@@ -1,6 +1,6 @@
 ## Boa Construtor - An Overview
 
-Hello and thanks for dropping in to check out Boa Constructor. Boa Constructor is an IDE and was originally written in 1999. It runs in Python and uses wxPython for its GUI elements and controls. In 1999, Python and wxPython were very different and have evolved over the itervening time. As such, Boa Constructor will not run on current releases of Python or wxPython. This project was created to "uplift" the code to get Boa working again in modern programming environments.
+Hello and thanks for dropping in to check out Boa Constructor. Boa Constructor is an IDE originally written in 1999. It runs in Python and uses wxPython for its GUI elements and controls. In 1999, Python and wxPython were very different and have evolved over the itervening time. So much so that the original Boa Constructor code will no longer run on current releases of Python or wxPython. This project was created to "uplift" the code to get Boa working again in modern programming environments.
 
 Boa Constructor is described as a Rapid Application Development tool. Apart from features common to most IDEs such as a full-featured editor, a built-in debugger, TODO functions, Bookmarking, etc Boa also features a GUI-based GUI builder. This means you can graphically build your applications window frame, its menus, its toolbars and buttons, its text entry areas and other controls. There are many built=in wxPython controls available for use in your application; colour picker, Directory Navigation dialogue and file selection, various dialogue boxes to communicate with your user. wxPython has many other controls like radio buttons, spinners, sliders, combo boxes, etc all available for you to pick-and-click into your application.
 
@@ -9,6 +9,8 @@ Boa Constructor presumes your application will operate in the Model-View-Control
 ## Boa Construtor - The Project
 
 The project is on-going. There are still many parts of Boa that are not yet functional but most of the basics are there for you to get started. There is enough functionality to complete the original Boa Constructor tutorial activity that demonstrates how to use Boa to create basic applications. More functionaity will be available in later releases as I get more working. You can watch how things are progressing by going to the *Discussion* section (in the menu near the top of the page) and look for **"Day-by-Day Progress Reporting Diary"**. Despite the title, updates are approximately weekly. Don't forget to click on the *Newest* button to see the latest updates.
+
+If you have the desire and skill to help resurrect Boa Constructor, I would love to hear from you.
 
 ## Installation
 
@@ -30,9 +32,9 @@ To install wxPython, use the *pip* tool. Open a terminal window and use the comm
 
 (you may be asked to upgrade *pip* . The command to do this will be given to you)
 
-Finally, to download Boa Constructor, go to the github website and search for "ianBBB/boa-constructor" 
+Finally, to download Boa Constructor, go to the [github website](https://github.com/) and search for "ianBBB/boa-constructor". This should result in just one link. Click on this link to go to the project. Use the green button marked "Code" to download the ZIP file containing Boa Constructor. Save or move the ZIP file to a convenient location (a folder in My Documents would be suitable). Unzip the file. Extract the ZIP file. In the root folder, you will find the Boa file (it is 30K in size). Double click on this file to open Boa Constructor. 
 
-If you have the desire and skill to help resurrect Boa Constructor, I would love to hear from you.
-
+### Installation - Other
+Installation instructions for Linux (Ubuntu) and Mac coming soon.
 Ian Baker
 June 2024
