@@ -19,9 +19,18 @@ There are three basic steps it get Boa Constructor working. They are;
 
 ### Installation - Windows 11
 
-Windows does not come with Python so if you do not have it already, you will need to install it. Go to the *python.org* website and select Download from the menu. You will see a box titled "Download For Windows"with a button to start the download. Click it to download Pythhon.
+Windows does not come with Python so if you do not have it already, you will need to install it. There are several resources on the internet that describe how to do this. The following is a minimalist explanation. Go to the [python.org](https://www.python.org/) website and select Download from the menu. You will see a box titled "Download For Windows" with a button to start the download. Click it to download Python.
 
+Once the download is complete, double click on it to commence the installation process. Accept all the default settings however there is one variation required. You need to tick the "Add Python to Path" box, like this;
 
+<img width="498" alt="python install tick box" src="https://github.com/user-attachments/assets/81af380b-617f-4ad9-8463-e50116295b14">
+
+To install wxPython, use the #pip# tool. Open a terminal window and use the command;
+>pip install -U wxPython
+
+(you may be asked to upgrade *pip* . The command to do this will be given to you)
+
+Finally, to download Boa Constructor, go to the github website and search for "ianBBB/boa-constructor" 
 
 If you have the desire and skill to help resurrect Boa Constructor, I would love to hear from you.
 
