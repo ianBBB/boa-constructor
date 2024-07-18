@@ -25,10 +25,10 @@ Once the download is complete, double click on it to commence the installation p
 
 <img width="498" alt="python install tick box" src="https://github.com/user-attachments/assets/81af380b-617f-4ad9-8463-e50116295b14">
 
-To install wxPython, use the #pip# tool. Open a terminal window and use the command;
+To install wxPython, use the *pip* tool. Open a terminal window and use the command;
 >pip install -U wxPython
 
-(you may be asked to upgrade #pip# . The command to do this will be given to you)
+(you may be asked to upgrade *pip* . The command to do this will be given to you)
 
 Finally, to download Boa Constructor, go to the github website and search for "ianBBB/boa-constructor" 
 
