@@ -25,7 +25,7 @@ edSTCFolding = False
 #-Window settings---------------------------------------------------------------
 
 # Height of the Palette window. Adjust if you use big fonts
-paletteHeights = {'tabs': 100, 'menu': 56}
+paletteHeights = {'tabs': 210, 'menu': 56}
 # Used my Mac toplevel main menu
 topMenuHeight = 0
 

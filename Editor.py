@@ -131,7 +131,7 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
     def __init__(self, parent, id, inspector, newMenu, componentPalette, app, palette):
         self._created = False
         self._init_ctrls(parent)
-        self.Show()     # test for Ubuntu
+        self.Show()     # test for Ubuntu    # Is this needed?
         self.palette = palette
         self.winConfOption = 'editor'
         self.loadDims()

@@ -96,7 +96,7 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.SetToolBar(self.toolBar)
 
         self.palette = wx.Notebook(id=wxID_BOAFRAMEPALETTE, name='palette',
-                                   parent=self, pos=wx.Point(0, 24), size=wx.Size(637, 23), style=0)
+                                   parent=self, pos=wx.Point(0, 24), size=wx.Size(637, 23), style=wx.NB_TOP)
 
         self._init_coll_toolBar_Tools(self.toolBar)
 
