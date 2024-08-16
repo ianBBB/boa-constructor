@@ -139,7 +139,9 @@ about_text = '''
 <p>A <b>Python</b> IDE and <b>wxPython</b> GUI builder
 </p>
 
-<p><a href="Boa">https://bitbucket.org/cwt/boa-constructor</a><br></u>
+<p><a href="Boa">https://github.com/ianBBB/boa-constructor</a><br></u>
+&copy;2021-2024 <b>Ian Baker</b>.<br>
+<a href="MailMe">cwt@bashell.com</a></p><p><a href="Boa">https://bitbucket.org/cwt/boa-constructor</a><br></u>
 &copy;2012-2014 <b>Chaiwat Suttipongsakul</b>.<br>
 <a href="MailMe">cwt@bashell.com</a></p>
 <p><a href="BoaLegacy">http://boa-constructor.sourceforge.net</a><br></u>
@@ -158,6 +160,7 @@ about_text = '''
 <p>
 <center>
 <font size=-1><i>for <font color="#AA0000"><b>Bonnie</b></font></i></font>
+<font size=-1><i>and for <font color="#AA0000"><b>Lisa</b></font></i></font>
 </center>
 </p>
 '''
