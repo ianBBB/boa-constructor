@@ -83,6 +83,10 @@ Robert Boulanger (robert@boulanger.de)<br>
 Tim Hochberg (tim.hochberg@ieee.org)<br>
 Kevin Light (klight@walkertechnical.com)<br>
 Marius van Wyk (marius@e.co.za)<br>
+<br>
+Chaiwat Suttipongsakul (cwt@bashell.com)<br>
+<br>
+Ian Baker (ibaker@ieee.org)
 
 <p>
 <b>Translators</b><br>
@@ -139,7 +143,9 @@ about_text = '''
 <p>A <b>Python</b> IDE and <b>wxPython</b> GUI builder
 </p>
 
-<p><a href="Boa">https://bitbucket.org/cwt/boa-constructor</a><br></u>
+<p><a href="Boa">https://github.com/ianBBB/boa-constructor</a><br></u>
+&copy;2021-2024 <b>Ian Baker</b>.<br>
+<a href="MailMe">ibaker@ieee.org</a></p><p><a href="Boa">https://github.com/ianBBB/boa-constructor</a><br></u>
 &copy;2012-2014 <b>Chaiwat Suttipongsakul</b>.<br>
 <a href="MailMe">cwt@bashell.com</a></p>
 <p><a href="BoaLegacy">http://boa-constructor.sourceforge.net</a><br></u>
@@ -157,7 +163,8 @@ about_text = '''
 <br>
 <p>
 <center>
-<font size=-1><i>for <font color="#AA0000"><b>Bonnie</b></font></i></font>
+<font size=-1><i>for <font color="#AA0000"><b>Bonnie</b></font></i></font><br>
+<font size=-1><i>and for <font color="#AA0000"><b>Lisa</b></font></i></font>
 </center>
 </p>
 '''
@@ -255,8 +262,8 @@ class AboutBoxMixin:
                                               'memory:FreeBSD.png',
                                              ))
         elif clicked == 'Back':
-            # self.setPage()
-            self.html.HistoryBack()
+            self.setPage()
+            # self.html.HistoryBack()
         elif clicked == 'Python':
             self.gotoInternetUrl('http://www.python.org')
         elif clicked == 'wxPython':
@@ -287,9 +294,9 @@ class AboutBoxMixin:
 class AboutBox(AboutBoxMixin, wx.Dialog):
     def _init_ctrls(self, prnt):
         if Preferences.thisPlatform == 'msw':
-            boxSize=wx.Size(410, 645)
+            boxSize=wx.Size(410, 745)
         else:
-            boxSize=wx.Size(410, 600)
+            boxSize=wx.Size(410, 700)
         wx.Dialog.__init__(self, size=boxSize, pos=(-1, -1),
               id=wxID_ABOUTBOX, title=_('About Boa Constructor'), parent=prnt,
               name='AboutBox', style=wx.DEFAULT_DIALOG_STYLE)
