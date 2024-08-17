@@ -29,7 +29,6 @@ from Utils import _
 class PyDocHelpPage(wx.Panel):
     def _init_utils(self):
         # generated method, don't edit
-        # self.scrBrowse =wx.StockCursor(id=wx.CURSOR_HAND)
         self.scrBrowse =wx.Cursor(wx.CURSOR_HAND)
 
     def _init_ctrls(self, prnt):
@@ -91,7 +90,7 @@ class PyDocHelpPage(wx.Panel):
         self.stxStatus.Bind(wx.EVT_LEFT_DOWN, self.OnStxstatusLeftDown)
 
     def __init__(self, parent, helpFrame):
-        #print 'creating new PyDocPage'
+        print('creating new PyDocPage')
         self.runServer = False
         self.runServer = helpFrame.pdRunServer
 
