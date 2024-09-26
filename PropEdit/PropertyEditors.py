@@ -1817,6 +1817,8 @@ class ColPropEdit(ClassPropEdit):
                 self.value = dlg.GetColourData().GetColour()
                 self.inspectorPost(False)
                 self.editorCtrl.setValue(self.value)
+                self.propWrapper.setValue(self.value)
+                self.obj.Refresh()
                 #self.propWrapper.setValue(self.value)
                 #self.obj.Refresh()
         finally:
