@@ -6,4 +6,8 @@ This is a list that may help you do that,
 
 - OnSelect()  _when an item is selected from the Inspector_
    Inspector.py 559 864
+- OnDesigner() _when clicking on the Designer button in the Editor_
+   wxPythonControllers.py 77
+- OnClickTrap() _when selecting an item from the Palette._ Palette.py 387
+  
 
