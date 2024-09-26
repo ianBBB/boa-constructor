@@ -5,5 +5,9 @@
 3. Update the appropriate Config file.
    1. Delete any entry in _openfiles_
    2. Delete any entries in _bookmarks_ after the first three entries. 
+<<<<<<< HEAD
    3. Delete any entries in _recentfiles_.
 4. Update the version number in \__version__.py
+=======
+   3. Delete any entries in _recentfiles_.
+>>>>>>> origin/dev
