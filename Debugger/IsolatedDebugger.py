@@ -860,17 +860,21 @@ class DebugServer (Bdb):
 
         # self.run("execfile(fn, d)", {
         #     'fn':fn, 'd':d, '__debugger__': self})     # orig
-        file_code=open(fn).read()
-        cmd_str='exec(' + repr(file_code) + ' , d)'
-        self.run(cmd_str, {
-            'fn': fn, 'd': d, '__debugger__': self})
-
-
 
         # self.run("exec(open(fn).read(), d)", {        # 1st pass
         #     'fn':repr(fn), 'd':d, '__debugger__': self})
         # self.run("print(5test)", {
         #     'fn':fn, 'd':d, '__debugger__': self})
+
+        # file_code=open(fn).read()                             # 2nd pass
+        # cmd_str='exec(' + repr(file_code) + ' , d)'
+        # self.run(cmd_str, {
+        #     'fn': fn, 'd': d, '__debugger__': self})
+
+        file_code=open(fn).read()
+        cmd_str='exec(' + repr(file_code) + ')'
+        cod_obj = compile(cmd_str,fn,'exec')
+        self.run(cod_obj)
 
     def run(self, cmd, globals=None, locals=None):
         try:
