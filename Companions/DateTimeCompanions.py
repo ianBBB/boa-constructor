@@ -40,7 +40,7 @@ class CalendarDTC(CalendarConstr, BaseCompanions.WindowDTC):
         return BaseCompanions.WindowDTC.events(self) + ['CalendarEvent']
 
     def writeImports(self):
-        return 'import wx.lib.calendar'
+        return 'import wx.adv'
 
 
 class DateTimePropEditor(PropertyEditors.BITPropEditor):
@@ -72,9 +72,9 @@ EventCollections.commandCategories.append('DatePickerCtrlEvent')
 class DatePickerCtrlDTC(BaseCompanions.WindowDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         BaseCompanions.WindowDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.DP_SPIN', 'wx.DP_DROPDOWN', 'wx.DP_DEFAULT',
-                             'wx.DP_ALLOWNONE', 'wx.DP_SHOWCENTURY'
-                             ] + self.windowStyles
+        self.windowStyles = ['wx.adv.CAL_SUNDAY_FIRST', 'wx.adv.CAL_MONDAY_FIRST',
+              'wx.adv.CAL_SHOW_HOLIDAYS', 'wx.adv.CAL_NO_YEAR_CHANGE',
+              'wx.adv.CAL_NO_MONTH_CHANGE'] + self.windowStyles
 
     def constructor(self):
         return {'Position': 'pos', 'Size': 'size',
@@ -83,7 +83,7 @@ class DatePickerCtrlDTC(BaseCompanions.WindowDTC):
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
         return {'pos': position,
                 'size': size,
-                'style': 'wx.DP_SHOWCENTURY',
+                'style': 'wx.adv.CAL_SHOW_HOLIDAYS',
                 'name': repr(self.name)}
 
     def events(self):

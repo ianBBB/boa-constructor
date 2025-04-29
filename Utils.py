@@ -179,7 +179,7 @@ def getWxPyNameForClass(Class):
     # I think this was intended to remove '_core' from wx class names however it will also take out '_adv' and '_stc'
     # which are needed to build the full wx class name for items in those modules.
     # Trying this fix to simply remove the underscore from affected class names.
-    if classPathSegs[1] in {'_adv', '_stc', '_media'}:
+    if classPathSegs[1] in {'_adv', '_stc', '_media', '_html'}:
         classname = '.'.join(classPathSegs)
         return classname.replace('_','')
     else:
