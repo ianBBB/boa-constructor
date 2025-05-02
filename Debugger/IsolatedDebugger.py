@@ -578,7 +578,20 @@ class DebugServer (Bdb):
     def getFilenameAndLine(self, frame):
         """Returns the filename and line number for the frame.
         """
-        filename = self.canonic(frame.f_code.co_filename)
+
+        # filename = self.canonic(frame.f_code.co_filename)   # orig
+
+
+        if 'fn' in frame.f_globals.keys():
+            filename = self.canonic(frame.f_globals['fn'])
+        else:
+            filename = self.canonic(frame.f_code.co_filename)   # orig
+
+        # DEBUG CODE
+        # with open(r"C:\Users\Ian-17\Dropbox\Ians\technical\Boa Constructor\Testarea\general\temp\frame.txt", "w") as file:
+        #     # Write a string to the file
+        #     file.write(filename)
+
         return filename, frame.f_lineno
 
     def getFrameNames(self, frame):
@@ -858,23 +871,10 @@ class DebugServer (Bdb):
 
         self.autocont = autocont
 
-        # self.run("execfile(fn, d)", {
-        #     'fn':fn, 'd':d, '__debugger__': self})     # orig
-
-        # self.run("exec(open(fn).read(), d)", {        # 1st pass
-        #     'fn':repr(fn), 'd':d, '__debugger__': self})
-        # self.run("print(5test)", {
-        #     'fn':fn, 'd':d, '__debugger__': self})
-
-        # file_code=open(fn).read()                             # 2nd pass
-        # cmd_str='exec(' + repr(file_code) + ' , d)'
-        # self.run(cmd_str, {
-        #     'fn': fn, 'd': d, '__debugger__': self})
-
         file_code=open(fn).read()
-        cmd_str='exec(' + repr(file_code) + ')'
-        cod_obj = compile(cmd_str,fn,'exec')
-        self.run(cod_obj)
+        cmd_str='exec(' + repr(file_code) +')'
+        self.run(cmd_str, {
+            'fn': fn, 'd': d, '__debugger__': self})
 
     def run(self, cmd, globals=None, locals=None):
         try:
