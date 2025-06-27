@@ -880,7 +880,8 @@ class DebugServer (Bdb):
         try:
             self._running = 1
             try:
-                Bdb.run(self, cmd, globals, locals)
+                # Bdb.run(self, cmd, globals, locals)    # org
+                Bdb.run(self, cmd, None, locals)
             except (BdbQuit, SystemExit):
                 pass
             except:
