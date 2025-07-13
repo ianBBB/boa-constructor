@@ -58,14 +58,8 @@ class DebuggerConnection:
         sm.setupEvent()
 
         self._ds.queueServerMessage(sm)
-        # # DEBUG MESSAGE
-        # sys.stdout.write('#_callMethod queueServerMessage ')
-        # sys.stdout.flush()
-        # Block.
+
         res = sm.getResult()
-        # # DEBUG MESSAGE
-        # sys.stdout.write('#_callMethod getResult ')
-        # sys.stdout.flush()
         return res
 
     ### Non-blocking calls.
@@ -221,13 +215,6 @@ class DebuggerConnection:
 
     def runFileAndRequestStatus(self, filename, params=(), autocont=0,
                                 add_paths=(), breaks=()):
-
-
-        # # TODO DEBUG
-        # sys.stdout.write('reached runFileAndRequestStatus ')
-        # sys.stdout.flush()
-
-
         """Calls setAllBreakpoints(), runFile(), and
         getStatusSummary().  Blocking."""
         self.setAllBreakpoints(breaks)
@@ -409,9 +396,6 @@ class MethodCall (ServerMessage):
 
     def getResult(self, timeout=None):
         self.wait()
-        # # DEBUG MESSAGE
-        # sys.stdout.write('#getResult wait ')
-        # sys.stdout.flush()
         if hasattr(self, 'exc'):
             try:
                 raise self.exc[0](self.exc[1], self.exc[2])
@@ -585,13 +569,7 @@ class DebugServer (Bdb):
         if 'fn' in frame.f_globals.keys():
             filename = self.canonic(frame.f_globals['fn'])
         else:
-            filename = self.canonic(frame.f_code.co_filename)   # orig
-
-        # DEBUG CODE
-        # with open(r"C:\Users\Ian-17\Dropbox\Ians\technical\Boa Constructor\Testarea\general\temp\frame.txt", "w") as file:
-        #     # Write a string to the file
-        #     file.write(filename)
-
+            filename = self.canonic(frame.f_code.co_filename)
         return filename, frame.f_lineno
 
     def getFrameNames(self, frame):
@@ -854,10 +832,31 @@ class DebugServer (Bdb):
         self.stopframe = None
         self.returnframe = None
 
+#======================== orig
+    # def runFile(self, filename, params, autocont, add_paths):
+    #     d = {'__name__': '__main__',
+    #          '__doc__': 'Debugging',
+    #          '__builtins__': __builtins__,}
+    #
+    #     fn = self.canonic(filename)
+    #     if self._allow_env_changes:
+    #         bn = path.basename(fn)
+    #         dn = path.dirname(fn)
+    #         sys.argv = [bn] + list(params)
+    #         if not add_paths:
+    #             add_paths = []
+    #         sys.path = [dn] + list(add_paths) + list(_orig_syspath)
+    #         chdir(dn)
+    #
+    #     self.autocont = autocont
+    #
+    #     file_code=open(fn).read()
+    #     cmd_str='exec(' + repr(file_code) +')'
+    #     self.run(cmd_str, {
+    #         'fn': fn, 'd': d, '__debugger__': self})
+    # ========================
+
     def runFile(self, filename, params, autocont, add_paths):
-        d = {'__name__': '__main__',
-             '__doc__': 'Debugging',
-             '__builtins__': __builtins__,}
 
         fn = self.canonic(filename)
         if self._allow_env_changes:
@@ -871,17 +870,24 @@ class DebugServer (Bdb):
 
         self.autocont = autocont
 
+
         file_code=open(fn).read()
-        cmd_str='exec(' + repr(file_code) +')'
-        self.run(cmd_str, {
-            'fn': fn, 'd': d, '__debugger__': self})
+        cod_obj = compile(file_code,fn,'exec')
+
+        d = {'fn' : fn,
+             '__name__': '__main__',
+             '__doc__': 'Debugging',
+             '__builtins__': __builtins__,
+             '__debugger__': self
+             }
+
+        self.run(cod_obj, d)
 
     def run(self, cmd, globals=None, locals=None):
         try:
             self._running = 1
             try:
-                # Bdb.run(self, cmd, globals, locals)    # org
-                Bdb.run(self, cmd, None, locals)
+                Bdb.run(self, cmd, globals, locals)
             except (BdbQuit, SystemExit):
                 pass
             except:
@@ -1058,7 +1064,7 @@ class DebugServer (Bdb):
             # Remove debugger's own stack.
             for index in range(len(stack)):
                 g = stack[index][0].f_globals
-                if g.get('__debugger__', None) is self:
+                if g.get('__debugger__', self) is self:
                     stack = stack[index + 1:]
                     frame_stack_len = frame_stack_len - (index + 1)
                     break
