@@ -5,4 +5,4 @@ Frame*.py
 App*.py
 notes.txt
 *.pyc
-/Config/Explorer.*
+/Config/Explorer.*.*
