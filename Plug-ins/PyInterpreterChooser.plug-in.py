@@ -104,6 +104,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
               name='gdcInstallPath', parent=self, pos=wx.Point(272, 52),
               size=wx.Size(242, 146),
               style=wx.DIRCTRL_SHOW_FILTERS | wx.DIRCTRL_3D_INTERNAL | wx.NO_BORDER)
+        self.gdcInstallPath.ShowHidden(True)
 
         # self.lcInstallations = wx.ListView(id=wxID_PYINTERPRETERCHOOSERDLGLCINSTALLATIONS,
         #       name='lcInstallations', parent=self, pos=wx.Point(10, 52),
