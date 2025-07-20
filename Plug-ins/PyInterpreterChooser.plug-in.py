@@ -106,10 +106,6 @@ class PyInterpreterChooserDlg(wx.Dialog):
               style=wx.DIRCTRL_SHOW_FILTERS | wx.DIRCTRL_3D_INTERNAL | wx.NO_BORDER)
         self.gdcInstallPath.ShowHidden(True)
 
-        # self.lcInstallations = wx.ListView(id=wxID_PYINTERPRETERCHOOSERDLGLCINSTALLATIONS,
-        #       name='lcInstallations', parent=self, pos=wx.Point(10, 52),
-        #       size=wx.Size(242, 146), style=wx.SUNKEN_BORDER | wx.LC_REPORT,
-        #       validator=wx.DefaultValidator)
         self.lcInstallations = wx.ListView(winid=wxID_PYINTERPRETERCHOOSERDLGLCINSTALLATIONS,
               name='lcInstallations', parent=self, pos=wx.Point(10, 52),
               size=wx.Size(242, 146), style=wx.SUNKEN_BORDER | wx.LC_REPORT,
@@ -191,7 +187,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
 
         # Windows, add pythons defined in registry
         try:
-            reg = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, PyCoreRegPath)
+                reg = winreg.OpenKey(winreg.HKEY_CURRENT_USER, PyCoreRegPath)
         except EnvironmentError:
             return res
 
@@ -212,7 +208,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
 
         for version in versions:
             try:
-                reg = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
+                reg = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
                                      '%s\\%s'%(PyCoreRegPath, version))
             except EnvironmentError:
                 continue
