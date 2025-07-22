@@ -1,4 +1,4 @@
-# <u>Actvities for Staging Updates to Master Files</u>
+**# <u>Actvities for Staging Updates to Master Files</u>
 
 1. Delete the Testarea directory.
 2. Delete t1 directory in the docs folder.
@@ -10,4 +10,4 @@
 4. Update the version number in \__version__.py
 =======
    3. Delete any entries in _recentfiles_.
->>>>>>> origin/dev
+>>>>>>> origin/dev**
