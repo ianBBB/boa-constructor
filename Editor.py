@@ -1536,7 +1536,6 @@ class EditorFrame(wx.Frame, Utils.FrameRestorerMixin):
 
 
 if __name__ == '__main__':
-    # app = wx.PySimpleApp()
     app = wx.App()
     import Palette
     Preferences.initScreenVars()
