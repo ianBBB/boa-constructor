@@ -1,8 +1,6 @@
 # <u>Actvities for Staging Updates to Master Files</u>
 
-1. Delete the Testarea directory.
-2. Delete t1 directory in the docs folder.
-3. Update these variables in the following files in the Config directory.
+1. Update these variables in the following files in the Config directory.
    - Explorer.gtk.cfg
    - Explorer.msw.cfg
    - Explorer.mac.cfg
