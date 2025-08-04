@@ -9,5 +9,4 @@ This is a list that may help you do that,
 - OnDesigner() _when clicking on the Designer button in the Editor_
    wxPythonControllers.py 77
 - OnClickTrap() _when selecting an item from the Palette._ Palette.py 387
-  
-
+- OnRunApp() _when clicking on the Run App button in the Editor._ PythonControllers.py. 195
