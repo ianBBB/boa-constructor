@@ -1,0 +1,9 @@
+[project]
+name = "boa-constructor"
+version = "0.7.3"
+description = "A rapid application development tool"
+readme = "README.md"
+requires-python = ">=3.12.4"
+dependencies = [
+    "wxPython==4.2.2",
+]
