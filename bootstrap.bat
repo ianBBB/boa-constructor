@@ -18,6 +18,8 @@ where powershell >nul 2>&1
 if errorlevel 1 (
     echo ERROR: PowerShell is not found on this system.
     echo Please ensure PowerShell is installed.
+    echo Alternatively, follow the installation instructions for UV at
+    echo https://docs.astral.sh/uv/getting-started/installation/
     pause
     exit /b 1
 )
@@ -29,6 +31,8 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 if errorlevel 1 (
     echo.
     echo ERROR: The installation script failed with error code %errorlevel%.
+    echo Alternatively, follow the installation instructions for UV at
+    echo https://docs.astral.sh/uv/getting-started/installation/
     pause
     exit /b %errorlevel%
 ) else (

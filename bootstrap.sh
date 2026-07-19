@@ -46,6 +46,8 @@ check_dependencies() {
     if ! command -v curl &> /dev/null; then
         print_error "curl is not installed on this system."
         echo "Please install curl and try again."
+        echo "Alternatively, follow the installation instructions for UV at"
+        echo "https://docs.astral.sh/uv/getting-started/installation/"
         exit 1
     fi
 }
@@ -63,6 +65,8 @@ run_installer() {
         local exit_code=$?
         echo ""
         print_error "The installation script failed with exit code $exit_code."
+        echo "Alternatively, follow the installation instructions for UV at"
+        echo "https://docs.astral.sh/uv/getting-started/installation/"
         return $exit_code
     fi
 }

@@ -9,7 +9,7 @@ Boa Constructor presumes your application will operate in the Model-View-Control
 
 ## The Project
 
-The project is ongoing. There are still many parts of Boa that are not yet functional but most of the basics are there for you to get started. There is enough functionality to complete the original Boa Constructor tutorial activity that demonstrates how to use Boa to create basic applications. More functionaity will be available in later releases as I get more working. You can watch how things are progressing by going to the *Discussion* section (in the menu near the top of the page) and look for **"Day-by-Day Progress Reporting Diary"**. Despite the title, updates are approximately weekly. Don't forget to click on the *Newest* button to see the latest updates.
+The project is ongoing. There are still many parts of Boa that are not yet functional but most of the basics are there for you to get started. There is enough functionality to complete the original Boa Constructor tutorial activity that demonstrates how to use Boa to create basic applications. More functionality will be available in later releases as I get more of the application working.
 
 If you have the desire and skill to help resurrect Boa Constructor, I would love to hear from you.
 
@@ -21,6 +21,9 @@ This project is managed with UV - An extremely fast Python package and project m
 Run the appropriate bootstrap script to install UV on your system.
 - Windows: `bootstrap.bat`
 - Linux / MacOS: `bootstrap.sh`
+
+Alternatively, follow the UV installation instructions directly:
+- https://docs.astral.sh/uv/getting-started/installation/
 
 #### Verifying UV Installation
 1. In a new command prompt / terminal window
@@ -59,4 +62,3 @@ This command will:
 2. Set up a virtual environment
 3. Install the required dependencies
 4. Launch Boa Constructor.
-
