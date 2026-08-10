@@ -28,3 +28,38 @@ AttributeError: 'NoneType' object has no attribute 'SetBackgroundColour'
 === Boa session start: 2026-05-23T08:27:26.464582 ===
 
 === Boa session start: 2026-05-23T08:29:35.318923 ===
+
+=== Boa session start: 2026-05-23T09:30:51.546435 ===
+
+=== Boa session start: 2026-08-09T16:45:42.037690 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 434, in OnPaste
+    self.selDesgn.OnPasteSelected(event)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1264, in OnPasteSelected
+    pasted = self.pasteCtrls(self.selection.name,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 561, in pasteCtrls
+    raise Exception(_('Nothing to paste'))
+Exception: Nothing to paste
+Windows fatal exception: access violation
+
+Thread 0x000040e4 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\EditorUtils.py", line 523 in run
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032 in _bootstrap
+
+Current thread 0x00001730 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 84 in setValue
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PropEdit\PropertyEditors.py", line 235 in setCtrlValue
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PropEdit\PropertyEditors.py", line 172 in inspectorPost
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 843 in hideEditor
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 1105 in cleanup
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 388 in cleanup
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1134 in OnCloseWindow
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1511 in doPost
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 442 in OnPost
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 2254 in MainLoop
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 793 in main
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 806 in <module>
+
+=== Boa session start: 2026-08-09T22:52:51.600549 ===

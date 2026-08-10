@@ -305,10 +305,10 @@ class Upgrade:
         # import
         imp = Literal("from wxPython.") + delimitedList(ident,".",combine=True)\
                 + Literal("import") + restOfLine
-        importlib.setParseAction(self.impAction)
+        imp.setParseAction(self.impAction)
 
         # Specific name space changes
-        repWXSpec = Or(map(Literal, self.specialNames2.keys()))
+        repWXSpec = Or([Literal(name) for name in self.specialNames2])
         repWXSpec.setParseAction(self.repNamespace)
 
         # wx to wx. e.g. wxFrame1(wxFrame)to wxFrame1(wx.Frame)

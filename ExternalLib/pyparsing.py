@@ -1748,7 +1748,7 @@ def dictOf( key, value ):
     """
     return Dict( ZeroOrMore( Group ( key + value ) ) )
 
-alphas     = string.ascci_letters
+alphas     = string.ascii_letters
 nums       = string.digits
 alphanums  = alphas + nums
 printables = "".join( [ c for c in string.printable if c not in string.whitespace ] )
