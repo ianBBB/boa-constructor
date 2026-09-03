@@ -5,3 +5,9 @@ App*.py
 notes.txt
 *.pyc
 Config/Explorer.*.*
+
+# Build output directory
+build/
+
+# JetBrains Project Files
+.idea/
