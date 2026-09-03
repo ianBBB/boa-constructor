@@ -1,6 +1,19 @@
 Changes
 -------
 
+-- 0.8.02.01 - 25/09/29 --
+* Updated code to operate with Python 3.12 and wxPython 4.2.1
+* Pre-release "cleaning" to remove development settings.
+* Several more wxPython controls now working.
+
+
+-- 0.8.01.01 - 2023/12/07 --
+* Major update to the code base to allow operation under Python 3.XX and wxPython 4.X
+* Limited functionality
+* Debugger opens but does not work properly
+* Moved across to GitHub for SCV
+
+
 -- 0.7.2 - beta (Release) --
 * Add changes made by Tinker Tonyo <tinker.tonyo@gmail.com>
   (https://github.com/tinkertonyo/boa-constructor)
