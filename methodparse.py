@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #----------------------------------------------------------------------
 # Name:        methodparse.py
 # Purpose:
@@ -9,9 +11,7 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-"""
-
-Creation
+"""Creation
 
 self.<componentname> = <wxClassname>(<constr params>)
 
@@ -54,8 +54,7 @@ class frame1(wxFrame):
         self._init_utils()
 
     def __init__(self):
-        self._init_ctrls()
-"""
+        self._init_ctrls()"""
 
 import re, string
 
@@ -277,7 +276,7 @@ class PerLineParser:
         for key in sortedkeys:
             if isinstance(key, type(0)):
                 kvlist.append(params[key])
-            else:    
+            else:
                 kvlist.append(Preferences.cgKeywordArgFormat%{'keyword': key,
                                                          'value': params[key]})
         return ', '.join(kvlist)
@@ -374,7 +373,7 @@ class ConstructorParse(PerLineParser):
         else:
             return '%s.__init__(self, %s)' %(self.class_name,
               self.KVParamsAsText(params))
-    
+
 ##is_constr_col = re.compile('^[ \t]*self._init_coll_(?P<meth>'+idc+\
 ##  ')[.]__init__\(self,[ \t]*(?P<params>.*)\)$')
 
@@ -405,7 +404,7 @@ class PropertyParse(PerLineParser):
                     self.comp_name = compsetter[0]
                     self.prop_setter = compsetter[1]
                 else: raise Exception(_('Too many attribute levels'))
-                
+
                 if self.prop_setter == 'Bind':
                     self.m = None
 
@@ -681,10 +680,10 @@ class EventParse(PerLineParser):
                 if self.checkId(windowid, idPrfx):
                     windowid = windowid[len(idPrfx):]
 
-            return '%s.Bind(%s, self.%s, id=%s)' %(Utils.srcRefFromCtrlName(self.comp_name), 
+            return '%s.Bind(%s, self.%s, id=%s)' %(Utils.srcRefFromCtrlName(self.comp_name),
                 self.event_name, self.trigger_meth, windowid)
         else:
-            return '%s.Bind(%s, self.%s)' %(Utils.srcRefFromCtrlName(self.comp_name), 
+            return '%s.Bind(%s, self.%s)' %(Utils.srcRefFromCtrlName(self.comp_name),
                 self.event_name, self.trigger_meth)
 
 def testRename():
@@ -708,7 +707,7 @@ def testRename():
 
 def testEvent():
     pass
-    
+
 
 def test():
     cp = parseMixedBody([ConstructorParse], [

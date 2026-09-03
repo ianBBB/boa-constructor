@@ -1,7 +1,7 @@
 #Boa:Frame:Frame2
 
-""" Mixing Custom Classes and Special Attributes to make the type of
-    a control dynamically setable at run-time """
+"""Mixing Custom Classes and Special Attributes to make the type of
+    a control dynamically setable at run-time"""
 
 import wx
 

@@ -76,7 +76,8 @@ def start(username, password, host='127.0.0.1', port=26200,
     connection.allowEnvChanges()  # Allow changing of sys.path, etc.
 
     # Create an authentication string.
-    auth_str = base64.encodestring('%s:%s' % (username, password)).strip()
+    auth_bytes = ('%s:%s' % (username, password)).encode('utf-8')
+    auth_str = base64.b64encode(auth_bytes).decode('ascii')
 
     debug_server = ds
     server = TaskingTCPServer((host, port), DebugRequestHandler)

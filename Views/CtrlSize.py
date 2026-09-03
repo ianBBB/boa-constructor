@@ -18,10 +18,10 @@ from Utils import _
 def create(parent):
     return ControlSizeFrame(parent)
 
-[wxID_CONTROLSIZEFRAME, wxID_CONTROLSIZEFRAMECANCELBTN, 
- wxID_CONTROLSIZEFRAMEHEIGHTTC, wxID_CONTROLSIZEFRAMEOKBTN, 
- wxID_CONTROLSIZEFRAMEPANEL1, wxID_CONTROLSIZEFRAMERADIOBOX1, 
- wxID_CONTROLSIZEFRAMERADIOBOX2, wxID_CONTROLSIZEFRAMEWIDTHTC, 
+[wxID_CONTROLSIZEFRAME, wxID_CONTROLSIZEFRAMECANCELBTN,
+ wxID_CONTROLSIZEFRAMEHEIGHTTC, wxID_CONTROLSIZEFRAMEOKBTN,
+ wxID_CONTROLSIZEFRAMEPANEL1, wxID_CONTROLSIZEFRAMERADIOBOX1,
+ wxID_CONTROLSIZEFRAMERADIOBOX2, wxID_CONTROLSIZEFRAMEWIDTHTC,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(8)]
 
 class ControlSizeFrame(wx.Dialog):
@@ -71,7 +71,7 @@ class ControlSizeFrame(wx.Dialog):
         self.cancelBtn.Bind(wx.EVT_BUTTON, self.OnCancelbtnButton,
               id=wxID_CONTROLSIZEFRAMECANCELBTN)
 
-    def __init__(self, parent, selection):
+    def __init__(self, parent, selection=None):
         self._init_ctrls(parent)
         self.choices = (_('No change'), _('No change'))
         self.selection = selection

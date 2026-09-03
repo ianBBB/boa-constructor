@@ -24,7 +24,7 @@ from Models import Controllers, EditorHelper, EditorModels
 from Views import SourceViews, StyledTextCtrls
 
 # Allocate an image index for Java files
-EditorHelper.imgJavaModel = EditorHelper.imgIdxRange()
+EditorHelper.imgJavaModel = EditorHelper.imgIdxRange()  # type: ignore[attr-defined]
 
 Plugins.registerPreference('JavaSupport', 'jsJavaCompilerPath', "''",
                            ['Path to the compiler'], 'type: filepath')
@@ -34,7 +34,7 @@ class JavaModel(EditorModels.SourceModel):
     defaultName = 'java'  # default name given to newly created files
     bitmap = 'Java.png' # this image must exist in Images/Modules
     ext = '.java'
-    imgIdx = EditorHelper.imgJavaModel
+    imgIdx = EditorHelper.imgJavaModel  # type: ignore[attr-defined]
 
 # get the style definitions file in either the prefs directory or the Boa root
 java_cfgfile = os.path.join(Preferences.rcPath, 'stc-java.rc.cfg')
@@ -129,7 +129,7 @@ style.java.037=
 [style.java.default]
 
 [java]
-displaysrc='''+`javaSource`[1:-1]+'''
+displaysrc='''+repr(javaSource)[1:-1]+'''
 braces={'good': (5, 10), 'bad': (5, 38)}
 keywords=abstract double int strictfp boolean else interface super break extends long switch byte final native synchronized case finally new this catch float package throw har for private throws class goto protected transient const if public try continue implements return void default import short volatile do instanceof static while True False null
 lexer=wx.stc.STC_LEX_CPP

@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------
 # Name:        I18NWrap.plug-in.py
-# Purpose:     
+# Purpose:
 #
 # Author:      Riaan Booysen
 #
@@ -19,7 +19,7 @@ import wx
 from Models import EditorModels, Controllers
 from ModRunner import ProcessModuleRunner
 
-import Preferences
+import Preferences, Plugins
 from Utils import _
 
 Preferences.keyDefs['I18NWrap'] = (wx.ACCEL_ALT, ord('I'), 'Alt-I')
@@ -29,7 +29,7 @@ class I18NWrapViewPlugin:
         self.model = model
         self.view = view
         actions.extend( (
-         (_('Wrap selection with _()'), self.OnI18NWrapSelection, '-', 'I18NWrap'), 
+         (_('Wrap selection with _()'), self.OnI18NWrapSelection, '-', 'I18NWrap'),
         ) )
 
     def OnI18NWrapSelection(self, event):
@@ -53,7 +53,7 @@ class POFileController(Controllers.TextController):
         if not model.savedAs:
             wx.LogError(_('Cannot compile an unsaved module'))
             return
-        
+
         filename = model.assertLocalFile()
         outfile = os.path.splitext(filename)[0] + '.mo'
         MESSAGES = {}
@@ -70,18 +70,21 @@ def msgfmt_add(id, str, fuzzy, MESSAGES):
 
 def msgfmt_generate(MESSAGES):
     "Return the generated output."
-    keys = MESSAGES.keys()
+    keys = list(MESSAGES.keys())
     # the keys are sorted in the .mo file
     keys.sort()
     offsets = []
-    ids = strs = ''
+    ids = b''
+    strs = b''
     for id in keys:
+        idb = id.encode('utf-8')
+        msgb = MESSAGES[id].encode('utf-8')
         # For each string, we need size and file offset.  Each string is NUL
         # terminated; the NUL does not count into the size.
-        offsets.append((len(ids), len(id), len(strs), len(MESSAGES[id])))
-        ids += id + '\0'
-        strs += MESSAGES[id] + '\0'
-    output = ''
+        offsets.append((len(ids), len(idb), len(strs), len(msgb)))
+        ids += idb + b'\0'
+        strs += msgb + b'\0'
+    output = b''
     # The header is 7 32-bit unsigned integers.  We don't use hash tables, so
     # the keys start right after the index tables.
     # translated string.
@@ -97,13 +100,13 @@ def msgfmt_generate(MESSAGES):
         voffsets += [l2, o2+valuestart]
     offsets = koffsets + voffsets
     output = struct.pack("Iiiiiii",
-                         0x950412deL,       # Magic
+                         0x950412DE,       # Magic
                          0,                 # Version
                          len(keys),         # # of entries
                          7*4,               # start of key index
                          7*4+len(keys)*8,   # start of value index
                          0, 0)              # size and offset of hash table
-    output += array.array("i", offsets).tostring()
+    output += array.array("i", offsets).tobytes()
     output += ids
     output += strs
     return output
@@ -164,9 +167,8 @@ def msgfmt_make(filename, outfile, MESSAGES):
         elif section == STR:
             msgstr += l
         else:
-            print >> sys.stderr, 'Syntax error on %s:%d' % (infile, lno), \
-                  'before:'
-            print >> sys.stderr, l
+            print('Syntax error on %s:%d before:' % (infile, lno), file=sys.stderr)
+            print(l, file=sys.stderr)
             return
     # Add last entry
     if section == STR:
@@ -177,21 +179,21 @@ def msgfmt_make(filename, outfile, MESSAGES):
 
     try:
         open(outfile,"wb").write(output)
-    except IOError,msg:
-        print >> sys.stderr, msg
+    except IOError as msg:
+        print(msg, file=sys.stderr)
         return False
     else:
         return True
 
 
 Plugins.registerFileType(POFileController, aliasExts=('.po'))
-    
+
 from Views import PySourceView
-PySourceView.PythonSourceView.plugins += (I18NWrapViewPlugin,)
+PySourceView.PythonSourceView.plugins += (I18NWrapViewPlugin,)  # type: ignore[operator,assignment]
 
 ###-------------------------------------------------------------------------------
 ##def showGeneratePOTFromSourceDlg(editor):
-##    dlg = wx.DirDialog(editor, 
+##    dlg = wx.DirDialog(editor,
 ##          _('Select directory to recursively scan source for strings'),
 ##          _('Generate POT from source'))
 ##    try:

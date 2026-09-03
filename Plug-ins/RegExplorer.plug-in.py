@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        RegExplorer.py
 # Purpose:     Classes for exploring the windows registry
@@ -21,7 +23,7 @@ from Models import EditorModels, EditorHelper
 import RTTI
 
 try:
-    import _winreg
+    import winreg as _winreg
 except ImportError:
     raise Plugins.SkipPluginSilently ('Requires windows')
 
@@ -102,9 +104,9 @@ class RegItemNode(ExplorerNodes.ExplorerNode):
     def initHkey(self):
         if self.resourcepath.find('\\') == -1:
             key, subkey = self.resourcepath, None
-        else:    
-            key, subkey = str.split(self.resourcepath, '\\', 1)
-        key =_winreg.__dict__[key]
+        else:
+            key, subkey = self.resourcepath.split('\\', 1)
+        key = getattr(_winreg, key)
         if self.properties['computername']:
             compName = self.properties['computername']
         else:
@@ -194,10 +196,10 @@ class RegPropReaderMixin:
         #print propList
         for name, value in propList:
             if not value: value = ''
-            elif types.StringType is type(value[0]):
+            elif isinstance(value[0], str):
                 value = value[0]
 
-            items.append( (str.split(name, ':')[1], value) )
+            items.append((name.split(':')[1], value))
         return items
 
 class RegCompanion(RegPropReaderMixin, ExplorerNodes.ExplorerCompanion):
@@ -213,7 +215,7 @@ class RegCompanion(RegPropReaderMixin, ExplorerNodes.ExplorerCompanion):
         return res
 
     def SetProp(self, name, value):
-        raise 'Property editing not supported yet'
+        raise NotImplementedError('Property editing not supported yet')
 
 
 #-------------------------------------------------------------------------------

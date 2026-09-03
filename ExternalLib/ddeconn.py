@@ -28,7 +28,7 @@ class DDESystemTopic(object.Object):
             self.app.OnDDECommand(data)
         except:
             # The DDE Execution failed.
-            print "Error executing DDE command."
+            print("Error executing DDE command.")
             traceback.print_exc()
             return 0
 
@@ -85,13 +85,13 @@ class DDEApp:
             dde = self.MakeExistingDDEConnection()
             if dde is not None and self.args:
                 for arg in self.args:
-                    dde.Exec(self.execStr%`arg`)
+                    dde.Exec(self.execStr % repr(arg))
                 self.done = 1
         except:
-            print 'ERROR: There was an error during the DDE conversation.'
+            print('ERROR: There was an error during the DDE conversation.')
             traceback.print_exc()
 
     def OnDDECommand(self, data):
         import sys
-        exec data
+        exec(data)
         

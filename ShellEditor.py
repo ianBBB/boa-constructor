@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        ShellEditor.py
 # Purpose:     Interactive interpreter
@@ -33,7 +35,7 @@ p2c = 'Type "copyright", "credits" or "license" for more information.'
 
 [wxID_SHELL_HISTORYUP, wxID_SHELL_HISTORYDOWN, wxID_SHELL_ENTER, wxID_SHELL_HOME,
  wxID_SHELL_CODECOMP, wxID_SHELL_CALLTIPS,
-] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)] 
+] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 only_first_block = 1
 
@@ -41,13 +43,13 @@ only_first_block = 1
 class IShellEditor:
     def destroy(self):
         pass
-    
+
     def execStartupScript(self, startupfile):
         pass
-    
+
     def debugShell(self, doDebug, debugger):
         pass
-    
+
     def pushLine(self, line, addText=''):
         pass
 
@@ -129,7 +131,8 @@ class ShellEditor(wx.stc.StyledTextCtrl,
     def execStartupScript(self, startupfile):
         if startupfile:
             startuptext = '## Startup script: ' + startupfile
-            self.pushLine('print %s;execfile(%s)'%(repr(startuptext), repr(startupfile)))
+            self.pushLine('print(%s);exec(compile(open(%s, "rb").read(), %s, "exec"))' %
+                          (repr(startuptext), repr(startupfile), repr(startupfile)))
         else:
             self.pushLine('')
 
@@ -137,10 +140,10 @@ class ShellEditor(wx.stc.StyledTextCtrl,
         if doDebug:
             self._debugger = debugger
             self.stdout.write('\n## Debug mode turned on.')
-            self.pushLine('print "?"')
+            self.pushLine('print("?")')
         else:
             self._debugger = None
-            self.pushLine('print "## Debug mode turned %s."'% (doDebug and 'on' or 'off'))
+            self.pushLine('print("## Debug mode turned %s.")' % (doDebug and 'on' or 'off'))
 
     def OnUpdateUI(self, event):
         if Preferences.braceHighLight:
@@ -205,7 +208,7 @@ class ShellEditor(wx.stc.StyledTextCtrl,
             if prompt:
                 self.AddText(prompt)
             self.EnsureCaretVisible()
-    
+
     def getShellLocals(self):
         return self.interp.locals
 
@@ -309,7 +312,7 @@ class ShellEditor(wx.stc.StyledTextCtrl,
             elif (wx.ACCEL_CTRL, kk) in self.sc:
                 self.sc[(wx.ACCEL_CTRL, kk)](self)
                 return
-        
+
         if self.CallTipActive():
             self.callTipCheck()
         event.Skip()
@@ -317,7 +320,7 @@ class ShellEditor(wx.stc.StyledTextCtrl,
     def OnAddChar(self, event):
         if event.GetKey() == 40 and Preferences.callTipsOnOpenParen:
             self.callTipCheck()
-        
+
 
 def recdir(obj):
     res = dir(obj)
@@ -470,7 +473,7 @@ class PyCrustShellEditor(wx.SplitterWindow):
 
         from wx.py.crust import Shell, Filling
 
-        # XXX argh! PyCrust records the About box pseudo file objs from 
+        # XXX argh! PyCrust records the About box pseudo file objs from
         # XXX sys.in/err/out
         o, i, e = sys.stdout, sys.stdin, sys.stderr
         sys.stdout, sys.stdin, sys.stderr = \
@@ -479,10 +482,10 @@ class PyCrustShellEditor(wx.SplitterWindow):
             self.shellWin = Shell(self, -1)
         finally:
             sys.stdout, sys.stdin, sys.stderr = o, i, e
-            
+
         self.fillingWin = Filling(self, -1, style=wx.SP_3DSASH,
               rootObject=self.shellWin.interp.locals, rootIsNamespace=True)
-        
+
         height = int(round(Preferences.screenHeight / 2.0))
         #int(self.GetSize().y * 0.75)
         self.SplitHorizontally(self.shellWin, self.fillingWin, height)
@@ -493,19 +496,19 @@ class PyCrustShellEditor(wx.SplitterWindow):
 
     def destroy(self):
         pass
-    
+
     def execStartupScript(self, startupfile):
         pass
-    
+
     def debugShell(self, doDebug, debugger):
         if doDebug:
             self._debugger = debugger
             self.shellWin.stdout.write('\n## Debug mode turned on.')
-            self.pushLine('print "?"')
+            self.pushLine('print("?")')
         else:
             self._debugger = None
-            self.pushLine('print "## Debug mode turned %s."'% (doDebug and 'on' or 'off'))
-    
+            self.pushLine('print("## Debug mode turned %s.")' % (doDebug and 'on' or 'off'))
+
     def pushLine(self, line, addText=''):
         if addText:
             self.shellWin.write(addText)

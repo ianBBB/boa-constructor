@@ -25,8 +25,7 @@ if errcode == 200:
 Note that an HTTP object is used for a single request -- to issue a
 second request to the same server, you create a new HTTP object.
 (This is in accordance with the protocol, which uses a new TCP
-connection for each request.)
-"""
+connection for each request.)"""
 
 import socket
 import string

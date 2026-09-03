@@ -1,4 +1,4 @@
-""" Plugin to toggle the Error/Output window with a keybinding """
+"""Plugin to toggle the Error/Output window with a keybinding."""
 
 import wx
 

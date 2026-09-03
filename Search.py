@@ -60,7 +60,9 @@ def findInFile(filename, pattern, caseSensitive, includeLine = 0):
         f.close()
 
 def defaultProgressCallback(dlg, count, file, msg):
-    dlg.cont = dlg.Update(min(dlg.max-1, count), msg +' '+ file)
+    # wx.ProgressDialog.Update returns (continue, skip).
+    cont, _ = dlg.Update(count, msg + ' ' + file)
+    return cont
 
 def findInFiles(parent, srchPath, pattern, callback = defaultProgressCallback, deeperPath = '', filemask = ('.htm', '.html', '.txt'), progressMsg = 'Search help files...', dlg = None, joiner = '/'):
     results = []
@@ -68,12 +70,10 @@ def findInFiles(parent, srchPath, pattern, callback = defaultProgressCallback, d
     cnt = 0
 
     owndlg = False
-    maxval = len(names)
+    maxval = max(1, len(names))
     if not dlg:
         dlg = wx.ProgressDialog(progressMsg, _('Searching...'), maxval, parent,
                            wx.PD_CAN_ABORT | wx.PD_APP_MODAL | wx.PD_AUTO_HIDE)
-        dlg.max = maxval
-        dlg.cont = 1
         owndlg = True
     try:
         for file in names:
@@ -85,17 +85,17 @@ def findInFiles(parent, srchPath, pattern, callback = defaultProgressCallback, d
             else:
                 ext = os.path.splitext(file)[1]
                 if ext in filemask or ('.*' in filemask and ext):
-                    callback(dlg, cnt, file, _('Searching'))
+                    cont = callback(dlg, min(maxval - 1, cnt), file, _('Searching'))
                     ocs = count(filePath, pattern, 0)
                     if ocs:
                         results.append((ocs, deeperPath+file))
                 else:
-                    callback(dlg, cnt, file, _('Skipping'))
+                    cont = callback(dlg, min(maxval - 1, cnt), file, _('Skipping'))
 
             if cnt < maxval -1:
                 cnt = cnt + 1
 
-            if not dlg.cont:
+            if cont is False:
                 break
 
         return results
@@ -183,5 +183,5 @@ def listFiles(folders, file_filter, bIncludeFilter=1, bRecursive=1):
 
 if __name__ == '__main__':
     wx.PySimpleApp()
-    f = wx.Frame(None, -1, 'results', size=(0, 0))
+    f = wx.Frame(None, -1, 'results', size=wx.Size(100, 100))
     print(findInFiles(f, os.path.abspath('ExternalLib'), 'riaan', filemask = ('.*',)))

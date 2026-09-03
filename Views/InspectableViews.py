@@ -35,7 +35,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
     """
     viewName = 'InspectableObject'
     viewTitle = _('InspectableObject')
-    
+
     collectionMethod = 'init_'
     collectionParams = 'self'
 ##    handledProps = []
@@ -60,15 +60,15 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                 args[paramKey] = params[paramKey]
             else:
                 try:
-                    args[paramKey] = PaletteMapping.evalCtrl(params[paramKey], 
+                    args[paramKey] = PaletteMapping.evalCtrl(params[paramKey],
                           evalDct)
                 except AttributeError:
-                    args[paramKey] = PaletteMapping.evalCtrl(params[paramKey], 
+                    args[paramKey] = PaletteMapping.evalCtrl(params[paramKey],
                           {'self': self.controllerView.objectNamespace})
 
         return args
 
-    def __init__(self, inspector, model, compPal, actions=(), dclickActionIdx=-1, 
+    def __init__(self, inspector, model, compPal, actions=(), dclickActionIdx=-1,
           editorIsWindow=True):
         self.compPal = compPal
         EditorViews.EditorView.__init__(self, model, actions, dclickActionIdx, editorIsWindow)
@@ -126,9 +126,9 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         collDeps = {}
         for constr in creators:
             self.initObjCreator(constr)
-            self.initObjProps(objColl.propertiesByName, constr.comp_name, constr, 
+            self.initObjProps(objColl.propertiesByName, constr.comp_name, constr,
                   dependents, depLinks)
-            self.initObjColls(objColl.collectionsByName, constr.comp_name, constr, 
+            self.initObjColls(objColl.collectionsByName, constr.comp_name, constr,
                   collDeps)
             self.initObjEvts(objColl.eventsByName, constr.comp_name, constr)
 
@@ -141,7 +141,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
     def initObjCreator(self, constrPrs):
         # Assumes all design time ctrls are imported in global scope
         try:
-            ctrlClass = PaletteMapping.evalCtrl(constrPrs.class_name, 
+            ctrlClass = PaletteMapping.evalCtrl(constrPrs.class_name,
                   self.model.customClasses)
         except NameError:
             raise DesignerError(_('%s is not defined on the Palette.')%constrPrs.class_name)
@@ -162,7 +162,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
               constrPrs.comp_name, constrPrs.params)
             ctrlCompn = self.objects[ctrlName][0]
             ctrlCompn.setConstr(constrPrs)
-    
+
     def initObjProps(self, props, name, creator, dependents, depLinks):
         """ Initialise property list by evaluating 1st parameter and calling
             prop's setter with it.
@@ -182,7 +182,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                     self.addCollView(name, collItem.method, False)
                 # Check for custom evaluator
                 elif prop.prop_name in comp.customPropEvaluators:
-                    args = comp.customPropEvaluators[prop.prop_name](prop.params, 
+                    args = comp.customPropEvaluators[prop.prop_name](prop.params,
                           self.getAllObjects())
                     # XXX This is a hack !!!
                     # XXX argument list with more than one prop value are
@@ -194,13 +194,19 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                 # Check for pops which don't update the control
                 elif prop.prop_name in comp.onlyPersistProps():
                     continue
+                # No-argument properties/methods, e.g. sizer.AddStretchSpacer()
+                elif not prop.params:
+                    if prop.prop_name in comp.initPropsThruCompanion:
+                        getattr(comp, prop.prop_setter)()
+                    else:
+                        getattr(ctrl, prop.prop_setter)()
                 # Normal property, eval value and apply it
                 else:
                     try:
-                        value = PaletteMapping.evalCtrl(prop.params[0], 
+                        value = PaletteMapping.evalCtrl(prop.params[0],
                                                         self.model.specialAttrs)
-                    except AttributeError as name:
-                        value = PaletteMapping.evalCtrl(prop.params[0], 
+                    except AttributeError as error:
+                        value = PaletteMapping.evalCtrl(prop.params[0],
                           {'self': self.controllerView.objectNamespace})
                     except:
                         print(_('Problem with: %s') % prop.asText())
@@ -443,7 +449,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
 
         if collDeps:
             newBody.extend(collDeps + [''])
-            
+
         if extraLines:
             newBody.extend(extraLines + [''])
 
@@ -479,7 +485,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
                 module.removeMethod(self.model.main, self.collectionMethod)
                 #newBody[-1:-1] = [sourceconst.bodyIndent+'pass']
             else:
-                module.replaceMethodBody(self.model.main, self.collectionMethod, 
+                module.replaceMethodBody(self.model.main, self.collectionMethod,
                       newBody)
         else:
             if not emptyCodeBlock:
@@ -595,12 +601,12 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         # Rename possible name clashes
         objCol.indexOnCtrlName()
         pasteNameClasses = objCol.getCtrlNames()
-        
+
         for name, cls in pasteNameClasses:
             if name in objCol.eventsByName:
-                methodparse.decorateParseItems(objCol.eventsByName[name], name, 
+                methodparse.decorateParseItems(objCol.eventsByName[name], name,
                       self.model.main)
-        
+
         newNames = []
         oldNames = []
         # Preserve order, but determine all new names before creating objs
@@ -665,13 +671,13 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
         # XXX Now that there is multiple maintained methods is may fail because
         # XXX it's only unique in the method.
         num = 1
-        
+
         dotted = className.rfind('.')
         if dotted != -1:
             if className[:3] == 'wx.':
                 newName = '%s%s'%(className[dotted+1:dotted+2].lower(), className[dotted+2:])
             else:
-                newName = '%s%s'%(className[0].lower(), className[1:])                
+                newName = '%s%s'%(className[0].lower(), className[1:])
         else:
             newName = '%s%s'%(className[0].lower(), className[1:])
 
@@ -795,7 +801,7 @@ class InspectableObjectView(EditorViews.EditorView, Utils.InspectorSessionMix):
             self.addCollView(ctrlName, '_init_coll_%s_%s'%(ctrlName, propName), True)
 
         collEditor = self.collEditors[(ctrlName, propName)]
-        
+
         if show:
             collEditor.show()
         else:

@@ -45,7 +45,7 @@ class BaseFrameController(ModuleController):
               (_('Frame Designer'), self.OnDesigner, self.designerBmp, 'Designer')]
 
     def createModel(self, source, filename, main, saved, modelParent=None):
-        return self.Model(source, filename, main, self.editor, saved, modelParent)
+        return self.Model(source, filename, main, self.editor, saved, modelParent)  # type: ignore[call-arg]
 
     def createNewModel(self, modelParent=None):
         if modelParent:
@@ -61,7 +61,7 @@ class BaseFrameController(ModuleController):
         return model, name
 
     def getModelParams(self, model):
-        tempComp = self.Model.Companion('', None, None)
+        tempComp = self.Model.Companion('', None, None)  # type: ignore[attr-defined]
         params = tempComp.designTimeSource()
         params['parent'] = 'prnt'
         params['id'] = Utils.windowIdentifier(model.main, '')

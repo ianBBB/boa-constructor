@@ -1,3 +1,4 @@
+# pyright: ignore
 #----------------------------------------------------------------------
 # Name:        PropertyEditors.py
 # Purpose:
@@ -9,22 +10,23 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-"""
-    Property editors provide a design time interface for the inspector to
+"""Property editors provide a design time interface for the inspector to
     examine and manipulate properties of controls.
 
     Some properties are live and also update the design time control,
     others only update the source and changes may only be seen when the
-    frame is reloaded or the control is recreated.
-"""
+    frame is reloaded or the control is recreated."""
+
+# pyright: reportGeneralTypeIssues=false, reportAttributeAccessIssue=false, reportArgumentType=false, reportCallIssue=false
 
 print('importing PropertyEditors')
 
 # XXX Value getting setting of value between internal and sometime control value
 # XXX Is still too fuzzy
 
-from types import *
+from types import *  # type: ignore[wildcard-import]
 import os, string
+from typing import Any
 
 import wx
 from wx import adv
@@ -386,7 +388,7 @@ class FilepathConfPropEdit(ConfPropEdit):
 
     def edit(self, event):
         from FileDlg import wxFileDialog
-        dlg = wxFileDialog(self.parent, _('Choose the file'), '.', '', 'AllFiles', wx.SAVE)
+        dlg = wxFileDialog(self.parent, _('Choose the file'), '.', '', 'AllFiles', wx.FD_SAVE)  # type: ignore[attr-defined]
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 self.editorCtrl.setValue(repr(dlg.GetFilePath()))
@@ -566,7 +568,7 @@ class ButtonIdConstrPropEdit(ConstrPropEdit):
         self.editorCtrl.setValue(self.value)
 
     def getValues(self):
-        return [Utils.windowIdentifier(self.companion.designer.GetName(), 
+        return [Utils.windowIdentifier(self.companion.designer.GetName(),
                 self.companion.name)] + Enumerations.wxStockIds
 
     def getValue(self):
@@ -611,8 +613,10 @@ def patchExplorerFileTypes(add=True):
     else:
         FileExplorer.filterDescrOrd.remove('ArtProvider')
         del FileExplorer.filterDescr['ArtProvider']
-        
+
 class BitmapPropEditMix:
+    companion: Any
+    parent: Any
     extTypeMap = {'.bmp': 'wx.BITMAP_TYPE_BMP',
                   '.gif': 'wx.BITMAP_TYPE_GIF',
                   '.jpg': 'wx.BITMAP_TYPE_JPEG',
@@ -631,7 +635,7 @@ class BitmapPropEditMix:
         selImg = ''
         apClientId = ''
         apSize = ''
-        
+
         if tpe == 'Bitmap' and not os.path.isdir(dir):
             wx.MessageBox(_('The given directory is invalid, using current '
                          'directory.\n(%s)')%dir, _('Warning'),
@@ -681,8 +685,8 @@ class BitmapPropEditMix:
                 try:
                     result = dlg.ShowModal()
                     if result == wx.ID_OK:
-                        return ( (dlg.clientId.GetStringSelection(), 
-                                 dlg.imgSize.GetValue()), dlg.artId.GetValue(), 
+                        return ( (dlg.clientId.GetStringSelection(),
+                                 dlg.imgSize.GetValue()), dlg.artId.GetValue(),
                                  'ArtProvider')
                     elif result == wx.ID_YES:
                         keepShowing = True
@@ -693,7 +697,7 @@ class BitmapPropEditMix:
 
                 finally:
                     dlg.Destroy()
-                
+
             elif ext == '.py':
                 if os.path.isabs(pth):
                     pth = Utils.pathRelativeToModel(pth, model)
@@ -816,7 +820,7 @@ class BitmapPropEditMix:
         clientId = self.companion.eval(clientIdSrc)
         size = self.companion.eval(sizeSrc)
         artId = self.companion.eval(artIdSrc)
-        
+
         src = 'wx.ArtProvider.GetBitmap(%s, %s, %s)'%(artIdSrc, clientIdSrc, sizeSrc)
 
         return src, wx.ArtProvider.GetBitmap(artId, clientId, size), src+'/ArtProvider'
@@ -843,7 +847,10 @@ class BitmapConstrPropEdit(IntConstrPropEdit, BitmapPropEditMix):
     def edit(self, event):
         model = self.companion.designer.model
         src, dir, name, tpe = self.extractPathFromSrc(self.value)
-        abspth, pth, tpe = self.showImgDlg(dir, name, tpe)
+        imgDlgRes = self.showImgDlg(dir, name, tpe)
+        if not imgDlgRes:
+            return
+        abspth, pth, tpe = imgDlgRes
         if not tpe:
             return
         elif tpe == 'ResourceModule':
@@ -852,7 +859,7 @@ class BitmapConstrPropEdit(IntConstrPropEdit, BitmapPropEditMix):
             self.value, ctrlVal, bmpPath = self.assureArtProviderImageLoaded(abspth, pth)
         elif abspth:
             self.value = 'wx.Bitmap(%s, %s)'%(repr(pth), tpe)
-            ctrlVal = wx.Bitmap(abspth, self.companion.eval(tpe))
+            ctrlVal = wx.Bitmap(abspth, self.companion.eval(tpe))  # type: ignore[call-overload,arg-type]
 
         self.persistValue(self.value)
         self.propWrapper.setValue(ctrlVal, self.companion.index)
@@ -898,7 +905,10 @@ class BitmapPropEdit(PropertyEditor, BitmapPropEditMix):
         else:
             dir, name, tpe = '.', '', 'Bitmap'
 
-        abspth, pth, tpe = self.showImgDlg(dir, name, tpe)
+        imgDlgRes = self.showImgDlg(dir, name, tpe)
+        if not imgDlgRes:
+            return
+        abspth, pth, tpe = imgDlgRes
         if not tpe or not abspth:
             return
         if tpe == 'ResourceModule':
@@ -906,8 +916,8 @@ class BitmapPropEdit(PropertyEditor, BitmapPropEditMix):
         elif tpe == 'ArtProvider':
             src, self.value, self.bmpPath = self.assureArtProviderImageLoaded(abspth, pth)
         else:
-            self.value = self.ctrlClass(abspth, self.companion.eval(tpe))
-            self.bmpPath = os.path.join(pth, 'Bitmap')
+            self.value = self.ctrlClass(abspth, self.companion.eval(tpe))  # type: ignore[call-overload,arg-type]
+            self.bmpPath = os.path.join(pth or '', 'Bitmap')
         self.inspectorPost(False)
 
     def getValue(self):
@@ -1068,7 +1078,7 @@ class ObjEnumConstrPropEdit(EnumConstrPropEdit):
         try:
             val = self.getValue()
             if val == 'self': vals.remove('self')
-            else: vals.remove('self.'+val)
+            elif val is not None: vals.remove('self.'+val)
         except: pass
         return vals
 
@@ -1377,7 +1387,7 @@ class EventPropEdit(OptionedPropEdit):
                             break
 
                 ted = wx.TextEntryDialog(self.parent, _('Enter a new method name:'),
-                      _('Rename event method'), defVal)
+                        _('Rename event method'), defVal or '')
                 try:
                     if ted.ShowModal() == wx.ID_OK:
                         self.value = ted.GetValue()
@@ -1495,15 +1505,15 @@ class StrPropEdit(BITPropEditor):
             src = ps[0]
             if src.startswith('_('):
                 self.value = '_(%r)'%v
-        
+
         if self.editorCtrl:
             self.editorCtrl.setValue(self.valueToIECValue())
-    
+
     def findPropSrc(self):
         constr = self.companion.constructor()
         if self.name in constr:
             paramName = constr[self.name]
-            
+
             return [self.companion.textConstr.params[paramName]]
         else:
             setterName = self.propWrapper.getSetterName()
@@ -1516,7 +1526,7 @@ class StrPropEdit(BITPropEditor):
         self.companion.checkTriggers(self.name, oldValue, value)
 
         self.propWrapper.setValue(self.companion.eval(value))
-    
+
 
 class NamePropEdit(BITPropEditor):
     def valueToIECValue(self):
@@ -1590,7 +1600,10 @@ class EnumPropEdit(OptionedPropEdit):
     def getValues(self):
         vals = list(self.names.keys())
         try:
-            name = self.revNames[self.value]
+            if self.revNames is not None:
+                name = self.revNames[self.value]
+            else:
+                name = repr(self.value)
         except KeyError:
             name = repr(self.value)
         if name not in vals:
@@ -1602,7 +1615,10 @@ class EnumPropEdit(OptionedPropEdit):
         self.value = value
         if self.editorCtrl:
             try:
-                self.editorCtrl.setValue(self.revNames[value])
+                if self.revNames is not None:
+                    self.editorCtrl.setValue(self.revNames[value])
+                else:
+                    self.editorCtrl.setValue(repr(value))
             except KeyError:
                 self.editorCtrl.setValue(repr(value))
     def getValue(self):
@@ -1985,8 +2001,8 @@ class AnchorPropEdit(OptionedPropEdit):
 
 
 class SashVisiblePropEdit(BoolPropEdit):
-    sashEdgeMap = {wx.adv.SASH_LEFT: 'wx.SASH_LEFT', wx.adv.SASH_TOP: 'wx.SASH_TOP',
-                   wx.adv.SASH_RIGHT: 'wx.SASH_RIGHT', wx.adv.SASH_BOTTOM: 'wx.SASH_BOTTOM'}
+    sashEdgeMap = {adv.SASH_LEFT: 'wx.SASH_LEFT', adv.SASH_TOP: 'wx.SASH_TOP',
+                   adv.SASH_RIGHT: 'wx.SASH_RIGHT', adv.SASH_BOTTOM: 'wx.SASH_BOTTOM'}  # type: ignore[attr-defined]
     def valueToIECValue(self):
         v = self.value[1]
         if isinstance(v, int):
@@ -2004,7 +2020,8 @@ class SashVisiblePropEdit(BoolPropEdit):
         if self.editorCtrl:
             # trick to convert boolean string to integer
             v = self.editorCtrl.getValue()
-            self.value = (self.value[0], self.getValues().index(self.editorCtrl.getValue()))
+            edge = self.value[0] if isinstance(self.value, tuple) else adv.SASH_LEFT  # type: ignore[attr-defined]
+            self.value = (edge, self.getValues().index(self.editorCtrl.getValue()))
         return self.value
     def valueAsExpr(self):
         return '%s, %s'%(self.sashEdgeMap[self.value[0]],

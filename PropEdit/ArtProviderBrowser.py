@@ -1,12 +1,13 @@
 #Boa:Dialog:ArtProviderBrowser
 
+from Cython import basestring
 import wx
 
 from Utils import _
 
 import PaletteStore
 
-ClientIds = ['wx.ART_TOOLBAR', 'wx.ART_MENU', 'wx.ART_FRAME_ICON', 'wx.ART_CMN_DIALOG', 
+ClientIds = ['wx.ART_TOOLBAR', 'wx.ART_MENU', 'wx.ART_FRAME_ICON', 'wx.ART_CMN_DIALOG',
              'wx.ART_HELP_BROWSER', 'wx.ART_MESSAGE_BOX', 'wx.ART_BUTTON', 'wx.ART_OTHER']
 
 def attachStandardArtIds():
@@ -22,10 +23,10 @@ attachStandardArtIds()
 def create(parent):
     return ArtProviderBrowser(parent)
 
-[wxID_ARTPROVIDERBROWSER, wxID_ARTPROVIDERBROWSERARTID, 
- wxID_ARTPROVIDERBROWSERBTNCANCEL, wxID_ARTPROVIDERBROWSERBTNFILEDLG, 
- wxID_ARTPROVIDERBROWSERBTNOK, wxID_ARTPROVIDERBROWSERCLIENTID, 
- wxID_ARTPROVIDERBROWSERIMGSIZE, wxID_ARTPROVIDERBROWSERLISTCTRL, 
+[wxID_ARTPROVIDERBROWSER, wxID_ARTPROVIDERBROWSERARTID,
+ wxID_ARTPROVIDERBROWSERBTNCANCEL, wxID_ARTPROVIDERBROWSERBTNFILEDLG,
+ wxID_ARTPROVIDERBROWSERBTNOK, wxID_ARTPROVIDERBROWSERCLIENTID,
+ wxID_ARTPROVIDERBROWSERIMGSIZE, wxID_ARTPROVIDERBROWSERLISTCTRL,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(8)]
 
 class ArtProviderBrowser(wx.Dialog):
@@ -138,7 +139,7 @@ class ArtProviderBrowser(wx.Dialog):
         self.clientIdChoices = ClientIds
 
         self._init_ctrls(parent)
-        
+
         # used for selection, match if possible
         if artId:
             if artId[0] in ('"', "'"):
@@ -147,7 +148,7 @@ class ArtProviderBrowser(wx.Dialog):
                 artIdVal = artId[2:-1]
             else:
                 artIdVal = artId
-        
+
         self.artId.SetValue(artId)
         if clientId.strip():
             if not self.clientId.SetStringSelection(clientId):
@@ -170,7 +171,7 @@ class ArtProviderBrowser(wx.Dialog):
                 selIdx = idx
         if selIdx != -1:
             self.listCtrl.EnsureVisible(selIdx)
-            
+
             idx += 1
 
     def OnBtnfiledlgButton(self, event):

@@ -14,7 +14,7 @@ print('importing Companions.WizardCompanions')
 
 import wx
 # import wx.wizard
-from wx import adv
+import wx.adv
 
 
 

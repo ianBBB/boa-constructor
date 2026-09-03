@@ -50,7 +50,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
         on frames. """
     viewName = 'Designer'
     viewTitle = _('Designer')
-    
+
     docked = False
     collectionMethod = sourceconst.init_ctrls
     supportsParentView = True
@@ -80,11 +80,11 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
             elif srcPrnt == 'self':
                 try:
                     args[prnt] = self
-                except AttributeError as name:
+                except AttributeError:
                     # XXX This isn't right
-                    if name in self.objects:
+                    if srcPrnt in self.objects:
                         pass
-                    elif name in self.model.objectCollections:
+                    elif srcPrnt in self.model.objectCollections:
                         pass
                     else:
                         raise
@@ -98,7 +98,7 @@ class DesignerView(wx.Frame, InspectableObjectView, Utils.FrameRestorerMixin):
         # hack to allow stock ids to set the button
         if wId in args and args[wId] in Enumerations.wxStockIds:
             args[wId] = getattr(wx, args[wId].split('.')[1])
-        elif doId: 
+        elif doId:
             args[wId] = wx.NewIdRef(count=1)
 
         return args
@@ -1520,12 +1520,28 @@ class DesignerNamespace:
     def __init__(self, designer):
         self._designer = designer
 
+    def _is_dead_wx_object(self, ctrl):
+        """Return True if a wx object wrapper is no longer backed by a live C++ object."""
+        dead_cls = getattr(wx._core, '_wxPyDeadObject', None)
+        if dead_cls is not None:
+            try:
+                if isinstance(ctrl, dead_cls):
+                    return True
+            except Exception:
+                return True
+
+        try:
+            # wxPython Phoenix uses invalid wrappers instead of _wxPyDeadObject.
+            return isinstance(ctrl, wx.Object) and not bool(ctrl)
+        except Exception:
+            return True
+
     def __getattr__(self, name):
         designer = self.__dict__['_designer']
         if name in designer.objects:
             #return designer.objects[name][1]
             obj = designer.objects[name]
-            if isinstance(obj[1], wx._core._wxPyDeadObject):
+            if self._is_dead_wx_object(obj[1]):
                 obj[0].parent = designer.objects[obj[2]][1]
                 obj[1] = obj[0].designTimeControl(wx.DefaultPosition, wx.DefaultSize)
                 obj[0].control = obj[1]
@@ -1534,7 +1550,7 @@ class DesignerNamespace:
             return designer.dataView.objects[name][1]
         elif designer.sizersView and \
               name in designer.sizersView.objects:
-            return designer.sizerView.objects[name][1]
+            return designer.sizersView.objects[name][1]
         else:
             raise AttributeError(name)
 

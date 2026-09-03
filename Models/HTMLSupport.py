@@ -17,7 +17,7 @@ import Preferences, Utils, Plugins
 from Utils import _
 
 from . import EditorHelper
-EditorHelper.imgHTMLFileModel = EditorHelper.imgIdxRange()
+EditorHelper.imgHTMLFileModel = EditorHelper.imgIdxRange()  # type: ignore[attr-defined]
 
 from Models.EditorModels import PersistentModel
 
@@ -25,7 +25,7 @@ class HTMLFileModel(PersistentModel):
     modelIdentifier = 'HTML'
     defaultName = 'html'
     bitmap = 'WebDocHTML.png'
-    imgIdx = EditorHelper.imgHTMLFileModel
+    imgIdx = EditorHelper.imgHTMLFileModel  # type: ignore[attr-defined]
     ext = '.html'
 
 
@@ -47,7 +47,7 @@ from Views.SourceViews import EditorStyledTextCtrl
 class HTMLSourceView(EditorStyledTextCtrl, HTMLStyledTextCtrlMix):
     viewName = 'HTML'
     viewTitle = _('HTML')
-    
+
     def __init__(self, parent, model):
         EditorStyledTextCtrl.__init__(self, parent, wxID_HTMLSOURCEVIEW,
           model, (), -1)

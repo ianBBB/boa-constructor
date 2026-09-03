@@ -12,7 +12,10 @@
 print('importing Companions.ListCompanions')
 
 import wx
-import wx.grid
+try:
+    import wx.grid
+except ImportError:
+    wx.grid = None  # type: ignore
 
 from Utils import _
 
@@ -51,9 +54,9 @@ class ListCtrlDTC(Constructors.MultiItemCtrlsConstr, WindowDTC):
         # # change windowIDName for those controls that require a different name.
         if self.ctrlClass.__name__ == 'ListView':
             self.windowIdName = 'winid'
-            holding_list = list(self.handledConstrParams)
-            holding_list[0] = 'winid'
-            self.handledConstrParams = tuple(holding_list)
+            # Replace first element with 'winid'
+            if len(self.handledConstrParams) > 0:
+                self.handledConstrParams = ('winid',) + self.handledConstrParams[1:]  # type: ignore
     def properties(self):
         props = WindowDTC.properties(self)
         props['Columns'] = ('NoneRoute', None, None)
@@ -335,17 +338,18 @@ class GridDTC(WindowDTC, Constructors.WindowConstr):
         self.editors['SelectionMode'] = EnumPropEdit
         self.compositeCtrl = True
 
-        self.options['SelectionMode'] = [wx.grid.Grid.GridSelectCells,
-                                         wx.grid.Grid.GridSelectRows,
-                                         wx.grid.Grid.GridSelectColumns,
-                                         wx.grid.Grid.GridSelectRowsOrColumns,
-                                         wx.grid.Grid.GridSelectNone]
-        self.names['SelectionMode'] = \
-            {'wx.grid.Grid.GridSelectCells': wx.grid.Grid.GridSelectCells,
-             'wx.grid.Grid.GridSelectRows': wx.grid.Grid.GridSelectRows,
-             'wx.grid.Grid.GridSelectColumns': wx.grid.Grid.GridSelectColumns,
-             'wx.grid.Grid.GridSelectRowsOrColumns': wx.grid.Grid.GridSelectRowsOrColumns,
-             ' wx.grid.Grid.GridSelectNone ': wx.grid.Grid.GridSelectNone}
+        if wx.grid is not None:  # type: ignore
+            self.options['SelectionMode'] = [wx.grid.Grid.GridSelectCells,  # type: ignore
+                                             wx.grid.Grid.GridSelectRows,  # type: ignore
+                                             wx.grid.Grid.GridSelectColumns,  # type: ignore
+                                             wx.grid.Grid.GridSelectRowsOrColumns,  # type: ignore
+                                             wx.grid.Grid.GridSelectNone]  # type: ignore
+            self.names['SelectionMode'] = \
+                {'wx.grid.Grid.GridSelectCells': wx.grid.Grid.GridSelectCells,  # type: ignore
+                 'wx.grid.Grid.GridSelectRows': wx.grid.Grid.GridSelectRows,  # type: ignore
+                 'wx.grid.Grid.GridSelectColumns': wx.grid.Grid.GridSelectColumns,  # type: ignore
+                 'wx.grid.Grid.GridSelectRowsOrColumns': wx.grid.Grid.GridSelectRowsOrColumns,  # type: ignore
+                 ' wx.grid.Grid.GridSelectNone ': wx.grid.Grid.GridSelectNone}  # type: ignore
 
     def designTimeSource(self, position='wx.DefaultPosition', size='wx.DefaultSize'):
         return {'pos': position,
@@ -355,10 +359,11 @@ class GridDTC(WindowDTC, Constructors.WindowConstr):
 
     def properties(self):
         props = WindowDTC.properties(self)
-        props.update({'Editable': ('CtrlRoute',
-                                   wx.grid.Grid.IsEditable, wx.grid.Grid.EnableEditing),
-                      'GridLinesEnabled': ('CtrlRoute',
-                                           wx.grid.Grid.GridLinesEnabled, wx.grid.Grid.EnableGridLines)})
+        if wx.grid is not None:  # type: ignore
+            props.update({'Editable': ('CtrlRoute',
+                                       wx.grid.Grid.IsEditable, wx.grid.Grid.EnableEditing),  # type: ignore
+                          'GridLinesEnabled': ('CtrlRoute',
+                                               wx.grid.Grid.GridLinesEnabled, wx.grid.Grid.EnableGridLines)})  # type: ignore
         return props
 
     def designTimeControl(self, position, size, args=None):
@@ -386,13 +391,16 @@ import Plugins
 
 Plugins.registerPalettePage('ListControls', _('List Controls'))
 
-Plugins.registerComponents('ListControls',
-                           (wx.ListBox, 'wx.ListBox', ListBoxDTC),
-                           (wx.CheckListBox, 'wx.CheckListBox', CheckListBoxDTC),
-                           (wx.grid.Grid, 'wx.grid.Grid', GridDTC),
-                           (wx.ListCtrl, 'wx.ListCtrl', ListCtrlDTC),
-                           (wx.ListView, 'wx.ListView', ListViewDTC),
-                           (wx.TreeCtrl, 'wx.TreeCtrl', TreeCtrlDTC),
-                           (wx.RadioBox, 'wx.RadioBox', RadioBoxDTC),
-                           (wx.GenericDirCtrl, 'wx.GenericDirCtrl', GenericDirCtrlDTC),
-                           )
+components = [
+    (wx.ListBox, 'wx.ListBox', ListBoxDTC),
+    (wx.CheckListBox, 'wx.CheckListBox', CheckListBoxDTC),
+    (wx.ListCtrl, 'wx.ListCtrl', ListCtrlDTC),
+    (wx.ListView, 'wx.ListView', ListViewDTC),
+    (wx.TreeCtrl, 'wx.TreeCtrl', TreeCtrlDTC),
+    (wx.RadioBox, 'wx.RadioBox', RadioBoxDTC),
+    (wx.GenericDirCtrl, 'wx.GenericDirCtrl', GenericDirCtrlDTC),
+]
+if wx.grid is not None:  # type: ignore
+    components.insert(2, (wx.grid.Grid, 'wx.grid.Grid', GridDTC))  # type: ignore
+
+Plugins.registerComponents('ListControls', *components)

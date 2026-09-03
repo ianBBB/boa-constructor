@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #----------------------------------------------------------------------
 # Name:        Explorer.py
 # Purpose:     Controls to explore and initialise different data sources

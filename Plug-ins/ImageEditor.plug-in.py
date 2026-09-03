@@ -2,6 +2,7 @@
 
 import os, math, tempfile
 from io import StringIO
+from typing import Any
 
 import wx
 from wx.lib.anchors import LayoutAnchors
@@ -13,12 +14,12 @@ from Utils import _
 ddCanvas = 1
 ddGrid = 2
 
-[wxID_IMAGEEDITORPANEL, wxID_IMAGEEDITORPANELBGCOLBTN, 
- wxID_IMAGEEDITORPANELBRUSHCOLBTN, wxID_IMAGEEDITORPANELEDITWINDOW, 
- wxID_IMAGEEDITORPANELFGCOLBTN, wxID_IMAGEEDITORPANELMODECHOICE, 
- wxID_IMAGEEDITORPANELPENBRUSHWINDOW, wxID_IMAGEEDITORPANELSLIDER1, 
- wxID_IMAGEEDITORPANELSPINBUTTON1, wxID_IMAGEEDITORPANELSPINBUTTON2, 
- wxID_IMAGEEDITORPANELSPINBUTTON3, wxID_IMAGEEDITORPANELSTATICTEXT1, 
+[wxID_IMAGEEDITORPANEL, wxID_IMAGEEDITORPANELBGCOLBTN,
+ wxID_IMAGEEDITORPANELBRUSHCOLBTN, wxID_IMAGEEDITORPANELEDITWINDOW,
+ wxID_IMAGEEDITORPANELFGCOLBTN, wxID_IMAGEEDITORPANELMODECHOICE,
+ wxID_IMAGEEDITORPANELPENBRUSHWINDOW, wxID_IMAGEEDITORPANELSLIDER1,
+ wxID_IMAGEEDITORPANELSPINBUTTON1, wxID_IMAGEEDITORPANELSPINBUTTON2,
+ wxID_IMAGEEDITORPANELSPINBUTTON3, wxID_IMAGEEDITORPANELSTATICTEXT1,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(12)]
 
 class ImageEditorPanel(wx.Panel):
@@ -133,7 +134,7 @@ class ImageEditorPanel(wx.Panel):
         self.drawingModes = [_('Select'), _('Draw'), _('Line'), _('Circle'), _('Box'), _('Fill'), _('Colour')]
         self._init_ctrls(parent)
 
-        self.currentCursor = None
+        self.currentCursor = self.cursorCross
 
         self.drawingMethMap = {_('Select'): (ddCanvas|ddGrid, self.drawSelection),
                                _('Draw')  : (ddCanvas,        self.drawPoint),
@@ -148,10 +149,13 @@ class ImageEditorPanel(wx.Panel):
         self.mode = ''
         self.setMode(_('Draw'))
 
-        self.mDC = self.bmp = None
+        self.mDC: Any = None
+        self.bmp: Any = None
+        self.mDCundo: Any = None
+        self.bmpundo: Any = None
 
         self.fgcol = wx.BLACK
-        self.fgpen = wx.Pen(self.fgcol, 1, wx.SOLID)
+        self.fgpen = wx.Pen(self.fgcol, 1, wx.PENSTYLE_SOLID)
         self.bgcol = wx.LIGHT_GREY
         self.bgbsh = wx.Brush(self.bgcol)
         self.brush = wx.Brush(wx.WHITE, wx.BRUSHSTYLE_TRANSPARENT)
@@ -169,13 +173,17 @@ class ImageEditorPanel(wx.Panel):
         self.prevPointCol = ()
 
 
-    brushStyles = [wx.TRANSPARENT, wx.SOLID, wx.BDIAGONAL_HATCH, wx.CROSSDIAG_HATCH,
-                   wx.FDIAGONAL_HATCH, wx.CROSS_HATCH, wx.HORIZONTAL_HATCH,
-                   wx.VERTICAL_HATCH]
+    brushStyles = [wx.BRUSHSTYLE_TRANSPARENT, wx.BRUSHSTYLE_SOLID,
+                   wx.BRUSHSTYLE_BDIAGONAL_HATCH, wx.BRUSHSTYLE_CROSSDIAG_HATCH,
+                   wx.BRUSHSTYLE_FDIAGONAL_HATCH, wx.BRUSHSTYLE_CROSS_HATCH,
+                   wx.BRUSHSTYLE_HORIZONTAL_HATCH, wx.BRUSHSTYLE_VERTICAL_HATCH]
 
-    penStyles = [wx.SOLID, wx.TRANSPARENT, wx.DOT, wx.LONG_DASH, wx.SHORT_DASH, wx.DOT_DASH,
-                 wx.BDIAGONAL_HATCH, wx.CROSSDIAG_HATCH, wx.FDIAGONAL_HATCH, wx.CROSS_HATCH,
-                 wx.HORIZONTAL_HATCH, wx.VERTICAL_HATCH]
+    penStyles = [wx.PENSTYLE_SOLID, wx.PENSTYLE_TRANSPARENT,
+                 wx.PENSTYLE_DOT, wx.PENSTYLE_LONG_DASH,
+                 wx.PENSTYLE_SHORT_DASH, wx.PENSTYLE_DOT_DASH,
+                 wx.PENSTYLE_BDIAGONAL_HATCH, wx.PENSTYLE_CROSSDIAG_HATCH,
+                 wx.PENSTYLE_FDIAGONAL_HATCH, wx.PENSTYLE_CROSS_HATCH,
+                 wx.PENSTYLE_HORIZONTAL_HATCH, wx.PENSTYLE_VERTICAL_HATCH]
 
     extTypeMap = {'.bmp': wx.BITMAP_TYPE_BMP,
                   '.gif': wx.BITMAP_TYPE_GIF,
@@ -189,17 +197,17 @@ class ImageEditorPanel(wx.Panel):
     def initImageData(self, ext, data):
         """ Initialise editor with data """
         if data:
-            # WAR: On Windows7 x64 with Aero disabled, Python 2.7 x64 and 
-            #      wx-2.8-msw-unicode x64, SetUserScale fails when used on a DC 
+            # WAR: On Windows7 x64 with Aero disabled, Python 2.7 x64 and
+            #      wx-2.8-msw-unicode x64, SetUserScale fails when used on a DC
             #      with a Bitmap selected coming from a BitmapFromImage
             #
             #      This is likely wxWidgets issue 3494 "wxDC::Blit ignores SetUserScale
             #      on source DC" [when a DIB is selected on the HDC]
             #      http://trac.wxwidgets.org/ticket/3494
             #
-            #      To WAR this, create a new empty bitmap and blit to it from the 
+            #      To WAR this, create a new empty bitmap and blit to it from the
             #      incoming DIB instead of selecting the incoming DIB onto the DC
-            #      (another tested WAR is to use a colordepth of 16 in the 
+            #      (another tested WAR is to use a colordepth of 16 in the
             #       BitmapFromImage call, this probably causes the original 32-bit
             #       DIB to be exchanged by a color-converted BMP)
             bmp = wx.BitmapFromImage(wx.ImageFromStream(StringIO(data)))
@@ -264,8 +272,14 @@ class ImageEditorPanel(wx.Panel):
                 self.modeChoice.SetStringSelection(mode)
 
     def clearState(self):
-        self.dragoffset = self.dragpos = self.dragbmp = self.dragsrcrect = None
-        self.sel = self.line = self.circle = self.box = None
+        self.dragoffset = None
+        self.dragpos = None
+        self.dragbmp = None
+        self.dragsrcrect = None
+        self.sel = None
+        self.line = None
+        self.circle = None
+        self.box = None
         self.editWindow.SetCursor(self.currentCursor)
 
     def snapshot(self):
@@ -292,7 +306,7 @@ class ImageEditorPanel(wx.Panel):
             x1, y1, x2, y2 = self.sel
             mDC, bmp = self.getTempMemDC(x2-x1+1, y2-y1+1)
             self.mDC.SetUserScale(1.0, 1.0)
-            mDC.Blit(0, 0, x2-x1+1, y2-y1+1, self.mDC, x1, y1)
+            mDC.Blit(0, 0, int(x2-x1+1), int(y2-y1+1), self.mDC, int(x1), int(y1))
             mDC.SelectObject(wx.NullBitmap)
             return bmp
         return None
@@ -337,7 +351,7 @@ class ImageEditorPanel(wx.Panel):
         if not dc:
             if state == 'start':
                 self.sel = self.getImgPos(event) * 2
-            elif state in ('drag', 'end'):
+            elif state in ('drag', 'end') and self.sel:
                 self.sel = self.sel[:2] + self.getImgPos(event)
                 if state == 'end':
                     x1, y1, x2, y2 = self.sel
@@ -418,7 +432,7 @@ class ImageEditorPanel(wx.Panel):
         if not dc:
             if state == 'start':
                 self.box = self.getImgPos(event) * 2
-            else:
+            elif self.box:
                 self.box = self.box[:2] + self.getImgPos(event)
                 if state == 'end':
                     self.snapshot()
@@ -504,6 +518,8 @@ class ImageEditorPanel(wx.Panel):
             self.imageModified()
 
     def drawMove(self, event, state, dc=None):
+        if not self.sel:
+            return
         x1, y1, x2, y2 = self.sel
         if not dc:
             x, y = self.getImgPos(event)
@@ -517,6 +533,8 @@ class ImageEditorPanel(wx.Panel):
                 # better to only do this once
                 self.undo()
 
+                if not self.dragoffset:
+                    return
                 dox, doy = self.dragoffset
                 dx, dy = self.dragpos = dox + x, doy + y
 
@@ -524,7 +542,8 @@ class ImageEditorPanel(wx.Panel):
                 self.mDC.SetLogicalFunction(wx.COPY)
                 self.mDC.SetPen(self.invpen)
                 self.mDC.SetBrush(self.bgbsh)
-                self.mDC.DrawRectangle(*self.dragsrcrect)
+                if self.dragsrcrect:
+                    self.mDC.DrawRectangle(*self.dragsrcrect)
 
                 self.mDC.DrawBitmap(self.dragbmp, dx, dy)
 
@@ -548,7 +567,7 @@ class ImageEditorPanel(wx.Panel):
     def drawPickColour(self, event, state):
         if state == 'end':
             x, y = self.getImgPos(event)
-            newcol = self.mDC.GetPixel(x, y)
+            newcol = self.mDC.GetPixel(int(x), int(y))
 
             self.fgcol = newcol
             self.fgpen.SetColour(newcol)
@@ -745,7 +764,8 @@ class ImageEditorPanel(wx.Panel):
         clip.Open()
         try:
             bmp = self.getSelBmp()
-            clip.SetData(wx.BitmapDataObject(bmp))
+            if bmp is not None:
+                clip.SetData(wx.BitmapDataObject(bmp))
         finally:
             clip.Close()
 
@@ -904,9 +924,10 @@ from Views import EditorViews
 class ImageView(wx.Panel, EditorViews.EditorView):
     viewName = 'View'
     viewTitle = 'View'
+    model: Any
     def __init__(self, parent, model):
         wx.Panel.__init__(self, parent, -1, style= wx.SUNKEN_BORDER)
-        self.staticBitmapSmall = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.staticBitmapSmall = wx.StaticBitmap(self, -1, wx.NullBitmap)  # type: ignore[arg-type]
         #self.staticBitmapBig = wx.StaticBitmap(self, -1, wx.NullBitmap)
         EditorViews.EditorView.__init__(self, model, (), -1)
         self.active = True
@@ -919,7 +940,7 @@ class ImageView(wx.Panel, EditorViews.EditorView):
             self.staticBitmapSmall.SetBitmap(bmp)
             self.staticBitmapSmall.SetDimensions(self.imgsep, self.imgsep,
                                                  bmp.GetWidth(), bmp.GetHeight())
-            self.staticBitmapSmall.Refresh()                                     
+            self.staticBitmapSmall.Refresh()
             #self.staticBitmapBig.SetBitmap(bmp)
             #self.staticBitmapBig.SetDimensions(bmp.GetWidth()+self.imgsep*2,
             #      self.imgsep, bmp.GetWidth()*2, bmp.GetHeight()*2)
@@ -927,6 +948,7 @@ class ImageView(wx.Panel, EditorViews.EditorView):
 class ImageEditorView(ImageEditorPanel, EditorViews.EditorView):
     viewName = 'Edit'
     viewTitle = _('Edit')
+    model: Any
 
     refreshBmp = 'Images/Editor/Refresh.png'
     copyBmp = 'Images/Shared/Copy.png'
@@ -956,7 +978,7 @@ class ImageEditorView(ImageEditorPanel, EditorViews.EditorView):
         self.editWindow.Bind(wx.EVT_RIGHT_UP, self.OnRightClick)
 
         self.active = True
-        self.subImage = None
+        self.subImage: Any = None
 
     def refreshCtrl(self, subImage=None):
         if subImage is None and self.subImage is None:
@@ -1086,7 +1108,7 @@ class PyResourceImagesViewPlugin:
                 view = self.model.views[viewName]
             view.focus()
 
-ResourceSupport.PyResourceImagesView.plugins += (PyResourceImagesViewPlugin,)
+ResourceSupport.PyResourceImagesView.plugins += (PyResourceImagesViewPlugin,)  # type: ignore[operator,assignment]
 
 #-------------------------------------------------------------------------------
 
@@ -1121,7 +1143,7 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x18\x00\x00\x00\x18\x08\x06\
 \xd7>\xedm\x9bn\x8d\xbe\xfa\xc3\x0c\x90\x08\xd5\xdc\x05\xb8=\xb9\xfaF\xb0\
 \x9dw\x07\xc0\xcf\x1ejZ\xa2\xff\x9f\x04\xe5\x9eL\xbe|t_\xd7\x91X\xe6.\xca\
 \x02~3\xfe\xfe\x93\xb9;\xe0\x13]\x82[\x14\xe0\xb9\xd5\x88\x00\x00\x00\x00IEN\
-D\xaeB`\x82' 
+D\xaeB`\x82'
 
 Preferences.IS.registerImage('Images/EditBitmap.png', getEditBitmapData())
 Preferences.IS.registerImage('Images/Palette/Bitmap.png', getBitmapData())

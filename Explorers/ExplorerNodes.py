@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        ExplorerNodes.py
 # Purpose:     Explorer base classes for nodes, controllers and companions

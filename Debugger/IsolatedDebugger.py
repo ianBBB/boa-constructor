@@ -16,15 +16,11 @@ import sys
 import _thread
 import threading
 import queue
-import time
 from os import chdir
 from os import path
 import bdb
 from bdb import Bdb, BdbQuit, Breakpoint
 from reprlib import Repr
-# from repr import Repr
-# from types import TupleType
-
 
 # XXX Extend breakpoints to break on exception (like conditional breakpoints)
 
@@ -82,9 +78,9 @@ class DebuggerConnection:
         rather than stop.  Non-blocking.
         """
         self._callNoWait('runFile', 1, filename, params, autocont, add_paths)
-    
+
     def post_mortem(self):
-        """ Inspecting tracebacks in the debugger 
+        """ Inspecting tracebacks in the debugger
         """
         self._callMethod('post_mortem', 0)
 
@@ -112,7 +108,7 @@ class DebuggerConnection:
     def set_step_jump(self, lineno):
         """Updates the lineno of the bottom frame.  Non-blocking."""
         self._callMethod('set_step_jump', 0, lineno)
-    
+
     def set_pause(self):
         """Stops as soon as possible.  Non-blocking and immediate.
         """
@@ -907,17 +903,17 @@ class DebugServer (Bdb):
 
     def isRunning(self):
         return self._running
-    
+
     def post_mortem(self, exc_info=None):
         if exc_info is None:
             self.exc_info = sys.exc_info()
         else:
             self.exc_info = exc_info
-            
+
         if self.exc_info[2] is not None:
             self.frame = self.exc_info[2].tb_frame
         else:
-            self.frame = None    
+            self.frame = None
 
         self._running = 1
         self.quitting = 0
@@ -943,7 +939,7 @@ class DebugServer (Bdb):
             self.set_next(frame)
         else:
             raise DebugError('No current frame')
-        
+
     def set_step_jump(self, lineno):
         """ Adjust the linenumber attribute of the bottom frame """
         frame = self.getFrameByNumber(-1)
@@ -951,7 +947,7 @@ class DebugServer (Bdb):
             frame.f_lineno = lineno
         else:
             raise DebugError('No current frame')
-    
+
 
     ### Breakpoint control.
     def setAllBreakpoints(self, brks):
@@ -1216,7 +1212,7 @@ class DebugServer (Bdb):
 ##                except:
 ##                    pass
 ##            return res
-                    
+
         finally:
             sys.stdout = _ts
 
@@ -1252,4 +1248,3 @@ class DebugServer (Bdb):
 ##            self.quitting = 0
 ##        else:
 ##            raise DebugError('No current frame')
-        

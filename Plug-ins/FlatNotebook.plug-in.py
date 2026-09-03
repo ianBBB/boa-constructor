@@ -1,12 +1,13 @@
 import wx
+import Preferences
 
 import Plugins
 from Utils import _
 
 try:
-    import wx.lib.flatnotebook
+    import wx.lib.flatnotebook  # type: ignore[import-not-found]
 except ImportError:
-    raise Plugins.SkipPluginSilently, _('Module %s not found')%'wx.lib.flatnotebook'
+    raise Plugins.SkipPluginSilently(_('Module %s not found')%'wx.lib.flatnotebook')
 
 from Companions.ContainerCompanions import BookCtrlDTC
 from Companions.EventCollections import *
@@ -25,44 +26,44 @@ class FlatNotebookDTC(BookCtrlDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         BookCtrlDTC.__init__(self, name, designer, parent, ctrlClass)
         self.windowStyles = \
-            ['wx.lib.flatnotebook.FNB_VC71', 
-             'wx.lib.flatnotebook.FNB_FANCY_TABS', 
-             'wx.lib.flatnotebook.FNB_TABS_BORDER_SIMPLE', 
+            ['wx.lib.flatnotebook.FNB_VC71',
+             'wx.lib.flatnotebook.FNB_FANCY_TABS',
+             'wx.lib.flatnotebook.FNB_TABS_BORDER_SIMPLE',
              'wx.lib.flatnotebook.FNB_NO_X_BUTTON',
-             'wx.lib.flatnotebook.FNB_NO_NAV_BUTTONS', 
+             'wx.lib.flatnotebook.FNB_NO_NAV_BUTTONS',
              'wx.lib.flatnotebook.FNB_MOUSE_MIDDLE_CLOSES_TABS',
-             'wx.lib.flatnotebook.FNB_BOTTOM', 
-             'wx.lib.flatnotebook.FNB_NODRAG', 
-             'wx.lib.flatnotebook.FNB_VC8', 
+             'wx.lib.flatnotebook.FNB_BOTTOM',
+             'wx.lib.flatnotebook.FNB_NODRAG',
+             'wx.lib.flatnotebook.FNB_VC8',
              'wx.lib.flatnotebook.FNB_X_ON_TAB',
-             'wx.lib.flatnotebook.FNB_BACKGROUND_GRADIENT', 
+             'wx.lib.flatnotebook.FNB_BACKGROUND_GRADIENT',
              'wx.lib.flatnotebook.FNB_COLORFUL_TABS',
              'wx.lib.flatnotebook.FNB_DCLICK_CLOSES_TABS'] + self.windowStyles
 
     def designTimeDefaults(self, position = wx.DefaultPosition, size = wx.DefaultSize):
         defs = BookCtrlDTC.designTimeDefaults(self, position = wx.DefaultPosition, size = wx.DefaultSize)
-        defs['style'] |= wx.lib.flatnotebook.FNB_NO_X_BUTTON 
+        defs['style'] |= wx.lib.flatnotebook.FNB_NO_X_BUTTON
         defs['style'] &= ~(wx.lib.flatnotebook.FNB_X_ON_TAB|wx.lib.flatnotebook.FNB_DCLICK_CLOSES_TABS)
         return defs
 
     def designTimeControl(self, position, size, args = None):
         if args is not None:
-            args['style'] |= wx.lib.flatnotebook.FNB_NO_X_BUTTON 
+            args['style'] |= wx.lib.flatnotebook.FNB_NO_X_BUTTON
             args['style'] &= ~(wx.lib.flatnotebook.FNB_X_ON_TAB|wx.lib.flatnotebook.FNB_DCLICK_CLOSES_TABS)
         ctrl = BookCtrlDTC.designTimeControl(self, position, size, args)
-        ctrl.Bind(wx.lib.flatnotebook.EVT_FLATNOTEBOOK_PAGE_CHANGED, 
+        ctrl.Bind(wx.lib.flatnotebook.EVT_FLATNOTEBOOK_PAGE_CHANGED,
               self.OnPageChanged, id=ctrl.GetId())
         ctrl.SetWindowStyleFlag = lambda s: None
-        return ctrl        
+        return ctrl
 
     def events(self):
         return BookCtrlDTC.events(self) + ['FlatNotebookEvent']
-    
+
     def writeImports(self):
         return '\n'.join( (BookCtrlDTC.writeImports(self), 'import wx.lib.flatnotebook'))
 
 
-Plugins.registerComponent('Library', wx.lib.flatnotebook.FlatNotebook, 
+Plugins.registerComponent('Library', wx.lib.flatnotebook.FlatNotebook,
       'wx.lib.flatnotebook.FlatNotebook', FlatNotebookDTC)
 
 def getFlatNotebookData():
@@ -75,6 +76,6 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x18\x00\x00\x00\x18\x08\x06\
 knh\xfc_\xdbP\xcf\x88\x12\x07V\xb6Vp\x1a\x99M\t@\xf1\xc1\xb1\xc3\xc7Pht\xb6\
 \xa5\x8d%\x86\x01\xd8\xc4\x18\x18 A\x8aa\x01>\xe0\xe4\xe8\x845\x88\x08\x81\
 \xa1\x9f\x0fF-\x18\xb5\x80r\x00\xcfh\xb0\x9cGm\xc08Z\xa3\x8dZ@1\x00\x006M0\
-\x0b(3z\x16\x00\x00\x00\x00IEND\xaeB`\x82' 
+\x0b(3z\x16\x00\x00\x00\x00IEND\xaeB`\x82'
 
 Preferences.IS.registerImage('Images/Palette/wx.lib.flatnotebook.FlatNotebook.png', getFlatNotebookData())

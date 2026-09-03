@@ -10,7 +10,7 @@
 # Licence:     GPL
 #----------------------------------------------------------------------
 import wx
-from wx import adv
+import wx.adv
 from wx import Dialog
 # from wxCompat import wxNO_3D
 
@@ -78,8 +78,8 @@ sashLayoutAlignmentNames = {'wx.adv.LAYOUT_NONE' : wx.adv.LAYOUT_NONE,
                             'wx.adv.LAYOUT_BOTTOM' : wx.adv.LAYOUT_BOTTOM}
 
 wxStockIds = [
-    'wx.ID_ADD', 'wx.ID_APPLY', 'wx.ID_BOLD', 'wx.ID_CANCEL', 'wx.ID_CLEAR', 
-    'wx.ID_CLOSE', 'wx.ID_COPY', 'wx.ID_CUT', 'wx.ID_DELETE', 'wx.ID_FIND', 
+    'wx.ID_ADD', 'wx.ID_APPLY', 'wx.ID_BOLD', 'wx.ID_CANCEL', 'wx.ID_CLEAR',
+    'wx.ID_CLOSE', 'wx.ID_COPY', 'wx.ID_CUT', 'wx.ID_DELETE', 'wx.ID_FIND',
     'wx.ID_REPLACE', 'wx.ID_BACKWARD', 'wx.ID_DOWN', 'wx.ID_FORWARD',
     'wx.ID_UP', 'wx.ID_HELP', 'wx.ID_HOME', 'wx.ID_INDENT', 'wx.ID_INDEX',
     'wx.ID_ITALIC', 'wx.ID_JUSTIFY_CENTER', 'wx.ID_JUSTIFY_FILL',
@@ -87,8 +87,8 @@ wxStockIds = [
     'wx.ID_OK', 'wx.ID_OPEN', 'wx.ID_PASTE', 'wx.ID_PREFERENCES','wx.ID_PRINT',
     'wx.ID_PREVIEW', 'wx.ID_PROPERTIES', 'wx.ID_EXIT', 'wx.ID_REDO',
     'wx.ID_REFRESH', 'wx.ID_REMOVE', 'wx.ID_REVERT_TO_SAVED', 'wx.ID_SAVE',
-    'wx.ID_SAVEAS', 'wx.ID_STOP', 'wx.ID_UNDELETE', 'wx.ID_UNDERLINE', 
-    'wx.ID_UNDO', 'wx.ID_UNINDENT', 'wx.ID_YES', 'wx.ID_ZOOM_100', 
+    'wx.ID_SAVEAS', 'wx.ID_STOP', 'wx.ID_UNDELETE', 'wx.ID_UNDERLINE',
+    'wx.ID_UNDO', 'wx.ID_UNINDENT', 'wx.ID_YES', 'wx.ID_ZOOM_100',
     'wx.ID_ZOOM_FIT', 'wx.ID_ZOOM_IN', 'wx.ID_ZOOM_OUT',
 ]
 

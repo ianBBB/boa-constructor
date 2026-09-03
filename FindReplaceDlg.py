@@ -9,6 +9,9 @@
 # Copyright:   (c) 2001 - 2007 Tim Hochberg
 # Licence:     GPL
 #-----------------------------------------------------------------------------
+# pyright: ignore
+# type: ignore
+
 #Boa:Dialog:FindReplaceDlg
 
 import wx
@@ -35,21 +38,21 @@ def findAgain(parent, finder, view, invertFinderReverse = False):
     """
     Repeats the last search in the given finder or prompts for a new search if
     the finder has no search history.
-    
+
     Called by OnFindAgain/OnFindAgainPrev event handlers at SourceViews.py
-    
+
     :param finder: Finder state to use.
     :param view: View whose contents to search over.
-    :param invertFinderReverse: True if we want to invert the current finder 
-    reverse state (forward vs. backward search). 
-    This parameter is used to find the "next" occurrence (don't invert) or the 
-    "previous" occurrence (invert). Note that the meaning of "previous" and 
+    :param invertFinderReverse: True if we want to invert the current finder
+    reverse state (forward vs. backward search).
+    This parameter is used to find the "next" occurrence (don't invert) or the
+    "previous" occurrence (invert). Note that the meaning of "previous" and
     "next" is wrt the finder.reverse state (ie. if finder.reverse is true, it
     means that backwards search is enabled and that inverting the backwards search
     will return the "next" ocurrence towards the beginning of the text)
     """
     oldFinderReverse = finder.reverse
-    finder.reverse = finder.reverse != invertFinderReverse 
+    finder.reverse = finder.reverse != invertFinderReverse
     if len(finder.findHistory) == 1:
         find(parent, finder, view)
     else:
@@ -57,25 +60,25 @@ def findAgain(parent, finder, view, invertFinderReverse = False):
             finder.findNextInSource(view)
         except FindError as err:
             wx.MessageBox(str(err), _('Find/Replace'), wx.OK | wx.ICON_INFORMATION, view)
-    finder.reverse = oldFinderReverse 
+    finder.reverse = oldFinderReverse
 
-[wxID_FINDREPLACEDLG, wxID_FINDREPLACEDLGBTNBROWSE, 
- wxID_FINDREPLACEDLGBTNBUILDINFIND, wxID_FINDREPLACEDLGBTNFINDINFILES, 
- wxID_FINDREPLACEDLGCANCELBTN, wxID_FINDREPLACEDLGCASESENSITIVECB, 
- wxID_FINDREPLACEDLGCHKRECURSIVESEARCH, wxID_FINDREPLACEDLGCLOSEONFOUNDCB, 
- wxID_FINDREPLACEDLGCMBFILEFILTER, wxID_FINDREPLACEDLGCMBFOLDER, 
- wxID_FINDREPLACEDLGDIRECTIONRB, wxID_FINDREPLACEDLGFINDALLBTN, 
- wxID_FINDREPLACEDLGFINDBTN, wxID_FINDREPLACEDLGFINDTXT, 
- wxID_FINDREPLACEDLGOPTIONSSB, wxID_FINDREPLACEDLGREGEXPRCB, 
- wxID_FINDREPLACEDLGREPLACEALLBTN, wxID_FINDREPLACEDLGREPLACEBTN, 
- wxID_FINDREPLACEDLGREPLACETXT, wxID_FINDREPLACEDLGSCOPERB, 
- wxID_FINDREPLACEDLGSTATICTEXT1, wxID_FINDREPLACEDLGSTATICTEXT2, 
- wxID_FINDREPLACEDLGSTATICTEXT3, wxID_FINDREPLACEDLGSTATICTEXT4, 
- wxID_FINDREPLACEDLGWHOLEWORDSCB, wxID_FINDREPLACEDLGWILDCARDCB, 
- wxID_FINDREPLACEDLGWRAPCB, 
+[wxID_FINDREPLACEDLG, wxID_FINDREPLACEDLGBTNBROWSE,
+ wxID_FINDREPLACEDLGBTNBUILDINFIND, wxID_FINDREPLACEDLGBTNFINDINFILES,
+ wxID_FINDREPLACEDLGCANCELBTN, wxID_FINDREPLACEDLGCASESENSITIVECB,
+ wxID_FINDREPLACEDLGCHKRECURSIVESEARCH, wxID_FINDREPLACEDLGCLOSEONFOUNDCB,
+ wxID_FINDREPLACEDLGCMBFILEFILTER, wxID_FINDREPLACEDLGCMBFOLDER,
+ wxID_FINDREPLACEDLGDIRECTIONRB, wxID_FINDREPLACEDLGFINDALLBTN,
+ wxID_FINDREPLACEDLGFINDBTN, wxID_FINDREPLACEDLGFINDTXT,
+ wxID_FINDREPLACEDLGOPTIONSSB, wxID_FINDREPLACEDLGREGEXPRCB,
+ wxID_FINDREPLACEDLGREPLACEALLBTN, wxID_FINDREPLACEDLGREPLACEBTN,
+ wxID_FINDREPLACEDLGREPLACETXT, wxID_FINDREPLACEDLGSCOPERB,
+ wxID_FINDREPLACEDLGSTATICTEXT1, wxID_FINDREPLACEDLGSTATICTEXT2,
+ wxID_FINDREPLACEDLGSTATICTEXT3, wxID_FINDREPLACEDLGSTATICTEXT4,
+ wxID_FINDREPLACEDLGWHOLEWORDSCB, wxID_FINDREPLACEDLGWILDCARDCB,
+ wxID_FINDREPLACEDLGWRAPCB,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(27)]
 
-class FindReplaceDlg(wx.Dialog):    
+class FindReplaceDlg(wx.Dialog):
     def _init_coll_topSizer_Growables(self, parent):
         # generated method, don't edit
 
@@ -377,13 +380,13 @@ class FindReplaceDlg(wx.Dialog):
 
     def __init__(self, parent, engine, view, bModeFindReplace = 1):
         self._init_ctrls(parent)
-        
+
         # reset all sizes to default
         Utils.resetMinSize(self)
-        
+
         # now set the sizer properly
         self.SetSizerAndFit(self.mainSizer)
-        
+
         self.engine = engine
         self.view = view
         # Bind enter event using acceleratorTable

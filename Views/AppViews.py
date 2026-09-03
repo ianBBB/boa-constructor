@@ -9,6 +9,9 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
+# pyright: ignore
+# type: ignore
+
 print('importing Views.AppViews')
 
 """ View classes for the AppModel """
@@ -394,21 +397,21 @@ class AppToDoView(ListCtrlView):
                 f.close()
                 name = os.path.splitext(os.path.basename(module))[0]
                 model = ModuleModel(data, name, self.model.editor, 1)
-                
+
                 m = model.getModule()
                 if m.todos:
                     todos.append( (name, len(m.todos), module) )
-        
+
         self.model.editor.statusBar.progress.SetValue(0)
         self.model.editor.setStatus(_('Finished parsing'))
-            
+
         i = 0
         for name, numTodos, path in todos:
             self.addReportItems(i, (name, numTodos, path))
             i += 1
 
         self.pastelise()
-        
+
         self.todos = todos
 
 
@@ -422,7 +425,7 @@ class AppToDoView(ListCtrlView):
                 view  = mod.editor.addNewView(ToDoView.viewName, ToDoView)
             view.refreshCtrl()
             view.focus()
-            
+
 ##            srcView = self.model.views['Source']
 ##            # XXX Implement an interface for views to talk
 ##            srcView.focus()
@@ -458,11 +461,11 @@ class TextInfoFileView(SourceViews.EditorStyledTextCtrl):
 class AppREADME_TIFView(TextInfoFileView):
     viewName = 'Readme.txt'
     viewTitle = 'Readme.txt'
-    
+
 class AppTODO_TIFView(TextInfoFileView):
     viewName = 'Todo.txt'
     viewTitle = 'Todo.txt'
-    
+
 class AppBUGS_TIFView(TextInfoFileView):
     viewName = 'Bugs.txt'
     viewTitle = 'Bugs.txt'

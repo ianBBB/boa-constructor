@@ -139,7 +139,7 @@ class ModuleController(SourceController):
         self.editor.setStatus(_('Loading stats...'))
         stats = marshal.load(open(statFile, 'rb'))
 
-        resName = _('Profile stats: %s')%time.strftime('%H:%M:%S', 
+        resName = _('Profile stats: %s')%time.strftime('%H:%M:%S',
               time.localtime(time.time()))
         if resName not in model.views:
             resultView = self.editor.addNewView(resName,
@@ -195,13 +195,13 @@ class ModuleController(SourceController):
     def OnRunApp(self, event=None, runModel=None):
         model = self.getModel()
         if self.checkUnsaved(model): return
-        
+
         try:
             Preferences.getPythonInterpreterPath()
         except Exception as err:
             wx.LogError(str(err))
             return
-        
+
         wx.BeginBusyCursor()
         try:
             if runModel is None:
@@ -322,7 +322,7 @@ class ModuleController(SourceController):
                       'pychecker_custom.py'), os.path.basename(filename))
 
                 ProcessModuleRunner(self.editor.erroutFrm, newCwd).run(cmd,
-                      ErrorStack.PyCheckerErrorParser, 'PyChecker', 'Warning',
+                        ErrorStack.PyCheckerErrorParser, 'PyChecker', 'Warning',  # type: ignore[arg-type]
                       True)
             finally:
                 sys.path = oldSysPath
@@ -492,8 +492,8 @@ class BaseAppController(ModuleController):
               (_('View crash log as traceback'), self.OnCrashLog, '-', '')]
 
     def createModel(self, source, filename, main, saved, modelParent=None):
-        return self.Model(source, filename, main, self.editor, saved,
-           self.editor.modules)
+          return self.Model(source, filename, main, self.editor, saved,
+              self.editor.modules)  # type: ignore[call-arg]
 
     def createNewModel(self, modelParent=None):
         appName = self.editor.getValidName(self.Model)
@@ -613,7 +613,7 @@ class SetupController(ModuleController):
             actions.append(('setup.py bdist_wininst', self.OnSetupBDist_WinInst, '-', ''))
 
         try:
-            importlib.abc.MetaPathFinder.find_spec('py2exe')
+            importlib.util.find_spec('py2exe')
         except ImportError:
             pass
         else:

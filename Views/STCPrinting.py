@@ -11,8 +11,7 @@
 #-----------------------------------------------------------------------------
 #Boa:Dialog:STCPrintDlg
 
-"""
-"""
+""""""
 
 # XXX Currently forces stc rendering not to wrap lines, currently the page
 # XXX total calculations depend on exact number of lines
@@ -27,15 +26,15 @@ import wx.stc
 from Utils import _
 
 def create(parent):
-    return STCPrintDlg(parent)
+    return STCPrintDlg(parent, wx.stc.StyledTextCtrl(parent, -1))  # type: ignore[call-arg]
 
-[wxID_STCPRINTDLG, wxID_STCPRINTDLGBTNCANCEL, wxID_STCPRINTDLGBTNPRINT, 
- wxID_STCPRINTDLGBTNPRINTPREVIEW, wxID_STCPRINTDLGBTNPRINTSETUP, 
- wxID_STCPRINTDLGCKBFILENAME, wxID_STCPRINTDLGCKBPAGENUMBERS, 
- wxID_STCPRINTDLGRDBCOLOURMODE, 
+[wxID_STCPRINTDLG, wxID_STCPRINTDLGBTNCANCEL, wxID_STCPRINTDLGBTNPRINT,
+ wxID_STCPRINTDLGBTNPRINTPREVIEW, wxID_STCPRINTDLGBTNPRINTSETUP,
+ wxID_STCPRINTDLGCKBFILENAME, wxID_STCPRINTDLGCKBPAGENUMBERS,
+ wxID_STCPRINTDLGRDBCOLOURMODE,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(8)]
 
-stcPrintColourModes = [0, wx.stc.STC_PRINT_BLACKONWHITE, 
+stcPrintColourModes = [0, wx.stc.STC_PRINT_BLACKONWHITE,
                           wx.stc.STC_PRINT_COLOURONWHITE,
                           wx.stc.STC_PRINT_COLOURONWHITEDEFAULTBG]
 
@@ -122,7 +121,7 @@ class STCPrintDlg(wx.Dialog):
         try:
             if dlg.ShowModal() == wx.ID_OK:
                 data = dlg.GetPageSetupData()
-                self.printData = wx.PrintData(data.GetPrintData()) 
+                self.printData = wx.PrintData(data.GetPrintData())
                 self.printData.SetPaperId(data.GetPaperId())
                 self.margins = (data.GetMarginTopLeft(),
                                 data.GetMarginBottomRight())
@@ -225,7 +224,7 @@ class STCPrintout(wx.Printout):
 
         # render page titles and numbers
         f = dc.GetFont()
-        f.SetFamily(wx.ROMAN)
+        f.SetFamily(wx.FONTFAMILY_ROMAN)  # type: ignore[attr-defined]
         f.SetFaceName('Times New Roman')
         f.SetPointSize(f.GetPointSize()+3)
         dc.SetFont(f)
@@ -270,13 +269,13 @@ if __name__ == '__main__':
     wx.InitAllImageHandlers()
     frame = wx.Frame(None, -1, '')
     # prepare an stc
-    frame.stc = wx.stc.StyledTextCtrl(frame, -1)
-    frame.stc.SetText(open(testFile).read())
+    stc = wx.stc.StyledTextCtrl(frame, -1)  # type: ignore[attr-defined]
+    stc.SetText(open(testFile).read())  # type: ignore[attr-defined]
     config = os.path.abspath('../Config/stc-styles.rc.cfg')
     from STCStyleEditor import initSTC
-    initSTC(frame.stc, config, 'python')
+    initSTC(stc, config, 'python')  # type: ignore[attr-defined]
     # print dlg for prepared stc
-    dlg = STCPrintDlg(frame, frame.stc, testFile)
+    dlg = STCPrintDlg(frame, stc, testFile)  # type: ignore[attr-defined]
     try:
         dlg.ShowModal()
     finally:

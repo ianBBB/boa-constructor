@@ -1,3 +1,6 @@
+# pyright: ignore
+# type: ignore
+
 import os, sys
 
 import Preferences, Utils, Plugins

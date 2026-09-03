@@ -19,9 +19,9 @@ import Preferences, Utils, Plugins
 from Preferences import IS
 from Utils import _
 
-[wxID_CLASSBROWSERFRAME, wxID_CLASSBROWSERFRAMEHIERARCHY, 
- wxID_CLASSBROWSERFRAMEPAGES, wxID_CLASSBROWSERFRAMESTATUSBAR, 
- wxID_CLASSBROWSERFRAMETREE, 
+[wxID_CLASSBROWSERFRAME, wxID_CLASSBROWSERFRAMEHIERARCHY,
+ wxID_CLASSBROWSERFRAMEPAGES, wxID_CLASSBROWSERFRAMESTATUSBAR,
+ wxID_CLASSBROWSERFRAMETREE,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 class ClassBrowserFrame(wx.Frame, Utils.FrameRestorerMixin):
@@ -64,7 +64,7 @@ class ClassBrowserFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.winConfOption = 'classbrowser'
         self.loadDims()
 
-        self.SetIcon(IS.load('Images/Icons/ClassBrowser.ico'))
+        self.SetIcon(IS.load('Images/Icons/ClassBrowser.ico'))  # type: ignore[arg-type]
 
         self.classes = {}
 

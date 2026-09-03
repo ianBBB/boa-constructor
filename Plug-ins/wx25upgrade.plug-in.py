@@ -20,14 +20,14 @@ import string
 from ExternalLib import wx25upgrade, reindent
 import Utils
 
-[wxID_WX25CODEUPGRADEDLG, wxID_WX25CODEUPGRADEDLGSETFILE, 
- wxID_WX25CODEUPGRADEDLGSETSOURCE, wxID_WX25CODEUPGRADEDLGSETTARGET, 
- wxID_WX25CODEUPGRADEDLGSOURCEFILE, wxID_WX25CODEUPGRADEDLGSOURCEFOLDER, 
- wxID_WX25CODEUPGRADEDLGSTARTFILE, wxID_WX25CODEUPGRADEDLGSTARTFOLDER, 
- wxID_WX25CODEUPGRADEDLGSTATICTEXT1, wxID_WX25CODEUPGRADEDLGSTATICTEXT2, 
- wxID_WX25CODEUPGRADEDLGSTFILE, wxID_WX25CODEUPGRADEDLGSTSOURCEFOLDER, 
- wxID_WX25CODEUPGRADEDLGSTTARGETFOLDER, wxID_WX25CODEUPGRADEDLGTARGETFOLDER, 
- wxID_WX25CODEUPGRADEDLGUPGRADEGUIDE, 
+[wxID_WX25CODEUPGRADEDLG, wxID_WX25CODEUPGRADEDLGSETFILE,
+ wxID_WX25CODEUPGRADEDLGSETSOURCE, wxID_WX25CODEUPGRADEDLGSETTARGET,
+ wxID_WX25CODEUPGRADEDLGSOURCEFILE, wxID_WX25CODEUPGRADEDLGSOURCEFOLDER,
+ wxID_WX25CODEUPGRADEDLGSTARTFILE, wxID_WX25CODEUPGRADEDLGSTARTFOLDER,
+ wxID_WX25CODEUPGRADEDLGSTATICTEXT1, wxID_WX25CODEUPGRADEDLGSTATICTEXT2,
+ wxID_WX25CODEUPGRADEDLGSTFILE, wxID_WX25CODEUPGRADEDLGSTSOURCEFOLDER,
+ wxID_WX25CODEUPGRADEDLGSTTARGETFOLDER, wxID_WX25CODEUPGRADEDLGTARGETFOLDER,
+ wxID_WX25CODEUPGRADEDLGUPGRADEGUIDE,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(15)]
 
 class Wx25CodeUpgradeDlg(wx.Dialog):
@@ -175,7 +175,7 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
         self.targetFolder.SetValue(self.targetFolderName)
 
         self.u = wx25upgrade.Upgrade()
-        
+
     def OnSetSourceButton(self, event):
         dlg = wx.DirDialog(self, defaultPath=self.sourceFolderName,
               style=wx.DD_DEFAULT_STYLE|wx.DD_NEW_DIR_BUTTON)
@@ -188,7 +188,7 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
             dlg.Destroy()
 
     def OnSetTargetButton(self, event):
-        dlg = wx.DirDialog(self, defaultPath=self.targetFolderName, 
+        dlg = wx.DirDialog(self, defaultPath=self.targetFolderName,
               style=wx.DD_DEFAULT_STYLE|wx.DD_NEW_DIR_BUTTON )
         try:
             if dlg.ShowModal() == wx.ID_OK:
@@ -209,11 +209,11 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
     def OnStartFolderButton(self, event):
         targetFolder = self.targetFolder.GetValue()
         if not os.path.isdir(targetFolder):
-            if wx.MessageBox('Target folder does not exist, create it?', 
+            if wx.MessageBox('Target folder does not exist, create it?',
                   'Create folder', wx.YES_NO | wx.ICON_QUESTION) == wx.NO:
                 return
             os.mkdir(targetFolder)
-            
+
         try:
             files = os.listdir(self.sourceFolder.GetValue())
             max = len(files)
@@ -221,32 +221,30 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
                                    "Starting conversion of source files",
                                    maximum = max,
                                    parent=self)
-    
+
             keepGoing = True
             count = 0
-       
+
             for name in files:
                 count = count +1
                 root, ext = os.path.splitext(name)
                 if ext == '.py':
                     temp = 'Converting: %s' % name
                     keepGoing = dlg.Update(count, temp)
-                    
+
                     fInputName = os.path.join(self.sourceFolder.GetValue(), name)
-                    fInputLines = file(fInputName, 'r').readlines()
+                    with open(fInputName, 'r') as f_input:
+                        fInputLines = f_input.readlines()
                     fInputData = self.reindentSource(fInputLines, fInputName)
-                    fOutput = file(os.path.join(self.targetFolder.GetValue(), name), 'w')
-                    try:
+                    with open(os.path.join(self.targetFolder.GetValue(), name), 'w') as fOutput:
                         fOutput.write(self.u.upgrade(fInputData))
-                    finally:
-                        fOutput.close()
-                        temp = 'Done converting: %s' % name
-                        keepGoing = dlg.Update(count, temp)
+                    temp = 'Done converting: %s' % name
+                    keepGoing = dlg.Update(count, temp)
 
             keepGoing = dlg.Update(count, "We are all done")
         finally:
             dlg.Destroy()
-        
+
     def OnStartFileButton(self, event):
         max = 2
         dlg = wx.ProgressDialog("Converting source file",
@@ -260,28 +258,25 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
         newName, ext = os.path.splitext(self.sourceFile.GetValue())
         outName = newName+'Upg'+ext
         root2, newFileName = os.path.split(outName)
-                
-        fInputName = self.sourceFile.GetValue()
-        fInputLines = file(fInputName, 'r').readlines()
-        fInputData = self.reindentSource(fInputLines, fInputName)
 
-        fOutput = file(outName, 'w')
+        fInputName = self.sourceFile.GetValue()
+        with open(fInputName, 'r') as f_input:
+            fInputLines = f_input.readlines()
+        fInputData = self.reindentSource(fInputLines, fInputName)
 
         temp = 'Converting: %s,\n\nto: %s' % (fileName, newFileName)
         keepGoing = dlg.Update(count, temp)
-        
-        try:
+
+        with open(outName, 'w') as fOutput:
             fOutput.write(self.u.upgrade(fInputData))
-        finally:
-            fOutput.close()
-            
-            count = count +1
-            temp = 'Done converting: %s,\n\nto: %s' % (fileName, newFileName)
-            keepGoing = dlg.Update(count, temp)
-            print('Converted: %s,\n\nnew name: %s' % (fileName, newFileName))
-            count = count +1
-            keepGoing = dlg.Update(count, "We are done")
-            dlg.Destroy()
+
+        count = count +1
+        temp = 'Done converting: %s,\n\nto: %s' % (fileName, newFileName)
+        keepGoing = dlg.Update(count, temp)
+        print('Converted: %s,\n\nnew name: %s' % (fileName, newFileName))
+        count = count +1
+        keepGoing = dlg.Update(count, "We are done")
+        dlg.Destroy()
 
     def OnUpgradeGuideButton(self, event):
         import webbrowser
@@ -290,14 +285,14 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
     def reindentSource(self, srcLines, filename):
         data = ''.join(srcLines)
         eol = Utils.getEOLMode(data)
-        file = SourcePseudoFile(srcLines)
-        ri = reindent.Reindenter(file, eol=eol)
+        pseudo_file = SourcePseudoFile(srcLines)
+        ri = reindent.Reindenter(pseudo_file, eol=eol)
         try:
             if ri.run():
-                file.output = []
-                ri.write(file)
+                pseudo_file.output = []
+                ri.write(pseudo_file)
 
-                return ''.join(file.output)
+                return ''.join(pseudo_file.output)
         except Exception as error:
             print('Error on reindenting %s : %s'%(filename, str(error)))
 
@@ -306,7 +301,7 @@ class Wx25CodeUpgradeDlg(wx.Dialog):
 class SourcePseudoFile(Utils.PseudoFileOutStore):
     def readlines(self):
         return self.output
-    
+
 #-------------------------------------------------------------------------------
 
 def showWx25CodeUpgradeDlg(editor):
@@ -315,6 +310,6 @@ def showWx25CodeUpgradeDlg(editor):
         dlg.ShowModal()
     finally:
         dlg.Destroy()
-    
+
 import Plugins
 Plugins.registerTool('wxPython 2.4 to 2.5/2.6 code upgrader', showWx25CodeUpgradeDlg)

@@ -1,0 +1,15 @@
+{
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.exclude": [
+        "**/__pycache__/**",
+        "Examples/**",
+        "ExternalLib/**",
+        "ZopeLib/zoa/**",
+        "Docs/**",
+        "locale/**",
+        "TestArea/**", "**/node_modules", "**/.*",
+        "**/build", "**/dist", "**/venv", "**/.venv",
+        "**/env", "**/.env", "**/ENV", "**/.ENV"
+    ]
+}

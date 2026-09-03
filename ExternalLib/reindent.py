@@ -23,8 +23,7 @@ running reindent on the resulting .py file won't change it again).
 
 The hard part of reindenting is figuring out what to do with comment
 lines.  So long as the input files get a clean bill of health from
-tabnanny.py, reindent should do a good job.
-"""
+tabnanny.py, reindent should do a good job."""
 
 __version__ = "1"
 

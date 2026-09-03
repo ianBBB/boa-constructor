@@ -9,6 +9,9 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 # -----------------------------------------------------------------------------
+# pyright: ignore
+# type: ignore
+
 import string, re, os, sys, pprint
 import Utils
 

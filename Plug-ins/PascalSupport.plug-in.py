@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        PascalSupport.py
 # Purpose:     Example plugin module showing how to add new filetypes to the ide
@@ -150,7 +152,7 @@ style.pascal.037=
 [style.pascal.default]
 
 [pascal]
-displaysrc='''+`pascalSource`[1:-1]+'''
+displaysrc='''+repr(pascalSource)[1:-1]+'''
 braces={}
 keywords=and array as asm begin case class const constructor destructor dispinterface div do downto else end except exports file finalization finally for function goto if implementation in inherited initialization inline interface is label library mod nil not object of or out packed procedure program property raise record repeat resourcestring set shl shr string then threadvar to try type unit until uses var while with xor private protected public published automated at on
 lexer=wx.stc.STC_LEX_PASCAL

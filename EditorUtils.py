@@ -1,5 +1,6 @@
 import math
 import os, time, threading, socket
+from typing import Any
 
 import wx
 
@@ -14,14 +15,14 @@ class MyToolBar(wx.ToolBar):
           style=wx.TB_HORIZONTAL | wx.NO_BORDER|Preferences.flatTools)
         self.toolLst = []
         self.toolCount = 0
-        self.SetToolBitmapSize((16, 16))
+        self.SetToolBitmapSize((16, 16))  # type: ignore[arg-type]
 
     def AddTool(self, id, bitmap, toggleBitmap=wx.NullBitmap, shortHelpString='', isToggle=False):
         if isToggle==False:
             wx.ToolBar.AddTool(self, id, '', bitmap,
             shortHelpString,wx.ITEM_NORMAL)
         else:
-            wx.ToolBar.AddTool(self, id, '', bitmap, toggleBitmap, toggleBitmap,wx.ITEM_NORMAL,
+            wx.ToolBar.AddTool(self, id, '', bitmap, toggleBitmap, toggleBitmap,wx.ITEM_NORMAL,  # type: ignore[call-overload]
                                shortHelpString, '', None)
 
 
@@ -59,7 +60,7 @@ class MyToolBar(wx.ToolBar):
         self.toolCount = 0
 
     def GetToolPopupPosition(self, id):
-        margins = self.GetToolMargins()
+        margins = self.GetToolMargins()  # type: ignore[attr-defined]
         toolSize = self.GetToolSize()
         xPos = margins.x
         for tId in self.toolLst:
@@ -104,19 +105,19 @@ class EditorStatusBar(wx.StatusBar):
 
         rect = self.GetFieldRect(sbfIcon)
         self.img = wx.StaticBitmap(self, -1,
-            Preferences.IS.load('Images/Shared/BoaLogo.png'),
-            (rect.x+1, rect.y+1), (16, 16))
+            Preferences.IS.load('Images/Shared/BoaLogo.png'),  # type: ignore[arg-type]
+            (rect.x+1, rect.y+1), (16, 16))  # type: ignore[arg-type]
         self.img.Bind(wx.EVT_LEFT_DCLICK, self.OnShowHistory)
 
         rect = self.GetFieldRect(sbfBrwsBtns)
 
 
         self.historyBtnBack = wx.BitmapButton(self, -1,
-              Preferences.IS.load('Images/Shared/PreviousSmall.png'),
+              Preferences.IS.load('Images/Shared/PreviousSmall.png'),  # type: ignore[arg-type]
                   wx.Point(rect.x+1, rect.y+1), wx.Size(20, 20))
         self.historyBtnFwd = wx.BitmapButton(self, -1,
-              Preferences.IS.load('Images/Shared/NextSmall.png'),
-              (rect.x+1+16, rect.y+1), (20,20))
+              Preferences.IS.load('Images/Shared/NextSmall.png'),  # type: ignore[arg-type]
+              (rect.x+1+16, rect.y+1), (20,20))  # type: ignore[arg-type]
 
         # self.historyBtns.SetToolTip('Browse the Traceback/Error/Output window history.')
         tip = _('Browse the Traceback/Error/Output window history.')
@@ -155,7 +156,7 @@ class EditorStatusBar(wx.StatusBar):
 
         self.SetStatusText(hint, sbfStatus)
         self.img.SetToolTip(hint)
-        self.img.SetBitmap(self.images[msgType])
+        self.img.SetBitmap(self.images[msgType])  # type: ignore[arg-type]
         if ringBell: wx.Bell()
 
     def OnEditorNotification(self, event):
@@ -188,14 +189,14 @@ def HistoryPopup(parent, hist, imgs):
     f = wx.MiniFrame(parent,
                      -1,
                      title = _('Editor status history'),
-                     size = (350, 200),
+                     size = (350, 200),  # type: ignore[arg-type]
                      style=(wx.CLOSE_BOX | wx.RESIZE_BORDER | wx.DEFAULT_FRAME_STYLE))
     lc = wx.ListCtrl(f, style=wx.LC_REPORT | wx.LC_VRULES | wx.LC_NO_HEADER)
-    lc.il = wx.ImageList(16, 16)
+    il = wx.ImageList(16, 16)
     idxs = {}
     for tpe, img in list(imgs.items()):
-        idxs[tpe] = lc.il.Add(img)
-    lc.SetImageList(lc.il, wx.IMAGE_LIST_SMALL)
+        idxs[tpe] = il.Add(img)
+    lc.SetImageList(il, wx.IMAGE_LIST_SMALL)
     lc.InsertColumn(0, _('Time'))
     lc.InsertColumn(1, _('Message'))
     lc.SetColumnWidth(0, 75)
@@ -222,7 +223,7 @@ class ModulePage:
         self.defViews = [(v, wx.NewIdRef(count=1)) for v in defViews]
         self.adtViews = [(v, wx.NewIdRef(count=1)) for v in views]
         self.viewIds = []
-        self.model = model
+        self.model: Any = model
         self.parent = parent
         self.notebook = wx.Notebook(parent, -1, style=wx.WANTS_CHARS | wx.CLIP_CHILDREN)
         self.notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChange, id=self.notebook.GetId())
@@ -442,7 +443,7 @@ class ModulePage:
             self.editor.setupToolBar(viewIdx=viewIdx)
             view = self.getActiveView(viewIdx)
             if hasattr(view, 'OnPageActivated'):
-                view.OnPageActivated(event)
+                view.OnPageActivated(event)  # type: ignore[union-attr]
         event.Skip()
 
     def OnRightDown(self, event):
@@ -472,7 +473,7 @@ class ModulePage:
 
         for View, wid in self.adtViews:
             if isinstance(actView, View):
-                actView.deleteFromNotebook(self.default, actView.viewName)
+                actView.deleteFromNotebook(self.default, actView.viewName)  # type: ignore[union-attr]
 
                 self.editor.mainMenu.Check(wid, False)
                 return

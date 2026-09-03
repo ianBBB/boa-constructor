@@ -1,3 +1,6 @@
+# pyright: ignore
+# type: ignore
+
 import wx
 from wx.lib.activexwrapper import MakeActiveXClass
 import win32com.client.gencache
@@ -10,7 +13,7 @@ except Exception, error:
 
 wxComPdfPtr = MakeActiveXClass(acrobatModule.Pdf)
 class wxComPdf(wxComPdfPtr):
-    def __init__(self, parent = None, id = -1, pos=wx.DefaultPosition, 
+    def __init__(self, parent = None, id = -1, pos=wx.DefaultPosition,
           size=wx.DefaultSize, style=0, name=''):
         wxComPdfPtr.__init__(self, parent, id, pos, size, style)
         self.SetName(name)

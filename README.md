@@ -6,17 +6,43 @@ Boa Constructor is described as a Rapid Application Development tool. Apart from
 
 Boa Constructor presumes your application will operate in the Model-View-Controller framework. Part of the basic design flow in Boa is to select controls and lay them out graphically to make up you user interface and select the events they generate that need to be managed. As such, a project should start its life in Boa Constructor and continue to completion. It is difficult to migrate an existing program into Boa.
 
+## Current Build Notes (Phoenix Widgets)
+
+This build adds a new **Phoenix** palette page with modern wxPython controls where available on your platform/build.
+
+Added palette widgets include:
+- wx.dataview.DataViewCtrl
+- wx.dataview.DataViewListCtrl
+- wx.dataview.TreeListCtrl
+- wx.adv.CommandLinkButton
+- wx.adv.HyperlinkCtrl
+- wx.adv.BitmapComboBox
+- wx.adv.TimePickerCtrl
+- wx.adv.BannerWindow
+- wx.ribbon.RibbonBar / RibbonPage / RibbonPanel / RibbonButtonBar
+- wx.aui.AuiNotebook / AuiToolBar
+- wx.propgrid.PropertyGrid / PropertyGridManager / PropertyGridCtrl
+- wx.ActivityIndicator
+- wx.RearrangeList / wx.RearrangeCtrl
+- wx.InfoBar
+
+Non-visual utility additions:
+- wx.aui.AuiManager
+- wx.adv.NotificationMessage
+
+Palette help button behavior has been updated so that when a component is selected, help lookup can use module-qualified wx class names (for example `wx.dataview.DataViewCtrl`) in addition to simple class names.
+
 ## Boa Construtor - The Project
 
 The project is on-going. There are still many parts of Boa that are not yet functional but most of the basics are there for you to get started. There is enough functionality to complete the original Boa Constructor tutorial activity that demonstrates how to use Boa to create basic applications. More functionaity will be available in later releases as I get more working. You can watch how things are progressing by going to the *Discussion* section (in the menu near the top of the page) and look for **"Day-by-Day Progress Reporting Diary"**. Despite the title, updates are approximately weekly. Don't forget to click on the *Newest* button to see the latest updates.
 
-If you have the desire and skill to help resurrect Boa Constructor, I would love to hear from you.
+If you have the desire and skill to help resurrect Boa Constructor, we would love to hear from you.
 
 ## Installation
 
 There are three basic steps it get Boa Constructor working. They are;
-1. Install Python (version 3.12.1 or better)
-2. Install wxPython (version 4.2.1 or better)
+1. Install Python (version 3.09.1 or better)
+2. Install wxPython (version 4.2.2 or better)
 3. Download Boa Constructor and do final setting up, if needed.
 
 ### Installation - Windows 11
@@ -32,9 +58,12 @@ To install wxPython, use the *pip* tool. Open a terminal window and use the comm
 
 (you may be asked to upgrade *pip* . The command to do this will be given to you)
 
-Finally, to download Boa Constructor, go to the [github website](https://github.com/) and search for "ianBBB/boa-constructor". This should result in just one link. Click on this link to go to the project. Use the green button marked "Code" to download the ZIP file containing Boa Constructor. Save or move the ZIP file to a convenient location (a folder in My Documents would be suitable). Unzip the file. Extract the ZIP file. In the root folder, you will find the Boa file (it is 30K in size). Double click on this file to open Boa Constructor. 
+Finally, to download Boa Constructor, go to the [github website](https://github.com/) and search for "ianBBB/boa-constructor". This should result in just one link. Click on this link to go to the project. Use the green button marked "Code" to download the ZIP file containing Boa Constructor. Save or move the ZIP file to a convenient location (a folder in My Documents would be suitable). Unzip the file. Extract the ZIP file. In the root folder, you will find the Boa file (it is 30K in size). Double click on this file to open Boa Constructor.
 
 ### Installation - Other
 Installation instructions for Linux (Ubuntu) and Mac coming soon.
 Ian Baker
-June 2024
+June 2025
+
+Ray Schumacher
+May 2026

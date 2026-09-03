@@ -10,9 +10,9 @@ from ExternalLib import langlistctrl
 def create(parent):
     return LanguageSelectDlg(parent)
 
-[wxID_LANGUAGESELECTDLG, wxID_LANGUAGESELECTDLGBUTTON2, 
- wxID_LANGUAGESELECTDLGLANGCTRLCONTAINER, wxID_LANGUAGESELECTDLGLANGFILTERRB, 
- wxID_LANGUAGESELECTDLGOKBTN, wxID_LANGUAGESELECTDLGSTATICTEXT1, 
+[wxID_LANGUAGESELECTDLG, wxID_LANGUAGESELECTDLGBUTTON2,
+ wxID_LANGUAGESELECTDLGLANGCTRLCONTAINER, wxID_LANGUAGESELECTDLGLANGFILTERRB,
+ wxID_LANGUAGESELECTDLGOKBTN, wxID_LANGUAGESELECTDLGSTATICTEXT1,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class LanguageSelectDlg(wx.Dialog):
@@ -92,33 +92,41 @@ class LanguageSelectDlg(wx.Dialog):
 
         self._init_sizers()
 
-    def __init__(self, parent, lang=wx.LANGUAGE_DEFAULT, filter='boa', 
+    def __init__(self, parent, lang=wx.LANGUAGE_DEFAULT, filter='boa',
               boaLangs=(wx.LANGUAGE_DEFAULT,)):
         self._init_ctrls(parent)
 
-        self.filterMap = {'boa': langlistctrl.LC_ONLY, 
-                          'available': langlistctrl.LC_AVAILABLE, 
+        self.filterMap = {'boa': langlistctrl.LC_ONLY,
+                          'available': langlistctrl.LC_AVAILABLE,
                           'all': langlistctrl.LC_ALL}
-                        
-        self.filterIdxMap = {0: 'boa', 
-                             1: 'available', 
+
+        self.filterIdxMap = {0: 'boa',
+                             1: 'available',
                              2: 'all'}
         self.boaLangs = boaLangs
-        self.langCtrl = langlistctrl.LanguageListCtrl(self.langCtrlContainer, -1, 
+        self.langCtrl = langlistctrl.LanguageListCtrl(self.langCtrlContainer, -1,
               filter=self.filterMap[filter], only=boaLangs, select=lang,
               style=wx.LC_REPORT | wx.LC_NO_HEADER | wx.LC_SINGLE_SEL | wx.SUNKEN_BORDER)
-        
+
         # reset min sizes for all controls except the language selector
         Utils.resetMinSize(self, (self.langCtrlContainer,))
-        
+
         # set language selector size
         self.OnLangCtrlContainerSize()
-        
+
         # now set the sizer properly
         self.SetSizerAndFit(self.mainSizer)
-        
-        self.SetIcon(IS.load('Images/Icons/LanguageSelect.ico'))
-        
+
+        # Load and set icon - convert Bitmap to Icon if needed
+        icon_resource = IS.load('Images/Icons/LanguageSelect.ico')
+        if isinstance(icon_resource, wx.Icon):
+            self.SetIcon(icon_resource)
+        else:
+            # Convert Bitmap to Icon
+            icon = wx.Icon()
+            icon.CopyFromBitmap(icon_resource)
+            self.SetIcon(icon)
+
 
     def OnLangCtrlContainerSize(self, event=None):
         #if event: event.Skip()
@@ -132,7 +140,7 @@ class LanguageSelectDlg(wx.Dialog):
     def GetLanguageInfo(self):
         lang = self.langCtrl.GetLanguage()
         ident = langlistctrl.GetWxIdentifierForLanguage(lang)
-        
+
         return lang, ident
 
     def OnOkBtnButton(self, event):
@@ -145,8 +153,8 @@ class LanguageSelectDlg(wx.Dialog):
 if __name__ == '__main__':
     # stand alone
     app = wx.App()
-    dlg = LanguageSelectDlg(None, lang=wx.LANGUAGE_ENGLISH, 
-          boaLangs=(wx.LANGUAGE_AFRIKAANS, wx.LANGUAGE_DEFAULT, 
+    dlg = LanguageSelectDlg(None, lang=wx.LANGUAGE_ENGLISH,
+          boaLangs=(wx.LANGUAGE_AFRIKAANS, wx.LANGUAGE_DEFAULT,
               wx.LANGUAGE_ENGLISH, wx.LANGUAGE_SPANISH))
     try:
         if dlg.ShowModal() == wx.ID_OK:
@@ -157,12 +165,12 @@ if __name__ == '__main__':
 else:
     # boa
     import Preferences, About, Plugins
-    
+
     langs = [l for l, a in About.translations]
     langs.extend([wx.LANGUAGE_ENGLISH, wx.LANGUAGE_DEFAULT])
-    
+
     def showChooseIDELanguage(editor):
-        dlg = LanguageSelectDlg(editor, lang=Preferences.i18nLanguage, 
+        dlg = LanguageSelectDlg(editor, lang=Preferences.i18nLanguage,
               boaLangs=langs)
         try:
             if dlg.ShowModal() == wx.ID_OK:
@@ -171,6 +179,6 @@ else:
                 Plugins.updateRcFile('prefs_rc.py', 'i18nLanguage', 'wx.'+ident)
         finally:
             dlg.Destroy()
-    
+
     Plugins.registerTool('Choose IDE Language', showChooseIDELanguage, 'Images/Editor/LanguageSelect.png')
-    
+

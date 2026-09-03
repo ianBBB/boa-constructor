@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        LibCompanions.py
 # Purpose:
@@ -385,8 +387,8 @@ class IntCtrlDTC(TextCtrlDTC):
 class AnalogClockDTC(WindowDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         WindowDTC.__init__(self, name, designer, parent, ctrlClass)
-        
-##        wx.lib.analogclock.SHOW_QUARTERS_TICKS, 
+
+##        wx.lib.analogclock.SHOW_QUARTERS_TICKS,
 ##        wx.lib.analogclock.SHOW_HOURS_TICKS,
 ##        wx.lib.analogclock.SHOW_MINUTES_TICKS,
 ##        wx.lib.analogclock.ROTATE_TICKS,
@@ -408,8 +410,8 @@ class AnalogClockDTC(WindowDTC):
 
     def hideDesignTime(self):
         return WindowDTC.hideDesignTime(self) + ['HandSize', 'HandBorderWidth',
-              'HandBorderColour', 'HandFillColour', 'TickSize', 'TickStyle', 
-              'TickOffset', 'TickBorderWidth', 'TickBorderColour', 
+              'HandBorderColour', 'HandFillColour', 'TickSize', 'TickStyle',
+              'TickOffset', 'TickBorderWidth', 'TickBorderColour',
               'TickFillColour', 'TickFont', 'ClockStyle']
 
     def writeImports(self):
@@ -420,7 +422,7 @@ class AnalogClockDTC(WindowDTC):
 class ScrolledPanelDTC(ContainerCompanions.ScrolledWindowDTC, Constructors.WindowConstr):
     """Currently you need to manually add the following call to the source
     after self._init_ctrls(parent).
-    
+
     e.g.
     self.panel1.SetupScrolling(scroll_x=True, scroll_y=True, rate_x=20, rate_y=20)
     """
@@ -477,7 +479,7 @@ class HyperLinkCtrlDTC(BasicCompanions.StaticTextDTC):
     def properties(self):
         return {
             'AutoBrowse': ('CompnRoute', self.GetAutoBrowse, self.AutoBrowse),
-            'Bold': ('CompnRoute', self.GetBold, self.SetBold), 
+            'Bold': ('CompnRoute', self.GetBold, self.SetBold),
         }
 
     def GetAutoBrowse(self, x):
@@ -506,10 +508,10 @@ class FileBrowseButtonDTC(PanelDTC):
         self.editors.update({
             'LabelText': StrPropEdit, 'ButtonText': StrPropEdit,
             'ToolTip': StrPropEdit, 'DialogTitle': StrPropEdit,
-            'StartDirectory': StrPropEdit, 'InitialValue': StrPropEdit, 
+            'StartDirectory': StrPropEdit, 'InitialValue': StrPropEdit,
             'FileMask': StrPropEdit,
         })
-    
+
     def designTimeSource(self, position='wx.DefaultPosition', size='wx.DefaultSize'):
         return {'pos':   position,
                 'size': 'wx.Size(296, 48)',
@@ -527,14 +529,14 @@ class FileBrowseButtonDTC(PanelDTC):
         return {'Position': 'pos', 'Size': 'size', 'Style': 'style',
                 'LabelText': 'labelText', 'ButtonText': 'buttonText',
                 'ToolTip': 'toolTip', 'DialogTitle': 'dialogTitle',
-                'StartDirectory': 'startDirectory', 
+                'StartDirectory': 'startDirectory',
                 'InitialValue': 'initialValue', 'FileMask': 'fileMask'}
 
     def writeImports(self):
         return '\n'.join( (PanelDTC.writeImports(self),
                           'import wx.lib.filebrowsebutton'))
 
-class FileBrowseButtonWithHistoryDTC(FileBrowseButtonDTC): 
+class FileBrowseButtonWithHistoryDTC(FileBrowseButtonDTC):
     pass
 
 class DirBrowseButtonDTC(FileBrowseButtonDTC):
@@ -554,9 +556,9 @@ class DirBrowseButtonDTC(FileBrowseButtonDTC):
         return {'Position': 'pos', 'Size': 'size', 'Style': 'style',
                 'LabelText': 'labelText', 'ButtonText': 'buttonText',
                 'ToolTip': 'toolTip', 'DialogTitle': 'dialogTitle',
-                'StartDirectory': 'startDirectory', 
+                'StartDirectory': 'startDirectory',
                 'NewDirectory': 'newDirectory'}
-    
+
 
 class MultiSplitterWindowDTC(PanelDTC):
     def __init__(self, name, designer, parent, ctrlClass):
@@ -594,7 +596,7 @@ class ThrobberDTC(PanelDTC):
                 'size': self.getDefCtrlSize(),
                 'style': '0',
                 'name': repr(self.name),
-                'bitmap': '[wx.NullBitmap]', 
+                'bitmap': '[wx.NullBitmap]',
                 'frameDelay': '0.1',
                 'label': 'None',
                 'overlay': 'None',
@@ -605,8 +607,8 @@ class ThrobberDTC(PanelDTC):
 
     def constructor(self):
         return {'Position': 'pos', 'Size': 'size', 'Style': 'style', 'Name': 'name',
-                'Bitmaps': 'bitmap', 'FrameDelay': 'frameDelay', 'Label': 'label', 
-                'Overlay': 'overlay', 'Reverse': 'reverse', 'Rest': 'rest', 
+                'Bitmaps': 'bitmap', 'FrameDelay': 'frameDelay', 'Label': 'label',
+                'Overlay': 'overlay', 'Reverse': 'reverse', 'Rest': 'rest',
                 'Current': 'current', 'Direction': 'direction'}
 
     def writeImports(self):
@@ -623,7 +625,7 @@ class TickerDTC(WindowDTC):
         return '\n'.join((WindowDTC.writeImports(self), 'import wx.lib.ticker'))
 
     def constructor(self):
-        return {'Position': 'pos', 'Size': 'size', 'Style': 'style', 
+        return {'Position': 'pos', 'Size': 'size', 'Style': 'style',
                 'Name': 'name', 'Text': 'text', 'Start': 'start',
                 'Direction': 'direction'}
 
@@ -635,7 +637,7 @@ class TickerDTC(WindowDTC):
                 'size': size,
                 'style': '0',
                 'name': repr(self.name)}
-                                
+
 #-------------------------------------------------------------------------------
 
 import wx.lib.stattext
@@ -662,7 +664,7 @@ Plugins.registerComponents('Library',
       (wx.lib.masked.timectrl.TimeCtrl, 'wx.lib.masked.timectrl.TimeCtrl', TimeCtrlDTC),
       (wx.lib.intctrl.IntCtrl, 'wx.lib.intctrl.IntCtrl', IntCtrlDTC),
       (wx.lib.scrolledpanel.ScrolledPanel, 'wx.lib.scrolledpanel.ScrolledPanel', ScrolledPanelDTC),
-      (wx.lib.agw.hyperlink.HyperLinkCtrl, 'wx.lib.agw.hyperlink.HyperLinkCtrl', HyperLinkCtrlDTC),       
+      (wx.lib.agw.hyperlink.HyperLinkCtrl, 'wx.lib.agw.hyperlink.HyperLinkCtrl', HyperLinkCtrlDTC),
     )
 
 try:
@@ -674,9 +676,9 @@ try:
     import wx.lib.analogclock
     Plugins.registerComponent('Library', wx.lib.analogclock.AnalogClock, 'wx.lib.analogclock.AnalogClock', AnalogClockDTC)
 except (ImportError, AttributeError): pass
-    
+
 try:
-    import wx.lib.filebrowsebutton 
+    import wx.lib.filebrowsebutton
     Plugins.registerComponents('Library',
       (wx.lib.filebrowsebutton.FileBrowseButton, 'wx.lib.filebrowsebutton.FileBrowseButton', FileBrowseButtonDTC),
       (wx.lib.filebrowsebutton.FileBrowseButtonWithHistory, 'wx.lib.filebrowsebutton.FileBrowseButtonWithHistory', FileBrowseButtonWithHistoryDTC),

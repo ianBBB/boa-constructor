@@ -11,8 +11,8 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
-''' Copy all files specified in the CVS entry files recursively
-to create an image for distribution '''
+"""Copy all files specified in the CVS entry files recursively
+to create an image for distribution"""
 
 buildDest = '..\\Releases\\Image'
 buildRoot = '..'

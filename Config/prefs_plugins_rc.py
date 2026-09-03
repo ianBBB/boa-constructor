@@ -6,7 +6,7 @@
 # RCS-ID:      $Id$
 #-----------------------------------------------------------------------------
 
-""" A module for storing Plug-in file preferences """
+"""A module for storing Plug-in file preferences."""
 
 import wx
 

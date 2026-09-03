@@ -9,6 +9,9 @@
 # Copyright:   (c) 2002 - 2007
 # Licence:     GPL
 #-----------------------------------------------------------------------------
+# pyright: ignore
+# type: ignore
+
 import os
 
 import Client

@@ -82,8 +82,7 @@ ConfigParser -- responsible for for parsing a list of
         set the given option
 
     write(fp)
-        write the configuration state in .ini format
-"""
+        write the configuration state in .ini format"""
 
 # Removed unicode check for 1.5.2 compatibility
 

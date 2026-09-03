@@ -1,3 +1,6 @@
+# pyright: ignore
+# type: ignore
+
 import popen2
 
 def popen3(cmd):

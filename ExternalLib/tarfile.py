@@ -35,8 +35,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-"""Read from and write to tar format archives.
-"""
+"""Read from and write to tar format archives."""
 
 __version__ = "$Revision$"
 # $Source$

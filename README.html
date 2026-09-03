@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boa Constructor - README</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Segoe UI, Calibri, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #1a1a2e;
+    background: #f5f6fa;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 230px; height: 100vh;
+    background: #16213e;
+    overflow-y: auto;
+    padding: 24px 0 40px;
+    z-index: 100;
+  }
+
+  nav .nav-title {
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 0 20px 12px;
+    border-bottom: 1px solid #2a3a5c;
+    margin-bottom: 8px;
+  }
+
+  nav a {
+    display: block;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 13.5px;
+    padding: 5px 20px;
+    border-left: 3px solid transparent;
+    transition: color .15s, border-color .15s, background .15s;
+  }
+
+  nav a:hover, nav a.active {
+    color: #7dd3fc;
+    border-left-color: #7dd3fc;
+    background: rgba(125, 211, 252, .07);
+  }
+
+  nav a.sub { padding-left: 34px; font-size: 13px; }
+
+  main {
+    margin-left: 230px;
+    padding: 44px 52px 80px;
+    max-width: 980px;
+  }
+
+  h1 { font-size: 2rem; color: #0f3460; margin-bottom: 6px; }
+  h2 {
+    font-size: 1.35rem;
+    color: #0f3460;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #c8d8f0;
+  }
+  h3 { font-size: 1.05rem; color: #1a3a6b; margin: 28px 0 8px; }
+
+  p { margin-bottom: 10px; }
+  ul, ol { margin: 8px 0 12px 24px; }
+  li { margin-bottom: 4px; }
+
+  code {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: .88em;
+    background: #e8eef8;
+    color: #1e3a6e;
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin: 14px 0 24px;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #d1ddf5;
+    border-radius: 8px;
+    padding: 14px 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+  }
+
+  .card strong { color: #0f3460; }
+
+  .note {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    margin: 14px 0;
+    font-size: .94em;
+  }
+
+  .warn {
+    background: #fff7ed;
+    border-left: 4px solid #f59e0b;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    margin: 14px 0;
+    font-size: .94em;
+  }
+
+  a { color: #1d4ed8; }
+
+  footer {
+    margin-left: 230px;
+    padding: 18px 52px;
+    font-size: .85em;
+    color: #64748b;
+    border-top: 1px solid #d1ddf5;
+  }
+
+  @media (max-width: 900px) {
+    nav {
+      position: static;
+      width: 100%;
+      height: auto;
+      padding-bottom: 12px;
+    }
+
+    main, footer {
+      margin-left: 0;
+      padding: 24px 18px 28px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-title">Boa Constructor</div>
+  <a href="#overview">Overview</a>
+  <a href="#build-notes">Current Build Notes</a>
+  <a class="sub" href="#phoenix-widgets">Phoenix Widgets</a>
+  <a class="sub" href="#utility-components">Utility Components</a>
+  <a href="#project">Project Status</a>
+  <a href="#installation">Installation</a>
+  <a class="sub" href="#install-windows">Windows 11</a>
+  <a class="sub" href="#install-other">Other Platforms</a>
+  <a href="#credits">Credits</a>
+</nav>
+
+<main>
+  <h1 id="overview">Boa Constructor - An Overview</h1>
+  <p>
+    Boa Constructor is an IDE originally written in 1999, built with Python and wxPython.
+    This project modernizes the codebase so Boa can run on current Python and wxPython releases.
+  </p>
+  <p>
+    Boa combines editor/debugger capabilities with a visual GUI designer for frames, menus,
+    toolbars, dialogs, and controls. The intended development flow is Model-View-Controller,
+    where projects are typically created and evolved directly inside Boa.
+  </p>
+
+  <div class="note">
+    <strong>Scope:</strong> this is an active modernization effort, so some legacy features are still
+    being brought forward to Python 3 and current wxPython Phoenix.
+  </div>
+
+  <h2 id="build-notes">Current Build Notes</h2>
+  <p>
+    The current build adds a dedicated <strong>Phoenix</strong> palette page with modern wxPython controls
+    where available on your platform.
+  </p>
+
+  <h3 id="phoenix-widgets">Phoenix Widgets</h3>
+  <div class="card-grid">
+    <div class="card"><strong>wx.dataview</strong><br>DataViewCtrl, DataViewListCtrl, TreeListCtrl</div>
+    <div class="card"><strong>wx.adv</strong><br>CommandLinkButton, HyperlinkCtrl, BitmapComboBox, TimePickerCtrl, BannerWindow</div>
+    <div class="card"><strong>wx.ribbon</strong><br>RibbonBar, RibbonPage, RibbonPanel, RibbonButtonBar</div>
+    <div class="card"><strong>wx.aui</strong><br>AuiNotebook, AuiToolBar</div>
+    <div class="card"><strong>wx.propgrid</strong><br>PropertyGrid, PropertyGridManager</div>
+    <div class="card"><strong>Misc Controls</strong><br>ActivityIndicator, RearrangeList, RearrangeCtrl, InfoBar</div>
+  </div>
+
+  <h3 id="utility-components">Utility Components</h3>
+  <ul>
+    <li><code>wx.aui.AuiManager</code></li>
+    <li><code>wx.adv.NotificationMessage</code></li>
+  </ul>
+  <p>
+    Palette help lookup was also improved so selected components can resolve module-qualified
+    wx class names such as <code>wx.dataview.DataViewCtrl</code>.
+  </p>
+
+  <h2 id="project">Project Status</h2>
+  <p>
+    The project is ongoing. Core functionality is in place and sufficient for the original
+    tutorial workflow, while additional functionality is being restored incrementally.
+  </p>
+  <p>
+    Progress updates are posted in the repository Discussion section under
+    <em>Day-by-Day Progress Reporting Diary</em> (updated approximately weekly).
+  </p>
+  <p>
+    Contributions are welcome.
+  </p>
+
+  <h2 id="installation">Installation</h2>
+  <p>Basic setup steps:</p>
+  <ol>
+    <li>Install Python 3.9.1 or newer.</li>
+    <li>Install wxPython 4.2.2 or newer.</li>
+    <li>Download this repository and run Boa from the project root.</li>
+  </ol>
+
+  <h3 id="install-windows">Installation - Windows 11</h3>
+  <p>
+    If Python is not installed, download it from
+    <a href="https://www.python.org/">python.org</a> and enable
+    <strong>Add Python to Path</strong> during installation.
+  </p>
+  <p>Then install wxPython:</p>
+  <p><code>pip install -U wxPython</code></p>
+  <p>
+    Download Boa Constructor from GitHub, extract the zip, and run <code>Boa.py</code>
+    from the repository root.
+  </p>
+
+  <div class="warn">
+    You may be prompted to upgrade <code>pip</code> first; follow the command provided by pip.
+  </div>
+
+  <h3 id="install-other">Installation - Other Platforms</h3>
+  <p>Linux (Ubuntu) and macOS setup guidance is planned for future updates.</p>
+
+  <h2 id="credits">Credits</h2>
+  <p>Ian Baker - June 2025</p>
+  <p>Ray Schumacher - May 2026</p>
+</main>
+
+<footer>
+  Boa Constructor README HTML - generated from repository README content.
+</footer>
+
+</body>
+</html>

@@ -69,7 +69,7 @@ class CompileModuleRunner(ModuleRunner):
         # if type(filename) is unicode:   # In python 3, all strings are in unicode
 
         # filename = filename.encode(sys.getfilesystemencoding())
-            
+
         # protsplit = string.find(filename, '://')
         protsplit = filename.find('://')
         if protsplit != -1:
@@ -90,18 +90,18 @@ class CompileModuleRunner(ModuleRunner):
                 etype = value = tb = None
         except:
             # Add filename to traceback object
+            # Note: os.popen3 is deprecated in Python 3, use subprocess instead
+            import subprocess
             etype, value, tb = sys.exc_info()
             try:
-                if len(value.args) == 2 and len(value.args[1]) == 4:
-                    msg, (_filename, lineno, offset, line) = value.args
-                    if not _filename:
-                        # XXX this is broken on too long lines
-                        value.args = msg, (filename, lineno, offset, line)
-                        value.filename = filename
+                if value is not None and hasattr(value, 'args'):
+                    if len(value.args) == 2 and len(value.args[1]) == 4:
+                        msg, (_filename, lineno, offset, line) = value.args
+                        if not _filename:
+                            # XXX this is broken on too long lines
+                            value.args = msg, (filename, lineno, offset, line)
                     traceback.print_exc()
-                else:
-                    traceback.print_exc()
-                    
+
             finally:
                 etype = value = tb = None
 
@@ -170,19 +170,26 @@ class PopenModuleRunner(ModuleRunner):
         in a frame. """
     def run(self, cmd, inpLines=[], execStart=None):
         inpLines.reverse()
-        inp, outp, errp = os.popen3(cmd)  # should this be a subprocess?
+        import subprocess
+        proc = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                text=True)
         pid = 0 # XXX only available on unix :(
         if execStart:
             wx.CallAfter(execStart, pid)
         out = []
         while 1:
             if inpLines:
-                inp.write(inpLines.pop())
-            l = outp.readline()
+                if proc.stdin is not None:
+                    proc.stdin.write(inpLines.pop())
+                    proc.stdin.flush()
+            if proc.stdout is None:
+                break
+            l = proc.stdout.readline()
             if not l: break
             out.append(l)
 
-        errLines = errp.readlines()
+        errLines = proc.stderr.readlines() if proc.stderr is not None else []
         serr = ErrorStack.buildErrorList(errLines)
         self.pid = pid
 

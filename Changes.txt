@@ -1,6 +1,21 @@
 Changes
 -------
 
+-- 0.8.02.02 - 26/05/23 --
+* Added Phoenix widget palette page with modern wxPython controls where available:
+  * wx.dataview: DataViewCtrl, DataViewListCtrl, TreeListCtrl
+  * wx.adv: CommandLinkButton, HyperlinkCtrl, BitmapComboBox, TimePickerCtrl, BannerWindow
+  * wx.ribbon: RibbonBar, RibbonPage, RibbonPanel, RibbonButtonBar
+  * wx.aui: AuiNotebook, AuiToolBar
+  * wx.propgrid: PropertyGrid, PropertyGridManager, PropertyGridCtrl
+  * misc: ActivityIndicator, RearrangeList, RearrangeCtrl, InfoBar
+* Added utility components:
+  * wx.aui.AuiManager
+  * wx.adv.NotificationMessage
+* Updated Palette "Boa or selected component help" action to improve wx class help lookup
+  for module-qualified class names (e.g. wx.dataview.DataViewCtrl).
+* Made Boa-managed text files BOM-tolerant on load and always save them as UTF-8 without BOM.
+
 -- 0.8.02.01 - 25/09/29 --
 * Updated code to operate with Python 3.12 and wxPython 4.2.1
 * Pre-release "cleaning" to remove development settings.
@@ -44,7 +59,7 @@ Changes
 2007-07-5
 
 * Improvements for sizers in the turorial, thanks to Werner
-* Further sizer/GTK improvements by Ianare for the ModuleFinder and 
+* Further sizer/GTK improvements by Ianare for the ModuleFinder and
   InterpreterChooser dialogs
 * More improvements for running as a binary
 * Bug fixes and config changes
@@ -66,18 +81,18 @@ Changes
 * -U, -UnicodeEncoding command-line switch, for setting the ide encoding without
   using sitecustomize.py
 * Code Templates added:
-  * A Code Template is a small idiomatic snippet of code that can be selected from 
+  * A Code Template is a small idiomatic snippet of code that can be selected from
     a popup list and inserted at the current caret position.
-  * The plugin is at Plug-ins/CodeTemplates.plug-in.py and the code template 
+  * The plugin is at Plug-ins/CodeTemplates.plug-in.py and the code template
     definitions are under Plug-ins/CodeTemplates/*.cfg
-  * The action is available from Source Views under Edit->Code Templates and 
+  * The action is available from Source Views under Edit->Code Templates and
     currently bound to Alt-T.
-  * CodeTemplates functionality replaces the functionality of the Dialogs 
+  * CodeTemplates functionality replaces the functionality of the Dialogs
     palette page. The page has been removed.
   * Code templates available for:
     * Boa: sys.breakpoint, customclasses, codetemplates, html document skeleton
     * Python: class, method, function, iterator, descriptor
-    * wxPython: wx.ColourDialog, wx.FontDialog, wx.PrintDialogData, 
+    * wxPython: wx.ColourDialog, wx.FontDialog, wx.PrintDialogData,
                 wx.PageSetupDialog, wx.DirDialog, wx.FileDialog,
                 wx.SingleChoiceDialog, wx.TextEntryDialog, wx.MessageDialog,
                 wx.FindReplaceDialog, wx.MultiChoiceDialog, wx.BusyCursor,
@@ -88,7 +103,7 @@ Changes
   wx.FilePickerCtrl
 * Optional support for FlatNotebook under plugins
 * Basic support for Stock Ids for buttons
-  * You still need to clear the label manually recreate the button before the 
+  * You still need to clear the label manually recreate the button before the
     stock id is applied
 * All help files now distributed as .htb help files.
   * This reduces the number of files in a typical boa installation enormously
@@ -97,7 +112,7 @@ Changes
   * All help files back in the repository and included in packages
 * New release format added: exe
   * Installs as a self contained exe
-  * A python/wxPython installation is still required to run external scripts 
+  * A python/wxPython installation is still required to run external scripts
     and the debugger
 * Boa FindReplaceDialog improved to use sizers
 * Config files (Explorer.*.cfg, etc) now contain a version field and will
@@ -114,7 +129,7 @@ Changes
 
 * I18N _() string marking of source code base of names that needed core changes:
   Palette tab names, View names, Preference help strings
-* Startup messages, command-line help will not be translated 
+* Startup messages, command-line help will not be translated
 * I18N _() string marking module: STCStyleEditor, HelpBook Support, ImageEdit Support
 * locale/boa.pot available as a PO Template file
 * Bug fixes
@@ -124,11 +139,11 @@ Changes
 
 2006-10-12
 
-* I18N _() string marking of the source code base 
-  excluded sections: ZopeSupport, STCStyleEditor, About, CVS/SVN, 
+* I18N _() string marking of the source code base
+  excluded sections: ZopeSupport, STCStyleEditor, About, CVS/SVN,
                      HelpBook Support, ImageEdit Support and Cyclops
   excluded UI elements: Palette tab names, View names, Preference help strings,
-                        startup messages, command-line help, 
+                        startup messages, command-line help,
 
 
 -- 0.5.0 (CVS) --
@@ -164,7 +179,7 @@ Changes
   * wx.lib: ScrollPanel, HyperLinkCtrl, AnalogClock, FileBrowseButtons,
             MultiSplitterWindow, Throbber, Ticker, DragScroller
 * Support for using wx.ArtProvider for bitmap properties in the Designer
-  * When the file dialog opens from the property editor, set the 
+  * When the file dialog opens from the property editor, set the
     Image Type to ArtProvider and click Open, the ArtProvider dialog
     will open.
   * If you want to install your own custom ArtProviders into the IDE,
@@ -181,7 +196,7 @@ Changes
     It tries to import the specified modules in the Shell namespace.
     It's off by default because importing arbitrary modules can
     be dangerous.
-* -wxVersionSelect, -W command-line switch, for specifying a 
+* -wxVersionSelect, -W command-line switch, for specifying a
    wxPython version
 
 
@@ -192,7 +207,7 @@ Changes
 * Bugfixes and more wx 2.5 name fixes
 * wxMAC compatibility improvements thanks to Kevin Walzer.
   * Recommended to use at least Python 2.4.1 and wxPython 2.6.0 under OS X
-* Added support for the unicode encoding declaration (PEP 263), thanks to 
+* Added support for the unicode encoding declaration (PEP 263), thanks to
   Eggert Magnusson.
 * Added support for wx.GridBagSizer
 * Added property editors for BackgroundStyle and WindowVariant
@@ -232,7 +247,7 @@ Changes
 * Conversion of all gui filetype modules in the core to 2.5 style code.
 * Moved CalendarCtrl from UserCompanions plug-in to DateTimeCompanions.py
 * Added new wx.DatePickerCtrl to DateTimeCompanions.py, thanks to Oleg Deribas.
-* Added preference setting to toggle specialiased Zope debugging 
+* Added preference setting to toggle specialiased Zope debugging
   (for PythonScripts and PageTemplates), now off by default.
   * Debug speed is much faster without Zope support for cpu intensive code.
 * Copy to clipboard from selection in the help controller.
@@ -245,8 +260,8 @@ Changes
 * Bugfixes.
 * You can now combine frame attributes and custom classes.
   * In other words you may define a custom class that maps to a frame attribute.
-  * This allows you to specify controls at run time by passing the class as a 
-    parameter and binding it to a frame attribute. 
+  * This allows you to specify controls at run time by passing the class as a
+    parameter and binding it to a frame attribute.
 
 
 -- 0.4.0 (Release) --
@@ -264,21 +279,21 @@ Changes
 2004-08-25
 
 * Primarily a bugfix release
-* Fixes issues with attribute resolution in the Designer, small issue with 
+* Fixes issues with attribute resolution in the Designer, small issue with
   unicode handling and the Zope debugger product.
 
 
--- 0.3.0 (Release) -- 
+-- 0.3.0 (Release) --
 
 2004-08-17
 
-* Started with the conversion to wxPython 2.5 compatible code, but it's 
-  currently impossible to support both 2.4 and 3.5 in the GUI Designer 
-  because of the wx namespace change. 
-  In __version__.py, wx_version_max can be set to None to run under 2.5, 
-  but beware that there are still many issues under 2.5 and the Designer 
+* Started with the conversion to wxPython 2.5 compatible code, but it's
+  currently impossible to support both 2.4 and 3.5 in the GUI Designer
+  because of the wx namespace change.
+  In __version__.py, wx_version_max can be set to None to run under 2.5,
+  but beware that there are still many issues under 2.5 and the Designer
   doesn't work.
-* BoaDebugger zope product added as an alternative/improved interface for 
+* BoaDebugger zope product added as an alternative/improved interface for
   debugging Zope, thanks to Robert Boulanger. See Debugger/BoaDebugger/*
 * Added properies/events:
   * wxComboBox enter event
@@ -286,16 +301,16 @@ Changes
 * New wxPython/Python docs bundle
 * Tutorial improvements (thanks Kevin Light)
 * Added examples for resource images and wizards
-* Special attributess can now span multiple lines 
+* Special attributess can now span multiple lines
   (continued lines must end on comma)
 * wxWindows renamed to wxWidgets
 * Many bug fixes
   * Fixed problem with window id handling
   * Fixed Sizer and linked Sizer properties
   * Fixed KeyError bug if renaming after recreating a control in the Designer.
-  * Fixed consistency problem with multi-line vs single-line indent and comment  
+  * Fixed consistency problem with multi-line vs single-line indent and comment
     Thanks to Tim Diggins for report and initial patch
-  * Improved error messages in case of user changed GUI code. 
+  * Improved error messages in case of user changed GUI code.
 
 -- 0.2.8 (CVS) --
 
@@ -369,7 +384,7 @@ Changes
 
 2003-08-13
 
-* Micro release sorts out some issues on Linux and other small changes and fixes. 
+* Micro release sorts out some issues on Linux and other small changes and fixes.
 
 
 -- 0.2.5 (CVS) --
@@ -381,7 +396,7 @@ Changes
   * wxToolBar.Tools : AddTool, AddContol, AddSeparator
   * wxImageList.Images : Add, AddWithColourMask
   * wxMenu.Items : Append, AppendMenu, AppendSeparator
-* Collection Editor items can be reordered by clicking the Up and Down 
+* Collection Editor items can be reordered by clicking the Up and Down
   arrows on the Collection Editor toolbar.
 * Support added for using Sizers in the Designer.
   * All standard sizers added:
@@ -389,9 +404,9 @@ Changes
       wxNotebookSizer
     * They are available from the Containers/Layout page
   * Sizers have their own view like the Data View.
-  * Visual cues and selectors are drawn around sizered controls in 
+  * Visual cues and selectors are drawn around sizered controls in
     yellow and green.
-  * Can navigate to the sizer by right clicking on sizered selection tag 
+  * Can navigate to the sizer by right clicking on sizered selection tag
     (like Anchors)
   * None values are used in empty Sizer items, this is valid in the
     Designer, but you will be warned when a session is posted that still
@@ -400,11 +415,11 @@ Changes
     Items with None values are visually indicated with the standard
     red dashed style.
   * Connect Sizers to controls via the Sizer property of a control.
-  * Add sizer items (window, sizer and spacer items) from the Items 
+  * Add sizer items (window, sizer and spacer items) from the Items
     collection property of a sizer (double-click)
     Link the item to a window or sizer in the Inspector.
   * Currently sizer layout is applied in addition to absolute coordinate
-    positioning and sizes. 
+    positioning and sizes.
     Hopefully this can be balanced to a best of both worlds approach.
   * See Examples/layout/SizersInBoa.py
 * Python Resource modules now available as an alternative way to use
@@ -412,7 +427,7 @@ Changes
   * Accepts the format generated by wxPython.tools.img2py, only requires
     that the file starts with this header: #Boa:PyImgResource:
   * Resource modules have an Images view of their contents.
-  * Bitmap property editors can open resource modules and generate the 
+  * Bitmap property editors can open resource modules and generate the
     appropriate code.
   * The ImageEditor plug-in can convert images to PyImgResource modules.
     It can also edit images directly inside resource modules.
@@ -424,7 +439,7 @@ Changes
     cause mixed EOL issues on Windows.
   * Files are now always opened in binary mode.
   * At startup source templates (used by code genration) are initialised
-    with the OS default EOL. 
+    with the OS default EOL.
     Tabs/Spaces in source templates are also set at startup.
 * ModuleFinder plug-in, enter the import name to find the file in
   sys.path and open the module in the IDE. Available from Tools.
@@ -432,8 +447,8 @@ Changes
 * Added wxTreeListCtrl and wxListView to the Palette.
 * Errors & Output notebook now has menu to load/save the history.
 * Many plug-ins now have their images embedded in their source.
-* Added feature to the debugger to display the value of a watch or a 
-  name in the Output window. 
+* Added feature to the debugger to display the value of a watch or a
+  name in the Output window.
   * This is useful for big values like large lists or dicts.
   * Ctrl-double-click is the shortcut for this action.
 * Also added Preference to minimize Debugger on running. Useful for GUI
@@ -447,7 +462,7 @@ Changes
 
 2003-07-10
 
-* Pervasive changes was made to the code to use string methods. 
+* Pervasive changes was made to the code to use string methods.
   Also a few lambda -> list comprehension translations.
 * Added BicycleRepairMan (Python Refactoring) support.
   First install BicycleRepairMan, then enable it under
@@ -521,7 +536,7 @@ Changes
   It appears as a page on the TraceBack/Output/Error notebook.
   To turn on choose: File->Toggle use input stream
 * Also new for the TraceBack/Error/Output notebook, it's history
-  can be browsed from the new buttons on the statusbar. 
+  can be browsed from the new buttons on the statusbar.
 
 
 -- 0.2.3 (Release) --
@@ -529,7 +544,7 @@ Changes
 2003-04-01
 
 * Primarily a bugfix release
-* Some changes to improve handling of non-ASCII source, 
+* Some changes to improve handling of non-ASCII source,
   see Docs/boa/apphelp/NonASCII.html
 
 
@@ -537,8 +552,8 @@ Changes
 
 2003-03-14
 
-* A bugfix release, mostly to handle wxNotebook.AddPage parameter signature 
-  change. 
+* A bugfix release, mostly to handle wxNotebook.AddPage parameter signature
+  change.
   * Script added to update generated code: Scripts/UpgradeNotebookParams.py
 
 
@@ -570,13 +585,13 @@ Changes
   but this works well enough.
   3 new Preferences added to the General->Code generation
   section. This feature is now on by default.
-* I've abandoned the strategy of renaming plug-ins to disable them. 
+* I've abandoned the strategy of renaming plug-ins to disable them.
   This was too unfriendly for things like CVS.
   Also plug-ins can now be ordered.
   Both these changes are implemented with a new file called
-  __init__.plug-in.py in your Plug-ins directory which defines the 
+  __init__.plug-in.py in your Plug-ins directory which defines the
   list of disabled and ordered plugin names.
-  Ordered plug-ins are executed first (in order!) 
+  Ordered plug-ins are executed first (in order!)
   Everything can be managed thru the GUI under
   Preferences->Plug-ins->Plug-in files.
 * Improved Find/Replace dialog.
@@ -585,9 +600,9 @@ Changes
 * Refactored Controller menu/toolbar definitions to use the
   same format that View menu/toolbar definitions uses.
   One visible result of this is that menu items can now display images.
-* Improved tab support. The frame designer can now properly generate 
+* Improved tab support. The frame designer can now properly generate
   tab indented code.
-  People who care about this, please test as I don't use this.  
+  People who care about this, please test as I don't use this.
 * Added ImageEditor.plug-in.py.
   This is an image editor I hacked up ages ago.
   (I needed masked PNG support!)
@@ -596,11 +611,11 @@ Changes
   (Hint: When editing images with masks, set the mask again before
          saving, otherwise the previous mask is used)
 * Shortcut keys now work better on Linux (Ctrl-S works!!!).
-* Composite controls like wxGrid now work properly in the Designer 
+* Composite controls like wxGrid now work properly in the Designer
   on Linux.
   Unfortunately many other controls still misbehave on Linux :(
 * Added wxSpinCtrl
-* Zope: Added SiteErrorLog support. 
+* Zope: Added SiteErrorLog support.
   Just delete your zoa folder in your Zope root and the new
   zoa will be automatically installed.
 * Removed the bundled PyChecker from the repository.
@@ -620,7 +635,7 @@ Changes
   * Tested with Python, wxPython, Tkinter, Zope
   * Special Zope support allowing you to step and break in Python scripts
      Also support for step and break in PageTemplates but for Zope 2.6
-* Many internal refactorings which includes moving the models and controllers 
+* Many internal refactorings which includes moving the models and controllers
   into the Models package and making wxPython module support optional.
   This implements many of the requirements from the wxIDLE discussuions.
   Also all Zope support moved to the ZopeLib package.
@@ -635,12 +650,12 @@ Changes
 
 01-05-01 - 02-01-28
 
-* Compatible with and now requires 2.3.2. 
+* Compatible with and now requires 2.3.2.
 * Files can now be opened, edited and saved over any supported transport
 * Explorer improvements
   * Clipboard improved, can copy/paste between any transports
   * DAV transport added.
-  * Preferences are now be maintained in the Explorer tree as items in the 
+  * Preferences are now be maintained in the Explorer tree as items in the
     Inspector.
      * Many new preferences
      * Key definitions editable
@@ -651,7 +666,7 @@ Changes
 * Support for opening html, xml, and c++ files
 * Extensive Zope support added
 * Complete integrated help for Boa, Python, wxPython and CVS.
-* The Help Tips have been expanded a lot, please work thru it as 
+* The Help Tips have been expanded a lot, please work thru it as
    soon as possible as it contains essential information.
 * Much better support for using preferences stored in your home directory.
 * All image transparency issues resolved (using PNGs for everything)
@@ -661,12 +676,12 @@ Changes
 * More properties added for standard controls
 * Resource usage under Win9x improved
 * Stability and speed improvements
-* Code generation is safer with rollback on errors and warnings for 
+* Code generation is safer with rollback on errors and warnings for
   unexpected/incomplete code.
 * Improved integration between your code and generated code
   * Special object attributes can be linked to properties
-  * The Designer can generate source for controls not directly supported from 
-    the Palette if you define it's name and equivalent class in a 
+  * The Designer can generate source for controls not directly supported from
+    the Palette if you define it's name and equivalent class in a
     _custom_classes class attribute.
 
 
@@ -681,11 +696,11 @@ Changes
     * Can filter on all files for general purpose cliboard use
   * CVS Explorer
     * command line CVS needs to be installed successfully
-    * basic cvs functionality: browse, update, commit, add, 
+    * basic cvs functionality: browse, update, commit, add,
       remove, status, log, diff, tag, branch
     * CVS conflicts view
     * Cancelable progress dialog
-  * Zope Explorer 
+  * Zope Explorer
     * Management: Cut, copy, paste, rename, delete, import, export
     * Creation from the Palette
     * Property management thru the Inspector
@@ -715,10 +730,10 @@ Changes
   * Control Alignment and Size dialogs added (from right-click)
 * The necessary import code is automatically added to source
 * Sub properties now work correctly
-* Default actions supported, double-clicking on components 
+* Default actions supported, double-clicking on components
   can create:
   * Default events (Like EVT_BUTTON)
-  * Open default properties (Like a Collection Editor for 
+  * Open default properties (Like a Collection Editor for
     Toolbar tools)
 * The debugger works better, but suffers from same defects as
   other in-process Python debuggers.
@@ -741,15 +756,15 @@ Changes
   * Attribute type and methods
 * Limited support for distutils (Setup module)
   * support for py2exe
-       
+
 -- 0.0.4 --
 
 00-03-01 - 00-08-30
 
-* Put the website into Zope 
-* Put application help into Zope 
+* Put the website into Zope
+* Put application help into Zope
 * Added CVS view to the Explorer
-* Links to wxWindows documentation from the Companion classes are now 
+* Links to wxWindows documentation from the Companion classes are now
   generated by a script
 * Moved all image loading into an ImageStore cache type object
 * Changed Boa to not have to be started in the Boa directory
@@ -761,7 +776,7 @@ Changes
   * Comment blocks
   * Breakpoints & Tracepoints
   * Code browsing (limited support)
-    Hold down ctrl and move the cursor over code, click on 
+    Hold down ctrl and move the cursor over code, click on
     underlined code to browse to it
   * Code completion, currently only object attributes self.*
 * OGL improvements including saving of position
@@ -776,18 +791,18 @@ Changes
 * Added FrameBars
 * Added the python profiler
 * Added Tim Peter's Cyclops, cycle finder
-* Controls that don't accept mouse clicks 
+* Controls that don't accept mouse clicks
   (wxNotebook, wxStaticLine, wxStaticBox)
   are now selectable and dragable
 * Added context sensitive help (press F1 in source code)
 * Added CollectionEditors
-  These are new properties on components which provides 
+  These are new properties on components which provides
   design-time item list maintenance.
   In the source, each Collection Editor looks after its
   own method.
   This is a rough first draft and will be refined.
   A very big gotcha with most of these collection properties
-  is that they are not live. For most you will have to close 
+  is that they are not live. For most you will have to close
   open and reopen the Designer for changes to take effect :(
   Please note that whitespace is even more meaningful
   than usual ;) So leave generated code as is!
@@ -798,20 +813,20 @@ Changes
   * wxNotebook.Pages
   * wxWindow.Constraints
   * wxToolBar.Tools (plus EVT_TOOL)
-  * wxMenuBar.Menus 
+  * wxMenuBar.Menus
   * wxMenu.Items (plus EVT_MENU)
   Still to be implemented:
   * wxAcceleratorTable.Entries (broken, doesn't fit yet)
   * wxBoxSizers, wxStaticBoxSizer
   * Sub menus
-  * Different types of insertion methods 
+  * Different types of insertion methods
 * Directory compare (lib's cmp) and diff facilities (Tim Peter's ndiff)
 * Fixed many memory leaks and circular references
 
 -- 0.0.3 --
 
 00-01-06
-Merged wxGTK changes back into source. Added wxGTK.py, wxMSW.py for platform 
+Merged wxGTK changes back into source. Added wxGTK.py, wxMSW.py for platform
 specific consts
 Added a preview of pyDE (currently a view on ModuleModel)
 
@@ -823,7 +838,7 @@ Differentiating between command and normal events, window id generation
 Added window id allocation
 
 00-01-09
-Resized images to 16*16. This sorts out the last of the MSW incompatibilities 
+Resized images to 16*16. This sorts out the last of the MSW incompatibilities
 GTK changes caused
 Updated frame and ctrl renaming code to also maintain window ids
 Added wxStaticLine
@@ -837,13 +852,13 @@ Hazy period in which I:
 
 00-01-20
 Resumed work on Pygasm.
-Trying to only develop in Pygasm, missing syntax hilighting and prod tools, 
+Trying to only develop in Pygasm, missing syntax hilighting and prod tools,
  going a bit slowly but docs and view are nice
 Implemented screensize from system metrics as suggested on mailing list.
 Started with watches in the debugger
 
 00-01-21
-Added attributes to classes (moduleparse.Class.attributes, 
+Added attributes to classes (moduleparse.Class.attributes,
  EditorViews.ExploreView)
 Added different help for Pygasm/wxPython/Python
 Added TextModel and TextView

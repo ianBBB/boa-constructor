@@ -1,4 +1,4 @@
-""" Boa plug-in which allows linking a sub application to a main application.
+"""Boa plug-in which allows linking a sub application to a main application.
 
 Add the main application as a file in the modules list.
 
@@ -10,9 +10,7 @@ to run the link app module itself from the IDE!
 
 Linked apps can be chained but beware of cycles! ;)
 
-Only proxies the run and debug methods to the parent app.
-
-"""
+Only proxies the run and debug methods to the parent app."""
 
 import wx
 
@@ -21,13 +19,13 @@ import Plugins
 import sourceconst
 from Models import PythonEditorModels, PythonControllers, EditorHelper, Controllers
 
-EditorHelper.imgLinkAppModel = EditorHelper.imgIdxRange()
+EditorHelper.imgLinkAppModel = EditorHelper.imgIdxRange()  # type: ignore[attr-defined]
 
 class LinkAppModel(PythonEditorModels.PyAppModel):
     modelIdentifier = 'LinkApp'
     defaultName = 'LinkApp'
     bitmap = 'LinkApp_s.png'
-    imgIdx = EditorHelper.imgLinkAppModel
+    imgIdx = EditorHelper.imgLinkAppModel  # type: ignore[attr-defined]
 
 #    def getDefaultData(self):
 #        return sourceconst.defSig %{'modelIdent':self.modelIdentifier, 'main': ''}
@@ -57,7 +55,7 @@ class LinkAppModel(PythonEditorModels.PyAppModel):
             app.debug(params, cont_if_running, cont_always, temp_breakpoint)
         else:
             wx.LogWarning('No Application module found in modules list to link to')
-                
+
 
 class LinkAppController(PythonControllers.BaseAppController):
     Model = LinkAppModel

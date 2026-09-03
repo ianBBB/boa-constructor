@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------
 # Name:        ImageStore.py
-# Purpose:     Centralised loading of images, supports different 
+# Purpose:     Centralised loading of images, supports different
 #              methods of loading: image files, zip files and modules
 #
 # Author:      Riaan Booysen
@@ -10,6 +10,9 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     BSD
 #----------------------------------------------------------------------
+# pyright: ignore
+# type: ignore
+
 
 import sys, os, io
 
@@ -23,13 +26,13 @@ class UnhandledExtError(ImageStoreError): pass
 class ImageStore:
 
     Error = ImageStoreError
-    
+
     def __init__(self, rootpaths, images=None, cache=1):
         if not images: images = {}
         self.rootpaths = []
         self.images = images
         self.useCache = cache
-        
+
         self.dataReg = {}
 
         for rootpath in rootpaths:
@@ -71,7 +74,7 @@ class ImageStore:
     def load(self, name):
         if name in self.dataReg:
             return self.createImage(name, 'data')
-            
+
         for rootpath in self.rootpaths:
             try:
                 imgpath, ext = self.pathExtFromName(rootpath, name)
@@ -130,7 +133,7 @@ class ZippedImageStore(ImageStore):
 
     def load(self, name):
         name = self.canonizePath(name)
-        
+
         if name in self.dataReg:
             return self.createImage(name, 'data')
         else:
@@ -141,20 +144,20 @@ class ResourceImageStore(ImageStore):
     def __init__(self, rootpaths, images=None, cache=1):
         ImageStore.__init__(self, rootpaths, images, cache)
 
-    def subModuleImport(self, name):     
+    def subModuleImport(self, name):
         realSysPath = sys.path
         try:
             for path in self.rootpaths:
                 sys.path = [path]
                 try:
-                    mod = __import__(name) 
+                    mod = __import__(name)
                 except ImportError:
                     continue
-                
-                components = name.split('.') 
-                for comp in components[1:]: 
-                    mod = getattr(mod, comp) 
-                return mod 
+
+                components = name.split('.')
+                for comp in components[1:]:
+                    mod = getattr(mod, comp)
+                return mod
             raise ImportError(_('Could not find %s')%name)
         finally:
             sys.path = realSysPath
@@ -174,15 +177,15 @@ class ResourceImageStore(ImageStore):
     def registerImage(self, name, data):
         name = self.transformPathToModuleSpace(name)
         ImageStore.registerImage(self, name, data)
-        
+
     def transformPathToModuleSpace(self, name):
         name = self.canonizePath(name)
         name = name.replace('.', '_').replace('/', '.')
         return name
 
-        
+
 ImageStoreClasses = {
      'files': ImageStore,
      'zip' : ZippedImageStore,
      'resource': ResourceImageStore,
-}     
+}

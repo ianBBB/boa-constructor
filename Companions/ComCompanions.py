@@ -51,7 +51,7 @@ class ComCtrlDTC(WindowDTC):
 
     def writeImports(self):
         return '\n'.join( (WindowDTC.writeImports(self),
-                           'from wx.lib.bcrtl.activex.%s import %s' % (
+                           'from bcrtl.activex.%s import %s' % (
                             self.comModule, self.comImports)) )
 
     def designTimeControl(self, position, size, args = None):
@@ -65,7 +65,7 @@ class ComCtrlDTC(WindowDTC):
 
 # Acrobat PDF control
 try:
-    from wx.lib.bcrtl.activex.acrobat import wxComPdf
+    from bcrtl.activex.acrobat import wxComPdf
 except ImportError as error:
     print('Acrobat not registered', error)
 else:

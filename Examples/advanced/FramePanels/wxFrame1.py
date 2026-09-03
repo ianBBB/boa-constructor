@@ -14,6 +14,11 @@ def create(parent):
  wxID_WXFRAME1PANEL5, wxID_WXFRAME1PANEL6, wxID_WXFRAME1PANEL7, 
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(9)]
 
+[wxID_WXFRAME1, wxID_WXFRAME1NOTEBOOK1, wxID_WXFRAME1PANEL1, 
+ wxID_WXFRAME1PANEL2, wxID_WXFRAME1PANEL3, wxID_WXFRAME1PANEL4, 
+ wxID_WXFRAME1PANEL5, wxID_WXFRAME1PANEL6, wxID_WXFRAME1PANEL7, 
+] = [wx.NewIdRef() for _init_ctrls in range(9)]
+
 class wxFrame1(wx.Frame):
     _custom_classes = {'wx.Panel': ['wxPanel1', 'wxPanel2', 'wxPanel3']}
     def _init_coll_notebook1_Pages(self, parent):
@@ -28,23 +33,24 @@ class wxFrame1(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_WXFRAME1, name='', parent=prnt,
-              pos=wx.Point(306, 164), size=wx.Size(491, 364),
+              pos=wx.Point(306, 164), size=wx.Size(499, 376),
               style=wx.DEFAULT_FRAME_STYLE, title='wxFrame1')
         self.SetClientSize(wx.Size(483, 337))
 
-        self.notebook1 = wx.Notebook(id=wxID_WXFRAME1NOTEBOOK1, name='notebook1',
-              parent=self, pos=wx.Point(0, 0), size=wx.Size(483, 337), style=0)
+        self.notebook1 = wx.Notebook(id=wxID_WXFRAME1NOTEBOOK1,
+              name='notebook1', parent=self, pos=wx.Point(0, 0),
+              size=wx.Size(483, 337), style=0)
 
         self.panel1 = wxPanel1(id=wxID_WXFRAME1PANEL1, name='panel1',
-              parent=self.notebook1, pos=wx.Point(0, 0), size=wx.Size(475, 311),
+              parent=self.notebook1, pos=wx.Point(0, 0), size=wx.Size(475, 309),
               style=wx.TAB_TRAVERSAL)
 
         self.panel2 = wxPanel2(id=wxID_WXFRAME1PANEL2, name='panel2',
-              parent=self.notebook1, pos=wx.Point(0, 0), size=wx.Size(475, 311),
+              parent=self.notebook1, pos=wx.Point(0, 0), size=wx.Size(475, 309),
               style=wx.TAB_TRAVERSAL)
 
         self.panel3 = wx.Panel(id=wxID_WXFRAME1PANEL3, name='panel3',
-              parent=self.notebook1, pos=wx.Point(0, 0), size=wx.Size(475, 311),
+              parent=self.notebook1, pos=wx.Point(0, 0), size=wx.Size(475, 309),
               style=wx.TAB_TRAVERSAL)
 
         self.panel4 = wxPanel3(id=wxID_WXFRAME1PANEL4, name='panel4',

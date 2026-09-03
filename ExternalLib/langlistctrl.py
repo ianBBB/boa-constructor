@@ -9,8 +9,7 @@
 # Copyright:   (c) 2007 Riaan Booysen
 # License:     wxPython
 #-----------------------------------------------------------------------------
-""" ListCtrl and functions to display languages and the flags of their countries
-"""
+"""ListCtrl and functions to display languages and the flags of their countries."""
 import wx
 
 from . import flagart

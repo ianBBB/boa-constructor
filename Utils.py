@@ -9,7 +9,11 @@
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
-import string, os, sys, glob, pprint, types, re, traceback
+# pyright: ignore
+# type: ignore
+
+import string, os, sys, glob, pprint, types, re, traceback, codecs
+from typing import Any, cast
 
 import wx
 from wx import adv
@@ -21,6 +25,20 @@ from html.parser import HTMLParser
 
 # Centralised i18n gettext compatible definition
 _ = wx.GetTranslation
+
+UTF8_BOM = codecs.BOM_UTF8.decode('utf-8')
+
+
+def stripUtf8Bom(data):
+    if isinstance(data, bytes):
+        if data.startswith(codecs.BOM_UTF8):
+            return data[len(codecs.BOM_UTF8):]
+        return data
+
+    if isinstance(data, str) and data.startswith(UTF8_BOM):
+        return data[len(UTF8_BOM):]
+
+    return data
 
 
 def toPyPath(filename):
@@ -243,7 +261,9 @@ class PaintEventHandler(wx.EvtHandler):
         if len(self.updates) == 0:
             event.Skip()
             if len(self.updates) > 0:
-                self.RequestMore()
+                # Request another idle callback when there is pending work.
+                if hasattr(event, 'RequestMore'):
+                    event.RequestMore()
             return
         self.painting=1
         for rect in self.updates:
@@ -288,7 +308,11 @@ class PaintEventHandler(wx.EvtHandler):
         return rv
 
 def getI18NLangDir():
-    d = wx.GetApp().locale.GetCanonicalName()
+    app = wx.GetApp()
+    locale = getattr(app, 'locale', None)
+    if locale is None:
+        return ''
+    d = locale.GetCanonicalName()
     path = toPyPath(os.path.join('locale', d))
     if not os.path.exists(path):
         if '_' in d:
@@ -323,8 +347,8 @@ def showTip(frame, forceShow=0):
             if not os.path.exists(tipsFile):
                 tipsFile = toPyPath('Docs/tips.txt')
 
-        tp = wx.adv.CreateFileTipProvider(tipsFile, index)
-        showTip = wx.adv.ShowTip(frame, tp, showTip)
+        tp = adv.CreateFileTipProvider(tipsFile, index)
+        showTip = adv.ShowTip(frame, tp, showTip)
         index = tp.GetCurrentTip()
         if conf:
             conf.set('tips', 'showonstartup', showTip and 'true' or 'false')
@@ -440,7 +464,8 @@ def updateFile(src, dst):
 
 def updateDir(src, dst):
     """ Traverse src and assures that dst is up to date """
-    os.path.walk(src, visit_update, (src, dst) )
+    for dirname, _, names in os.walk(src):
+        visit_update((src, dst), dirname, names)
 
 def visit_update(paths, dirname, names):
     src, dst = paths
@@ -461,9 +486,12 @@ def visit_update(paths, dirname, names):
 
 def get_current_frame():
     try:
-        Exception, 'get_exc_info'
-    except:
-        return sys.exc_info()[2].tb_frame.f_back
+        raise Exception('get_exc_info')
+    except Exception:
+        tb = sys.exc_info()[2]
+        if tb is not None:
+            return tb.tb_frame.f_back
+        return None
 
 def descr_frame(frame):
     if frame: return ('<frame:%s(%s)%s [%s]>'%(
@@ -520,7 +548,9 @@ class OutputLoggerPF(LoggerPF):
                 ss = s
             wx.LogMessage(self.pad(ss).replace('%', '%%'))
 
-        sys.__stdout__.write(s)
+        std_out = sys.__stdout__
+        if std_out is not None:
+            std_out.write(s)
 
 # XXX Should try to recognise warnings
 # Match start against [v for k, v in __builtins__.items() if type(v) is types.ClassType and issubclass(v, Warning)]
@@ -538,7 +568,9 @@ class ErrorLoggerPF(LoggerPF):
         else:
             wx.LogError(self.pad(self.buffer+s[:-1]).replace('%', '%%'))
 
-        sys.__stderr__.write(s)
+        std_err = sys.__stderr__
+        if std_err is not None:
+            std_err.write(s)
 
 def installErrOutLoggers():
     sys.stdout = OutputLoggerPF()
@@ -598,49 +630,54 @@ class FrameRestorerMixin:
     frameRestorerWindows = {}
 
     def restore(self):
-        self.Show()
-        if self.IsIconized():
-            self.Iconize(False)
-        self.Raise()
+        win = cast(Any, self)
+        win.Show()
+        if win.IsIconized():
+            win.Iconize(False)
+        win.Raise()
 
     def setDimensions(self, dims):
+        win = cast(Any, self)
         if None in dims:
             if dims[0] is None:
                 if dims[1] is not None:
-                    self.SetClientSize(tuple(dims[1:]))
+                    win.SetClientSize(tuple(dims[1:]))
             else:
-                self.SetPosition(tuple(dims[:-1]))
+                win.SetPosition(tuple(dims[:-1]))
         else:
-            self.setDimensions(*dims)
+            win.setDimensions(*dims)
 
     def getDimensions(self):
-        pos = self.GetPosition().Get()
-        size = self.GetSize().Get()
+        win = cast(Any, self)
+        pos = win.GetPosition().Get()
+        size = win.GetSize().Get()
         return pos + size
 
     def loadDims(self):
+        win = cast(Any, self)
         conf = createAndReadConfig(self.confFile)
-        if not conf.has_option(self.confSection, self.winConfOption):
+        if not conf.has_option(self.confSection, win.winConfOption):
             dims = None
         else:
-            dims = eval(conf.get(self.confSection , self.winConfOption),
+            dims = eval(conf.get(self.confSection , win.winConfOption),
                         {'wxSize': wx.Size, 'wxPoint': wx.Point,
                          'wxDefaultSize': wx.DefaultSize,
                          'wxDefaultPosition': wx.DefaultPosition,
                          'wx': wx})
 
         if dims:
-            self.setDimensions(dims)
+            win.setDimensions(dims)
         else:
-            self.setDefaultDimensions()
+            win.setDefaultDimensions()
 
-        self.frameRestorerWindows[self.winConfOption] = self
+        self.frameRestorerWindows[win.winConfOption] = self
 
     def saveDims(self, dims=()):
+        win = cast(Any, self)
         if dims == ():
-            dims = self.getDimensions()
+            dims = win.getDimensions()
         conf = createAndReadConfig(self.confFile)
-        conf.set(self.confSection, self.winConfOption, repr(dims))
+        conf.set(self.confSection, win.winConfOption, repr(dims))
         writeConfig(conf)
 
     def restoreDefDims(self):
@@ -681,35 +718,41 @@ def pathRelativeToModel(path, model):
 class BottomAligningSplitterMix:
     """ Mixin class that keeps the bottom window in a splitter at a constant height """
     def __init__(self):
-        self.Bind(wx.EVT_SIZE, self._OnSplitterwindowSize)
-        self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self._OnSplitterwindowSplitterSashPosChanged, id=self.GetId())
-        self.Bind(wx.EVT_SPLITTER_DOUBLECLICKED, self._OnSplitterwindowSplitterDoubleclicked, id=self.GetId())
-        sashsize = self.GetSashSize()
-        self.SetMinimumPaneSize(sashsize)
-        sashpos = self.GetClientSize().y - sashsize
-        self.SetSashPosition(sashpos)
+        split = cast(Any, self)
+        split.Bind(wx.EVT_SIZE, self._OnSplitterwindowSize)
+        split.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self._OnSplitterwindowSplitterSashPosChanged, id=split.GetId())
+        split.Bind(wx.EVT_SPLITTER_DOUBLECLICKED, self._OnSplitterwindowSplitterDoubleclicked, id=split.GetId())
+        sashsize = split.GetSashSize()
+        split.SetMinimumPaneSize(sashsize)
+        sashpos = split.GetClientSize().y - sashsize
+        split.SetSashPosition(sashpos)
         self._win2sze = self._getWin2Sze()
 
     def bottomWindowIsOpen(self):
-        return self.GetSashPosition()+1 != self.GetClientSize().y - self.GetSashSize()
+        split = cast(Any, self)
+        return split.GetSashPosition()+1 != split.GetClientSize().y - split.GetSashSize()
 
     def openBottomWindow(self):
-        self.SetSashPosition(
-         int(self.GetClientSize().y *(1.0-Preferences.eoErrOutWindowHeightPerc)))
+        split = cast(Any, self)
+        split.SetSashPosition(
+         int(split.GetClientSize().y *(1.0-Preferences.eoErrOutWindowHeightPerc)))
         self._win2sze = self._getWin2Sze()
 
     def closeBottomWindow(self):
-        self.SetSashPosition(self.GetClientSize().y - self.GetSashSize())
+        split = cast(Any, self)
+        split.SetSashPosition(split.GetClientSize().y - split.GetSashSize())
         self._win2sze = self._getWin2Sze()
 
     def _getWin2Sze(self):
-        win2 = self.GetWindow2()
+        split = cast(Any, self)
+        win2 = split.GetWindow2()
         if win2 : return win2.GetSize().y
         else:     return 0
 
     def _OnSplitterwindowSize(self, event):
-        sashpos = self.GetClientSize().y - self._win2sze - self.GetSashSize()
-        self.SetSashPosition(sashpos)
+        split = cast(Any, self)
+        sashpos = split.GetClientSize().y - self._win2sze - split.GetSashSize()
+        split.SetSashPosition(sashpos)
         if event: event.Skip()
 
     def _OnSplitterwindowSplitterSashPosChanged(self, event):
@@ -821,8 +864,9 @@ class ListCtrlSelectionManagerMix:
         pass
 
     def getSelection(self):
+        list_ctrl = cast(Any, self)
         res = getListCtrlSelection(self)
-        if self.GetWindowStyleFlag() & wx.LC_SINGLE_SEL:
+        if list_ctrl.GetWindowStyleFlag() & wx.LC_SINGLE_SEL:
             if res:
                 return res[0]
             else:
@@ -901,7 +945,7 @@ def canReadStream(stream):
         return not stream.eof()
 
 def find_dotted_module(name, path=None):
-    import imp
+    imp = __import__('imp')
     segs = name.split('.')
     file = None
     while segs:

@@ -59,22 +59,22 @@ class FoldingStyledTextCtrlMix:
         self.SetMarginWidth(margin, Preferences.STCFoldingMarginWidth)
 
         markIdnt, markBorder, markCenter = Preferences.STCFoldingClose
-        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDER, 
+        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDER,
               markIdnt, markBorder, markCenter)
-        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDEREND, 
+        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDEREND,
               wx.stc.STC_MARK_EMPTY, markBorder, markCenter)
 
         markIdnt, markBorder, markCenter = Preferences.STCFoldingOpen
-        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDEROPEN, 
+        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDEROPEN,
               markIdnt, markBorder, markCenter)
-        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDEROPENMID, 
+        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDEROPENMID,
               wx.stc.STC_MARK_EMPTY, markBorder, markCenter)
 
-        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDERMIDTAIL, 
+        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDERMIDTAIL,
               wx.stc.STC_MARK_BACKGROUND, "white", "black")
-        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDERSUB, 
+        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDERSUB,
               wx.stc.STC_MARK_BACKGROUND, "white", "black")
-        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDERTAIL, 
+        self.MarkerDefine(wx.stc.STC_MARKNUM_FOLDERTAIL,
               wx.stc.STC_MARK_BACKGROUND, "white", "black")
 
     def OnMarginClick(self, evt):
@@ -104,7 +104,7 @@ class FoldingStyledTextCtrlMix:
 
         if expanding is None:
             expanding = True
-    
+
             # find out if we are folding or unfolding
             for lineNum in range(lineCount):
                 if self.GetFoldLevel(lineNum) & wx.stc.STC_FOLDLEVELHEADERFLAG:
@@ -186,8 +186,9 @@ class BrowseStyledTextCtrlMix:
         functionality for browsing the code.
     """
     def __init__(self, indicator=0):
-        self.handCrs = 1
-        self.stndCrs = 0
+        # wxPython 4 expects wx.Cursor objects, not legacy integer constants.
+        self.handCrs = wx.Cursor(wx.CURSOR_HAND)
+        self.stndCrs = wx.Cursor(wx.CURSOR_IBEAM)
 
         # self.IndicatorSetStyle(indicator, wx.stc.STC_INDIC_PLAIN)
         # self.IndicatorSetForeground(indicator, wx.BLUE)
@@ -221,12 +222,7 @@ class BrowseStyledTextCtrlMix:
         # PRUNE
         # #self.SetCursor(self.handCrs)
         # self.SetLexer(wx.stc.STC_LEX_NULL)
-        print ('start : ' + str(start))
-
-
         self.SetCursor(self.handCrs)
-        self. SetStyle(start, (start+length), wx.TextAttr(wx.BLACK, wx.RED))
-
 
         return start, length
 

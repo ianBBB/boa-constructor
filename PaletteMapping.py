@@ -11,13 +11,11 @@
 # Licence:     GPL
 #----------------------------------------------------------------------
 
-""" Based on core support preferences this module initialises Companion, Model,
+"""Based on core support preferences this module initialises Companion, Model,
 View and Controller classes. It also executes all active Plug-ins.
 
 The namespace of this module is used to evalute code at Design-Time with evalCtrl.
-Hence the needed import * and execfile.
-
-"""
+Hence the needed import * and execfile."""
 
 # XXX This module should be renamed it's function has changed over time
 # XXX Maybe: BoaNamespace/DesignTimeNamespace
@@ -47,6 +45,7 @@ if Preferences.csWxPythonSupport:
     from Companions.ButtonCompanions import *
     from Companions.ListCompanions import *
     from Companions.GizmoCompanions import *
+    from Companions.PhoenixCompanions import *
     from Companions.LibCompanions import *
     if Utils.IsComEnabled():
         from Companions.ComCompanions import *
@@ -106,9 +105,9 @@ if Preferences.pluginPaths:
             continue
 
         pluginBasename = os.path.basename(pluginFilename)
-        
+
         print('executing %s'% os.path.splitext(pluginBasename)[0])
-        
+
         filename = pluginFilename.lower()
         try:
             #exec(open(pluginFilename,'r'))

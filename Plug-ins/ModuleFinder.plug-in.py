@@ -9,11 +9,17 @@ import Preferences
 import Utils
 from Utils import _, resetMinSize
 
+# Legacy find-module type tags used by Utils.find_dotted_module.
+# Keep numeric fallbacks for Python versions where these attrs are absent.
+PKG_DIRECTORY = getattr(imp, 'PKG_DIRECTORY', 5)
+PY_SOURCE = getattr(imp, 'PY_SOURCE', 1)
+C_EXTENSION = getattr(imp, 'C_EXTENSION', 3)
+
 #-------------------------------------------------------------------------------
 
-[wxID_MODULEFINDERDLG, wxID_MODULEFINDERDLGCANCELBTN, 
- wxID_MODULEFINDERDLGOKBTN, wxID_MODULEFINDERDLGSTATICTEXT1, 
- wxID_MODULEFINDERDLGTXTMODULENAME, 
+[wxID_MODULEFINDERDLG, wxID_MODULEFINDERDLGCANCELBTN,
+ wxID_MODULEFINDERDLGOKBTN, wxID_MODULEFINDERDLGSTATICTEXT1,
+ wxID_MODULEFINDERDLGTXTMODULENAME,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(5)]
 
 class ModuleFinderDlg(wx.Dialog):
@@ -79,7 +85,7 @@ class ModuleFinderDlg(wx.Dialog):
         icon = wx.EmptyIcon()
         icon.CopyFromBitmap(Preferences.IS.load('Images/ModuleFinder.png'))
         self.SetIcon(icon)
-        
+
         # adjust sizes for different platforms
         resetMinSize(self)
         self.SetMinSize(wx.Size(309, 106))
@@ -101,9 +107,9 @@ def openModuleFinder(editor):
                 if f is not None:
                     f.close()
                 if filename:
-                    if type == imp.PKG_DIRECTORY:
+                    if type == PKG_DIRECTORY:
                         editor.openOrGotoModule(os.path.join(filename, '__init__.py'))
-                    elif type in (imp.PY_SOURCE, imp.C_EXTENSION):
+                    elif type in (PY_SOURCE, C_EXTENSION):
                         editor.openOrGotoModule(filename)
                 return
     finally:

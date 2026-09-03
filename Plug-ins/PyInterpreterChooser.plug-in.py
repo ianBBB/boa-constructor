@@ -18,13 +18,13 @@ from Utils import _, resetMinSize
 
 PyCoreRegPath = 'SOFTWARE\\Python\\Pythoncore'
 
-[wxID_PYINTERPRETERCHOOSERDLG, wxID_PYINTERPRETERCHOOSERDLGBTNCANCEL, 
- wxID_PYINTERPRETERCHOOSERDLGBTNOK, 
- wxID_PYINTERPRETERCHOOSERDLGGDCINSTALLPATH, 
- wxID_PYINTERPRETERCHOOSERDLGLCINSTALLATIONS, 
- wxID_PYINTERPRETERCHOOSERDLGSTATICTEXT1, 
- wxID_PYINTERPRETERCHOOSERDLGSTATICTEXT2, 
- wxID_PYINTERPRETERCHOOSERDLGTXTPYINTPPATH, 
+[wxID_PYINTERPRETERCHOOSERDLG, wxID_PYINTERPRETERCHOOSERDLGBTNCANCEL,
+ wxID_PYINTERPRETERCHOOSERDLGBTNOK,
+ wxID_PYINTERPRETERCHOOSERDLGGDCINSTALLPATH,
+ wxID_PYINTERPRETERCHOOSERDLGLCINSTALLATIONS,
+ wxID_PYINTERPRETERCHOOSERDLGSTATICTEXT1,
+ wxID_PYINTERPRETERCHOOSERDLGSTATICTEXT2,
+ wxID_PYINTERPRETERCHOOSERDLGTXTPYINTPPATH,
 ] = [wx.NewIdRef() for _init_ctrls in range(8)]
 
 class PyInterpreterChooserDlg(wx.Dialog):
@@ -142,7 +142,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
         self.installPathFilter = self.getInstallPathFilter()
 
         self._init_ctrls(parent)
-        
+
         # adjust sizes for different platforms
         resetMinSize(self)
         self.gdcInstallPath.SetMinSize(wx.Size(242, 146))
@@ -163,7 +163,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
             # Bold the current installation
             li = self.lcInstallations.GetItem(0)
             f = li.GetFont()
-            f.SetWeight(wx.BOLD)
+            f.SetWeight(wx.FONTWEIGHT_BOLD)
             li.SetFont(f)
             self.lcInstallations.SetItem(li)
 
@@ -201,9 +201,9 @@ class PyInterpreterChooserDlg(wx.Dialog):
             pass
 
         if not hasattr(sys, 'frozen'):
-            try: 
+            try:
                 versions.remove(self.sysBinVer)
-            except ValueError: 
+            except ValueError:
                 pass
 
         for version in versions:
@@ -217,7 +217,7 @@ class PyInterpreterChooserDlg(wx.Dialog):
                                       'Python.exe')
             except WindowsError:
                 continue
-            
+
             if os.path.exists(pyIntpPath):
                 try:
                     res.index( (version, pyIntpPath) )
@@ -330,8 +330,8 @@ t:E\x84jd\xc2\x1d$\x80RJ\xc1?\x91\x99\xdb\x91\x91T\xad\xee\xb5\xd6\xab\xfbF\
 \xb7\xd5\x1a\xcb\xb2\xcc\xd3\x8c\xcf\xa8\x871i\x1c\x0b$z7\xb36~\xc8\xdb\xa5[\
 k>\x81\xbfq\xbb\xeb\xc7\xa4\rz\x00\x14e\xdd\xd0Z\x9be\xaf\x8aU\x9c\x04\xf5\
 \x06\xab\x98\xa6y\xe0{\xef\x9b\x88\x18&!\x19\x1aJ\x00\xeap\xac\x06\xc3_\xb6\
-\xf9\x03t}\xfb\xbaG1\'\x18\x00\x00\x00\x00IEND\xaeB`\x82' 
+\xf9\x03t}\xfb\xbaG1\'\x18\x00\x00\x00\x00IEND\xaeB`\x82'
 
 
 Preferences.IS.registerImage('Images/PyInterpreterChooser.png', getPyInterpreterChooserImgData())
-    
+

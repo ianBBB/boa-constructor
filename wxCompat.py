@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
-# try:
-#     from wx import NO_3D as wxNO_3D
-# except ImportError:
-#     from wx import wxNO_3D
+# Compatibility layer for older wx naming conventions
 
-try:
-    from wx import DIALOG_MODAL as wxDIALOG_MODAL
-except ImportError:
-    from wx import wxDIALOG_MODAL
+import wx
 
-try:
-    from wx import DIALOG_MODELESS as wxDIALOG_MODELESS
-except ImportError:
-    from wx import wxDIALOG_MODELESS
+wxDIALOG_MODAL = getattr(wx, 'DIALOG_MODAL', getattr(wx, 'wxDIALOG_MODAL', 1))
+
+wxDIALOG_MODELESS = getattr(wx, 'DIALOG_MODELESS', getattr(wx, 'wxDIALOG_MODELESS', 0))
 
 try:
     from wx.tools.img2py import crunch_data
-except ImportError:
-    from ExternalLib.wxtools import crunch_data
+except (ImportError, AttributeError):
+    try:
+        from ExternalLib.wxtools import crunch_data
+    except (ImportError, AttributeError):
+        def crunch_data(data, compressed=1):
+            return data

@@ -11,13 +11,13 @@
 # Licence:     GPL
 #----------------------------------------------------------------------
 
-""" The model classes represent different types of source code files,
-    Different views can be connected to a model  """
+"""The model classes represent different types of source code files,
+    Different views can be connected to a model"""
 
 print('importing Models.EditorModels')
 
 import os, sys, tempfile
-from io import StringIO
+from io import StringIO, BytesIO
 
 import wx
 
@@ -43,19 +43,19 @@ class EditorModel:
         self.transport = None
         self.prevSwitch = None
 
-        self.views = {}
+        self.views: dict = {}
         self.modified = not saved
-        self.viewsModified = []
-        
+        self.viewsModified: list = []
+
         plugins = {}
         for Plugin in self.plugins:
             plugins[Plugin.name] = Plugin(self)
         self.plugins = plugins
 
     def destroy(self):
-        self.views = ()
-        self.viewsModified = ()
-        self.plugins = ()
+        self.views = {}
+        self.viewsModified = []
+        self.plugins = {}
 
     def updateNameFromTransport(self):
         if self.transport:
@@ -95,8 +95,8 @@ class EditorModel:
 
     def update(self):
         """ Rebuild additional derived structure, called when data is changed """
-        for plugin in self.plugins:
-            self.plugins[plugin].update()
+        for plugin in self.plugins.values():  # type: ignore[union-attr]
+            plugin.update()
 
     def refreshFromViews(self):
         for view in self.viewsModified:
@@ -167,11 +167,11 @@ class CVSFolderModel(FolderModel):
                         pass
                         # maybe add all dirs?
                     elif txtEntry[0] == 'D':
-                        self.entries.insert(dirpos, CVSDir(txtEntry))
+                        self.entries.insert(dirpos, CVSDir(txtEntry))  # type: ignore[name-defined]
                         dirpos = dirpos + 1
                     else:
                         try:
-                            self.entries.append(CVSFile(txtEntry, self.filepath))
+                            self.entries.append(CVSFile(txtEntry, self.filepath))  # type: ignore[name-defined]
                         except IOError: pass
         finally:
             f.close()
@@ -180,6 +180,12 @@ class BasePersistentModel(EditorModel):
     fileModes = ('rb', 'wb')
     saveBmp = 'Images/Editor/Save.png'
     saveAsBmp = 'Images/Editor/SaveAs.png'
+    stripBomOnSave = False
+
+    def __init__(self, data, name, editor, saved):
+        EditorModel.__init__(self, data, name, editor, saved)
+        if self.stripBomOnSave:
+            self.data = Utils.stripUtf8Bom(self.data)
 
     def load(self, notify=True):
         """ Loads contents of data from file specified by self.filename.
@@ -189,6 +195,8 @@ class BasePersistentModel(EditorModel):
             raise Exception(_('No transport for loading'))
 
         self.data = self.transport.load(mode=self.fileModes[0])
+        if self.stripBomOnSave:
+            self.data = Utils.stripUtf8Bom(self.data)
         self.modified = False
         self.saved = False
         self.update()
@@ -201,12 +209,16 @@ class BasePersistentModel(EditorModel):
 
         if self.filename:
             filename = self.transport.assertFilename(self.filename)
+            data = self.data
+            if self.stripBomOnSave:
+                data = Utils.stripUtf8Bom(data)
+                self.data = data
             # this check is to minimise interface change.
             if overwriteNewer:
-                self.transport.save(filename, self.data, mode=self.fileModes[1],
+                self.transport.save(filename, data, mode=self.fileModes[1],
                       overwriteNewer=True)
             else:
-                self.transport.save(filename, self.data, mode=self.fileModes[1])
+                self.transport.save(filename, data, mode=self.fileModes[1])
             self.modified = False
             self.saved = True
 
@@ -214,7 +226,7 @@ class BasePersistentModel(EditorModel):
                 view.saveNotification()
 
             if _vc_hook:
-                _vc_hook.save(filename, self.data, mode=self.fileModes[1])
+                _vc_hook.save(filename, data, mode=self.fileModes[1])
         else:
             raise Exception(_('No filename'))
 
@@ -312,9 +324,14 @@ class BitmapFileModel(PersistentModel):
         updateViews = 0
         if newExt != oldExt:
             updateViews = 1
-            import io
+            if isinstance(self.data, str):
+                img_data = self.data.encode()
+            elif isinstance(self.data, memoryview):
+                img_data = self.data.tobytes()
+            else:
+                img_data = bytes(self.data)
             bmp = wx.BitmapFromImage(wx.ImageFromStream(
-                  io.StringIO(self.data)))
+                BytesIO(img_data)))
             fn = tempfile.mktemp(newExt)
             try:
                 bmp.SaveFile(fn, self.extTypeMap[newExt])
@@ -334,6 +351,8 @@ class BitmapFileModel(PersistentModel):
 
 class SourceModel(BasePersistentModel):
     modelIdentifier = 'Source'
+    stripBomOnSave = True
+
     def __init__(self, data, name, editor, saved):
         BasePersistentModel.__init__(self, data, name, editor, saved)
 
@@ -383,6 +402,7 @@ class TextModel(PersistentModel):
     bitmap = 'Text.png'
     imgIdx = EditorHelper.imgTextModel
     ext = '.txt'
+    stripBomOnSave = True
 
 class UnknownFileModel(TextModel):
     modelIdentifier = 'Unknown'

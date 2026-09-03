@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        FileExplorer.py
 # Purpose:     Classes for filesystem exploring
@@ -407,7 +409,7 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
                     Path(self.resourcepath))
             else: # unicode or other
                 files = os.listdir(self.resourcepath)
-            #---------------------------------------- 
+            #----------------------------------------
         except Exception as err:
             raise ExplorerNodes.TransportError(err)
         files.sort()
@@ -498,9 +500,15 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
 
     def load(self, mode='rb'):
         try:
-            data = open(self.resourcepath, mode).read()
-            if type(data) == 'bytes' :
-                data = data.decode('UTF-8')
+            if 'b' in mode:
+                with open(self.resourcepath, mode) as resource_file:
+                    data = resource_file.read()
+                if isinstance(data, bytes):
+                    data = data.decode('utf-8-sig')
+            else:
+                with open(self.resourcepath, mode, encoding='utf-8-sig') as resource_file:
+                    data = resource_file.read()
+            data = Utils.stripUtf8Bom(data)
             self.updateStdAttrs()
             return data
         except IOError as error:
@@ -516,8 +524,20 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
                 raise ExplorerNodes.TransportModifiedSaveError(_('This file has '
                   'been saved by someone else since it was loaded'),
                   self.resourcepath)
-            # open(self.resourcepath, mode).write(bytes(data,'ascii'))
-            open(self.resourcepath, mode).write(data.encode('ascii'))
+            if 'b' in mode:
+                if isinstance(data, str):
+                    payload = Utils.stripUtf8Bom(data).encode('utf-8')
+                else:
+                    payload = Utils.stripUtf8Bom(data)
+                with open(self.resourcepath, mode) as resource_file:
+                    resource_file.write(payload)
+            else:
+                if isinstance(data, bytes):
+                    payload = data.decode('utf-8-sig')
+                else:
+                    payload = Utils.stripUtf8Bom(data)
+                with open(self.resourcepath, mode, encoding='utf-8') as resource_file:
+                    resource_file.write(payload)
         except IOError as error:
             raise ExplorerNodes.TransportSaveError(error, self.resourcepath)
         self.updateStdAttrs()

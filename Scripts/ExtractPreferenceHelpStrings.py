@@ -1,5 +1,5 @@
-""" Script to read preference help comments and write it to a python source file
-    that gettext type source scanners can pick up """
+"""Script to read preference help comments and write it to a python source file
+    that gettext type source scanners can pick up"""
 
 import os, sys
 

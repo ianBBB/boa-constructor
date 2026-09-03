@@ -12,7 +12,8 @@
 
 import wx
 
-from types import *
+import Preferences
+from types import *  # type: ignore[wildcard-import]
 
 class ClipboardPlus:
     def __init__(self, buffer = [], buffer_size = 10):
@@ -47,9 +48,9 @@ class ClipboardPlus:
     def update(self, param = None):
         if param is None:
             self._smart_insert(self._read() )
-        elif isinstance(param, ListType):
+        elif isinstance(param, list):
             self._buffer = param
-        elif isinstance(param, StringType):
+        elif isinstance(param, str):
             self._smart_insert(param)
 
         # Limit growth
@@ -95,7 +96,7 @@ class ClipboardPlusViewPlugin:
                 dlg.Destroy()
 
 from Views import SourceViews
-SourceViews.EditorStyledTextCtrl.plugins += (ClipboardPlusViewPlugin,)
+SourceViews.EditorStyledTextCtrl.plugins += (ClipboardPlusViewPlugin,)  # type: ignore[operator,assignment]
 
 Preferences.keyDefs['CopyPlus'] = (wx.ACCEL_CTRL|wx.ACCEL_SHIFT, ord('C') , 'Ctrl-Shift-C')
 Preferences.keyDefs['PastePlus'] = (wx.ACCEL_CTRL|wx.ACCEL_SHIFT, ord('V'), 'Ctrl-Shift-V')

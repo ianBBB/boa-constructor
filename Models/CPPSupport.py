@@ -19,14 +19,14 @@ import Preferences, Utils, Plugins
 from Utils import _
 
 from . import EditorHelper
-EditorHelper.imgCPPModel = EditorHelper.imgIdxRange()
+EditorHelper.imgCPPModel = EditorHelper.imgIdxRange()  # type: ignore[attr-defined]
 
 from Models.EditorModels import SourceModel
 class CPPModel(SourceModel):
     modelIdentifier = 'CPP'
     defaultName = 'cpp'
     bitmap = 'Cpp.png'
-    imgIdx = EditorHelper.imgCPPModel
+    imgIdx = EditorHelper.imgCPPModel  # type: ignore[attr-defined]
     ext = '.cxx'
 
     def __init__(self, data, name, editor, saved):
@@ -63,7 +63,7 @@ from Views.SourceViews import EditorStyledTextCtrl
 class CPPSourceView(EditorStyledTextCtrl, CPPStyledTextCtrlMix, FoldingStyledTextCtrlMix):
     viewName = 'Source'
     viewTitle = _('Title')
-    
+
     def __init__(self, parent, model):
         EditorStyledTextCtrl.__init__(self, parent, wxID_CPPSOURCEVIEW,
           model, (), -1)
@@ -86,7 +86,7 @@ class HPPSourceView(CPPSourceView):
         self.pos = self.GetCurrentPos()
         prevVsblLn = self.GetFirstVisibleLine()
 
-        self.SetText(self.model.headerData)
+        self.SetText(self.model.headerData if self.model else '')
         self.EmptyUndoBuffer()
         self.GotoPos(self.pos)
         curVsblLn = self.GetFirstVisibleLine()

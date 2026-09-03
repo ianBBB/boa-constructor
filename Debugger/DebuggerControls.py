@@ -20,6 +20,12 @@ class DebuggerListCtrl(wx.ListView, Utils.ListCtrlSelectionManagerMix):
               style=wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.LC_VRULES | wx.CLIP_CHILDREN)
         Utils.ListCtrlSelectionManagerMix.__init__(self)
 
+    def getSelectionIndex(self):
+        selection = self.getSelection()
+        if isinstance(selection, list):
+            return selection[0] if selection else -1
+        return selection
+
 wxID_STACKVIEW = wx.NewIdRef(count=1)
 class StackViewCtrl(DebuggerListCtrl):
     def __init__(self, parent, flist, debugger):
@@ -78,14 +84,14 @@ class StackViewCtrl(DebuggerListCtrl):
             count = count - 1
 
     def OnStackItemSelected(self, event):
-        selection = self.getSelection()
+        selection = self.getSelectionIndex()
         stacklen = len(self.stack)
         if 0 <= selection < stacklen:
             self.debugger.invalidatePanes()
             self.debugger.updateSelectedPane()
 
     def selectCurrentEntry(self):
-        selection = self.getSelection()
+        selection = self.getSelectionIndex()
         newsel = self.GetItemCount() - 1
         if newsel != selection:
             if selection >= 0:
@@ -102,7 +108,7 @@ class StackViewCtrl(DebuggerListCtrl):
             self.EnsureVisible(newsel)
 
     def OnGotoSource(self, event=None):
-        selection = self.getSelection()
+        selection = self.getSelectionIndex()
         if selection != -1:
             entry = self.stack[selection]
             lineno = entry['lineno']
@@ -292,12 +298,12 @@ class BreakViewCtrl(DebuggerListCtrl):
             idx = idx + 1
 
     def OnGotoSource(self, event=None):
-        sel = self.getSelection()
+        sel = self.getSelectionIndex()
         if sel != -1:
             self.gotoSourceForItem(sel)
 
     def OnGotoSourceRight(self, event):
-        sel = self.getSelection()
+        sel = self.getSelectionIndex()
         if sel != -1:
             self.gotoSourceForItem(sel)
 
@@ -315,7 +321,7 @@ class BreakViewCtrl(DebuggerListCtrl):
             view.GotoLine(bp['lineno'] - 1)
 
     def OnDelete(self, event):
-        sel = self.getSelection()
+        sel = self.getSelectionIndex()
         if sel != -1:
             bp = self.bps[sel]
             filename = bp['filename']
@@ -338,7 +344,7 @@ class BreakViewCtrl(DebuggerListCtrl):
         self.refreshList()
 
     def OnToggleEnabled(self, event):
-        sel = self.getSelection()
+        sel = self.getSelectionIndex()
         if sel != -1:
             bp = self.bps[sel]
             filename = bp['filename']
@@ -357,7 +363,7 @@ class BreakViewCtrl(DebuggerListCtrl):
 
     def getPopupMenu(self):
         wx.Yield()
-        sel = self.getSelection()
+        sel = self.getSelectionIndex()
 
         self.menu.Enable(wxID_BREAKSOURCE, sel != -1)
         self.menu.Enable(wxID_BREAKIGNORE, sel != -1)
@@ -372,7 +378,7 @@ class BreakViewCtrl(DebuggerListCtrl):
         return DebuggerListCtrl.getPopupMenu(self)
 
     def OnEditCondition(self, event):
-        sel = self.getSelection()
+        sel = self.getSelectionIndex()
         if sel != -1:
             bp = self.bps[sel]
             filename = bp['filename']
@@ -397,7 +403,7 @@ class BreakViewCtrl(DebuggerListCtrl):
                 dlg.Destroy()
 
     def OnEditIgnore(self, event):
-        sel = self.getSelection()
+        sel = self.getSelectionIndex()
         if sel != -1:
             bp = self.bps[sel]
             filename = bp['filename']
@@ -482,7 +488,7 @@ class NamespaceViewCtrl(DebuggerListCtrl):
                 row = row + 1
 
     def OnAddAsWatch(self, event):
-        selected = self.getSelection()
+        selected = self.getSelectionIndex()
         if selected != -1:
             name = self.names[selected]
             self.debugger.add_watch(name, self.is_local)
@@ -491,7 +497,7 @@ class NamespaceViewCtrl(DebuggerListCtrl):
         self.debugger.add_watch('', self.is_local)
 
     def OnValueToOutput(self, event):
-        selected = self.getSelection()
+        selected = self.getSelectionIndex()
         if selected != -1:
             name = self.names[selected]
             self.debugger.valueToOutput(name)
@@ -611,7 +617,7 @@ class WatchViewCtrl(DebuggerListCtrl):
         self.debugger.updateSelectedPane(force=1)
 
     def OnEdit(self, event):
-        selected = self.getSelection()
+        selected = self.getSelectionIndex()
 
         if selected != -1:
             name, local = self.watches[selected]
@@ -625,7 +631,7 @@ class WatchViewCtrl(DebuggerListCtrl):
                 dlg.Destroy()
 
     def OnDelete(self, event):
-        selected = self.getSelection()
+        selected = self.getSelectionIndex()
         if selected != -1:
             del self.watches[selected]
             self.DeleteItem(selected)
@@ -636,13 +642,13 @@ class WatchViewCtrl(DebuggerListCtrl):
         self.DeleteAllItems()
 
     def OnExpand(self, event):
-        selected = self.getSelection()
+        selected = self.getSelectionIndex()
         if selected != -1:
             name, local = self.watches[selected]
             self.debugger.requestWatchSubobjects(name, local, selected + 1)
 
     def getPopupMenu(self):
-        sel = self.getSelection()
+        sel = self.getSelectionIndex()
 
         self.menu.Enable(self.editId, sel != -1)
         self.menu.Enable(self.deleteId, sel != -1)
@@ -651,7 +657,7 @@ class WatchViewCtrl(DebuggerListCtrl):
         return DebuggerListCtrl.getPopupMenu(self)
 
     def OnValueToOutput(self, event):
-        selected = self.getSelection()
+        selected = self.getSelectionIndex()
 
         if selected != -1:
             name = self.watches[selected][0]
