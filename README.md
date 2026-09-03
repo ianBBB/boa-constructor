@@ -20,7 +20,7 @@ This project is managed with UV - An extremely fast Python package and project m
 
 Run the appropriate bootstrap script to install UV on your system.
 - Windows: `bootstrap.bat`
-- Linux / MacOS: `bootstrap.sh`
+- Linux / MacOS: `./bootstrap.sh`
 
 Alternatively, follow the UV installation instructions directly:
 - https://docs.astral.sh/uv/getting-started/installation/
@@ -48,7 +48,7 @@ git clone https://github.com/ianBBB/boa-constructor
 #### Simple
 Run the provided script for your platform:
 - Windows: `run.bat`
-- Linux / MacOS: `run.sh`
+- Linux / MacOS: `./run.sh`
 
 #### Manual - Windows/MacOS/Linux
 1. Open a command prompt / terminal window
