@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "wxpython", specifier = "==4.2.2" }]
+requires-dist = [{ name = "wxpython", specifier = ">=4.2.2,<=4.3.1" }]
 
 [[package]]
 name = "six"

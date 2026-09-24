@@ -25,6 +25,12 @@ Run the appropriate bootstrap script to install UV on your system.
 Alternatively, follow the UV installation instructions directly:
 - https://docs.astral.sh/uv/getting-started/installation/
 
+#### Linux Build Dependencies (Fedora / RHEL)
+If compiling wxPython from source (such as on Fedora with newer Python versions):
+```bash
+sudo dnf install gcc-c++ make pkgconf-pkg-config gtk3-devel webkit2gtk4.1-devel mesa-libGL-devel mesa-libGLU-devel libnotify-devel gstreamer1-plugins-base-devel
+```
+
 #### Verifying UV Installation
 1. In a new command prompt / terminal window
 2. Run `uv self version` to confirm UV is installed
