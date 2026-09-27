@@ -24,13 +24,15 @@ def func_tag(x, i):
 
 def instance_filter(cycle):
     for obj, index in cycle:
-        if type(obj) is types.InstanceType:
-            return 1
+        if isinstance(obj, type):
+            continue
+        # Filter out instances (Python 3 doesn't have InstanceType)
+        return 1
     return 0
 
 def run():
     # flag for code which needs to be aware of Cyclops' presence
-    sys.cyclops = 1
+    setattr(sys, 'cyclops', 1)
 
     mod_name = os.path.splitext(sys.argv[1])[0]
     cycle_file = sys.argv[2]
@@ -45,7 +47,7 @@ def run():
             mod = __import__(mod_name)
         except:
             handle_error(f)
-        
+
 
         # Comment out any of the following lines to not add a chaser or filter
         z.chase_type(types.ModuleType, mod_refs, mod_tag)

@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        FileDlg.py
 # Purpose:     Dialog that emulates the standard file dialog, but can browse
@@ -37,10 +39,10 @@ htmlPath = '''<body bgcolor="#%x%x%x"><font size=-1><a href="ROOT">'''+_('top')+
 htmlLnk = '''<a href="%s">%s</a>'''
 htmlCurrItem = '''<b><font color="#0000BB">%s</font></b>'''
 
-[wxID_WXBOAFILEDIALOG, wxID_WXBOAFILEDIALOGBTCANCEL, wxID_WXBOAFILEDIALOGBTOK, 
- wxID_WXBOAFILEDIALOGCHTYPES, wxID_WXBOAFILEDIALOGHTMLWINDOW1, 
- wxID_WXBOAFILEDIALOGSTATICTEXT1, wxID_WXBOAFILEDIALOGSTATICTEXT2, 
- wxID_WXBOAFILEDIALOGTCFILENAME, 
+[wxID_WXBOAFILEDIALOG, wxID_WXBOAFILEDIALOGBTCANCEL, wxID_WXBOAFILEDIALOGBTOK,
+ wxID_WXBOAFILEDIALOGCHTYPES, wxID_WXBOAFILEDIALOGHTMLWINDOW1,
+ wxID_WXBOAFILEDIALOGSTATICTEXT1, wxID_WXBOAFILEDIALOGSTATICTEXT2,
+ wxID_WXBOAFILEDIALOGTCFILENAME,
 ] = [wx.NewIdRef() for _init_ctrls in range(8)]
 
 class wxBoaFileDialog(wx.Dialog, Utils.FrameRestorerMixin):

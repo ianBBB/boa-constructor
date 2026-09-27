@@ -9,7 +9,7 @@
 # Copyright:   (c) 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
-""" Explorer classes for SVN browsing and operations """
+"""Explorer classes for SVN browsing and operations."""
 
 import time, stat, os
 
@@ -22,10 +22,11 @@ from Models import EditorModels, EditorHelper
 from Preferences import IS
 
 import ProcessProgressDlg, Utils
+from Explorers.FileExplorer import FileSysNode as PyFileNode
 
 (wxID_SVNUPDATE, wxID_SVNCOMMIT, wxID_SVNADD, wxID_SVNREMOVE,
  wxID_SVNDIFF, wxID_SVNLOG, wxID_SVNSTATUS, wxID_FSSVNIMPORT, wxID_FSSVNCHECKOUT,
- wxID_FSSVNENV, wxID_SVNTAG, wxID_SVNBRANCH, wxID_SVNLOCK, wxID_SVNUNLOCK, 
+ wxID_FSSVNENV, wxID_SVNTAG, wxID_SVNBRANCH, wxID_SVNLOCK, wxID_SVNUNLOCK,
  wxID_SVNTEST, wxID_SVNRESOLVED, wxID_SVNINFO) = Utils.wxNewIds(17)
 
 svnFolderImgIdx = 6
@@ -35,13 +36,13 @@ class SVNEntriesParser:
     def __init__(self, filename):
         self.entries = []
         self.initParser(filename)
-    
+
     def entry(self, name):
         for entryName, entryAttrs in self.entries:
             if name == entryName:
                 return entryAttrs
         raise KeyError(name+' not found')
-        
+
     def StartElement(self, name, attrs ):
         name = name.encode()
         if name == 'entry' and 'name' in attrs and attrs['name']:
@@ -51,30 +52,30 @@ class SVNEntriesParser:
         from xml.parsers import expat
         parser = expat.ParserCreate()
         parser.StartElementHandler = self.StartElement
-        return parser.Parse(open(filename,'r').read(), 1)
+        return parser.Parse(open(filename,'r').read(), True)
 
 
 def isSVN(filename):
     file = os.path.basename(filename)
     return file.lower() == '.svn' and \
                       os.path.exists(os.path.join(filename, 'entries')) and \
-                      os.path.exists(os.path.join(filename, 'format')) 
+                      os.path.exists(os.path.join(filename, 'format'))
 
 def svnFileLocallyModified(filename, entry):
     """  svnFileLocallyModified -> modified, conflict """
 
     filets = time.asctime(time.gmtime(os.stat(filename)[stat.ST_MTIME]))
-    
+
     try:
         texttime = entry['text-time'].rsplit('.', 1)[0]
-    except KeyError: 
+    except KeyError:
         return False, False
-    
+
     texttime = time.asctime(time.strptime(texttime, '%Y-%m-%dT%H:%M:%S'))
-    
+
     return (texttime != filets, False)
-##    
-##    
+##
+##
 ##    ismerge = timestamp.split('+')
 ##    conflict = ismerge[0] == 'Result of merge'
 ##    filets = time.asctime(time.gmtime(os.stat(filename)[stat.ST_MTIME]))
@@ -124,7 +125,7 @@ class SVNController(ExplorerNodes.Controller):
               (wxID_SVNINFO, 'Info', self.OnInfoSVNItems, '-'),
               #(-1, '-', None, ''),
               #(wxID_SVNLOCK, 'Lock', self.OnLockSVNItems, '-'),
-              #(wxID_SVNUNLOCK, 'Unlock', self.OnUnlockSVNItems, '-'), 
+              #(wxID_SVNUNLOCK, 'Unlock', self.OnUnlockSVNItems, '-'),
         ]
 
         self.setupMenu(self.menu, self.list, self.svnMenuDef)
@@ -153,19 +154,19 @@ class SVNController(ExplorerNodes.Controller):
 
         self.toolbarMenus = [self.svnMenuDef]
 
-        FSSVNFolderNode.images = self.images
+        FSSVNFolderNode.images = self.images  # type: ignore[assignment]
 
     def destroy(self):
         self.svnMenuDef = ()
         self.fileSVNMenuDef = ()
         self.toolbarMenus = ()
         self.images = None
-        FSSVNFolderNode.images = None
+        FSSVNFolderNode.images = None  # type: ignore[assignment]
         self.menu.Destroy()
 
     def getName(self, item):
         name = ExplorerNodes.Controller.getName(self, item)
-        if ' ' in name:
+        if name and ' ' in name:
             return '"%s"' % name
         else:
             return name
@@ -303,11 +304,14 @@ class SVNController(ExplorerNodes.Controller):
 ##        if self.doCvsCmdInDir('import', '', svnDir, ['[MODULE]', 'VENDOR', 'RELEASE']):
 ##            self.list.refreshCurrent()
 
+    def importSVNItems(self):
+        wx.LogWarning('SVN import is not implemented in this plug-in')
+
 
     def checkoutSVNItems(self):
         # Checkouts are called from normal folders not SVN folders
         svnDir = self.list.node.resourcepath
-        if self.doSvnCmdInDir('checkout', '', svnDir, ['--username [USER]', 
+        if self.doSvnCmdInDir('checkout', '', svnDir, ['--username [USER]',
             '--password [PASS]', '[URL]', '[PATH]'], ''):
             self.list.refreshCurrent()
 
@@ -391,6 +395,7 @@ class SVNFolderNode(ExplorerNodes.ExplorerNode):
     def __init__(self, entry, resourcepath, dirpos, parent):
         if entry:
             name = entry['name']
+            self.options = ''
             try:
                 self.revision = entry['committed-rev']
             except KeyError:
@@ -404,7 +409,7 @@ class SVNFolderNode(ExplorerNodes.ExplorerNode):
             except KeyError:
                 self.timestamp = self.tagdate
         else:
-            name=self.revision=self.timestamp=self.tagdate = ''
+            name=self.revision=self.timestamp=self.tagdate=self.options = ''
 
         ExplorerNodes.ExplorerNode.__init__(self, name, resourcepath, None, svnFolderImgIdx, parent)
 
@@ -439,6 +444,7 @@ class SVNFileNode(ExplorerNodes.ExplorerNode):
     def __init__(self, entry, resourcepath, parent):
         if entry:
             name = entry['name']
+            self.options = ''
             try:
                 self.revision = entry['committed-rev']
             except KeyError:
@@ -452,12 +458,12 @@ class SVNFileNode(ExplorerNodes.ExplorerNode):
             except KeyError:
                 self.timestamp = self.tagdate
         else:
-            name=self.revision=self.timestamp=self.tagdate = ''
+            name=self.revision=self.timestamp=self.tagdate=self.options = ''
 
         ExplorerNodes.ExplorerNode.__init__(self, name, resourcepath, None, -1, parent)
 
         self.imgIdx = 0#self.missing and self.missing << 2 \
-        
+
         filename = os.path.abspath(os.path.join(self.resourcepath, '..', name))
         if os.path.exists(filename):
             self.modified, self.conflict = svnFileLocallyModified(filename, entry)
@@ -504,7 +510,7 @@ class SVNFileNode(ExplorerNodes.ExplorerNode):
                 # XXX inefficient
                 conflicts = model.getSVNConflicts()
                 if conflicts:
-                    from Views.EditorViews import SVNConflictsView
+                    from Views.EditorViews import SVNConflictsView  # type: ignore[attr-defined]
                     if SVNConflictsView.viewName not in model.views:
                         resultView = editor.addNewView(SVNConflictsView.viewName,
                               SVNConflictsView)
@@ -545,13 +551,13 @@ class FSSVNFolderNode(ExplorerNodes.ExplorerNode):
 
     def getDescription(self):
         try:
-            return '%s'% (self.root)
+            return '%s'% (self.root)  # type: ignore[attr-defined]
         except AttributeError:
             return ExplorerNodes.ExplorerNode.getDescription(self)
 
     def getTitle(self):
         try:
-            return '%s'% (self.repository)
+            return '%s'% (self.repository)  # type: ignore[attr-defined]
         except AttributeError:
             return ExplorerNodes.ExplorerNode.getTitle(self)
 
@@ -567,7 +573,7 @@ class FSSVNFolderNode(ExplorerNodes.ExplorerNode):
         else:
             parent = os.path.abspath(os.path.join(self.resourcepath, os.path.join('..', '.svn')))
             return FSSVNFolderNode(os.path.basename(parent), parent, self.clipboard,
-                      EditorModels.SVNFolderModel.imgIdx, self)
+                      EditorModels.CVSFolderModel.imgIdx, self)
 
     def createChildNode(self, entry):
         if entry['kind'] == 'dir':
@@ -591,6 +597,8 @@ class FSSVNFolderNode(ExplorerNodes.ExplorerNode):
         p = SVNEntriesParser(os.path.join(self.resourcepath, 'entries'))
         for name, entry in p.entries:
             svnNode = self.createChildNode(entry)
+            if svnNode is None:
+                continue
             if entry['kind'] == 'file':
                 files.append(svnNode)
                 names[svnNode.name] = svnNode
@@ -598,16 +606,16 @@ class FSSVNFolderNode(ExplorerNodes.ExplorerNode):
                 dirs.append(svnNode)
                 names[svnNode.name] = svnNode
 
-        fileEntries = self.parent.openList()
+        fileEntries = self.parent.openList() if self.parent else []
         for entry in fileEntries:
             if entry.name not in names:
-                unaddedNode = SVNUnAddedItem(entry.name, entry.resourcepath, 
+                unaddedNode = SVNUnAddedItem(entry.name, entry.resourcepath,
                       self, entry.isFolderish())
                 if entry.isFolderish():
                     dirs.append(unaddedNode)
                 else:
                     files.append(unaddedNode)
-        
+
         self.entries = dirs + files
 ##            if svnNode:
 ##                res[svnNode.name] = svnNode
@@ -646,7 +654,7 @@ class FSSVNFolderNode(ExplorerNodes.ExplorerNode):
 ##            lst.append(missing)
 ##
 ##        self.entries = lst
-        return self.entries 
+        return self.entries
 
     def open(self, editor):
         return editor.openOrGotoModule(self.resourcepath)

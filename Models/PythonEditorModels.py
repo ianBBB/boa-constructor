@@ -12,7 +12,7 @@
 
 print('importing Models.PythonEditorModels')
 
-import os, sys, pprint, stat, types, tempfile, codecs
+import os, sys, pprint, stat, types, tempfile
 from _thread import start_new_thread
 from time import time, localtime, strftime
 from io import StringIO
@@ -37,7 +37,7 @@ except ImportError:
 
 (imgPyAppModel, imgModuleModel, imgPackageModel, imgSetupModel,
  imgPythonBinaryFileModel,
-) = EditorHelper.imgIdxRange(5)
+) = EditorHelper.imgIdxRange(5)  # type: ignore[misc]
 
 class SourcePseudoFile(Utils.PseudoFileOutStore):
     def readlines(self):
@@ -49,6 +49,7 @@ class ModuleModel(SourceModel):
     bitmap = 'Module.png'
     imgIdx = imgModuleModel
     ext = '.py'
+    fileModes = ('r', 'w')
 
     def __init__(self, data, name, editor, saved, app=None):
         self.app = app
@@ -158,7 +159,7 @@ class ModuleModel(SourceModel):
             if self.useInputStream and self.editor.erroutFrm.inputPage:
                 inpLines = StringIO(
                       self.editor.erroutFrm.inputPage.GetValue()).readlines()
-                
+
             start_new_thread(self.runInThread, (filename, args,
                   Preferences.getPythonInterpreterPath(), inpLines,
                   execStart, execFinish))
@@ -180,24 +181,25 @@ class ModuleModel(SourceModel):
             if self.useInputStream and self.editor.erroutFrm.inputPage:
                 inpLines = StringIO(
                       self.editor.erroutFrm.inputPage.GetValue()).readlines()
-                
+
             cwd = os.path.abspath(os.getcwd())
             # cwd1 = "\""+os.path.abspath(os.getcwd())+ "\""
             newCwd = os.path.dirname(os.path.abspath(filename))
             # newCwd = "\""+os.path.dirname(os.path.abspath(filename))+ "\""
             interp = Preferences.getPythonInterpreterPath()
             basename = os.path.basename(filename)
-            
+
             os.chdir(newCwd)
             try:
                 cmd = '"%s" "%s" %s'%(interp, basename, args)
-    
+
                 from ModRunner import wxPopenModuleRunner
 
                 runner = wxPopenModuleRunner(self.editor.erroutFrm, newCwd)
                 runner.run(cmd, inpLines, execFinish)
 
-                execStart(runner.pid, os.path.basename(interp), basename)
+                if execStart:
+                    execStart(runner.pid, os.path.basename(interp), basename)
 
             finally:
                 if os: os.chdir(cwd)
@@ -281,10 +283,12 @@ class ModuleModel(SourceModel):
         cwd = os.path.abspath(os.getcwd())
         os.chdir(profDir)
         try:
-            profCmd = """"%s" -c "import %s;%s.run('execfile('+chr(34)+%s+chr(34)+')', '%s')" """.strip()
+            stmt = 'exec(compile(open(%r, "rb").read(), %r, "exec"))' % (
+                os.path.basename(filename), os.path.basename(filename))
+            profCmd = '"%s" -c "import %s;%s.runctx(%s, globals(), locals(), %s)"'.strip()
 
-            cmd = profCmd % (repr(Preferences.getPythonInterpreterPath())[1:-1], 
-                  prof, prof, repr(os.path.basename(filename)), repr(statFile)[1:-1])
+            cmd = profCmd % (repr(Preferences.getPythonInterpreterPath())[1:-1],
+                  prof, prof, repr(stmt), repr(statFile))
 
             if hasattr(self, 'app'): app = self.app
             else: app = None
@@ -404,25 +408,25 @@ class ModuleModel(SourceModel):
         srchpath = stdPyPath[:]
         for name in modName.split('.'):
             try:
-                file, path, (ext, mode, tpe) = importlib.abc.MetaPathFinder.find_spec(name, srchpath)
+                file, path, (ext, mode, tpe) = importlib.abc.MetaPathFinder.find_spec(name, srchpath)  # type: ignore[attr-defined]
             except ImportError:
                 if srchpath == stdPyPath:
                     # else search module and app dirs
                     srchpath = self.buildImportSearchPath()
-                    file, path, (ext, mode, tpe) = importlib.abc.MetaPathFinder.find_spec(name, srchpath)
+                    file, path, (ext, mode, tpe) = importlib.abc.MetaPathFinder.find_spec(name, srchpath)  # type: ignore[attr-defined]
                 else:
                     raise
 
             if srchpath == stdPyPath:
                 srchpath = []
 
-            if tpe == importlib.PKG_DIRECTORY:
+            if tpe == importlib.PKG_DIRECTORY:  # type: ignore[attr-defined]
                 srchpath.append(path)
                 continue
-            elif tpe == importlib.PY_SOURCE:
+            elif tpe == importlib.PY_SOURCE:  # type: ignore[attr-defined]
                 # handle from [package.]module import name
                 return path, 'name'
-            if tpe == importlib.PY_COMPILED:
+            if tpe == importlib.PY_COMPILED:  # type: ignore[attr-defined]
                 self.editor.setStatus(_('Compiled file found, check sys.path!'),
                       'Warning', True)
                 raise ImportError(_('Compiled file found'))
@@ -540,6 +544,8 @@ class ModuleModel(SourceModel):
                              specialAttrs=None, report=False):
         if searchPath is None:
             searchPath = self.buildResourceSearchList()
+        if specialAttrs is None:
+            specialAttrs = {}
 
         try:
             f, fn, desc = Utils.find_dotted_module(importName, searchPath)
@@ -547,18 +553,18 @@ class ModuleModel(SourceModel):
             if report:
                 self.editor.setStatus(_('Could not find %s')%importName, 'Error')
             return False
-        
+
         if f is None:
             return False
-        
+
         f.close()
-        
+
         from . import Controllers
         Model, main = Controllers.identifyFile(fn)
         for ResourceClass in Controllers.resourceClasses:
             if issubclass(Model, ResourceClass):
                 try:
-                    imageMod, rootName, rootMod = self.loadResource(importName, 
+                    imageMod, rootName, rootMod = self.loadResource(importName,
                                                                     searchPath)
                     resources[importName] = imageMod
                     specialAttrs[rootName] = rootMod
@@ -572,7 +578,7 @@ class ModuleModel(SourceModel):
         if report:
             self.editor.setStatus(_('%s is not a valid Resource Module')%importName, 'Error')
         return False
-    
+
     def readResources(self, mod, cls, specialAttrs):
         resources = {}
         searchPath = self.buildResourceSearchList()
@@ -612,16 +618,16 @@ class ImportRelationshipMix:
         relationships = {}
 
         tot = len(modules)
-        self.editor.statusBar.progress.SetRange(tot)
+        self.editor.statusBar.progress.SetRange(tot)  # type: ignore[attr-defined]
         try:
             prog = 0
             totLOC = 0
             classCnt = 0
             # XXX Rewrite in terms of transport
             for module in modules:
-                self.editor.statusBar.progress.SetValue(prog)
+                self.editor.statusBar.progress.SetValue(prog)  # type: ignore[attr-defined]
                 prog = prog + 1
-                self.editor.setStatus('Parsing '+module+'...')
+                self.editor.setStatus('Parsing '+module+'...')  # type: ignore[attr-defined]
                 #module = self.modules[moduleName]
                 #filename = self.normaliseModuleRelativeToApp(module[2])
                 if module[:7] != 'file://':
@@ -636,7 +642,7 @@ class ImportRelationshipMix:
                     data = f.read()
                     f.close()
                     name = os.path.splitext(os.path.basename(module))[0]
-                    model = ModuleModel(data, name, self.editor, 1)
+                    model = ModuleModel(data, name, self.editor, 1)  # type: ignore[attr-defined]
                     relationships[name] = model.getModule() #.imports
 
                 totLOC = totLOC + model.getModule().loc
@@ -644,8 +650,8 @@ class ImportRelationshipMix:
 
             #print 'Project LOC: %d,\n%d classes in %d modules.'%(totLOC, classCnt, len(modules))
         finally:
-            self.editor.statusBar.progress.SetValue(0)
-            self.editor.statusBar.setHint('')
+            self.editor.statusBar.progress.SetValue(0)  # type: ignore[attr-defined]
+            self.editor.statusBar.setHint('')  # type: ignore[attr-defined]
         return relationships
 
 class PackageModel(ModuleModel, ImportRelationshipMix):
@@ -1085,7 +1091,7 @@ class BaseAppModel(ClassModel, ImportRelationshipMix):
         try:
             return self.editor.openOrGotoModule(self.moduleFilename(name), self)
         except TransportError as err:
-            if str(err) == 'Unhandled transport' and err[1][0] == 'none':
+            if str(err) == 'Unhandled transport' and err.args[1][0] == 'none':
                 if wx.MessageBox(_('Unsaved file no longer open in the Editor.\n'
                       'Remove it from application modules ?'), _('Missing file'),
                       wx.YES_NO | wx.ICON_QUESTION) == wx.YES:
@@ -1111,7 +1117,7 @@ class BaseAppModel(ClassModel, ImportRelationshipMix):
 
             if prot == 'zip':
                 return relFilename
-            
+
             normedpath = os.path.normpath(os.path.join(os.path.dirname(appFilename),
                   relFilename))
             if prot == 'file':
@@ -1166,7 +1172,7 @@ class SetupModuleModel(ModuleModel):
     def getPageName(self):
         return 'setup (%s)' % os.path.basename(os.path.dirname(self.filename))
 
-   
+
 ##    def saveAs(self, filename):
 ##        # catch image type changes
 ##        newExt = os.path.splitext(filename)[1].lower()
@@ -1204,9 +1210,7 @@ def identifySource(source):
         The logic is a copy paste from above func """
     for line in source:
         if line:
-            line_start=line[:3]
-            if line_start == (codecs.BOM_UTF8):
-                line = line[len(codecs.BOM_UTF8):]
+            line = Utils.stripUtf8Bom(line)
 
             if line[0] != '#':
                 return ModuleModel, ''
@@ -1217,7 +1221,7 @@ def identifySource(source):
                 return headerInfo
         else:
             return ModuleModel, ''
-    return ModuleModel, ''    
+    return ModuleModel, ''
 
 
 #-------------------------------------------------------------------------------

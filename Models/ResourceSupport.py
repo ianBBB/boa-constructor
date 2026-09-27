@@ -21,8 +21,8 @@ from wx.lib.anchors import LayoutAnchors
 
 from Utils import _
 
-[wxID_RESOURCESELECTDLG, wxID_RESOURCESELECTDLGBTNCANCEL, 
- wxID_RESOURCESELECTDLGBTNFILEDLG, wxID_RESOURCESELECTDLGBTNOK, 
+[wxID_RESOURCESELECTDLG, wxID_RESOURCESELECTDLGBTNCANCEL,
+ wxID_RESOURCESELECTDLGBTNFILEDLG, wxID_RESOURCESELECTDLGBTNOK,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(4)]
 
 class ResourceSelectDlg(wx.Dialog):
@@ -157,12 +157,12 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
     def __init__(self, parent, model, listStyle=wx.LC_ICON | wx.LC_ALIGN_TOP,
                                       imgLstStyle=wx.IMAGE_LIST_NORMAL):
         EditorViews.ListCtrlView.__init__(self, parent, model, listStyle,
-          ((_('Goto line'), self.OnGoto, self.gotoLineBmp, ''), 
-#           ('Move up', self.OnMoveUp, self.moveUpBmp, ''), 
-#           ('Move down', self.OnMoveDown, self.moveDownBmp, ''), 
-#           ('Delete image', self.OnDeleteImage, self.deleteBmp, ''), 
+          ((_('Goto line'), self.OnGoto, self.gotoLineBmp, ''),
+#           ('Move up', self.OnMoveUp, self.moveUpBmp, ''),
+#           ('Move down', self.OnMoveDown, self.moveDownBmp, ''),
+#           ('Delete image', self.OnDeleteImage, self.deleteBmp, ''),
 ##           ('Add image', self.OnAddImage, '-', ''),
-#           ('Export image', self.OnExportImage, '-', ''), 
+#           ('Export image', self.OnExportImage, '-', ''),
            ), 0)
 
         self.images = wx.ImageList(*self.imageSize)
@@ -177,6 +177,8 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
 
     def refreshCtrl(self):
         EditorViews.ListCtrlView.refreshCtrl(self)
+        if not self.model:
+            return
 
         self.functions = PyResourceModuleExec(self.model.data)
         self.imageSrcInfo = []
@@ -197,7 +199,7 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
                     bmpFunctionStart = m.functions['get%sBitmap'%name].start
                     firstDataLine = m.source[m.functions['get%sData'%name].start]
                     compressed = firstDataLine.strip().startswith('return zlib.decompress')
-                    bmp = wx.ArtProvider.GetBitmap('get%sBitmap'%name, size=self.imageSize)
+                    bmp = wx.ArtProvider.GetBitmap('get%sBitmap'%name, size=self.imageSize)  # type: ignore[arg-type]
                     idx = self.images.Add(bmp)
                     self.InsertImageStringItem(idx, name, idx)
                     self.imageSrcInfo.append(
@@ -207,7 +209,7 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
             wx.ArtProvider.Pop()
 
     def OnGoto(self, event):
-        if self.selected != -1:
+        if self.selected != -1 and self.model:
             srcView = self.model.getSourceView()
             srcView.focus()
             lineNo = self.imageSrcInfo[self.selected][1][0]
@@ -219,7 +221,7 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
 ##        if fn.find('://') != -1:
 ##            fn = fn.split('://', 1)[1]
 ##        ConvertImgToPy
-        
+
 ##        dlg =wx.DirDialog(self.model.editor)
 ##        try:
 ##            if dlg.ShowModal() != wx.ID_OK:
@@ -239,13 +241,13 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
     def OnExportImage(self, event):
         if self.selected != -1:
             name = self.imageSrcInfo[self.selected][0]
-            dlg = wx.FileDialog(self, 'Save image', '.', name+'.png', 
-                  ';'.join(['*%s'%e for e in extTypeMap]), wx.SAVE)
+            dlg = wx.FileDialog(self, 'Save image', '.', name+'.png',
+                  ';'.join(['*%s'%e for e in extTypeMap]), wx.FD_SAVE)
             try:
                 if dlg.ShowModal() == wx.ID_OK:
                     path = dlg.GetPath()
                     ext = os.path.splitext(path)[-1].lower()
-                    if ext in extTypeMap:
+                    if ext in extTypeMap and self.functions:
                         func = self.functions.imageFunctions['get%sBitmap'%name]()
                         func.SaveFile(path, extTypeMap[ext])
                     else:
@@ -261,22 +263,22 @@ class PyResourceImagesView(EditorViews.ListCtrlView):
 
     def OnDeleteImage(self, event):
         pass
-            
+
 
 class PyResourceImagesSelectionView(PyResourceImagesView):
     docked = False
     imageSize = (16, 16)
     def OnGoto(self, event):
         if self.selected != -1:
-            self.GetParent().EndModal(wx.ID_OK)
+            self.GetParent().EndModal(wx.ID_OK)  # type: ignore[attr-defined]
 
 class PyResourceBitmapModel(PythonEditorModels.ModuleModel):
     modelIdentifier = 'PyImgResource'
     bitmap = 'PyResBitmap.png'
-    imgIdx = EditorHelper.imgPyResBitmap = EditorHelper.imgIdxRange()
+    imgIdx = EditorHelper.imgPyResBitmap = EditorHelper.imgIdxRange()  # type: ignore[attr-defined]
 
     def updateData(self, data, subImage):
-        from wxCompat import crunch_data
+        from wxCompat import crunch_data  # type: ignore[attr-defined]
         crunched = StringIO(crunch_data(data, subImage['zip'])).readlines()
         if subImage['zip']:
             crunched[-1].rstrip()
@@ -318,7 +320,8 @@ def ConvertImgToPy(imgPath, editor):
             pyResPath = pyResPath.split('://', 1)[1]
 
         # snip script usage, leave only options
-        docs = img2py.__doc__[img2py.__doc__.find('Options:')+11:]
+        docs = img2py.__doc__ or ''
+        docs = docs[docs.find('Options:')+11:]
 
         cmdLine = zopt+'-n %s'%(funcName)
         if os.path.exists(pyResPath):
@@ -346,12 +349,14 @@ def ConvertImgToPy(imgPath, editor):
         import sourceconst
         header = (sourceconst.defSig%{'modelIdent':'PyImgResource', 'main':''}).strip()
         if os.path.exists(pyResPath):
-            src = open(pyResPath, 'r').readlines()
+            with open(pyResPath, 'r', encoding='utf-8-sig') as resource_file:
+                src = resource_file.readlines()
             if not (src and src[0].startswith(header)):
                 src.insert(0, header+'\n')
                 src.insert(1, '\n')
-                open(pyResPath, 'w').writelines(src)
-    
+                with open(pyResPath, 'w', encoding='utf-8') as resource_file:
+                    resource_file.writelines(src)
+
             m, c = editor.openOrGotoModule(pyResPath)
             c.OnReload(None)
         else:

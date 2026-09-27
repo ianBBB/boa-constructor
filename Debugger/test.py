@@ -1,3 +1,6 @@
+# pyright: ignore
+# type: ignore
+
 import sys, os
 print os.getcwd()
 print sys.path

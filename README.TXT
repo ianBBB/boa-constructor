@@ -6,7 +6,7 @@ versions of Python and wxPython which are no longer supported. Boa underwent a m
 Python 2.7 was released. This work is to develop the next iteration of the software for Python 3.
 
 The description of Boa Constructor given below is from the original README, retained here for historic continuity.
-Please note that many of the features mentioned below are not yet working under Python 3 as this is still
+Please note that some of the features mentioned below are not yet working under Python 3 as this is still
  a work in progress. Despite this, I have added my versioning and copyright message.
  =================================================
 
@@ -16,7 +16,7 @@ Boa aims to be a simple Delphi for wxPython.
 It is an IDE for Python development including visual wxPython frame
 design, object browsers, documentation generation, debugging,
 source control (CVS, SVN) and much more.
-The Boa IDE also integrates with other Python technologies like 
+The Boa IDE also integrates with other Python technologies like
 Distutils, Zope, PyChecker, BicycleRepairMain.
 
 If you are new to Boa and wxPython, work through the Getting Started Guide
@@ -25,20 +25,30 @@ and Tutorial.
 Look at Changes.txt for the latest improvements.
 Look at Bugs.txt for info about problems & bugs.
 
-P.S. The short name is Boa, *not* BOA. 
+P.S. The short name is Boa, *not* BOA.
 Boa is not an acronymn, it's the name of a huge Python ;)
 
 Licence:
 GPL
 
 Version:
-0.8.0 - Beta
+0.8.0*
 Requires wxPython 4.2 or higher, Python 3.9 or higher.
 
 
+Current build notes:
+- Added a new "Phoenix" palette page for newer wxPython controls.
+- Added module families include wx.dataview, wx.adv, wx.ribbon, wx.aui and wx.propgrid (where available).
+- Added utility components include wx.aui.AuiManager and wx.adv.NotificationMessage.
+- Palette "Boa or selected component help" action now supports help lookups for module-qualified wx class names.
+
+
 Copyright:
-Ian Baker 2022 - 2024
+Ian Baker 2022 - 2026
 ibak6837@bigpond.net.au
+
+Ray Schumacher 2003 - 2026
+https://github.com/rjsdotorg
 
 Chaiwat Suttipongsakul 2012 - 2014
 cwt@bashell.com

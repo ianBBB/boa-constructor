@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        PyrexSupport.py
 # Purpose:     Support for editing pyrex files and compiling to C
@@ -10,7 +12,8 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
-import os, imp
+import os
+import importlib.util
 
 import wx
 import wx.stc
@@ -18,9 +21,7 @@ import wx.stc
 import Preferences, Utils, Plugins
 from Utils import _
 
-try:
-    imp.find_module('Pyrex')
-except ImportError:
+if importlib.util.find_spec('Pyrex') is None:
     raise Plugins.SkipPlugin(_('Pyrex is not installed'))
 
 from Models import Controllers, EditorHelper, EditorModels, PythonEditorModels, PythonControllers

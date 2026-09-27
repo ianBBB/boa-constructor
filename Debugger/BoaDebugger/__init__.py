@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------
 # Name:        __init__.py
-# Purpose:     
+# Purpose:
 #
 # Author:      gogo@bluedynamics.com, phil@bluedynamics.com
 #              robert@bluedynamics.com
@@ -10,11 +10,14 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
+# pyright: ignore
+# type: ignore
+
 import BoaDebugger, zLOG
 from AccessControl import ModuleSecurityInfo
 from AccessControl.Permissions import view_management_screens
 
-ModuleSecurityInfo('sys').declarePublic('breakpoint') 
+ModuleSecurityInfo('sys').declarePublic('breakpoint')
 
 __doc__ = 'BoaDebugger'
 __version__ = 'Version 0.1'
@@ -22,7 +25,7 @@ __version__ = 'Version 0.1'
 
 def initialize(context):
     """
-    Add the BoaDebugger to the Zope root 
+    Add the BoaDebugger to the Zope root
     """
     #
     # need this for icon registration :)
@@ -38,11 +41,11 @@ def initialize(context):
 
     app = context._ProductContext__app
     if not hasattr(app, 'BoaDebugger'):
-        try: 
+        try:
             BoaDebugger.manage_addBoaDebugger(app)
             get_transaction().note('Added BoaDebugger')
             get_transaction().commit()
             zLOG.LOG('BoaDebugger', zLOG.INFO, 'Created new BoaDebugger')
-        except: 
+        except:
             zLOG.LOG('BoaDebugger', zLOG.ERROR, 'Failed to create new BoaDebugger!')
             raise

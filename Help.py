@@ -4,11 +4,14 @@
 #
 # Author:      Riaan Booysen
 #
-# Created:     1999, rewritten 2001
+# Created:     1999, rewritten 2026
 # RCS-ID:      $Id$
 # Copyright:   (c) 1999 - 2007 Riaan Booysen
 # Licence:     GPL
 #----------------------------------------------------------------------
+# pyright: ignore
+# type: ignore
+
 #Boa:FramePanel:PyDocHelpPage
 
 import os, sys, marshal, string, socket, webbrowser
@@ -90,7 +93,6 @@ class PyDocHelpPage(wx.Panel):
         self.stxStatus.Bind(wx.EVT_LEFT_DOWN, self.OnStxstatusLeftDown)
 
     def __init__(self, parent, helpFrame):
-        print('creating new PyDocPage')
         self.runServer = False
         self.runServer = helpFrame.pdRunServer
 
@@ -263,7 +265,39 @@ def showMainHelp(bookname):
 
 
 def showCtrlHelp(wxClass, method=''):
-    getHelpController().Display(wxClass).ExpandCurrAsWxClass(method)
+    ctrl_name = ''
+    terms = []
+
+    # Accept both class objects and legacy string names.
+    if hasattr(wxClass, '__name__'):
+        ctrl_name = wxClass.__name__
+        mod_name = getattr(wxClass, '__module__', '')
+        if mod_name and mod_name.startswith('wx'):
+            terms.append('%s.%s' % (mod_name, ctrl_name))
+        terms.append(ctrl_name)
+    else:
+        term = str(wxClass)
+        terms.append(term)
+        if '.' in term:
+            ctrl_name = term.split('.')[-1]
+            terms.append(ctrl_name)
+        else:
+            ctrl_name = term
+
+    # Keep order but remove duplicates.
+    dedup_terms = []
+    for term in terms:
+        if term and term not in dedup_terms:
+            dedup_terms.append(term)
+
+    # Displaying a class term already opens its class page.  Only an explicit
+    # method request should add an HTML anchor; class-name anchors generally do
+    # not exist in wxPython's generated documentation.
+    anchor = method
+    hc = getHelpController()
+    for term in dedup_terms:
+        hc.Display(term).ExpandCurrAsWxClass(anchor)
+        return
 
 def showHelp(filename):
     getHelpController().Display(filename)
@@ -271,7 +305,7 @@ def showHelp(filename):
 def showContextHelp(word):
 # not useful atm
 ##    if word.startswith('EVT_'):
-##        word = 'wx%sEvent' % ''.join([s.lower().capitalize() 
+##        word = 'wx%sEvent' % ''.join([s.lower().capitalize()
 ##                                      for s in word[4:].split('_')])
 ##    elif word in sys.builtin_module_names:
 ##        word = '%s (built-in module)'%word
@@ -485,9 +519,11 @@ class wxHelpFrameEx:
 
     def ExpandCurrAsWxClass(self, anchor):
         self.navPages.SetSelection(0)
-        self.contentsTree.Expand(self.contentsTree.GetSelection())
+        selection = self.contentsTree.GetSelection()
+        if selection.IsOk():
+            self.contentsTree.Expand(selection)
         page = self.html.GetOpenedPage()
-        if anchor:
+        if anchor and page:
             self.controller.Display('%s#%s' % (page, str.lower(anchor)))
 
     def OnQuitHelp(self, event):
@@ -607,7 +643,7 @@ def delHelp():
             if hasattr(_hc, 'server') and _hc.server and not _hc.server.quit:
                 _hc.server.quit = 1
                 _hc.server.server_close()
-    
+
             f = _hc.GetFrame()
             if f:
                 # f.PopEventHandler().Destroy()   # orig

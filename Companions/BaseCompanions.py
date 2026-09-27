@@ -11,14 +11,15 @@
 # Licence:     GPL
 #-------------------------------------------------------------------------------
 
-""" Classes that 'shadow' controls.
+"""Classes that 'shadow' controls.
 
 They implement design time behaviour and interfaces. Also used for inspectable
-objects """
+objects"""
 
 print('importing Companions')
 
 import copy
+from typing import Any
 
 import wx
 # from wxCompat import wxNO_3D
@@ -69,14 +70,14 @@ class DesignTimeCompanion(Companion):
     suppressWindowId = False
     def __init__(self, name, designer):
         Companion.__init__(self, name)
-        self.parentCompanion = None
+        self.parentCompanion: Any = None
         self.designer = designer
         # Design time window id
         self.dId = wx.NewIdRef(count=1)
         self.id = None
 
         # Property editors for properties whose types cannot be deduced
-        self.editors = {'Class': ClassConstrPropEdit}
+        self.editors: dict[str, Any] = {'Class': ClassConstrPropEdit}
         # Enumerated values for the options of a property editor
         self.options = {}
         # Enumerated display values for the options of a property editor
@@ -114,8 +115,9 @@ class DesignTimeCompanion(Companion):
         self.resourceImports = []
 
         # Parse objects for reading in and writing out source
-        self.textConstr = None
+        self.textConstr: Any = None
         self.textPropList = []
+        self.control: Any = None
         self.textEventList = []
         self.textCollInitList = []
 
@@ -337,7 +339,7 @@ class DesignTimeCompanion(Companion):
         c = self.constructor()
         #constructor
         if name in c:
-            defVal = self.designTimeSource()[c[name]]
+            defVal = self.designTimeSource()[c[name]]  # type: ignore[attr-defined]
             self.textConstr.params[c[name]] = defVal
         #property
         elif name not in self.dontPersistProps():
@@ -356,12 +358,12 @@ class DesignTimeCompanion(Companion):
         #constructor
         if name in c:
             try:
-                dts = self.designTimeSource()
+                dts = self.designTimeSource()  # type: ignore[attr-defined]
             except TypeError:
                 return True
             else:
                 if c[name] in dts:
-                    defVal = self.designTimeSource()[c[name]]
+                    defVal = self.designTimeSource()[c[name]]  # type: ignore[attr-defined]
                     return self.textConstr.params[c[name]] == defVal
                 else:
                     return True
@@ -811,7 +813,7 @@ class UtilityDTC(DesignTimeCompanion):
         """ Return a dictionary of parameters for the constructor of a wxPython
             control. e.g. {'name': 'Frame1', etc) """
 
-        dts = self.designTimeSource()
+        dts = self.designTimeSource()  # type: ignore[attr-defined]
 
         for param in list(dts.keys()):
             dts[param] = self.eval(dts[param])
@@ -851,19 +853,19 @@ class WindowDTC(WindowConstr, ControlDTC):
         self.options['Centered'] = [None, wx.HORIZONTAL, wx.VERTICAL, wx.BOTH]
         self.names['Centered'] = {'None': None, 'wx.HORIZONTAL': wx.HORIZONTAL,
                                   'wx.VERTICAL': wx.VERTICAL, 'wx.BOTH': wx.BOTH}
-        self.options['WindowVariant'] = [wx.WINDOW_VARIANT_NORMAL, 
-              wx.WINDOW_VARIANT_SMALL, wx.WINDOW_VARIANT_MINI, 
+        self.options['WindowVariant'] = [wx.WINDOW_VARIANT_NORMAL,
+              wx.WINDOW_VARIANT_SMALL, wx.WINDOW_VARIANT_MINI,
               wx.WINDOW_VARIANT_LARGE]
         self.names['WindowVariant'] = {
-            'wx.WINDOW_VARIANT_NORMAL': wx.WINDOW_VARIANT_NORMAL, 
-            'wx.WINDOW_VARIANT_SMALL':  wx.WINDOW_VARIANT_SMALL, 
-            'wx.WINDOW_VARIANT_MINI': wx.WINDOW_VARIANT_MINI, 
+            'wx.WINDOW_VARIANT_NORMAL': wx.WINDOW_VARIANT_NORMAL,
+            'wx.WINDOW_VARIANT_SMALL':  wx.WINDOW_VARIANT_SMALL,
+            'wx.WINDOW_VARIANT_MINI': wx.WINDOW_VARIANT_MINI,
             'wx.WINDOW_VARIANT_LARGE': wx.WINDOW_VARIANT_LARGE}
-        self.options['BackgroundStyle'] = [wx.BG_STYLE_SYSTEM, 
+        self.options['BackgroundStyle'] = [wx.BG_STYLE_SYSTEM,
               wx.BG_STYLE_COLOUR, wx.BG_STYLE_CUSTOM]
         self.names['BackgroundStyle'] = {
-            'wx.BG_STYLE_SYSTEM': wx.BG_STYLE_SYSTEM, 
-            'wx.BG_STYLE_COLOUR': wx.BG_STYLE_COLOUR, 
+            'wx.BG_STYLE_SYSTEM': wx.BG_STYLE_SYSTEM,
+            'wx.BG_STYLE_COLOUR': wx.BG_STYLE_COLOUR,
             'wx.BG_STYLE_CUSTOM': wx.BG_STYLE_CUSTOM}
         self.triggers.update({'Size'     : self.SizeUpdate,
                               'Position' : self.PositionUpdate})
@@ -872,11 +874,11 @@ class WindowDTC(WindowConstr, ControlDTC):
 
         self.windowStyles = ['wx.CAPTION', 'wx.MINIMIZE_BOX', 'wx.MAXIMIZE_BOX',
             'wx.SIMPLE_BORDER', 'wx.DOUBLE_BORDER',
-            'wx.SUNKEN_BORDER', 'wx.RAISED_BORDER', 'wx.STATIC_BORDER', 
+            'wx.SUNKEN_BORDER', 'wx.RAISED_BORDER', 'wx.STATIC_BORDER',
             'wx.TRANSPARENT_WINDOW', 'wx.TAB_TRAVERSAL',
-            'wx.WANTS_CHARS', 'wx.NO_FULL_REPAINT_ON_RESIZE', 'wx.VSCROLL', 
+            'wx.WANTS_CHARS', 'wx.NO_FULL_REPAINT_ON_RESIZE', 'wx.VSCROLL',
             'wx.HSCROLL', 'wx.CLIP_CHILDREN', 'wx.NO_BORDER', 'wx.ALWAYS_SHOW_SB']
-        
+
         self.mutualDepProps = ['Value', 'Title', 'Label']
 
         #import UtilCompanions
@@ -1262,7 +1264,7 @@ class CollectionDTC(DesignTimeCompanion):
         self.index = self.getCount()
         if method is None:
             method = self.insertionMethod
-        src = self.designTimeSource(self.index, method)        
+        src = self.designTimeSource(self.index, method)  # type: ignore[attr-defined]
         src.update(srcParams)
         collItemInit = methodparse.CollectionItemInitParse(None,
           self.sourceObjName, method, src)

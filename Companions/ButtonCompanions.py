@@ -41,7 +41,7 @@ class ButtonDTC(WindowDTC):
 
     def constructor(self):
         return {'Position': 'pos', 'Size': 'size', 'Label': 'label',
-                'Style': 'style', 'Name': 'name', 'Id': 'id'} 
+                'Style': 'style', 'Name': 'name', 'Id': 'id'}
 
     def properties(self):
         props = WindowDTC.properties(self)
@@ -87,7 +87,7 @@ class ButtonDTC(WindowDTC):
 
     def GetId(self, x):
         return self.textConstr.params['id']
-    
+
     def SetId(self, value):
         self.textConstr.params['id'] = value
 
@@ -245,13 +245,13 @@ class SpinCtrlDTC(SpinButtonDTC):
 
 
 class GenButtonDTC(WindowDTC):
-    if wx.VERSION[:2] >= (2, 7):
+    if wx.VERSION[:2] >= (2, 7):  # type: ignore[operator]
         handledConstrParams = ('parent', 'id')
         windowIdName = 'id'
     else:
         handledConstrParams = ('parent', 'ID')
         windowIdName = 'ID'
-        
+
     def __init__(self, name, designer, parent, ctrlClass):
         WindowDTC.__init__(self, name, designer, parent, ctrlClass)
         self.editors['UseFocusIndicator'] = BoolPropEdit
@@ -319,7 +319,7 @@ class GenBitmapTextButtonDTC(GenBitmapButtonDTC):
 
 class GenToggleButtonMix:
     def __init__(self):
-        self.editors['Toggle'] = BoolPropEdit
+        self.editors['Toggle'] = BoolPropEdit  # type: ignore[attr-defined]
 
 class GenToggleButtonDTC(GenButtonDTC, GenToggleButtonMix):
     def __init__(self, name, designer, parent, ctrlClass):
@@ -358,15 +358,15 @@ commandCategories.append('ColourPickerEvent')
 class ColourPickerCtrlDTC(PickerCtrlDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         PickerCtrlDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.CLRP_DEFAULT_STYLE', 'wx.CLRP_USE_TEXTCTRL', 
+        self.windowStyles = ['wx.CLRP_DEFAULT_STYLE', 'wx.CLRP_USE_TEXTCTRL',
                              'wx.CLRP_SHOW_LABEL'] + self.windowStyles
         self.editors['Bitmap'] = ColPropEdit
         self.ctrlDisabled = True
-        
+
     def events(self):
         return PickerCtrlDTC.events(self) + ['ColourPickerEvent']
     def constructor(self):
-        return {'Position': 'pos', 'Size': 'size', 'Style': 'style', 
+        return {'Position': 'pos', 'Size': 'size', 'Style': 'style',
                 'Colour': 'col', 'Name': 'name'}
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
@@ -382,7 +382,7 @@ commandCategories.append('FontPickerEvent')
 class FontPickerCtrlDTC(PickerCtrlDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         PickerCtrlDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.FNTP_DEFAULT_STYLE', 'wx.FNTP_USE_TEXTCTRL', 
+        self.windowStyles = ['wx.FNTP_DEFAULT_STYLE', 'wx.FNTP_USE_TEXTCTRL',
           'wx.FNTP_FONTDESC_AS_LABEL', 'wx.FNTP_USEFONT_FOR_LABEL'] + self.windowStyles
         self.editors['Font'] = FontPropEdit
         self.ctrlDisabled = True
@@ -390,7 +390,7 @@ class FontPickerCtrlDTC(PickerCtrlDTC):
     def events(self):
         return PickerCtrlDTC.events(self) + ['FontPickerEvent']
     def constructor(self):
-        return {'Position': 'pos', 'Size': 'size', 'Style': 'style', 
+        return {'Position': 'pos', 'Size': 'size', 'Style': 'style',
                 'Font': 'initial', 'Name': 'name'}
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
@@ -407,7 +407,7 @@ commandCategories.append('DirPickerEvent')
 class DirPickerCtrlDTC(PickerCtrlDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         PickerCtrlDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.DIRP_DEFAULT_STYLE', 'wx.DIRP_USE_TEXTCTRL', 
+        self.windowStyles = ['wx.DIRP_DEFAULT_STYLE', 'wx.DIRP_USE_TEXTCTRL',
           'wx.DIRP_DIR_MUST_EXIST', 'wx.DIRP_CHANGE_DIR'] + self.windowStyles
         self.editors['Message'] = StrConstrPropEdit
         self.ctrlDisabled = True
@@ -415,7 +415,7 @@ class DirPickerCtrlDTC(PickerCtrlDTC):
     def events(self):
         return PickerCtrlDTC.events(self) + ['DirPickerEvent']
     def constructor(self):
-        return {'Position': 'pos', 'Size': 'size', 'Style': 'style', 
+        return {'Position': 'pos', 'Size': 'size', 'Style': 'style',
                 'Path': 'path', 'Message': 'message', 'Name': 'name'}
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
@@ -426,14 +426,14 @@ class DirPickerCtrlDTC(PickerCtrlDTC):
                 'message': "'Select a folder'",
                 'name': repr(self.name)}
 
- 
+
 EventCategories['FilePickerEvent'] = ('wx.EVT_FILEPICKER_CHANGED',)
 commandCategories.append('FilePickerEvent')
 class FilePickerCtrlDTC(PickerCtrlDTC):
     def __init__(self, name, designer, parent, ctrlClass):
         PickerCtrlDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.FLP_DEFAULT_STYLE', 'wx.FLP_USE_TEXTCTRL', 
-              'wx.FLP_OPEN', 'wx.FLP_SAVE', 'wx.FLP_OVERWRITE_PROMPT', 
+        self.windowStyles = ['wx.FLP_DEFAULT_STYLE', 'wx.FLP_USE_TEXTCTRL',
+              'wx.FLP_OPEN', 'wx.FLP_SAVE', 'wx.FLP_OVERWRITE_PROMPT',
               'wx.FLP_FILE_MUST_EXIST', 'wx.FLP_CHANGE_DIR'] + self.windowStyles
         self.editors['Message'] = StrConstrPropEdit
         self.editors['Wildcard'] = StrConstrPropEdit
@@ -442,7 +442,7 @@ class FilePickerCtrlDTC(PickerCtrlDTC):
     def events(self):
         return PickerCtrlDTC.events(self) + ['FilePickerEvent']
     def constructor(self):
-        return {'Position': 'pos', 'Size': 'size', 'Style': 'style', 
+        return {'Position': 'pos', 'Size': 'size', 'Style': 'style',
                 'Path': 'path', 'Message': 'message', 'Name': 'name',
                 'Wildcard': 'wildcard'}
 
@@ -466,12 +466,12 @@ Plugins.registerComponents('Buttons',
       (wx.BitmapButton, 'wx.BitmapButton', BitmapButtonDTC),
       (wx.SpinButton, 'wx.SpinButton', SpinButtonDTC),
       (wx.SpinCtrl, 'wx.SpinCtrl', SpinCtrlDTC),
-      (wx.lib.buttons.GenButton, 'wx.lib.buttons.GenButton', GenButtonDTC),
-      (wx.lib.buttons.GenBitmapButton, 'wx.lib.buttons.GenBitmapButton', GenBitmapButtonDTC),
-      (wx.lib.buttons.GenToggleButton, 'wx.lib.buttons.GenToggleButton', GenToggleButtonDTC),
-      (wx.lib.buttons.GenBitmapToggleButton, 'wx.lib.buttons.GenBitmapToggleButton', GenBitmapToggleButtonDTC),
-      (wx.lib.buttons.GenBitmapTextButton, 'wx.lib.buttons.GenBitmapTextButton', GenBitmapTextButtonDTC),
-      (wx.lib.buttons.GenBitmapTextToggleButton, 'wx.lib.buttons.GenBitmapTextToggleButton', GenBitmapTextToggleButtonDTC),
+      (wx.lib.buttons.GenButton, 'wx.lib.buttons.GenButton', GenButtonDTC),  # type: ignore[attr-defined]
+      (wx.lib.buttons.GenBitmapButton, 'wx.lib.buttons.GenBitmapButton', GenBitmapButtonDTC),  # type: ignore[attr-defined]
+      (wx.lib.buttons.GenToggleButton, 'wx.lib.buttons.GenToggleButton', GenToggleButtonDTC),  # type: ignore[attr-defined]
+      (wx.lib.buttons.GenBitmapToggleButton, 'wx.lib.buttons.GenBitmapToggleButton', GenBitmapToggleButtonDTC),  # type: ignore[attr-defined]
+      (wx.lib.buttons.GenBitmapTextButton, 'wx.lib.buttons.GenBitmapTextButton', GenBitmapTextButtonDTC),  # type: ignore[attr-defined]
+      (wx.lib.buttons.GenBitmapTextToggleButton, 'wx.lib.buttons.GenBitmapTextToggleButton', GenBitmapTextToggleButtonDTC),  # type: ignore[attr-defined]
       (wx.ContextHelpButton, 'wx.ContextHelpButton', ContextHelpButtonDTC),
     )
 
@@ -488,4 +488,4 @@ try:
     Plugins.registerComponent('Buttons', wx.FilePickerCtrl, 'wx.FilePickerCtrl', FilePickerCtrlDTC)
 except AttributeError:
     pass
-    
+

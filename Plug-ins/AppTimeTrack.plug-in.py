@@ -1,4 +1,4 @@
-""" Plugin that adds a simple time tracking view to Application Models """
+"""Plugin that adds a simple time tracking view to Application Models."""
 
 import os
 import time
@@ -69,7 +69,7 @@ class AppTimeTrackView(ListCtrlView):
         transp = Explorer.openEx(self.getTTVFilename())
         data = StringIO(transp.load())
 
-        return map(lambda line: eval(line), data.readlines())
+        return list(map(lambda line: eval(line), data.readlines()))
 
     def writeTimes(self):
         from io import StringIO

@@ -13,8 +13,8 @@
 import sys
 import warnings
 import inspect
+from types import FunctionType, MethodType, BuiltinFunctionType
 
-from types import *
 import wx
 
 warnings.filterwarnings('ignore', '', DeprecationWarning, 'RTTI')
@@ -91,7 +91,7 @@ class PropertyWrapper:
         elif self.routeType == 'IdRoute' and self.ctrl and self.compn:
             self.setter(self.ctrl, self.compn.getDesignTimeWinId(), value)
         elif self.routeType == 'ReApplyRoute' and self.compn and len(params):
-            self.setter(*[self.ctrl], **params)
+            self.setter(self.ctrl)
         elif self.routeType == 'NameRoute':
             return self.setter(self.name, value)
 

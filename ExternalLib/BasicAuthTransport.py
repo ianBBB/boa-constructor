@@ -1,4 +1,3 @@
-from base64 import *
 import string
 import base64
 from ExternalLib.WebDAV import httplib

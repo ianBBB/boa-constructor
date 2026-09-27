@@ -17,18 +17,21 @@
 # * Fancy comments, like this bulleted list, arent handled :-)
 
 import re
+from typing import Any
 
 from Utils import _
 
 class FormatParagraph:
     def __init__(self, stc):
-        self.stc = stc
+        self.stc: Any = stc
 
     def close(self):
         self.stc = None
 
     def format_paragraph(self):
         text = self.stc
+        if text is None:
+            return
         first, last = text.GetSelection()
         if first and last:
             data = self.stc.GetText()[first:last]
@@ -136,7 +139,8 @@ def is_all_white(line):
     return re.match(r"^\s*$", line) is not None
 
 def get_indent(line):
-    return re.match(r"^(\s*)", line).group()
+    m = re.match(r"^(\s*)", line)
+    return m.group() if m else ''
 
 def get_comment_header(line):
     m = re.match(r"^(\s*#*)", line)
@@ -156,7 +160,7 @@ class FormatParagraphViewPlugin:
 
     def OnFormatParagraph(self, event):
         self.formatter.format_paragraph()
-    
+
 from Views import PySourceView
-PySourceView.PythonSourceView.plugins += (FormatParagraphViewPlugin,)
+PySourceView.PythonSourceView.plugins += (FormatParagraphViewPlugin,)  # type: ignore[operator,assignment]
 
