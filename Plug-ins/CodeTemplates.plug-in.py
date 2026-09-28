@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------
 # Name:        CodeTemplates.plug-in.py
-# Purpose:     
+# Purpose:
 #
 # Author:      Riaan Booysen
 #
@@ -51,26 +51,26 @@ class CodeTemplateManager:
     """ Reads all Plug-ins/CodeTemplates/*.cfg files and publishes their templates """
     def __init__(self):
         self.readTemplates()
-    
+
     def readTemplates(self):
         files = []
         for path in Preferences.pluginPaths:
             cp = os.path.join(path, 'CodeTemplates')
             if os.path.exists(cp):
-                files.extend([os.path.join(cp, f) 
+                files.extend([os.path.join(cp, f)
                               for f in glob.glob(os.path.join(cp, '*.cfg'))])
 
         # self.conf = configparser.SafeConfigParser()
         self.conf = configparser.ConfigParser()
         self.conf.read(files)
-    
+
     def getNames(self, language):
         names = self.conf.sections()
-        names = [name for name in names 
+        names = [name for name in names
                  if self.conf.get(name, 'language') in (language, 'any')]
         names.sort()
         return names
-    
+
     def getTemplate(self, name):
         if self.conf.has_section(name):
             return self.conf.get(name, 'template')
@@ -97,10 +97,10 @@ class CodeTemplatesViewPlugin:
             self.view.insertCodeBlock(codeTemplateManager.getTemplate(
                   event.GetText()).replace('\\t', idnt))
         event.Skip()
-            
+
 
 from Views import SourceViews
-SourceViews.EditorStyledTextCtrl.plugins += (CodeTemplatesViewPlugin,)
+SourceViews.EditorStyledTextCtrl.plugins += (CodeTemplatesViewPlugin,)  # type: ignore[operator,assignment]
 
 # Tools dialog not useful yet
 #Plugins.registerTool(_('Code Template Manager'), showCodeTemplateManagerDlg)

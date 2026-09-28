@@ -9,12 +9,12 @@ from Utils import _
 
 class InvalidValueError(Exception): pass
 
-[wxID_KEYDEFSDIALOG, wxID_KEYDEFSDIALOGALTFLAGCHB, 
- wxID_KEYDEFSDIALOGCANCELBTN, wxID_KEYDEFSDIALOGCTRLFLAGCHB, 
- wxID_KEYDEFSDIALOGKEYCODECBB, wxID_KEYDEFSDIALOGOKBTN, 
- wxID_KEYDEFSDIALOGSHIFTFLAGCHB, wxID_KEYDEFSDIALOGSHORTCUTTC, 
- wxID_KEYDEFSDIALOGSTATICBOX1, wxID_KEYDEFSDIALOGSTATICTEXT1, 
- wxID_KEYDEFSDIALOGSTATICTEXT2, 
+[wxID_KEYDEFSDIALOG, wxID_KEYDEFSDIALOGALTFLAGCHB,
+ wxID_KEYDEFSDIALOGCANCELBTN, wxID_KEYDEFSDIALOGCTRLFLAGCHB,
+ wxID_KEYDEFSDIALOGKEYCODECBB, wxID_KEYDEFSDIALOGOKBTN,
+ wxID_KEYDEFSDIALOGSHIFTFLAGCHB, wxID_KEYDEFSDIALOGSHORTCUTTC,
+ wxID_KEYDEFSDIALOGSTATICBOX1, wxID_KEYDEFSDIALOGSTATICTEXT1,
+ wxID_KEYDEFSDIALOGSTATICTEXT2,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(11)]
 
 class KeyDefsDialog(wx.Dialog):
@@ -122,7 +122,7 @@ class KeyDefsDialog(wx.Dialog):
         if not keyCode:
             raise InvalidValueError(_('Key code may not be blank'))
         if keyCode not in list(specialKeys.keys()) + otherKeys1 + otherKeys2:
-            if len(keyCode) != 1 or keyCode not in string.ascII_letters+string.digits:
+            if len(keyCode) != 1 or keyCode not in string.ascii_letters+string.digits:
                 raise InvalidValueError(_('Key code must either be a single character (letter or digit) or an identifier selected from the combobox'))
             keyCode = "ord('%s')" % keyCode.upper()
 
@@ -172,8 +172,8 @@ flagValNames = {wx.ACCEL_CTRL:  ('wx.ACCEL_CTRL', 'Ctrl'),
                 wx.ACCEL_ALT:   ('wx.ACCEL_ALT', 'Alt'),
                 wx.ACCEL_SHIFT: ('wx.ACCEL_SHIFT', 'Shift')}
 
-specialKeys = {'wx.WXK_BACK': wx.WXK_BACK, 'wx.WXK_TAB': wx.WXK_TAB, 
-               'wx.WXK_RETURN': wx.WXK_RETURN, 'wx.WXK_ESCAPE': wx.WXK_ESCAPE, 
+specialKeys = {'wx.WXK_BACK': wx.WXK_BACK, 'wx.WXK_TAB': wx.WXK_TAB,
+               'wx.WXK_RETURN': wx.WXK_RETURN, 'wx.WXK_ESCAPE': wx.WXK_ESCAPE,
                'wx.WXK_SPACE': wx.WXK_SPACE, 'wx.WXK_DELETE': wx.WXK_DELETE}
 # values 300+
 otherKeys1 = ['wx.WXK_START', 'wx.WXK_LBUTTON', 'wx.WXK_RBUTTON',

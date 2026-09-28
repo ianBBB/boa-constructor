@@ -17,7 +17,7 @@ import Preferences, Utils, Plugins
 from Utils import _
 
 from . import EditorHelper
-EditorHelper.imgConfigFileModel = EditorHelper.imgIdxRange()
+EditorHelper.imgConfigFileModel = EditorHelper.imgIdxRange()  # type: ignore[attr-defined]
 
 from Models.EditorModels import SourceModel
 
@@ -25,7 +25,7 @@ class ConfigFileModel(SourceModel):
     modelIdentifier = 'Config'
     defaultName = 'config'
     bitmap = 'Config.png'
-    imgIdx = EditorHelper.imgConfigFileModel
+    imgIdx = EditorHelper.imgConfigFileModel  # type: ignore[attr-defined]
     ext = '.cfg'
 
 

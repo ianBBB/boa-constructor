@@ -170,7 +170,7 @@ class ScrolledWindowDTC(ContainerDTC, Constructors.WindowConstr):
 
     def events(self):
         return ContainerDTC.events(self) + ['ScrollWinEvent']
-    
+
     def hideDesignTime(self):
         return ContainerDTC.hideDesignTime(self) + ['TargetRect']
 
@@ -363,7 +363,7 @@ class BookCtrlPagesCDTC(CollectionDTC):
             else:
                 for constr in self.textConstrLst:
                     if Utils.srcRefFromCtrlName(compn.name) == constr.params['page']:
-                        constr.params['page'] == 'None'
+                        constr.params['page'] = 'None'
 
                 for tph in self.tempPlaceHolders:
                     if tph.ctrl == compn.control:
@@ -512,32 +512,32 @@ class NotebookDTC(BookCtrlDTC):
         return BookCtrlDTC.events(self) + ['NotebookEvent']
 
 
-EventCategories['ListbookEvent'] = ('wx.EVT_LISTBOOK_PAGE_CHANGED', 
+EventCategories['ListbookEvent'] = ('wx.EVT_LISTBOOK_PAGE_CHANGED',
                                     'wx.EVT_LISTBOOK_PAGE_CHANGING')
 commandCategories.append('ListbookEvent')
 class ListbookDTC(BookCtrlDTC):
     bookCtrlName = 'wx.Listbook'
     def __init__(self, name, designer, parent, ctrlClass):
         BookCtrlDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.LB_DEFAULT', 'wx.LB_TOP', 'wx.LB_LEFT', 
+        self.windowStyles = ['wx.LB_DEFAULT', 'wx.LB_TOP', 'wx.LB_LEFT',
               'wx.LB_RIGHT', 'wx.LB_BOTTOM', 'wx.LB_ALIGN_MASK'] + self.windowStyles
     def events(self):
         return BookCtrlDTC.events(self) + ['ListbookEvent']
 
 
-EventCategories['ChoicebookEvent'] = ('wx.EVT_CHOICEBOOK_PAGE_CHANGED', 
+EventCategories['ChoicebookEvent'] = ('wx.EVT_CHOICEBOOK_PAGE_CHANGED',
                                       'wx.EVT_CHOICEBOOK_PAGE_CHANGING')
 commandCategories.append('ListbookEvent')
 class ChoicebookDTC(BookCtrlDTC):
     bookCtrlName = 'wx.Choicebook'
     def __init__(self, name, designer, parent, ctrlClass):
         BookCtrlDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.CHB_DEFAULT', 'wx.CHB_TOP', 'wx.CHB_LEFT', 
+        self.windowStyles = ['wx.CHB_DEFAULT', 'wx.CHB_TOP', 'wx.CHB_LEFT',
               'wx.CHB_RIGHT', 'wx.CHB_BOTTOM', 'wx.CHB_ALIGN_MASK'] + self.windowStyles
     def events(self):
         return BookCtrlDTC.events(self) + ['ChoicebookEvent']
 
-EventCategories['TreebookEvent'] = ('wx.EVT_TREEBOOK_PAGE_CHANGED', 
+EventCategories['TreebookEvent'] = ('wx.EVT_TREEBOOK_PAGE_CHANGED',
                                     'wx.EVT_TREEBOOK_PAGE_CHANGING',
                                     'wx.EVT_TREEBOOK_NODE_COLLAPSED',
                                     'wx.EVT_TREEBOOK_NODE_EXPANDED')
@@ -546,12 +546,12 @@ class TreebookDTC(BookCtrlDTC):
     bookCtrlName = 'wx.Treebook'
     def __init__(self, name, designer, parent, ctrlClass):
         BookCtrlDTC.__init__(self, name, designer, parent, ctrlClass)
-        self.windowStyles = ['wx.BK_DEFAULT', 'wx.BK_TOP', 'wx.BK_LEFT', 
+        self.windowStyles = ['wx.BK_DEFAULT', 'wx.BK_TOP', 'wx.BK_LEFT',
               'wx.BK_RIGHT', 'wx.BK_BOTTOM'] + self.windowStyles
     def events(self):
         return BookCtrlDTC.events(self) + ['TreebookEvent']
 
-EventCategories['ToolbookEvent'] = ('wx.EVT_TOOLBOOK_PAGE_CHANGED', 
+EventCategories['ToolbookEvent'] = ('wx.EVT_TOOLBOOK_PAGE_CHANGED',
                                     'wx.EVT_TOOLBOOK_PAGE_CHANGING')
 commandCategories.append('ToolbookEvent')
 class ToolbookDTC(BookCtrlDTC):
@@ -578,9 +578,9 @@ class SplitterWindowDTC(ContainerDTC):
         self.options['SplitMode'] = splitterWindowSplitMode
         self.names['SplitMode'] = splitterWindowSplitModeNames
         self.windowStyles = ['wx.SP_3D', 'wx.SP_3DSASH', 'wx.SP_3DBORDER',
-                             'wx.SP_BORDER', 'wx.SP_NOBORDER', 
+                             'wx.SP_BORDER', 'wx.SP_NOBORDER',
                              'wx.SP_PERMIT_UNSPLIT', 'wx.SP_LIVE_UPDATE',
-                             ] + self.windowStyles 
+                             ] + self.windowStyles
         self.win1 = None
         self.win2 = None
 
@@ -815,9 +815,9 @@ def BlankToolBitmap(width, height):
     bmp = wx.EmptyBitmap(width, height)
     dc = wx.MemoryDC()
     dc.SelectObject(bmp)
-    dc.SetBrush(wx.Brush(wx.RED, wx.BDIAGONAL_HATCH))
+    dc.SetBrush(wx.Brush(wx.RED, getattr(wx, 'CROSSDIAG_HATCH', 1)))
     dc.SetBackground(wx.Brush(wx.WHITE))
-    dc.SetPen(wx.Pen(wx.WHITE, 0, wx.TRANSPARENT))
+    dc.SetPen(wx.Pen(wx.WHITE, 0, getattr(wx, 'DOT', 2)))
     # dc.BeginDrawing()  #DEPRECATED
     dc.DrawRectangle(0, 0, width, height)
 
@@ -1079,6 +1079,11 @@ class StatusBarFieldsCDTC(CollectionDTC):
         if self.widths:
             self.control.SetStatusWidths(self.widths)
 
+    def _normalize_widths(self):
+        # wxStatusBar requires at least one field; keep a safe default.
+        if not self.widths:
+            self.widths = [-1]
+
     def appendItem(self, method=None):
         self.widths.append(-1)
         self.control.SetFieldsCount(len(self.widths))
@@ -1089,6 +1094,7 @@ class StatusBarFieldsCDTC(CollectionDTC):
         for idx in range(index, len(self.widths)):
             self.control.SetStatusText(self.control.GetStatusText(idx+1), idx)
         del self.widths[index]
+        self._normalize_widths()
         self.control.SetStatusWidths(self.widths)
         self.control.SetFieldsCount(len(self.widths))
 
@@ -1110,7 +1116,9 @@ class StatusBarFieldsCDTC(CollectionDTC):
         if len(fins):
             self.widths = self.eval(fins[0]\
               [fins[0].find('(')+1 : fins[0].rfind(')')])
-            self.control.SetFieldsCount(len(self.widths))
+        self._normalize_widths()
+        self.control.SetFieldsCount(len(self.widths))
+        self.control.SetStatusWidths(self.widths)
 
     def GetWidth(self):
         return repr(self.widths[self.index])
@@ -1171,8 +1179,8 @@ try:
       (wx.Treebook, 'wx.Treebook', TreebookDTC),
       (wx.Toolbook, 'wx.Toolbook', ToolbookDTC),
 #      (wx.CollapsiblePane, 'wx.CollapsiblePane', CollapsiblePaneDTC),
-    )  
+    )
 except AttributeError:
     pass
-    
-    
+
+

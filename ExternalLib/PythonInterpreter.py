@@ -54,7 +54,7 @@ class PythonInterpreter:
             self.lines = []
 
         except SyntaxError as why:
-            if why[0] == "unexpected EOF while parsing":
+            if getattr(why, 'msg', '') in ("unexpected EOF while parsing", "incomplete input"):
                 # start collecting lines
                 self.lines.append(line)
                 return 1  # want more!
@@ -91,8 +91,9 @@ class PythonInterpreter:
                         sys.stderr.write('  File "%s", line %d\n%s%s' % (
                                          fn, ln, pad, src))
                 sys.stderr.write(pad + "^\n")
+            msg = exc_value.args[0] if exc_value.args else ''
             sys.stderr.write("''' %s '''\n" % (str(exc_type) + \
-                str(exc_value.args and (" : " + exc_value[0]) or '')))
+                str(msg and (" : " + msg) or '')))
         else:
             traceback.print_tb(exc_traceback.tb_next, None)
             sys.stderr.write("''' %s '''\n" % (str(exc_type) + " : " + \

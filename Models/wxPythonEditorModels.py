@@ -72,18 +72,18 @@ class BaseFrameModel(ClassModel):
         for param in list(params.keys()):
             paramLst.append(Preferences.cgKeywordArgFormat %{'keyword': param,
                                                         'value': params[param]})
-        
+
         # XXX Refactor line wrappers to Utils and wrap this
         paramStr = 'self, ' + ', '.join(paramLst)
 
-        srcValsDict = {'modelIdent': self.modelIdentifier, 
-                       'main': self.main, 
+        srcValsDict = {'modelIdent': self.modelIdentifier,
+                       'main': self.main,
                        'idNames': Utils.windowIdentifier(self.main, ''),
-                       'idIdent': sourceconst.init_ctrls, 
-                       'idCount': 1, 'defaultName': self.defaultName, 
+                       'idIdent': sourceconst.init_ctrls,
+                       'idCount': 1, 'defaultName': self.defaultName,
                        'params': paramStr}
         srcValsDict.update(self.defSrcVals)
-                       
+
         self.data = (sourceconst.defSig + self.defImport + \
                      self.defCreateClass + self.defWindowIds + \
                      self.defClass) % srcValsDict
@@ -224,7 +224,7 @@ class BaseFrameModel(ClassModel):
                             val += source[linePos].strip()
 
                         attrs.append( (attr, val) )
-                            
+
 
         if extAttrInitName:
             if extAttrInitName not in mod.from_imports_names:
@@ -329,7 +329,7 @@ class BaseFrameModel(ClassModel):
 
             self.specialAttrs = self.readSpecialAttrs(module, main)
             self.customClasses = self.readCustomClasses(module, main)
-            self.resources = self.readResources(module, main, 
+            self.resources = self.readResources(module, main,
                   specialAttrs=self.specialAttrs)
 
             for oc in self.identifyCollectionMethods():
@@ -340,7 +340,7 @@ class BaseFrameModel(ClassModel):
 
                 # XXX Hack: This should not be necessary !!
                 for prop in self.objectCollections[oc].properties[:]:
-                    if prop.asText() in ('self.%s()'%sourceconst.init_utils, 
+                    if prop.asText() in ('self.%s()'%sourceconst.init_utils,
                                          'self.%s()'%sourceconst.init_sizers):
                         self.objectCollections[oc].properties.remove(prop)
 
@@ -350,9 +350,9 @@ class BaseFrameModel(ClassModel):
                     self.mainConstr = \
                       self.objectCollections[sourceconst.init_ctrls].creators[0]
                 except IndexError:
-                    Exception, _('Inherited __init__ method missing')
+                    raise Exception(_('Inherited __init__ method missing'))
         else:
-            Exception, _('Main class "%s" not found. Please fix file header or class name.')%self.main
+            raise Exception(_('Main class "%s" not found. Please fix file header or class name.')%self.main)
 
     def removeWindowIds(self, colMeth):
         """ Remove a method's corresponding window ids from the source code """
@@ -543,7 +543,7 @@ class FramePanelModel(BaseFrameModel):
     def getSimpleRunnerSrc(self):
         return ''
 
-sourceconst.defWizardImport = sourceconst.wsfix('\nimport wx.wizard\n')
+sourceconst.defWizardImport = sourceconst.wsfix('\nimport wx.wizard\n')  # type: ignore[attr-defined]
 
 class WizardModel(DialogModel):
     modelIdentifier = 'Wizard'
@@ -555,12 +555,12 @@ class WizardModel(DialogModel):
 
     def __init__(self, data, name, main, editor, saved, app=None):
         DialogModel.__init__(self, data, name, main, editor, saved, app)
-        self.defImport = sourceconst.defImport.strip()+sourceconst.defWizardImport
-        
+        self.defImport = sourceconst.defImport.strip()+sourceconst.defWizardImport  # type: ignore[attr-defined]
+
     def getSimpleRunnerSrc(self):
         return ''
 
-sourceconst.defPyWizPageClass = sourceconst.defClass+sourceconst.wsfix('''
+defPyWizPageClass = sourceconst.defClass+sourceconst.wsfix('''
 \tdef GetNext(self):
 \t\treturn None
 
@@ -579,8 +579,8 @@ class PyWizardPageModel(FramePanelModel):
 
     def __init__(self, data, name, main, editor, saved, app=None):
         FramePanelModel.__init__(self, data, name, main, editor, saved, app)
-        self.defClass = sourceconst.defPyWizPageClass
-        self.defImport = sourceconst.defImport.strip()+sourceconst.defWizardImport
+        self.defClass = defPyWizPageClass
+        self.defImport = sourceconst.defImport.strip()+sourceconst.defWizardImport  # type: ignore[attr-defined]
         self.defWindowIds = ''
 
     def getSimpleRunnerSrc(self):
@@ -597,8 +597,8 @@ class WizardPageSimpleModel(FramePanelModel):
     def __init__(self, data, name, main, editor, saved, app=None):
         FramePanelModel.__init__(self, data, name, main, editor, saved, app)
         self.defClass = sourceconst.defClass
-        self.defImport = sourceconst.defImport.strip()+sourceconst.defWizardImport
+        self.defImport = sourceconst.defImport.strip()+sourceconst.defWizardImport  # type: ignore[attr-defined]
         self.defWindowIds = ''
-        
+
     def getSimpleRunnerSrc(self):
         return ''

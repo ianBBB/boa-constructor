@@ -1,4 +1,4 @@
--4#----------------------------------------------------------------------
+#----------------------------------------------------------------------
 # Name:        Preferences.py
 # Purpose:     Global settings. Populated by resource files *_rc.py
 #
@@ -58,7 +58,7 @@ if '--OverridePrefsDirName' in sys.argv or '-O' in sys.argv:
         print('using preference directory name', prefsDirName)
 
 # To prevent using the HOME env variable run different versions of Boa this flag
-# forces Boa to use Preference settings either in the Config dir or in a 
+# forces Boa to use Preference settings either in the Config dir or in a
 # specified rc path
 if os.path.isabs(prefsDirName):
     rcPath = prefsDirName
@@ -71,7 +71,7 @@ else:
         homeDir = os.environ['HOMEDRIVE']+homeDir
     else:
         homeDir = os.environ.get('HOME', None)
-        
+
     if homeDir is not None and os.path.isdir(homeDir):
         rcPath = os.path.join(homeDir, prefsDirName)
         for fn in ('', 'docs-cache', 'Plug-ins'):
@@ -153,7 +153,7 @@ for prefsFile, version in (('prefs_rc.py', 18),
     else:
         if version is not None:
             verline = open(file).readline().strip()
-    
+
             if len(verline) >= 14 and verline[:14] == '## rc-version:':
                 rcver = int(verline[14:-2])
             else:
@@ -248,11 +248,21 @@ screenWidth = screenHeight = wxDefaultFramePos = wxDefaultFrameSize = \
 
 if locals().get('screenX') is None: screenX = 0
 if locals().get('screenY') is None: screenY = 0
+if locals().get('topMenuHeight') is None: topMenuHeight = 0
+if locals().get('verticalTaskbarWidth') is None: verticalTaskbarWidth = 0
+if locals().get('horizontalTaskbarHeight') is None: horizontalTaskbarHeight = 0
+if locals().get('editorScreenWidthPerc') is None: editorScreenWidthPerc = 0.72
+if locals().get('windowManagerSide') is None: windowManagerSide = 0
+if locals().get('windowManagerTop') is None: windowManagerTop = 0
+if locals().get('windowManagerBottom') is None: windowManagerBottom = 0
+if locals().get('paletteHeights') is None: paletteHeights = {}
+if locals().get('paletteStyle') is None: paletteStyle = 'tabs'
+
 def initScreenVars():
     global screenWidth, screenHeight, wxDefaultFramePos, wxDefaultFrameSize
     global edWidth, inspWidth, paletteHeight, bottomHeight, underPalette
-    global oglBoldFont, oglStdFont, screenX, screenY 
-    
+    global oglBoldFont, oglStdFont, screenX, screenY
+
     screenWidth = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
     screenHeight = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
     if wx.Platform == '__WXMSW__':
@@ -263,20 +273,20 @@ def initScreenVars():
         # handle dual monitors on Linux
         if float(screenWidth) / float(screenHeight) >= 2.0:
             screenWidth = int(round(screenWidth / 2.0))
-    
+
         screenWidth = int(screenWidth - verticalTaskbarWidth)
         screenHeight = int(screenHeight - horizontalTaskbarHeight - topMenuHeight)
-    
+
     if wx.Platform == '__WXMSW__':
         wxDefaultFramePos = wx.DefaultPosition
         wxDefaultFrameSize = wx.DefaultSize
     else:
         wxDefaultFramePos = (int(round(screenWidth / 4.0)), int(round(screenHeight / 4.0)))
         wxDefaultFrameSize = (int(round(screenWidth / 1.5)), int(round(screenHeight / 1.5)))
-    
+
     edWidth = int(screenWidth * editorScreenWidthPerc - windowManagerSide * 2)
     inspWidth = screenWidth - edWidth + 1 - windowManagerSide * 4
-    paletteHeight = paletteHeights[paletteStyle]
+    paletteHeight = paletteHeights.get(paletteStyle, 120)
     bottomHeight = screenHeight - paletteHeight
     underPalette = paletteHeight + windowManagerTop + windowManagerBottom + topMenuHeight + screenY
 

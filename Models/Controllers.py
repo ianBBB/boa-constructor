@@ -11,7 +11,7 @@
 #-----------------------------------------------------------------------------
 print('importing Models.Controllers')
 
-import os, codecs
+import os
 
 import wx
 
@@ -139,7 +139,7 @@ class PersistentController(EditorController):
                 (_('NDiff files...'), self.OnNDiffFile, '-', '')]
 
     def createModel(self, source, filename, main, saved, modelParent=None):
-        return self.Model(source, filename, self.editor, saved)
+        return self.Model(source, filename, self.editor, saved)  # type: ignore[operator]
 
     def createNewModel(self, modelParent=None):
         name = self.editor.getValidName(self.Model)
@@ -268,7 +268,7 @@ class TextController(PersistentController):
 class UndockedController(BaseEditorController):
     docked          = False
     def createModel(self, source, filename, main, saved, modelParent=None):
-        return self.Model(source, filename, self.editor, saved)
+        return self.Model(source, filename, self.editor, saved)  # type: ignore[operator]
 
     def display(self, model):
         """ Override to display undocked interface """
@@ -329,7 +329,6 @@ def identifyFile(filename, source=None, localfs=True):
         BaseModel = DefaultModel
     else:
         BaseModel = EditorModels.UnknownFileModel
-    import codecs
     if source is None and not localfs:
         if lext in list(EditorHelper.inspectableFilesReg.keys()):
             return EditorHelper.inspectableFilesReg[lext], ''
@@ -342,14 +341,12 @@ def identifyFile(filename, source=None, localfs=True):
         elif not Preferences.exInspectInspectableFiles:
             return BaseModel, ''
         if os.path.exists(filename):
-            f = open(filename)
+            f = open(filename, encoding='utf-8-sig', errors='replace')
             try:
                 while True:
                     line = f.readline()
                     if not line: break
-                    line = line.strip()
-                    if line.startswith(codecs.BOM_UTF8.decode('UTF-8')):
-                        line = line[len(codecs.BOM_UTF8):]
+                    line = Utils.stripUtf8Bom(line).strip()
                     if line and lext in headerStartChar:
                         if line[0] != headerStartChar[lext]:
                             return BaseModel, ''

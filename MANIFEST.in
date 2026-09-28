@@ -1,0 +1,21 @@
+include README.md
+include README.TXT
+include README.html
+include BOA_README.html
+include Changes.txt
+include Credits.txt
+include Bugs.txt
+include Bugs-legacy.txt
+include Todo.txt
+include notes.txt
+include __version__.py
+recursive-include Config *
+recursive-include Docs *
+recursive-include Images *
+recursive-include locale *
+recursive-include Scripts *
+recursive-include Plug-ins *
+recursive-include Examples *
+recursive-include ExternalLib *
+recursive-include ZopeLib *
+global-exclude __pycache__ *.py[cod] *.pyo

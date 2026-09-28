@@ -1,4 +1,4 @@
-""" Demonstrates how to change system constants as a plug-in """
+"""Demonstrates how to change system constants as a plug-in."""
 
 import sourceconst
 # The order of (Name)s may change and lines may also be removed

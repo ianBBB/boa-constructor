@@ -2,6 +2,7 @@ import wx
 import wx.xrc
 
 from Utils import _
+from PropEdit.PropertyEditors import StrConstrPropEdit
 
 from Companions import BaseCompanions
 
@@ -36,9 +37,9 @@ class XrcPanelDTC(ContainerCompanions.PanelDTC):
         """ Create and initialise a design-time control """
         if args:
             args['id'] = -1
-            self.control = apply(self.ctrlClass, (), args)
+            self.control = self.ctrlClass(**args)
         else:
-            self.control = apply(self.ctrlClass, (), self.designTimeDefaults(position, size))
+            self.control = self.ctrlClass(**self.designTimeDefaults(position, size))
 
         self.initDesignTimeControl()
         return self.control
@@ -47,7 +48,7 @@ class XrcPanelDTC(ContainerCompanions.PanelDTC):
                                  size = wx.DefaultSize):
         xrcObjs = self.designer.getObjectsOfClass(wx.xrc.XmlResource)
         if not xrcObjs:
-            raise Exception, _('No wx.xrc.XmlResource objects found')
+            raise Exception(_('No wx.xrc.XmlResource objects found'))
         # factory/LoadPage allows no positional info
         if not position: posx, posy = 0, 0
         else:            posx, posy = position.x, position.y
@@ -62,9 +63,9 @@ class XrcPanelDTC(ContainerCompanions.PanelDTC):
 
         if not self.textConstr:
             xrcObjs = self.designer.getObjectsOfClass(wx.xrc.XmlResource)
-            names = xrcObjs.keys()
+            names = list(xrcObjs.keys())
             if names:
-                dlg = wx.SingleChoiceDialog(self.designer, 
+                dlg = wx.SingleChoiceDialog(self.designer,
                       _('Select wx.xrc.XmlResource to LoadPanel from'),
                       'wx.xrc.XmlResource.LoadPanel', names)
                 try:
@@ -72,11 +73,11 @@ class XrcPanelDTC(ContainerCompanions.PanelDTC):
                         xrcObj = dlg.GetStringSelection()
                         self.xmlResource = xrcObj.split('.')[1]
                     else:
-                        raise Exception, 'Cancelled!'
+                        raise Exception('Cancelled!')
                 finally:
                     dlg.Destroy()
             else:
-                raise Exception, _('No wx.xrc.XmlResource objects found')
+                raise Exception(_('No wx.xrc.XmlResource objects found'))
         else:
             self.xmlResource = self.textConstr.factory[0]
 
@@ -87,7 +88,7 @@ class XrcPanelDTC(ContainerCompanions.PanelDTC):
         self.designer.addCtrlToObjectCollection(self.textConstr)
 
     def designTimeSource(self, position = 'wx.DefaultPosition', size = 'wx.DefaultSize'):
-        return {'name':  `self.name`}
+        return {'name': repr(self.name)}
 
 
 class XrcPanel(wx.Panel):

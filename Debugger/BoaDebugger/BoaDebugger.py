@@ -3,7 +3,7 @@
 # Purpose:     Enable Zope debugging with Boa Constructor
 #
 # Authors:      phil@bluedynamics.com, gogo@bluedynamics.com
-#	            robert@bluedynamics.com	
+#	            robert@bluedynamics.com
 #               Alan Miligan
 #
 # Created:     2003/13/02
@@ -11,6 +11,9 @@
 # Copyright:   (c) 2002 - 2004
 # Licence:     GPL
 #-----------------------------------------------------------------------------
+
+# pyright: ignore
+# type: ignore
 
 import Globals
 import sys, traceback
@@ -38,7 +41,7 @@ class BoaDebugger (PropertyManager, SimpleItem):
     id = 'Boa Debugger'
     title = 'Boa Constructor Zope debug module'
     icon = 'www/boa.gif'
-        
+
     __ac_permissions__ = PropertyManager.__ac_permissions__ + (
         (view_management_screens, ('manage_start', 'manage_stop', 'manage_callBreakpoint')),
         ) + SimpleItem.__ac_permissions__
@@ -50,7 +53,7 @@ class BoaDebugger (PropertyManager, SimpleItem):
         {'id':'username', 'type':'string', 'mode':'w'},
         {'id':'password', 'type':'string', 'mode':'w'},
         )
-    
+
     manage_options = (
         { 'label': 'Properties', 'action':'manage_main',
           'help': ('BoaDebugger', 'debugger.stx') },
@@ -60,7 +63,7 @@ class BoaDebugger (PropertyManager, SimpleItem):
         ) + SimpleItem.manage_options
 
     manage_main = PropertyManager.manage_propertiesForm
-    
+
     def __init__(self):
         self.username = ''
         self.password = ''
@@ -71,7 +74,7 @@ class BoaDebugger (PropertyManager, SimpleItem):
         """ """
         if getattr(self, '_v_active', False):
             REQUEST.set('manage_tabs_message', 'The debug server is already active')
-            return self.manage_main(self, REQUEST)            
+            return self.manage_main(self, REQUEST)
         try :
             self._v_active = True
             start(self.username, self.password, self.host, self.port)
@@ -86,7 +89,7 @@ class BoaDebugger (PropertyManager, SimpleItem):
         if REQUEST:
             REQUEST.set('manage_tabs_message', 'The debug server is active now')
             return self.manage_main(self, REQUEST)
-        
+
     def manage_stop(self, REQUEST=None):
         """ """
         if not getattr(self, '_v_active', False):
@@ -119,13 +122,13 @@ class BoaDebugger (PropertyManager, SimpleItem):
             if REQUEST:
                 REQUEST.set('manage_tabs_message', 'BoaDebugger is inactive!')
                 return self.manage_main(self, REQUEST)
-    
+
         if hasattr(sys, 'breakpoint'):
             try:
-                
+
                 sys.breakpoint()
                 # This is a hardcoded breakpoint.
-                
+
                 if REQUEST:
                     REQUEST.set('manage_tabs_message', 'Breakpoint Added')
                     return self.manage_main(self, REQUEST)

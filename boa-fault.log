@@ -1,0 +1,427 @@
+
+=== Boa session start: 2026-05-23T07:44:06.621015 ===
+
+=== Boa session start: 2026-05-23T07:55:25.049340 ===
+
+=== Boa session start: 2026-05-23T08:03:35.529473 ===
+
+=== Boa session start: 2026-05-23T08:21:27.056986 ===
+
+=== Boa session start: 2026-05-23T08:26:19.458570 ===
+Traceback (most recent call last):
+  File "c:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 612, in OnInit
+    abt = About.createSplash(None, modTot, fileTot)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\rjs\Documents\GitHub\boa-constructor\About.py", line 200, in createSplash
+    return AboutBoxSplash(parent, modTot, fileTot, extraStyle=wx.html.HW_SCROLLBAR_NEVER)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\rjs\Documents\GitHub\boa-constructor\About.py", line 225, in __init__
+    self.setPage()  # type: ignore[attr-defined]
+    ^^^^^^^^^^^^^^
+  File "c:\Users\rjs\Documents\GitHub\boa-constructor\About.py", line 338, in setPage
+    self.initCtrlNames()
+  File "c:\Users\rjs\Documents\GitHub\boa-constructor\About.py", line 342, in initCtrlNames
+    self.label.SetBackgroundColour(wx.WHITE)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'SetBackgroundColour'
+
+=== Boa session start: 2026-05-23T08:27:26.464582 ===
+
+=== Boa session start: 2026-05-23T08:29:35.318923 ===
+
+=== Boa session start: 2026-05-23T09:30:51.546435 ===
+
+=== Boa session start: 2026-08-09T16:45:42.037690 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 434, in OnPaste
+    self.selDesgn.OnPasteSelected(event)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1264, in OnPasteSelected
+    pasted = self.pasteCtrls(self.selection.name,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 561, in pasteCtrls
+    raise Exception(_('Nothing to paste'))
+Exception: Nothing to paste
+Windows fatal exception: access violation
+
+Thread 0x000040e4 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\EditorUtils.py", line 523 in run
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032 in _bootstrap
+
+Current thread 0x00001730 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 84 in setValue
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PropEdit\PropertyEditors.py", line 235 in setCtrlValue
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PropEdit\PropertyEditors.py", line 172 in inspectorPost
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 843 in hideEditor
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 1105 in cleanup
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 388 in cleanup
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1134 in OnCloseWindow
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1511 in doPost
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 442 in OnPost
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 2254 in MainLoop
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 793 in main
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 806 in <module>
+
+=== Boa session start: 2026-08-09T22:52:51.600549 ===
+
+=== Boa session start: 2026-08-10T09:23:31.502228 ===
+
+=== Boa session start: 2026-09-07T13:49:58.868999 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\wxPythonControllers.py", line 78, in OnDesigner
+    self.showDesigner()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\wxPythonControllers.py", line 143, in showDesigner
+    designer.refreshCtrl()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 399, in refreshCtrl
+    self.initObjectsAndCompanions(objCol.creators[1:], objCol, deps, depLnks)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 129, in initObjectsAndCompanions
+    self.initObjProps(objColl.propertiesByName, constr.comp_name, constr,
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 206, in initObjProps
+    value = PaletteMapping.evalCtrl(prop.params[0],
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PaletteMapping.py", line 155, in evalCtrl
+    return eval(expr, globals(), localsDct)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1, in <module>
+NameError: name 'panel_sizer' is not defined
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\wxPythonControllers.py", line 78, in OnDesigner
+    self.showDesigner()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\wxPythonControllers.py", line 143, in showDesigner
+    designer.refreshCtrl()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 399, in refreshCtrl
+    self.initObjectsAndCompanions(objCol.creators[1:], objCol, deps, depLnks)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 131, in initObjectsAndCompanions
+    self.initObjColls(objColl.collectionsByName, constr.comp_name, constr,
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 237, in initObjColls
+    self.addCollView(name, collInit.method, False)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 272, in addCollView
+    collComp.applyDesignTimeDefaults(crt.params, crt.method)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Companions\BaseCompanions.py", line 1350, in applyDesignTimeDefaults
+    getattr(self.control, method)(*args, **kwargs)
+wx._core.wxAssertionError: C++ assertion "(size_t)n == m_panes.GetCount()" failed at ..\..\src\common\statbar.cpp(160) in wxStatusBarBase::SetStatusWidths(): field number mismatch
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 144, in initObjCreator
+    ctrlClass = PaletteMapping.evalCtrl(constrPrs.class_name,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PaletteMapping.py", line 155, in evalCtrl
+    return eval(expr, globals(), localsDct)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1, in <module>
+NameError: name 'wxPyPlot' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\wxPythonControllers.py", line 78, in OnDesigner
+    self.showDesigner()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\wxPythonControllers.py", line 143, in showDesigner
+    designer.refreshCtrl()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 399, in refreshCtrl
+    self.initObjectsAndCompanions(objCol.creators[1:], objCol, deps, depLnks)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 128, in initObjectsAndCompanions
+    self.initObjCreator(constr)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 529, in initObjCreator
+    InspectableObjectView.initObjCreator(self, constrPrs)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 147, in initObjCreator
+    raise DesignerError(_('%s is not defined on the Palette.')%constrPrs.class_name)
+Views.InspectableViews.DesignerError: wxPyPlot.PlotCanvas is not defined on the Palette.
+Windows fatal exception: access violation
+
+Thread 0x00002afc (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\EditorUtils.py", line 523 in run
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032 in _bootstrap
+
+Current thread 0x00000d90 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Utils.py", line 1000 in wxPyExceptHook
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 707 in _combined_excepthook
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 2254 in MainLoop
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 793 in main
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 806 in <module>
+
+=== Boa session start: 2026-09-07T14:13:31.847494 ===
+
+=== Boa session start: 2026-09-07T14:21:34.564052 ===
+
+=== Boa session start: 2026-09-07T14:25:40.418808 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 628, in OnInit
+    inspector = Inspector.InspectorFrame(self.main)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 180, in __init__
+    cmpInf.append(self.paletteImages.Add(IS.load(filename)))
+                                         ^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\ImageStore.py", line 76, in load
+    return self.createImage(name, 'data')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\ImageStore.py", line 57, in createImage
+    stream = io.BytesIO(self.dataReg[filename])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: a bytes-like object is required, not 'str'
+
+=== Boa session start: 2026-09-07T14:27:45.785074 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 144, in initObjCreator
+    ctrlClass = PaletteMapping.evalCtrl(constrPrs.class_name,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PaletteMapping.py", line 155, in evalCtrl
+    return eval(expr, globals(), localsDct)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1, in <module>
+NameError: name 'wxPyPlot' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\wxPythonControllers.py", line 78, in OnDesigner
+    self.showDesigner()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\wxPythonControllers.py", line 143, in showDesigner
+    designer.refreshCtrl()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 399, in refreshCtrl
+    self.initObjectsAndCompanions(objCol.creators[1:], objCol, deps, depLnks)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 128, in initObjectsAndCompanions
+    self.initObjCreator(constr)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 529, in initObjCreator
+    InspectableObjectView.initObjCreator(self, constrPrs)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 147, in initObjCreator
+    raise DesignerError(_('%s is not defined on the Palette.')%constrPrs.class_name)
+Views.InspectableViews.DesignerError: wxPyPlot.PlotCanvas is not defined on the Palette.
+Windows fatal exception: access violation
+
+Thread 0x00001f90 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\EditorUtils.py", line 523 in run
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032 in _bootstrap
+
+Current thread 0x000024fc (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Utils.py", line 1000 in wxPyExceptHook
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 707 in _combined_excepthook
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 2254 in MainLoop
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 793 in main
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 806 in <module>
+
+=== Boa session start: 2026-09-07T14:28:33.921808 ===
+
+=== Boa session start: 2026-09-07T14:30:37.100810 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1680, in OnControlResize
+    dsgn.Refresh()
+RuntimeError: wrapped C/C++ object of type DesignerView has been deleted
+
+=== Boa session start: 2026-09-07T14:33:40.654029 ===
+
+=== Boa session start: 2026-09-13T10:25:23.489396 ===
+
+=== Boa session start: 2026-09-13T10:38:21.222888 ===
+
+=== Boa session start: 2026-09-13T10:41:08.393416 ===
+
+=== Boa session start: 2026-09-13T11:17:01.480830 ===
+
+=== Boa session start: 2026-09-13T11:19:16.576398 ===
+
+=== Boa session start: 2026-09-13T11:23:18.870243 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1618, in OnControlSelect
+    dsgn.selectControlByPos(ctrl, pos, event.ShiftDown())
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 956, in selectControlByPos
+    ctrlName = self.newControl(parent, CtrlClass, CtrlCompanion, pos)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 508, in newControl
+    companion.designTimeControl(position, size), parentName)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Companions\BaseCompanions.py", line 615, in designTimeControl
+    self.control = self.ctrlClass(**self.designTimeDefaults(position, size))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: RibbonPanel(): arguments did not match any overloaded call:
+  overload 1: 'label' is not a valid keyword argument
+  overload 2: 'name' is not a valid keyword argument
+
+=== Boa session start: 2026-09-13T11:28:11.931888 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1618, in OnControlSelect
+    dsgn.selectControlByPos(ctrl, pos, event.ShiftDown())
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 956, in selectControlByPos
+    ctrlName = self.newControl(parent, CtrlClass, CtrlCompanion, pos)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 508, in newControl
+    companion.designTimeControl(position, size), parentName)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Companions\BaseCompanions.py", line 615, in designTimeControl
+    self.control = self.ctrlClass(**self.designTimeDefaults(position, size))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: DataViewListCtrl(): arguments did not match any overloaded call:
+  overload 1: 'pos' is not a valid keyword argument
+  overload 2: 'name' is not a valid keyword argument
+
+=== Boa session start: 2026-09-13T11:29:26.192114 ===
+
+=== Boa session start: 2026-09-13T11:32:09.539184 ===
+
+=== Boa session start: 2026-09-13T11:42:11.691133 ===
+
+=== Boa session start: 2026-09-13T11:47:19.355567 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Palette.py", line 268, in OnHelpToolClick
+    Help.showCtrlHelp(self.componentSB.selection[1])
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Help.py", line 297, in showCtrlHelp
+    hc.Display(term).ExpandCurrAsWxClass(anchor)
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Help.py", line 520, in ExpandCurrAsWxClass
+    self.contentsTree.Expand(self.contentsTree.GetSelection())
+wx._core.wxAssertionError: C++ assertion ""item.IsOk()"" failed at ..\..\src\msw\treectrl.cpp(1346) in wxTreeCtrl::IsExpanded(): invalid tree item
+
+=== Boa session start: 2026-09-13T11:52:14.588700 ===
+
+=== Boa session start: 2026-09-13T11:54:14.764010 ===
+
+=== Boa session start: 2026-09-13T11:57:19.603372 ===
+
+=== Boa session start: 2026-09-13T12:05:46.620174 ===
+Windows fatal exception: access violation
+
+Thread 0x000019a4 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\EditorUtils.py", line 523 in run
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032 in _bootstrap
+
+Current thread 0x0000265c (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 213 in getMethodType
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 268 in traverseAndBuildProps
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 149 in getPropList
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Companions\BaseCompanions.py", line 142 in getPropList
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 314 in selectObject
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\SelectionTags.py", line 397 in selectCtrl
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1023 in selectControlByPos
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1618 in OnControlSelect
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 2254 in MainLoop
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 793 in main
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Boa.py", line 806 in <module>
+
+=== Boa session start: 2026-09-13T12:10:41.807383 ===
+Windows fatal exception: access violation
+
+Thread 0x000024d4 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\EditorUtils.py", line 523 in run
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032 in _bootstrap
+
+Current thread 0x000021d0 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 213 in getMethodType
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 268 in traverseAndBuildProps
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 149 in getPropList
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Companions\BaseCompanions.py", line 142 in getPropList
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 314 in selectObject
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\SelectionTags.py", line 397 in selectCtrl
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1023 in selectControlByPos
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1618 in OnControlSelect
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 2254 in MainLoop
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 793 in main
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 806 in <module>
+
+=== Boa session start: 2026-09-13T12:11:18.370088 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1618, in OnControlSelect
+    dsgn.selectControlByPos(ctrl, pos, event.ShiftDown())
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 952, in selectControlByPos
+    view.OnSelectOrAdd()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\DataView.py", line 210, in OnSelectOrAdd
+    objName = self.newObject(CtrlClass, CtrlCompanion)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\InspectableViews.py", line 697, in newObject
+    self.addObject(objName, companion, companion.designTimeObject(), '')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Companions\BaseCompanions.py", line 808, in designTimeObject
+    self.control = self.objClass(**self.designTimeDefaults())
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 72, in __init__
+    item.__init__(*args, **kw)
+TypeError: Cursor(): arguments did not match any overloaded call:
+  overload 1: 'id' is not a valid keyword argument
+  overload 2: 'id' is not a valid keyword argument
+  overload 3: 'id' is not a valid keyword argument
+  overload 4: 'id' is not a valid keyword argument
+  overload 5: 'id' is not a valid keyword argument
+Windows fatal exception: access violation
+
+Thread 0x00000480 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\EditorUtils.py", line 523 in run
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032 in _bootstrap
+
+Current thread 0x000010e0 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 213 in getMethodType
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 268 in traverseAndBuildProps
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 149 in getPropList
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Companions\BaseCompanions.py", line 142 in getPropList
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 314 in selectObject
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\SelectionTags.py", line 397 in selectCtrl
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1023 in selectControlByPos
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1618 in OnControlSelect
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 2254 in MainLoop
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 793 in main
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 806 in <module>
+
+=== Boa session start: 2026-09-13T12:14:08.967004 ===
+Windows fatal exception: access violation
+
+Thread 0x00001f98 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\EditorUtils.py", line 523 in run
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075 in _bootstrap_inner
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032 in _bootstrap
+
+Current thread 0x00001c98 (most recent call first):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 213 in getMethodType
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 268 in traverseAndBuildProps
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\RTTI.py", line 149 in getPropList
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Companions\BaseCompanions.py", line 142 in getPropList
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Inspector.py", line 314 in selectObject
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\SelectionTags.py", line 397 in selectCtrl
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1023 in selectControlByPos
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1618 in OnControlSelect
+  File "C:\Users\rjs\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\core.py", line 2254 in MainLoop
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 793 in main
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\boa.py", line 806 in <module>
+
+=== Boa session start: 2026-09-13T12:25:04.001391 ===
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1618, in OnControlSelect
+    dsgn.selectControlByPos(ctrl, pos, event.ShiftDown())
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 952, in selectControlByPos
+    view.OnSelectOrAdd()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\DataView.py", line 216, in OnSelectOrAdd
+    self.refreshCtrl()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\DataView.py", line 99, in refreshCtrl
+    ClassObj = PaletteMapping.evalCtrl(className)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PaletteMapping.py", line 155, in evalCtrl
+    return eval(expr, globals(), localsDct)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1, in <module>
+AttributeError: module 'wx' has no attribute 'core'
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1138, in OnCloseWindow
+    self.refreshModel()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 444, in refreshModel
+    self.model.refreshFromModule()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\PythonEditorModels.py", line 122, in refreshFromModule
+    self.notify()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Models\EditorModels.py", line 94, in notify
+    view.update()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\EditorViews.py", line 283, in update
+    self.refresh()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\EditorViews.py", line 286, in refresh
+    self.refreshCtrl()
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\DataView.py", line 99, in refreshCtrl
+    ClassObj = PaletteMapping.evalCtrl(className)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\PaletteMapping.py", line 155, in evalCtrl
+    return eval(expr, globals(), localsDct)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1, in <module>
+AttributeError: module 'wx' has no attribute 'core'
+Traceback (most recent call last):
+  File "C:\Users\rjs\Documents\GitHub\boa-constructor\Views\Designer.py", line 1642, in OnControlResize
+    if event.GetId() == dsgn.GetId():
+                        ^^^^^^^^^^^^
+RuntimeError: wrapped C/C++ object of type DesignerView has been deleted

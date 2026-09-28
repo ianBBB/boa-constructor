@@ -303,8 +303,7 @@ def hidez():
         z.find_cycles(1)
         z.show_stats()
 
-hidez()
-"""
+hidez()"""
 
 # 0,9,4    18-Jul-1999
 #    added purge_dead_roots arg to find_cycles

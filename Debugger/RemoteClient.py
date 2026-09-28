@@ -1,19 +1,21 @@
-import os, sys, base64
-try:
-    from ExternalLib import xmlrpclib
-except ImportError:
-    import xmlrpclib
+# pyright: ignore
+# type: ignore
 
-class TransportWithAuthentication (xmlrpclib.Transport):
+import base64
+import xmlrpc.client
+
+class TransportWithAuthentication (xmlrpc.client.Transport):
     """Adds a proprietary but simple authentication header to the
-    RPC mechanism.  NOTE: this requires xmlrpclib version 1.0.0."""
+    RPC mechanism."""
 
     def __init__(self, user, pw):
-        self._auth = 'basic %s' % base64.encodestring(
-            '%s:%s' % (user, pw)).strip()
+        xmlrpc.client.Transport.__init__(self)
+        auth_bytes = ('%s:%s' % (user, pw)).encode('utf-8')
+        auth_token = base64.b64encode(auth_bytes).decode('ascii')
+        self._auth = 'Basic %s' % auth_token
 
-    def send_user_agent(self, connection):
-        xmlrpclib.Transport.send_user_agent(self, connection)
+    def send_headers(self, connection, headers):
+        xmlrpc.client.Transport.send_headers(self, connection, headers)
         connection.putheader("Authentication", self._auth)
 
 
@@ -37,7 +39,7 @@ class RemoteClient (MultiThreadedDebugClient):
             trans = TransportWithAuthentication(self.user, self.pw)
             url = 'http://%s:%d/RemoteDebug' % (
                 self.host, int(self.port))
-            self.server = xmlrpclib.Server(url, trans)
+            self.server = xmlrpc.client.ServerProxy(url, transport=trans)
         m = getattr(self.server, m_name)
         result = m(*m_args)
         return result

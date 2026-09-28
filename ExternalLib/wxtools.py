@@ -1,8 +1,6 @@
-'''
-Created on Jul 28, 2014
+"""Created on Jul 28, 2014
 
-@author: cwt
-'''
+@author: cwt"""
 
 # Code from wxPython-2.8 wx.tools.img2py
 import zlib

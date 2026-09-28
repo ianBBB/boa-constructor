@@ -23,6 +23,7 @@ from Preferences import IS
 from Utils import _
 
 from . import ExplorerNodes
+from .FileExplorer import FileSysNode as PyFileNode
 from Models import EditorModels, EditorHelper
 
 import ProcessProgressDlg
@@ -62,7 +63,7 @@ def cvsFileLocallyModified(filename, timestamp):
         if cvssegs and cvssegs[0] == 'Initial' or len(cvssegs) < 3:
             cvssegs.append('0')
         # use day field of dates for comparison
-        filesegs[2], cvssegs[2] = int(filesegs[2]), int(cvssegs[2])
+        filesegs[2], cvssegs[2] = int(filesegs[2]), int(cvssegs[2])  # type: ignore[index]
 
     return (filesegs != cvssegs, conflict)
 
@@ -140,19 +141,19 @@ class CVSController(ExplorerNodes.Controller):
 
         self.toolbarMenus = [self.cvsMenuDef]
 
-        FSCVSFolderNode.images = self.images
+        FSCVSFolderNode.images = self.images  # type: ignore[assignment]
 
     def destroy(self):
         self.cvsMenuDef = ()
         self.fileCVSMenuDef = ()
         self.toolbarMenus = ()
         self.images = None
-        FSCVSFolderNode.images = None
+        FSCVSFolderNode.images = None  # type: ignore[assignment]
         self.menu.Destroy()
 
     def getName(self, item):
         name = ExplorerNodes.Controller.getName(self, item)
-        if ' ' in name:
+        if ' ' in name:  # type: ignore[operator]
             return '"%s"' % name
         else:
             return name
@@ -509,7 +510,7 @@ class CVSFileNode(ExplorerNodes.ExplorerNode):
             name , self.revision, self.timestamp, self.options, self.tagdate = \
               entriesLine.strip()[1:].split('/')
         else:
-            name=self.revision=self.timestamp=self.options=self=tagdate = ''
+            name=self.revision=self.timestamp=self.options=self.tagdate=tagdate = ''
 
         ExplorerNodes.ExplorerNode.__init__(self, name, resourcepath, None, -1, parent)
 
@@ -642,7 +643,7 @@ class FSCVSFolderNode(ExplorerNodes.ExplorerNode):
 
         res = {}
         self.dirpos = 0
-        fileEntries = self.parent.openList()
+        fileEntries = self.parent.openList()  # type: ignore[union-attr]
         txtEntries = open(os.path.join(self.resourcepath, 'Entries')).readlines()
         filenames = [f.name for f in fileEntries]
         missingEntries = []

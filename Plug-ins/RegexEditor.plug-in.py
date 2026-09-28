@@ -16,13 +16,13 @@ reFlags = {'IGNORECASE': re.IGNORECASE, 'LOCALE': re.LOCALE,
 def createRegexEditor(parent):
     return RegexEditorFrm(parent)
 
-[wxID_REGEXEDITORFRM, wxID_REGEXEDITORFRMCLBFLAGS, 
- wxID_REGEXEDITORFRMLCGROUPS, wxID_REGEXEDITORFRMPANEL, 
- wxID_REGEXEDITORFRMRBACTION, wxID_REGEXEDITORFRMSTATICTEXT1, 
- wxID_REGEXEDITORFRMSTATICTEXT2, wxID_REGEXEDITORFRMSTATICTEXT3, 
- wxID_REGEXEDITORFRMSTATICTEXT4, wxID_REGEXEDITORFRMSTATICTEXT5, 
- wxID_REGEXEDITORFRMSTATUSBAR, wxID_REGEXEDITORFRMTXTMATCH, 
- wxID_REGEXEDITORFRMTXTREGEX, wxID_REGEXEDITORFRMTXTSTRING, 
+[wxID_REGEXEDITORFRM, wxID_REGEXEDITORFRMCLBFLAGS,
+ wxID_REGEXEDITORFRMLCGROUPS, wxID_REGEXEDITORFRMPANEL,
+ wxID_REGEXEDITORFRMRBACTION, wxID_REGEXEDITORFRMSTATICTEXT1,
+ wxID_REGEXEDITORFRMSTATICTEXT2, wxID_REGEXEDITORFRMSTATICTEXT3,
+ wxID_REGEXEDITORFRMSTATICTEXT4, wxID_REGEXEDITORFRMSTATICTEXT5,
+ wxID_REGEXEDITORFRMSTATUSBAR, wxID_REGEXEDITORFRMTXTMATCH,
+ wxID_REGEXEDITORFRMTXTREGEX, wxID_REGEXEDITORFRMTXTSTRING,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(14)]
 
 class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
@@ -139,15 +139,23 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
     def __init__(self, parent):
         self._init_ctrls(parent)
 
-        self.SetIcon(Preferences.IS.load('Images/Icons/Bevel.ico'))
+        icon = Preferences.IS.load('Images/Icons/Bevel.ico')
+        if isinstance(icon, wx.Icon):
+            self.SetIcon(icon)
 
-        self.statusImages = \
-              [wx.ArtProvider.GetBitmap(artId, wx.ART_TOOLBAR, (16, 16))
-               for artId in (wx.ART_ERROR, wx.ART_INFORMATION)]
+        self.statusImages = [
+            wx.ArtProvider.GetBitmap(artId, wx.ART_TOOLBAR, wx.Size(16, 16))
+            for artId in (wx.ART_ERROR, wx.ART_INFORMATION)
+        ]
 
         rect = self.statusBar.GetFieldRect(0)
-        self.sbImage = wx.StaticBitmap(self.statusBar, -1, self.statusImages[0],
-            (rect.x+1, rect.y+1), (16, 16))
+        self.sbImage = wx.StaticBitmap(
+            self.statusBar,
+            -1,
+            wx.BitmapBundle.FromBitmap(self.statusImages[0]),
+            wx.Point(rect.x + 1, rect.y + 1),
+            wx.Size(16, 16),
+        )
 
         self.winConfOption = 'regexeditor'
         self.loadDims()
@@ -168,7 +176,7 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
             ro = re.compile(regex, flags)
         except Exception as err:
             self.statusBar.SetStatusText(_('Error: %s: %s')%(err.__class__, err), 1)
-            self.sbImage.SetBitmap(self.statusImages[0])
+            self.sbImage.SetBitmap(wx.BitmapBundle.FromBitmap(self.statusImages[0]))
             return
 
         if self.rbAction.GetSelection():
@@ -184,27 +192,24 @@ class RegexEditorFrm(wx.Frame, Utils.FrameRestorerMixin):
             s, e = mo.span()
             self.txtMatch.SetValue(string[s:e])
 
-            # we want the named groups sorted in the order they appear in the re
-            # so lets get the index, name and group into a list of tuples and
-            # sort the list
+            # We want named groups sorted in the order they appear in the regex.
             namedGroups = []
             for name, idx in list(ro.groupindex.items()):
-                namedGroups += [(idx, name, mo.group(name))]
+                namedGroups.append((idx, name, mo.group(name)))
             namedGroups.sort()
 
-            # now add the sorted list items to lcGroups 
             for idx, name, group in namedGroups:
-                self.lcGroups.InsertItem(idx-1, str(idx))
-                self.lcGroups.SetItem(idx-1, 1, name)
-                self.lcGroups.SetItem(idx-1, 2, group)
+                self.lcGroups.InsertItem(idx - 1, str(idx))
+                self.lcGroups.SetItem(idx - 1, 1, name)
+                self.lcGroups.SetItem(idx - 1, 2, group)
 
     def setStatus(self, mo):
         if mo:
             self.statusBar.SetStatusText(_('Match'), 1)
-            self.sbImage.SetBitmap(self.statusImages[1])
+            self.sbImage.SetBitmap(wx.BitmapBundle.FromBitmap(self.statusImages[1]))
         else:
             self.statusBar.SetStatusText(_('Failed to match'), 1)
-            self.sbImage.SetBitmap(self.statusImages[0])
+            self.sbImage.SetBitmap(wx.BitmapBundle.FromBitmap(self.statusImages[0]))
 
 
 #-------------------------------------------------------------------------------
@@ -227,7 +232,7 @@ b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x02\
 \xf7`\x99S\xd3\xc0\xf2\xbbH\xda\xb6\x8d_\xa5\x94\x00\xc4\x18o\x13H\xba\x83\
 \xa4\x93\x00\x1c\xfb\x9f\xd0\x91!\x84\x89\x1bHJ\x92\xd4%\\\x00I!\x04I^\xcc\
 \x81.\xe7R\xc9o=\xd7\xb9Jw\x9a\xf8t\x0f\x94R\x86\x12r\xce\x83V\xd7\x01\x03\
-\x95D\x18\x17\xaf\xf7E\x00\x00\x00\x00IEND\xaeB`\x82' 
+\x95D\x18\x17\xaf\xf7E\x00\x00\x00\x00IEND\xaeB`\x82'
 
 
 Preferences.IS.registerImage('Images/RegexEditor.png', getRegexEditorImgData())
