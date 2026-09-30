@@ -24,11 +24,11 @@ from Utils import _
 
 from wxPopen import ProcessRunnerMix
 
-[wxID_PROCESSPROGRESSDLG, wxID_PROCESSPROGRESSDLGCANCELBTN, 
- wxID_PROCESSPROGRESSDLGCMDSTXT, wxID_PROCESSPROGRESSDLGERRORTCTRL, 
- wxID_PROCESSPROGRESSDLGKILLBTN, wxID_PROCESSPROGRESSDLGOUTPUTTCTRL, 
- wxID_PROCESSPROGRESSDLGSPLITTERWINDOW, wxID_PROCESSPROGRESSDLGSTATUSGGE, 
- wxID_PROCESSPROGRESSDLGSTATUSSTXT, 
+[wxID_PROCESSPROGRESSDLG, wxID_PROCESSPROGRESSDLGCANCELBTN,
+ wxID_PROCESSPROGRESSDLGCMDSTXT, wxID_PROCESSPROGRESSDLGERRORTCTRL,
+ wxID_PROCESSPROGRESSDLGKILLBTN, wxID_PROCESSPROGRESSDLGOUTPUTTCTRL,
+ wxID_PROCESSPROGRESSDLGSPLITTERWINDOW, wxID_PROCESSPROGRESSDLGSTATUSGGE,
+ wxID_PROCESSPROGRESSDLGSTATUSSTXT,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(9)]
 
 class ProcessProgressDlg(wx.Dialog, ProcessRunnerMix):
@@ -238,7 +238,7 @@ if __name__ == '__main__':
                 # Test doesn't terminate, don't know why :(
                 app.ExitMainLoop()
 
-        tpr = TestProcessRunner()
+        tpr = TestProcessRunner([])
         #cmd = 'cvs -H status'
         tpr.execute(cmd)
         app.MainLoop()

@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 import string, os, sys
 
 import wx
@@ -11,11 +13,11 @@ from Models import EditorModels, EditorHelper, Controllers
 from Views import EditorViews
 
 # Register plug-in preference
-Plugins.registerPreference('wxPythonDemo', 'wpWxPythonDemoFolder', "''", 
-                           ['Path to the wxPython demo folder.', 
+Plugins.registerPreference('wxPythonDemo', 'wpWxPythonDemoFolder', "''",
+                           ['Path to the wxPython demo folder.',
                             'If empty, wxPython/demo is used.'], 'type: dirpath')
-Plugins.registerPreference('wxPythonDemo', 'wpShowWxPythonDemoTemplate', 'False', 
-                           ['Should a template for an empty wxPython demo file', 
+Plugins.registerPreference('wxPythonDemo', 'wpShowWxPythonDemoTemplate', 'False',
+                           ['Should a template for an empty wxPython demo file',
                             'be available on the Palette.'])
 
 
@@ -44,7 +46,7 @@ def importFromWxPyDemo(name):
     except Exception as err:
         print(str(err))
         return None
-        
+
 
 def getWxPyDemoTree():
     Main = importFromWxPyDemo('Main')
@@ -63,44 +65,44 @@ class SkipViewSignal(Exception):
 class wxPythonDemoView(wx.Panel, EditorViews.EditorView, EditorViews.CloseableViewMix):
     viewName = tabName = 'Demo'
     viewTitle = _('Demo')
-    
+
     def __init__(self, parent, model):
         wx.Panel.__init__(self, parent, -1)
         EditorViews.CloseableViewMix.__init__(self)
         EditorViews.EditorView.__init__(self, model, actions=self.closingActionItems)
-        
+
         self.demoCtrl = None
         self.updateDemoCtrl()
-        
+
         if self.demoCtrl is None:
             raise SkipViewSignal
-        
+
     def updateDemoCtrl(self):
         demoModule = self.model.demoModule
         if demoModule:
             if self.demoCtrl:
                 self.demoCtrl.Destroy()
-    
+
             cwd = os.getcwd()
             os.chdir(demoDir)
             try:
                 self.demoCtrl = demoModule.runTest(self.model.editor, self, self)
             finally:
                 os.chdir(cwd)
-                
+
             if self.demoCtrl:
                 self.demoCtrl.SetSize(self.GetClientSize())
                 self.SetAutoLayout(True)
-                self.demoCtrl.SetConstraints(LayoutAnchors(self.demoCtrl, 
+                self.demoCtrl.SetConstraints(LayoutAnchors(self.demoCtrl,
                                              True, True, True, True))
-    
+
     def refreshCtrl(self):
         pass
-    
+
     def WriteText(self, text):
         """ When View used as demo log """
         if not self.model: return
-        
+
         ef = self.model.editor.erroutFrm
         ef.appendToOutput(text)
         ef.display()
@@ -116,9 +118,9 @@ class wxPythonDemoOverView(EditorViews.HTMLView, EditorViews.CloseableViewMix):
     def __init__(self, parent, model):
         EditorViews.CloseableViewMix.__init__(self)
         EditorViews.HTMLView.__init__(self, parent, model, actions=self.closingActionItems)
-        
+
         self.refreshCtrl()
-    
+
     def generatePage(self):
         if self.model.demoModule:
             return self.model.demoModule.overview
@@ -129,13 +131,13 @@ class wxPythonDemoOverView(EditorViews.HTMLView, EditorViews.CloseableViewMix):
 class wxPythonDemoNode(FileExplorer.FileSysNode):
     def open(self, editor):
         model, cntrl = editor.openOrGotoModule(self.resourcepath)
- 
+
         if not hasattr(model, 'demoModule'):
             name = os.path.splitext(os.path.basename(model.filename))[0]
             model.demoModule = importFromWxPyDemo(name)
-       
-        if model.demoModule and (model, cntrl) != (None, None): 
-            for View, focus in ((wxPythonDemoOverView, False), 
+
+        if model.demoModule and (model, cntrl) != (None, None):
+            for View, focus in ((wxPythonDemoOverView, False),
                                 (wxPythonDemoView, True)):
                 if View.viewName in model.views:
                     view = model.views[View.viewName]
@@ -146,16 +148,16 @@ class wxPythonDemoNode(FileExplorer.FileSysNode):
                         view = modPge.addView(View)
                     except SkipViewSignal:
                         view = None
-                        
+
                 if focus and view:
                     view.focus()
 
         return model, cntrl
-    
+
 class wxPythonDemoSectionNode(ExplorerNodes.ExplorerNode):
     protocol = 'wxpydemo.section'
     def __init__(self, name, items, clipboard, bookmarks):
-        ExplorerNodes.ExplorerNode.__init__(self, name, '', clipboard, 
+        ExplorerNodes.ExplorerNode.__init__(self, name, '', clipboard,
               EditorHelper.imgFolder)
         self.bookmarks = bookmarks
         self.vetoSort = true
@@ -171,23 +173,23 @@ class wxPythonDemoSectionNode(ExplorerNodes.ExplorerNode):
         else:
             demoFile = os.path.splitext(mod.__file__)[0]+'.py'
             imgIdx = Controllers.identifyFile(demoFile)[0].imgIdx
-            return wxPythonDemoNode(name, demoFile, self.clipboard, imgIdx, 
+            return wxPythonDemoNode(name, demoFile, self.clipboard, imgIdx,
                                     self, self.bookmarks)
 
     def openList(self):
         return [n for n in [self.createChildNode(name) for name in self.items] if n]
-    
+
 
 class wxPythonDemoDirNode(ExplorerNodes.ExplorerNode):
     protocol = 'wxpydemo'
     def __init__(self, clipboard, parent, bookmarks):
-        ExplorerNodes.ExplorerNode.__init__(self, _('wxPython demo'), '', 
+        ExplorerNodes.ExplorerNode.__init__(self, _('wxPython demo'), '',
               clipboard, EditorHelper.imgWxPythonDemo)
         self.bookmarks = bookmarks
         self.bold = true
         self.vetoSort = true
         self.treeList = getWxPyDemoTree()
-        
+
     def isFolderish(self):
         return true
 
@@ -196,7 +198,7 @@ class wxPythonDemoDirNode(ExplorerNodes.ExplorerNode):
               self.bookmarks)
 
     def openList(self):
-        return [self.createChildNode(name, items) 
+        return [self.createChildNode(name, items)
                 for name, items in self.treeList]
 
 
@@ -211,10 +213,10 @@ from Models import PythonEditorModels, PythonControllers
 class wxPythonDemoModuleModel(PythonEditorModels.ModuleModel):
     modelIdentifier = 'wxPythonDemoModule'
     defaultName = 'wxpythondemomodule'
-    
+
     def getDefaultData(self):
         return '''import wx
-    
+
 #-------------------------------------------------------------------------------
 
 # Define your demo class here and save this module in the wxPython demo folder
@@ -222,7 +224,7 @@ class wxPythonDemoModuleModel(PythonEditorModels.ModuleModel):
 #-------------------------------------------------------------------------------
 
 def runTest(frame, nb, log):
-    win = wx.Panel(nb, -1) # Replace with your demo class 
+    win = wx.Panel(nb, -1) # Replace with your demo class
     return win
 
 #-------------------------------------------------------------------------------
@@ -232,7 +234,7 @@ overview = """<html><body>
 <p>
 </body></html>
 """
-  
+
 if __name__ == '__main__':
     import sys,os
     import run
@@ -259,7 +261,7 @@ I\xce%\x83 \x89\x0c\x07d\xc6\xa7pwF\x01\xa1i\x86\x10:\xf2e\x1c\xbeR\xff\xc2`\
 t\t$ \xefD\x8co\x87\xcc\x1c\x10\xe0`f\xe9\x81\x96\xbf\x02X\x82|n_a\xcd\x90\
 \xe4H%\xc6u\x06\xaaq\xff?\xc6\xfd/1\xc6aQh\x17\xe0T\xf8\xd1\xfa\x06\xbd\xaf`\
 \x13p.\xc5u\xee\xef\xf0\x94\xddk\xd1\xf2\'\xdcf\xea\x93W\xfd\x1d\xbf|\\\xe5\
-\xbf>Ca\x00\x00\x00\x00IEND\xaeB`\x82' 
+\xbf>Ca\x00\x00\x00\x00IEND\xaeB`\x82'
 
 def getwxPythonDemoModuleData():
     return \
@@ -273,7 +275,7 @@ J`f\x9d\xdd\xff\x84\xa2("\xb8\x9a!\xff\xc1E\xcb\xe9KV\xc0\xe9>\x0f\xd3\x0b\
 \x94\xe5\xe6i\x90\xfd\xfe0\xbd\x80\xaab\xf7wLD\xfe\xe0\xa2\xcd\x02Iz]\x94\
 \xe7Y2\xf9x\x06\xd6\xb5\xc0\x05\xdc\xce\r\x13p\xaeo\xe5E\xb6\x05\xcaZ\xa0z\
 \xdf\xf3\xfb=\xf8\xe6\x87sM&w5YW\x8a\x88<\xeb\xdc\x00I\xef\xca-\xb2\x8f\xf3\
-\xee\x00\x00\x00\x00IEND\xaeB`\x82' 
+\xee\x00\x00\x00\x00IEND\xaeB`\x82'
 
 Preferences.IS.registerImage('Images/wxPythonDemo.png', getwxPythonDemoData())
 Preferences.IS.registerImage('Images/Palette/wxPythonDemoModule.png', getwxPythonDemoModuleData())

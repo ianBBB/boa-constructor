@@ -24,11 +24,11 @@ def createContentsDlg(parent, title, htmlTitle, location, anchors):
     return HelpBookItemDlg(parent, _('Help Book - Contents'), title, _('Title'), htmlTitle,
                      location, _('Location'), anchors)
 
-[wxID_HELPBOOKITEMDLG, wxID_HELPBOOKITEMDLGBTNREADTITLE, 
- wxID_HELPBOOKITEMDLGBUTTON2, wxID_HELPBOOKITEMDLGBUTTON3, 
- wxID_HELPBOOKITEMDLGCBBANCHORS, wxID_HELPBOOKITEMDLGSTATICTEXT1, 
- wxID_HELPBOOKITEMDLGSTATICTEXT2, wxID_HELPBOOKITEMDLGTXTPAGE, 
- wxID_HELPBOOKITEMDLGTXTTITLE, 
+[wxID_HELPBOOKITEMDLG, wxID_HELPBOOKITEMDLGBTNREADTITLE,
+ wxID_HELPBOOKITEMDLGBUTTON2, wxID_HELPBOOKITEMDLGBUTTON3,
+ wxID_HELPBOOKITEMDLGCBBANCHORS, wxID_HELPBOOKITEMDLGSTATICTEXT1,
+ wxID_HELPBOOKITEMDLGSTATICTEXT2, wxID_HELPBOOKITEMDLGTXTPAGE,
+ wxID_HELPBOOKITEMDLGTXTTITLE,
 ] = [wx.NewIdRef() for _init_ctrls in range(9)]
 
 class HelpBookItemDlg(wx.Dialog):
@@ -229,7 +229,7 @@ class HelpBookParser(HTMLParser):
             self.index = [None, None, None]
 
     def end_object(self):
-        if self.indexes is not None:
+        if self.indexes is not None and self.index is not None:
             self.indexes.append(tuple(self.index))
             self.index = None
 
@@ -302,7 +302,7 @@ def _testHPP():
     #i = parseHelpFile(open('../Docs/boa/apphelp/apphelp.hhc').read())
     #print i
     ##writeHelpBook(i)
-    print(parseHelpFile(open('../Docs/boa/apphelp/debugger.html').read(), Parser=HtmlDocDetailParser).result)
+    print(parseHelpFile(open('../Docs/boa/apphelp/debugger.html').read(), Parser=HtmlDocDetailParser).result)  # type: ignore[arg-type]
 
 def _testHCP():
     h = HelpConfigParser(open('../Docs/wxpython/wx/wx.hhp').readlines())
@@ -317,6 +317,7 @@ if __name__ == '__main__':
 
 import Preferences, Utils, Plugins
 import PaletteStore
+from typing import Any
 
 from Models import Controllers, EditorHelper, EditorModels
 from Views import EditorViews, SourceViews, StyledTextCtrls
@@ -328,12 +329,14 @@ import glob, zipfile
 from io import StringIO
 
 
+EditorHelper.imgHelpBook = EditorHelper.imgIdxRange()  # type: ignore[attr-defined]
+
 class HelpBookModel(EditorModels.SourceModel):
     modelIdentifier = 'HelpBook'
     defaultName = 'helpbook'
     bitmap = 'HelpBook.png'
     ext = '.hhp'
-    imgIdx = EditorHelper.imgHelpBook
+    imgIdx = EditorHelper.imgHelpBook  # type: ignore[attr-defined]
 
     def __init__(self, data, name, editor, saved):
         EditorModels.SourceModel.__init__(self, data, name, editor, saved)
@@ -442,6 +445,7 @@ class HTBHelpBookModel(HelpBookModel):
 class HelpBookFilesView(EditorViews.VirtualListCtrlView):
     viewName = 'Files'
     viewTitle = _('Files')
+    model: Any
 
     addBmp = 'Images/Shared/NewItem.png'
     delBmp = 'Images/Shared/DeleteItem.png'
@@ -503,9 +507,8 @@ class HelpBookFilesView(EditorViews.VirtualListCtrlView):
                     except ExplorerNodes.TransportError:
                         return ''
                     # fmtr = formatter.NullFormatter(formatter.NullWriter())
-                    fmtr = HTMLParser()
                     try:
-                        HtmlDocDetailParser(fmtr, breakOnTitle=True).feed(data)
+                        HtmlDocDetailParser(breakOnTitle=True).feed(data)
                     except BreakOnTitle as title:
                         return str(title)
                     except:
@@ -513,7 +516,7 @@ class HelpBookFilesView(EditorViews.VirtualListCtrlView):
                     else:
                         return ''
                 finally:
-                    self.cached[item] = title
+                    self.cached[item] = title  # type: ignore[assignment]
             else:
                 return self.cached[item]
 
@@ -662,7 +665,7 @@ class FileListDropTarget(wx.DropTarget):
     def OnData(self, x, y, d):
         if self.GetData():
             filelist = eval(self.data.GetData())
-            self.OnDropFiles(x, y, filelist)
+            self.OnDropFiles(x, y, filelist)  # type: ignore[attr-defined]
         return d
 
 class HelpBookIndexDropTarget(FileListDropTarget):
@@ -675,8 +678,8 @@ class HelpBookIndexDropTarget(FileListDropTarget):
 
         for filename in files:
             data = Explorer.openEx(os.path.join(docsDir, filename)).load()
-            prs = parseHelpFile(data, HtmlDocDetailParser)
-            dlg = createIndexDlg(None, '', filename, prs.anchors)
+            prs = parseHelpFile(data, HtmlDocDetailParser)  # type: ignore[arg-type]
+            dlg = createIndexDlg(None, '', filename, prs.anchors)  # type: ignore[attr-defined]
             try:
                 if dlg.ShowModal() != wx.ID_OK:
                     return
@@ -697,7 +700,7 @@ class HelpBookIndexDropTarget(FileListDropTarget):
 class HelpBookIndexView(wx.SplitterWindow, EditorViews.EditorView):
     viewName = 'Index'
     viewTitle = _('Index')
-    
+
     addBmp = 'Images/Shared/NewItem.png'
     delBmp = 'Images/Shared/DeleteItem.png'
     def __init__(self, parent, model):
@@ -723,6 +726,7 @@ class HelpBookIndexView(wx.SplitterWindow, EditorViews.EditorView):
 
 
 class HelpBookIndexListView(EditorViews.VirtualListCtrlView):
+    model: Any
     def __init__(self, parent, model, parentView=None):
         EditorViews.VirtualListCtrlView.__init__(self, parent, model, wx.LC_REPORT,
           (), -1)
@@ -778,8 +782,8 @@ class HelpBookIndexListView(EditorViews.VirtualListCtrlView):
                       os.path.join(docsDir, location.split('#')[0])).load()
             except ExplorerNodes.TransportLoadError:
                 data = ''
-            prs = parseHelpFile(data, HtmlDocDetailParser)
-            dlg = createIndexDlg(None, keyword, location, prs.anchors)
+            prs = parseHelpFile(data, HtmlDocDetailParser)  # type: ignore[arg-type]
+            dlg = createIndexDlg(None, keyword, location, prs.anchors)  # type: ignore[attr-defined]
             try:
                 if dlg.ShowModal() != wx.ID_OK:
                     return
@@ -852,10 +856,10 @@ class HelpBookContentsDropTarget(FileListDropTarget):
 def doContentsDlg(title, text, docsDir):
     #text, anchor = (text.split('#')+[''])[:2]
     data = Explorer.openEx(os.path.join(docsDir, text.split('#')[0])).load()
-    prs = parseHelpFile(data, HtmlDocDetailParser)
+    prs = parseHelpFile(data, HtmlDocDetailParser)  # type: ignore[arg-type]
     if title is None:
-        title = prs.title
-    dlg = createContentsDlg(None, title, prs.title, text, prs.anchors)
+        title = prs.title  # type: ignore[attr-defined]
+    dlg = createContentsDlg(None, title, prs.title, text, prs.anchors)  # type: ignore[attr-defined]
     try:
         if dlg.ShowModal() != wx.ID_OK:
             return None, None
@@ -898,6 +902,7 @@ class HelpBookContentsView(wx.SplitterWindow, EditorViews.EditorView):
 class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
     viewName = 'Contents'
     viewTitle = _('Contents')
+    model: Any
 
     def __init__(self, parent, model, parentView=None):
         wx.TreeCtrl.__init__(self, parent, -1,
@@ -910,7 +915,7 @@ class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
 
         self.helpImgLst = wx.ImageList(16, 16)
         for artId in (wx.ART_HELP_BOOK, wx.ART_HELP_FOLDER, wx.ART_HELP_PAGE):
-            bmp = wx.ArtProvider.GetBitmap(artId, wx.ART_TOOLBAR, (16, 16))
+            bmp = wx.ArtProvider.GetBitmap(artId, wx.ART_TOOLBAR, (16, 16))  # type: ignore[arg-type]
             self.helpImgLst.Add(bmp)
         self.AssignImageList(self.helpImgLst)
 
@@ -1012,7 +1017,7 @@ class HelpBookContentsTreeView(wx.TreeCtrl, EditorViews.EditorView):
             self.updateEditor()
 
             tree.SetItemData(item, wx.TreeItemData((page, items, children)))
-            tree.SetItemText(item, title)
+            tree.SetItemText(item, title)  # type: ignore[arg-type]
 
     def OnDeleteEntry(self, event):
         item = self.GetSelection()
@@ -1078,8 +1083,8 @@ class HelpBookController(Controllers.SourceController):
             files = [os.path.join(docsDir, f) for f in model.config.files]
         elif selected == 1:
             files = []
-            os.path.walk(docsDir, visitDir,
-                         (files, [os.path.basename(zipfilename)]))
+            for _wd_root, _wd_dirs, _wd_names in os.walk(docsDir):
+                visitDir((files, [os.path.basename(zipfilename)]), _wd_root, _wd_names)
 
         wx.BeginBusyCursor()
         zf = zipfile.ZipFile(zipfilename, 'w', zipfile.ZIP_DEFLATED)
@@ -1093,8 +1098,8 @@ class HelpBookController(Controllers.SourceController):
         wx.LogMessage(_('Written %s.')%zipfilename)
 
     def OnMakeCHM(self, event):
-        # modelFile = model.localFilename()
-        modelFile = EditorModels.localFilename()
+        model = self.getModel()
+        modelFile = model.localFilename()
         # dir, name = os.path.split(modelFile)
         runDir, name = os.path.split(modelFile)
         cmd = 'hhc %s'%name

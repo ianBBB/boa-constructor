@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        DAVExplorer.py
 # Purpose:     Classes for exploring DAV servers

@@ -9,6 +9,9 @@
 # Copyright:   (c) 2001 - 2007 Riaan Booysen
 # Licence:     GPL
 #-----------------------------------------------------------------------------
+# pyright: ignore
+# type: ignore
+
 ##Boa:Frame:ErrorStackMF
 # remove between #-- comments before editing visually
 

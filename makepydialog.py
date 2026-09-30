@@ -2,15 +2,21 @@
 
 import wx
 from wx.lib.anchors import LayoutAnchors
-from win32com.client import selecttlb, makepy
+try:
+    import win32com.client as _win32_client
+    selecttlb = getattr(_win32_client, 'selecttlb', None)
+    makepy = getattr(_win32_client, 'makepy', None)
+except ImportError:
+    selecttlb = None  # type: ignore
+    makepy = None  # type: ignore
 import traceback, types
 
 def create(parent):
     return MakePyDialog(parent)
 
-[wxID_MAKEPYDIALOG, wxID_MAKEPYDIALOGBFORDEMAND, wxID_MAKEPYDIALOGCANCEL, 
- wxID_MAKEPYDIALOGDIRECTSPECIFICATION, wxID_MAKEPYDIALOGOK, 
- wxID_MAKEPYDIALOGTYPELIBRARYLIST, 
+[wxID_MAKEPYDIALOG, wxID_MAKEPYDIALOGBFORDEMAND, wxID_MAKEPYDIALOGCANCEL,
+ wxID_MAKEPYDIALOGDIRECTSPECIFICATION, wxID_MAKEPYDIALOGOK,
+ wxID_MAKEPYDIALOGTYPELIBRARYLIST,
 ] = [wx.NewIdRef(count=1) for _init_ctrls in range(6)]
 
 class MakePyDialog(wx.Dialog):
@@ -94,6 +100,9 @@ class MakePyDialog(wx.Dialog):
 
     def Generate( self, typeLibrary):
         """ Generate wrapper for a given type library """
+        if makepy is None:
+            wx.MessageBox('win32com makepy is not available in this environment.', 'Generation Failure!', wx.OK | wx.ICON_ERROR)
+            return None
         progress = Progress( self )
 
         try:
@@ -154,6 +163,9 @@ class MakePyDialog(wx.Dialog):
     def OnMakepydialogInitDialog(self, event):
         '''Initialisation of the dialog starts up a
         process of loading the type library definitions.'''
+        if selecttlb is None:
+            self.libraryList = []
+            return
         wx.BeginBusyCursor()
         try:
             self.libraryList = libraryList = selecttlb.EnumTlbs()
@@ -203,22 +215,26 @@ class Progress(wx.ProgressDialog):
 if __name__ == "__main__":
     class DemoFrame(wx.Frame):
         def __init__(self, parent):
-            wx.Frame.__init__(self, parent, 2400, "File entry with browse", size=(500,150) )
+            wx.Frame.__init__(self, parent, 2400, "File entry with browse", size=wx.Size(500, 150))
             dialog = MakePyDialog( self )
             dialog.ShowModal( )
             dialog.Destroy()
 
     class DemoApp(wx.App):
         def OnInit(self):
-            wx.Image_AddHandler(wx.JPEGHandler())
-            wx.Image_AddHandler(wx.PNGHandler())
-            wx.Image_AddHandler(wx.GIFHandler())
+            try:
+                wx.Image.AddHandler(wx.JPEGHandler())
+                wx.Image.AddHandler(wx.PNGHandler())
+                wx.Image.AddHandler(wx.GIFHandler())
+            except AttributeError:
+                # Fallback for older wxPython versions
+                pass
             frame = DemoFrame(None)
             frame.Show(True)
             self.SetTopWindow(frame)
             return True
     def test( ):
-        app = DemoApp(0)
+        app = DemoApp(False)
         app.MainLoop()
     print('Creating dialog')
     test( )

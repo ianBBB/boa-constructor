@@ -10,6 +10,9 @@
 # Licence:     GPL
 #-----------------------------------------------------------------------------
 
+# pyright: ignore
+# type: ignore
+
 import socket
 import ftplib, os
 

@@ -1,3 +1,5 @@
+# pyright: ignore
+# type: ignore
 #-----------------------------------------------------------------------------
 # Name:        PrefsExplorer.py
 # Purpose:
@@ -253,7 +255,7 @@ class SourceBasedPrefColNode(PreferenceCollectionNode):
                 options.append(option)
 
         breaks = {}
-        if self.showBreakLines: 
+        if self.showBreakLines:
             for k, v in list(module.break_lines.items()):
                 breaks[k] = _(v)
 
@@ -375,22 +377,22 @@ class LanguagesConfPropEdit(PropertyEditors.ConfPropEdit):
         self.editorCtrl = InspectorEditorControls.ChoiceIEC(self, self.getValue())
         self.editorCtrl.createControl(self.parent, self.idx, self.width)
         self.editorCtrl.setValue(self.value)
-  
+
     def getValues(self):
         all = [n for n in dir(wx) if n.startswith('LANGUAGE_') ]
         avl = []
         for n in all:
-            try: 
+            try:
                 if wx.Locale.IsAvailable(getattr(wx, n)):
                     avl.append('wx.'+n)
-            except wx.PyAssertionError: 
+            except wx.PyAssertionError:
                 # invalid language assertions
                 pass
             except AttributeError:
                 # wx version < 2.7
                 avl.append('wx.'+n)
         return avl
-        
+
 class PreferenceCompanion(ExplorerNodes.ExplorerCompanion):
     def __init__(self, name, prefNode, ):
         ExplorerNodes.ExplorerCompanion.__init__(self, name)
@@ -403,7 +405,7 @@ class PreferenceCompanion(ExplorerNodes.ExplorerCompanion):
                      'dirpath': PropertyEditors.DirpathConfPropEdit,
                      'keydef': KeyDefConfPropEdit,
                      'languages': LanguagesConfPropEdit}
-                     
+
     def getPropEditor(self, prop):
         # XXX Using name equality to identify _breaks' prop edit is ugly !
         for aProp in self.propItems:

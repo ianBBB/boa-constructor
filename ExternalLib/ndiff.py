@@ -40,8 +40,7 @@ recovered by piping the output through
 
     sed -n '/^[+ ] /s/^..//p'
 
-See module comments for details and programmatic interface.
-"""
+See module comments for details and programmatic interface."""
 
 __version__ = 1, 4, 0
 

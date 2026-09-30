@@ -1,9 +1,10 @@
 import wx
+import os
 
 import Preferences, Utils, Plugins
 
 if not Plugins.transportInstalled('ZopeLib.ZopeExplorer'):
-    raise Plugins.SkipPlugin, 'Zope support is not enabled'
+    raise Plugins.SkipPlugin('Zope support is not enabled')
 
 from ZopeLib.ZopeCompanions import ZopeCompanion, DBAdapterZC
 from Models import EditorHelper, Controllers, XMLSupport, HTMLSupport

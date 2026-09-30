@@ -78,8 +78,7 @@ BabelizerIOError
     Thrown for various networking and IO errors.
 
 Version: $Id$
-Author: Jonathan Feinberg <jdf@pobox.com>
-"""
+Author: Jonathan Feinberg <jdf@pobox.com>"""
 import re
 import urllib
 

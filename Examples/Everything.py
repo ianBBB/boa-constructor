@@ -1,6 +1,6 @@
 # Boa:Frame:Frame1
 
-""" Frame containing all controls available on the Palette. """
+"""Frame containing all controls available on the Palette."""
 
 ##import wxversion
 ##wxversion.ensureMinimal('2.8')

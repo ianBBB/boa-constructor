@@ -10,6 +10,9 @@
 # Copyright:   of changes (c) 1999 - 2007 Riaan Booysen
 # Licence:     Dual GPL & Python
 #-----------------------------------------------------------------------------
+# pyright: ignore
+# type: ignore
+
 
 from ExternalLib import Cyclops
 

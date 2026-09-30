@@ -591,9 +591,9 @@ class StockCursorDTC(UtilityDTC):
     def hideDesignTime(self):
         return ['Handle']
     def constructor(self):
-        return {'CursorId': 'id'}
+        return {'CursorId': 'cursorId'}
     def designTimeSource(self, position='wx.DefaultPosition', size='wx.DefaultSize'):
-        return {'id': 'wx.CURSOR_ARROW'}
+        return {'cursorId': 'wx.CURSOR_ARROW'}
 
 
 #-------------------------------------------------------------------------------
@@ -606,7 +606,11 @@ Plugins.registerComponents('Utilities (Data)',
       (wx.Menu, 'wx.Menu', MenuDTC),
       (wx.ImageList, 'wx.ImageList', ImageListDTC),
       (wx.Timer, 'wx.Timer', TimerDTC),
-      (wx.StockCursor, 'wx.StockCursor', StockCursorDTC),
+      # wx.StockCursor is a deprecated proxy whose internal class name is
+      # wx.core.Cursor.  Persisting that implementation detail produces source
+      # that PaletteMapping cannot evaluate under Phoenix.  wx.Cursor accepts
+      # the same stock cursor IDs through its cursorId constructor argument.
+      (wx.Cursor, 'wx.Cursor', StockCursorDTC),
 
       #(wx.AcceleratorTable, 'wx.AcceleratorTable', AcceleratorTableDTC),
       #(wxCursor: ['wx.Cursor', CursorDTC],

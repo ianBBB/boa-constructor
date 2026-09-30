@@ -11,7 +11,7 @@
 # Licence:     GPL
 #----------------------------------------------------------------------
 
-""" Classes defining and implementing the design time behaviour of controls """
+"""Classes defining and implementing the design time behaviour of controls."""
 
 import wx
 

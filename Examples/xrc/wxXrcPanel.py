@@ -1,12 +1,12 @@
 #Boa:Frame:wxFrame1
 
-""" This example demonstrates how to load .xrc files created e.g. by XRCed.
+"""This example demonstrates how to load .xrc files created e.g. by XRCed.
 
 Support only allows creating/linking the components. The contents of the
 xcr file is not displayed at design-time and can certainly not be managed in
 the Designer.
 
-Note that the XRCSupport plug-in must be installed. """
+Note that the XRCSupport plug-in must be installed."""
 
 import wx
 import wx.xrc

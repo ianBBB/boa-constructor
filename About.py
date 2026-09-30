@@ -15,7 +15,6 @@ from _thread import start_new_thread
 
 import wx
 import wx.html
-import wx.lib.wxpTag
 
 import __version__
 import Preferences, Utils
@@ -183,7 +182,7 @@ def addImagesToFS():
         ('FreeBSD.png', 'Images/Shared/FreeBSD.png', PNG),
         ]:
         if name not in addImagesToFS.addedImages:
-            wx.MemoryFSHandler.AddFile(name, Preferences.IS.load(path), type)
+            wx.MemoryFSHandler.AddFile(name, Preferences.IS.load(path), type)  # type: ignore[call-overload]
             addImagesToFS.addedImages.append(name)
 
     for lid, _tr in translations:
@@ -208,22 +207,22 @@ wxID_ABOUTBOX = wx.NewIdRef(count=1)
 class AboutBoxMixin:
     border = 7
     def __init__(self, parent, modTot=0, fileTot=0, extraStyle=0):
-        self._init_ctrls(parent)
+        self._init_ctrls(parent)  # type: ignore[attr-defined]
 
         addImagesToFS()
 
         self.moduleTotal = modTot
         self.fileTotal = fileTot
 
-        self.blackback = wx.Window(self, -1, pos=(0, 0),
-              size=self.GetClientSize(), style=wx.CLIP_CHILDREN)
+        self.blackback = wx.Window(self, -1, pos=(0, 0),  # type: ignore[arg-type]
+            size=self.GetClientSize(), style=wx.CLIP_CHILDREN)  # type: ignore[attr-defined]
         self.blackback.SetBackgroundColour(wx.BLACK)
 
         self.html = Utils.wxUrlClickHtmlWindow(self.blackback, -1,
               style=wx.CLIP_CHILDREN | wx.html.HW_NO_SELECTION | extraStyle)
         #Utils.EVT_HTML_URL_CLICK(self.html, self.OnLinkClick)
         self.html.Bind(Utils.EVT_HTML_URL_CLICK, self.OnLinkClick)
-        self.setPage()
+        self.setPage()  # type: ignore[attr-defined]
         self.blackback.SetAutoLayout(True)
         lc = wx.LayoutConstraints()
         lc.top.SameAs(self.blackback, wx.Top, self.border)
@@ -232,8 +231,8 @@ class AboutBoxMixin:
         lc.right.SameAs(self.blackback, wx.Right, self.border)
         self.html.SetConstraints(lc)
         self.blackback.Layout()
-        self.Center(wx.BOTH)
-        self.SetAcceleratorTable(wx.AcceleratorTable([(0, wx.WXK_ESCAPE, wx.ID_OK)]))
+        self.Center(wx.BOTH)  # type: ignore[attr-defined]
+        self.SetAcceleratorTable(wx.AcceleratorTable([(0, wx.WXK_ESCAPE, wx.ID_OK)]))  # type: ignore[attr-defined]
 
     def gotoInternetUrl(self, url):
         try:
@@ -262,7 +261,7 @@ class AboutBoxMixin:
                                               'memory:FreeBSD.png',
                                              ))
         elif clicked == 'Back':
-            self.setPage()
+            self.setPage()  # type: ignore[attr-defined]
             # self.html.HistoryBack()
         elif clicked == 'Python':
             self.gotoInternetUrl('http://www.python.org')
@@ -297,21 +296,21 @@ class AboutBox(AboutBoxMixin, wx.Dialog):
             boxSize=wx.Size(410, 745)
         else:
             boxSize=wx.Size(410, 700)
-        wx.Dialog.__init__(self, size=boxSize, pos=(-1, -1),
+        wx.Dialog.__init__(self, size=boxSize, pos=(-1, -1),  # type: ignore[arg-type]
               id=wxID_ABOUTBOX, title=_('About Boa Constructor'), parent=prnt,
               name='AboutBox', style=wx.DEFAULT_DIALOG_STYLE)
 
         try:
             if 'Language.png' not in addImagesToFS.addedImages:
                 wx.MemoryFSHandler.AddFile('Language.png',
-                 langlistctrl.GetLanguageFlag(wx.GetApp().locale.GetLanguage()),
+                 langlistctrl.GetLanguageFlag(wx.GetApp().locale.GetLanguage()),  # type: ignore[attr-defined]
                  wx.BITMAP_TYPE_PNG)
                 addImagesToFS.addedImages.append('Language.png')
         except Exception as err:
             pass
 
     def setPage(self):
-        sysLangName = wx.GetApp().locale.GetSysName()
+        sysLangName = wx.GetApp().locale.GetSysName()  # type: ignore[attr-defined]
         self.html.SetPage((about_html % (
               'memory:Boa.jpg', __version__.version,
               '', about_text % (sys.version, wx.VERSION_STRING,
@@ -324,11 +323,12 @@ class AboutBoxSplash(AboutBoxMixin, wx.Frame):
     progressBorder = 1
     fileOpeningFactor = 10
     def _init_ctrls(self, prnt):
-        wx.Frame.__init__(self, size=wx.Size(418, 320), pos=(-1, -1),
+        wx.Frame.__init__(self, size=wx.Size(418, 320), pos=(-1, -1),  # type: ignore[arg-type]
               id=wxID_ABOUTBOX, title='Boa Constructor', parent=prnt,
               name='AboutBoxSplash', style=wx.SIMPLE_BORDER)
-        self.progressId = wx.NewIdRef(count=1)
-        self.gaugePId = wx.NewIdRef(count=1)
+        # wxp HTML control creation expects numeric IDs, not WindowIDRef wrappers.
+        self.progressId = int(wx.NewIdRef(count=1))
+        self.gaugePId = int(wx.NewIdRef(count=1))
         self.SetBackgroundColour(wx.Colour(0x44, 0x88, 0xFF))  # wxColour(0x99, 0xcc, 0xff))
 
     def setPage(self):
@@ -340,20 +340,27 @@ class AboutBoxSplash(AboutBoxMixin, wx.Frame):
 
     def initCtrlNames(self):
         self.label = self.FindWindowById(self.progressId)
+        if self.label is None:
+            # Keep startup alive even if wxp controls were not materialized.
+            sys.stdout = sys.__stdout__
+            return
         self.label.SetBackgroundColour(wx.WHITE)
         # parentWidth = self.label.GetParent().GetClientSize().x
         # self.label.SetSize((parentWidth - 40, self.label.GetSize().y))
         ReqdWidth = self.label.GetSize().x
-        self.label.SetSize((ReqdWidth - 40, self.label.GetSize().y))
+        self.label.SetSize((ReqdWidth - 40, self.label.GetSize().y))  # type: ignore[arg-type]
         gaugePrnt = self.FindWindowById(self.gaugePId)
+        if gaugePrnt is None:
+            sys.stdout = sys.__stdout__
+            return
         gaugePrnt.SetBackgroundColour(wx.BLACK)  # wx.Colour(0x99, 0xcc, 0xff))
         gaugeSze = gaugePrnt.GetClientSize()
         self.gauge = wx.Gauge(gaugePrnt, -1,
               range=self.moduleTotal + self.fileTotal * self.fileOpeningFactor,
               style=wx.GA_HORIZONTAL | wx.GA_SMOOTH,
-              pos=(self.progressBorder, self.progressBorder),
+              pos=(self.progressBorder, self.progressBorder),  # type: ignore[arg-type]
               size=(gaugeSze.x - 2 * self.progressBorder,
-                    gaugeSze.y - 2 * self.progressBorder))
+                  gaugeSze.y - 2 * self.progressBorder))  # type: ignore[arg-type]
         self.gauge.SetBackgroundColour(wx.Colour(0xff, 0x33, 0x00))
         # secret early quit option
         self.gauge.Bind(wx.EVT_LEFT_DOWN, self.OnGaugeDClick)
@@ -415,15 +422,15 @@ class StaticTextPF(Utils.PseudoFile):
         res = prog_update.search(s)
         if res:
             cnt = int(res.group('cnt'))
-            wx.PostEvent(self.output.GetGrandParent().GetParent(),
+            wx.PostEvent(self.output.GetGrandParent().GetParent(),  # type: ignore[attr-defined]
                   ModCntUpdateEvent(cnt, 'opening'))
             s = s[:res.start()]
 
         ss = str.strip(s)
         if ss:
-            self.output.SetLabel(ss)
+            self.output.SetLabel(ss)  # type: ignore[attr-defined]
 
-        if sys:
+        if sys and sys.__stdout__:
             try:
                 sys.__stdout__.write(s)
             except UnicodeEncodeError:
@@ -449,6 +456,9 @@ if __name__ == '__main__':
 
     # frame
     def updlbl(frame):
+        if not getattr(frame, 'label', None):
+            wx.CallLater(50, updlbl, frame)
+            return
         frame.label.SetLabel('Testing')
         frame.label.SetLabel('Testing 1')
         frame.label.SetLabel('Testing 2')

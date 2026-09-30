@@ -1,13 +1,11 @@
 #Boa:Frame:AttrMixinFrame
 
-""" Example module which demonstrates the use of Attribute Mixin classes.
+"""Example module which demonstrates the use of Attribute Mixin classes.
 
 Attribute Mixin classes can be used to centralise attribute declarations
 that can be shared between frames.
 
-The mixin class name must end with the postfix _AttrMixin.
-
-"""
+The mixin class name must end with the postfix _AttrMixin."""
 
 import wx
 

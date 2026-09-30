@@ -1,6 +1,22 @@
 Changes
 -------
 
+-- 0.8.04.02 - 01/10/26 --
+* Added Phoenix widget palette page with modern wxPython controls where available:
+  * wx.dataview: DataViewCtrl, DataViewListCtrl, TreeListCtrl
+  * wx.adv: CommandLinkButton, HyperlinkCtrl, BitmapComboBox, TimePickerCtrl, BannerWindow
+  * wx.ribbon: RibbonBar, RibbonPage, RibbonPanel, RibbonButtonBar
+  * wx.aui: AuiNotebook, AuiToolBar
+  * wx.propgrid: PropertyGrid, PropertyGridManager, PropertyGridCtrl
+  * misc: ActivityIndicator, RearrangeList, RearrangeCtrl, InfoBar
+* Added utility components:
+  * wx.aui.AuiManager
+  * wx.adv.NotificationMessage
+* Updated Palette "Boa or selected component help" action to improve wx class help lookup
+  for module-qualified class names (e.g. wx.dataview.DataViewCtrl).
+* Made Boa-managed text files BOM-tolerant on load and always save them as UTF-8 without BOM.
+
+
 -- 0.8.04.01 - 26/09/04 --
 * Updated code to operate with wxPython 4.3.1
 * Introduction of UV for installation management.
@@ -49,7 +65,7 @@ Changes
 2007-07-5
 
 * Improvements for sizers in the turorial, thanks to Werner
-* Further sizer/GTK improvements by Ianare for the ModuleFinder and
+* Further sizer/GTK improvements by Ian are for the ModuleFinder and
   InterpreterChooser dialogs
 * More improvements for running as a binary
 * Bug fixes and config changes

@@ -1,3 +1,6 @@
+# pyright: ignore
+# type: ignore
+
 import os, sys
 
 # just import to confirm resourcepackage is installed
@@ -47,7 +50,7 @@ def visitDir((onlyCleanup, packages), dirname, names):
             packages.append(path)
         else:
             if os.path.splitext(name)[-1] in ('.py', '.pyc', '.pyo'):
-                try: 
+                try:
                     os.remove(os.path.join(path))
                 except Exception: pass
 
@@ -56,14 +59,14 @@ def createPackageInitFiles(paths, onlyCleanup=False):
     for path in paths:
         packages = []
         os.path.walk(path, visitDir, (onlyCleanup, packages))
-        
+
         if not onlyCleanup:
             importLst = []
             for pth in packages:
                 pck = pth[len(path)+1:].strip().replace('/', '.').replace('\\', '.')
                 importLst.append(pck)
                 open(os.path.join(pth, '__init__.py'), 'w').write(src__init__)
-            
+
             sep = '\n'
             main_init = sep.join(['import %s'%pck for pck in importLst])
             init_file = os.path.join(path, '__init__.py')
@@ -71,10 +74,11 @@ def createPackageInitFiles(paths, onlyCleanup=False):
             cur_path = sys.path
             try:
                 sys.path = [os.path.dirname(init_file)]+cur_path
-                execfile(init_file, {'__file__': init_file})
+                 exec(compile(open(init_file, 'rb').read(), init_file, 'exec'),
+                     {'__file__': init_file})
             finally:
                 sys.path = cur_path
-        
+
 
 if __name__ == '__main__':
     createPackageInitFiles(('../Images',), onlyCleanup=False)
