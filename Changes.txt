@@ -1,6 +1,10 @@
 Changes
 -------
 
+-- 0.8.04.03 - 07/10/26 --
+* Fix up README.md pror to videos.
+* Small adjustments to .gitignore to improve Staging process.
+
 -- 0.8.04.02 - 01/10/26 --
 * Added Phoenix widget palette page with modern wxPython controls where available:
   * wx.dataview: DataViewCtrl, DataViewListCtrl, TreeListCtrl
