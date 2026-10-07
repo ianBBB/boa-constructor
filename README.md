@@ -41,7 +41,7 @@ Palette help button behavior has been updated so that when a component is select
 
 ## Installation
 
-There are two approaches to installing Boa Constructor.
+There are **two** approaches to installing Boa Constructor.
 
 A manual installation is where you install Python and wxPython directly on your machine then download and start Boa Constructor. This method is suitable for Windows, selected Linux distros and MacOS. Use this link to get instructions for a [manual installation](#manual-installation)
 
@@ -67,23 +67,46 @@ To install wxPython, use the *pip* tool. Open a terminal window and use the comm
 
 (you may be asked to upgrade *pip* . The command to do this will be given to you)
 
-Finally, to download Boa Constructor, go to the [github website](https://github.com/) and search for "ianBBB/boa-constructor". This should result in just one link. Click on this link to go to the project. Use the green button marked "Code" to download the ZIP file containing Boa Constructor. Save or move the ZIP file to a convenient location (a folder in My Documents would be suitable). Unzip the file. Extract the ZIP file. In the root folder, you will find the Boa file (it is 30K in size). Double click on this file to open Boa Constructor.
+Finally, to download Boa Constructor, go to the [github website](https://github.com/) and search for "ianBBB/boa-constructor". This should result in just one link. Click on this link to go to the project. Use the green button marked "Code" to download the ZIP file containing Boa Constructor. Save or move the ZIP file to a convenient location (a folder in My Documents would be suitable). Unzip the file. Extract the ZIP file.
 
+Alternatively, if you want to use Git to get the source code.
+
+1. Using the command line:
+   Navigate to the directory where you want to clone the repository and run:
+```bash
+git clone https://github.com/ianBBB/boa-constructor
+```
+
+### Starting Bos Constructor 
+To start Boa Constructor, go to the root folder and find the Boa file 
+(called "Boa.py", it is 30K in size). 
+Double click on this file to open Boa Constructor.
 ### Installation - Other
 Installation instructions for Linux (Ubuntu) and Mac coming soon.
 
 
 ## Installation With UV
 
-### Prerequisites
+### Getting The Source Code
+
+  
+#### Downloading the ZIP file
+1. Go to the GitHub page: https://github.com/ianBBB/boa-constructor
+2. Use the green button marked "Code" to download the ZIP file containing Boa Constructor.
+3. Save the ZIP file to your local machine in a directory of your choice.
+4. Extract the contents of the ZIP file to a directory on your local machine.
+
+### UV setup.
 This project is managed with UV - An extremely fast Python package and project manager, written in Rust. 
 
-Run the appropriate bootstrap script to install UV on your system.
+Go to the root directory of the files you just extracted. Run the appropriate bootstrap script to install UV on your system.
 - Windows: `bootstrap.bat`
 - Linux / MacOS: `./bootstrap.sh`
 
-Alternatively, follow the UV installation instructions directly:
-- https://docs.astral.sh/uv/getting-started/installation/
+This script will:
+1. Download the correct version of Python
+2. Set up a virtual environment
+3. Install the required dependencies
 
 #### Linux Build Dependencies (Fedora / RHEL)
 If compiling wxPython from source (such as on Fedora with newer Python versions):
@@ -96,35 +119,22 @@ sudo dnf install gcc-c++ make pkgconf-pkg-config gtk3-devel webkit2gtk4.1-devel 
 2. Run `uv self version` to confirm UV is installed
 
 
-### Getting The Source Code
-#### Using the command line
-1. Using the command line:
-   Navigate to the directory where you want to clone the repository and run:
-```bash
-git clone https://github.com/ianBBB/boa-constructor
-```
-  
-#### Downloading the ZIP file
-1. Go to the GitHub page: https://github.com/ianBBB/boa-constructor
-2. Use the green button marked "Code" to download the ZIP file containing Boa Constructor
-3. Save the ZIP file to your local machine in a directory of your choice
-4. Extract the contents of the ZIP file to a directory on your local machine
+
 
 ### Installing/Running Boa Constructor
 #### Simple
-Run the provided script for your platform:
+Run the provided script for your platform. 
+
 - Windows: `run.bat`
 - Linux / MacOS: `./run.sh`
 
-#### Manual - Windows/MacOS/Linux
+#### Using CLI - Windows/MacOS/Linux
 1. Open a command prompt / terminal window
 2. Navigate to the directory where you cloned or extracted the repository
 3. Run the following command
 ```commandline
 uv run Boa.py
 ```
-This command will:
-1. Download the correct version of Python
-2. Set up a virtual environment
-3. Install the required dependencies
-4. Launch Boa Constructor.
+#### In Windows;
+In Windows, you can simply double click on the file in File Manager.
+

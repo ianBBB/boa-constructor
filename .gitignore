@@ -5,6 +5,7 @@ App*.py
 notes.txt
 *.pyc
 Config/Explorer.*.*
+Config/prefs_rc.py
 
 # Build output directory
 build/
