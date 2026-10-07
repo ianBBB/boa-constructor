@@ -1,7 +1,7 @@
 Changes
 -------
 
--- 0.8.04.02 - 07/10/26 --
+-- 0.8.04.03 - 07/10/26 --
 * Fix up README.md pror to videos.
 * Small adjustments to .gitignore to improve Staging process.
 
