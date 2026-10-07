@@ -41,7 +41,7 @@ undefinedWindowCol = wx.Colour(128, 0, 0)
 # Also used by setup.py
 staticInfoPrefs = { 'Purpose':   '',
                     'Author':    '<your name>',
-                    'Copyright': '(c) 2006',
+                    'Copyright': '(c) 2026',
                     'Licence':   '<your licence>',
                     'Email':     '<your email>',
                   }
@@ -50,7 +50,7 @@ staticInfoPrefs = { 'Purpose':   '',
 # a module is created from the palette
 autoAddToApplication = True
 
-# Load images from normal image files, 
+# Load images from normal image files,
 # a singe file Image.archive (zip of Image directory)
 # or modules created by resourcepackage
 ## options: 'files', 'zip', 'resource',
@@ -266,15 +266,15 @@ dsHasSizerCol = wx.Colour(255, 255, 0)
 
 #-Code generation---------------------------------------------------------------
 
-# Should the paths to image file be created as 
-# absolute paths or relative to either the directory 
-# of the application file or the directory of the 
+# Should the paths to image file be created as
+# absolute paths or relative to either the directory
+# of the application file or the directory of the
 # module?
-# When a path is created for a module that has 
+# When a path is created for a module that has
 # never been saved it will always be absolute.
-# Remember, when a path is stored relatively, 
-# the current directory of the process must be 
-# correct (relative to the path) when your code 
+# Remember, when a path is stored relatively,
+# the current directory of the process must be
+# correct (relative to the path) when your code
 # executes.
 cgAbsoluteImagePaths = True
 
@@ -377,7 +377,7 @@ STCBufferedDraw = True
 # whitespace every indent size columns. They make it easy to see which constructs
 # line up especially when they extend over multiple pages.
 STCIndentationGuides = False
-# Set the code page used to interpret the bytes of the document as characters. 
+# Set the code page used to interpret the bytes of the document as characters.
 ## options: 0, wx.stc.STC_CP_UTF8, wx.stc.STC_CP_DBCS
 STCCodePage = wx.stc.STC_CP_UTF8
 
@@ -448,8 +448,8 @@ exportedProperties = ['flatTools', 'childFrameStyle', 'dataViewListStyle',
   'i18nLanguage',
 
   'checkSyntax', 'onlyCheckIfLineModified', 'checkSourceOnSave',
-  'autoRefreshOnCodeComplete', 'importOnCodeComplete', 'callTipsOnOpenParen', 
-  'handleSpecialEuropeanKeys', 'euroKeysCountry', 'autoReindent', 
+  'autoRefreshOnCodeComplete', 'importOnCodeComplete', 'callTipsOnOpenParen',
+  'handleSpecialEuropeanKeys', 'euroKeysCountry', 'autoReindent',
   'neverEmptyUndoBuffer',
 
   'rememberOpenFiles', 'showFilenameExtensions', 'editorNotebookOpenPos',
@@ -468,7 +468,7 @@ exportedProperties = ['flatTools', 'childFrameStyle', 'dataViewListStyle',
   'cgContinuedLineIndent',
 
   'dsGridSize', 'dsSelectionTagSize', 'dsSelectionFrameWidth',
-  'dsDefaultControlSize', 'dsSelectionTagCol', 'dsAnchorEnabledCol', 
+  'dsDefaultControlSize', 'dsSelectionTagCol', 'dsAnchorEnabledCol',
   'dsAnchorDisabledCol', 'dsUseSizers', 'dsInSizerCol', 'dsHasSizerCol',
 
   'vpOGLCanvasBackgroundColour', 'vpOGLLinePen', 'vpOGLLineBrush',
