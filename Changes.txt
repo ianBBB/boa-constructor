@@ -1,8 +1,7 @@
 Changes
 -------
 
-
--- 0.8.04.01 - 26/05/23 --
+-- 0.8.04.02 - 01/10/26 --
 * Added Phoenix widget palette page with modern wxPython controls where available:
   * wx.dataview: DataViewCtrl, DataViewListCtrl, TreeListCtrl
   * wx.adv: CommandLinkButton, HyperlinkCtrl, BitmapComboBox, TimePickerCtrl, BannerWindow
@@ -18,7 +17,7 @@ Changes
 * Made Boa-managed text files BOM-tolerant on load and always save them as UTF-8 without BOM.
 
 
--- 0.8.04.0 - 26/09/04 --
+-- 0.8.04.01 - 26/09/04 --
 * Updated code to operate with wxPython 4.3.1
 * Introduction of UV for installation management.
 
