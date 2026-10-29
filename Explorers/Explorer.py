@@ -352,10 +352,10 @@ class ExplorerTree(BaseExplorerTree):
     def openDefaultNodes(self):
         rootItem = BaseExplorerTree.openDefaultNodes(self)
 
-        bktn = self.getChildNamed(rootItem, 'Bookmarks')
+        bktn = self.getChildNamed(rootItem, _('Bookmarks'))
         self.Expand(bktn)
 
-        trtn = self.getChildNamed(rootItem, 'Transport')
+        trtn = self.getChildNamed(rootItem, _('Transport'))
         self.Expand(trtn)
 
         self.defaultBookmarkItem = self.getChildNamed(bktn,
