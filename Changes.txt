@@ -1,6 +1,11 @@
 Changes
 -------
 
+-- 0.8.04.05 - 04/11/26 --
+* Fix crashing problem after running loaded software.
+* Fix Save File which was writing an extra line feed out with each line of code.
+* Fix language problem. Changing language from English was causing crash during startup.
+
 -- 0.8.04.03 - 07/10/26 --
 * Fix up README.md pror to videos.
 * Small adjustments to .gitignore to improve Staging process.

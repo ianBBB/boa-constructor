@@ -8,15 +8,9 @@ class ProcessRunnerMix:
         if handler is None:
             handler = self
         self.handler = handler
-        # This update is causing Boa to crash after return from running the currently loaded app.
-        # commenting out for now and returning to previous code.
-        # if hasattr(handler, 'Bind'):
-        #     handler.Bind(wx.EVT_IDLE, self.OnIdle)
-        #     handler.Bind(wx.EVT_END_PROCESS, self.OnProcessEnded)
-        #
-        # This is the original code.
-        handler.Bind(wx.EVT_IDLE, self.OnIdle)
-        handler.Bind(wx.EVT_END_PROCESS, self.OnProcessEnded)
+        if hasattr(handler, 'Bind'):
+            handler.Bind(wx.EVT_IDLE, self.OnIdle)
+            handler.Bind(wx.EVT_END_PROCESS, self.OnProcessEnded)
 
         input.reverse() # so we can pop
         self.input = input
@@ -38,13 +32,7 @@ class ProcessRunnerMix:
         self.responded = False
 
     def execute(self, cmd):
-        # This update is causing Boa to crash after return from running the currently loaded app.
-        # commenting out for now and returning to previous code.
-        # self.process = wx.Process(None)  # Pass None for parent instead of handler
-        #
-        # This is the original code.
-        self.process = wx.Process(self.handler)
-
+        self.process = wx.Process(None)  # Pass None for parent instead of handler
         self.process.Redirect() # TODO testing purposes
 
         # self.pid = wx.Execute(cmd, wx.EXEC_NOHIDE, self.process)   # orig
