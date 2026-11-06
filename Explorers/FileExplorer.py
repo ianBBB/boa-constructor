@@ -536,7 +536,7 @@ class FileSysNode(ExplorerNodes.ExplorerNode):
                     payload = data.decode('utf-8-sig')
                 else:
                     payload = Utils.stripUtf8Bom(data)
-                with open(self.resourcepath, mode, encoding='utf-8') as resource_file:
+                with open(self.resourcepath, mode, encoding='utf-8', newline='') as resource_file:
                     resource_file.write(payload)
         except IOError as error:
             raise ExplorerNodes.TransportSaveError(error, self.resourcepath)
