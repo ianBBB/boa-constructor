@@ -4,8 +4,8 @@ Frame*.py
 App*.py
 notes.txt
 *.pyc
-Config/Explorer.*.*
-Config/prefs_rc.py
+Config/
+*.log
 
 # Build output directory
 build/
