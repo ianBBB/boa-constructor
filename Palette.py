@@ -148,9 +148,9 @@ class BoaFrame(wx.Frame, Utils.FrameRestorerMixin):
         self.toolBar.AddSeparator()
         self.addTool('Images/Shared/Help', _('Boa help'),
               _('Show help'), self.OnHelpToolClick)
-        self.addTool('Images/Shared/ContextHelp', _('Selected component help'),
-              _('Show help for the selected component'),
-              self.OnComponentHelpToolClick)
+        # self.addTool('Images/Shared/ContextHelp', _('Selected component help'),
+        #       _('Show help for the selected component'),
+        #       self.OnComponentHelpToolClick)
         self.addTool('Images/Shared/wxWinHelp', _('wxPython help'),
               _('Show help'), self.OnWxWinHelpToolClick)
         self.addTool('Images/Shared/PythonHelp', _('Python help'),
