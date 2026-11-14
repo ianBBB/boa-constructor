@@ -6,6 +6,7 @@ notes.txt
 *.pyc
 Config/
 *.log
+TestArea/
 
 # Build output directory
 build/
