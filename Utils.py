@@ -605,6 +605,10 @@ def html2txt(htmlblock):
 def getEntireWxNamespace():
     """ Return a dictionary containing the entire (non filtered) wxPython
         namespace """
+    # modules = ['activex', 'animate', 'aui', 'calendar', 'combo', 'dataview',
+    #            'gizmos', 'glcanvas', 'grid', 'html', 'html2', 'media',
+    #            'propgrid', 'richtext', 'stc', 'webkit', 'wizard', 'wx']
+
     modules = ['activex', 'animate', 'aui', 'calendar', 'combo', 'dataview',
                'gizmos', 'glcanvas', 'grid', 'html', 'html2', 'media',
                'propgrid', 'richtext', 'stc', 'webkit', 'wizard', 'wx']
