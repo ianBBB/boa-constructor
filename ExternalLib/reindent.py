@@ -113,7 +113,7 @@ class Reindenter:
         self.find_stmt = 1  # next token begins a fresh stmt?
         self.level = 0      # current indent level
         self.eol = eol
-        
+
         # Raw file lines.
         self.raw = f.readlines()
 
@@ -134,7 +134,10 @@ class Reindenter:
     def run(self):
         # tokenize.tokenize(self.getline, self.tokeneater)    # orig
 
-        for tok in tokenize.tokenize(self.getline):
+        # for tok in tokenize.tokenize (self.getline):
+        #     self.tokeneater(tok.type,tok.string,tok.start,tok.end,tok.line.strip())
+
+        for tok in tokenize.generate_tokens(self.getline):
             self.tokeneater(tok.type,tok.string,tok.start,tok.end,tok.line.strip())
 
         # Remove trailing empty lines.

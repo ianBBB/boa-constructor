@@ -676,6 +676,6 @@ def _test(word):
 
 
 if __name__ == '__main__':
-    # initWxPyDocStrs()
+    initWxPyDocStrs()
     main(sys.argv[1:])
     # _test('Window deletion overview')
