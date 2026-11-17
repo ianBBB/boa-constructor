@@ -1,13 +1,19 @@
 Changes
 -------
 
+-- 0.8.04.06 - 17/11/26 --
+* Reinstate Boa Help access.
+* Set pyplot plugin to load by default thereby removing startup error message.
+* Enable ClipboardPlus to load by default.
+* more additions to .gitingnore
+
 -- 0.8.04.05 - 04/11/26 --
 * Fix crashing problem after running loaded software.
 * Fix Save File which was writing an extra line feed out with each line of code.
 * Fix language problem. Changing language from English was causing crash during startup.
 
 -- 0.8.04.03 - 07/10/26 --
-* Fix up README.md pror to videos.
+* Fix up README.md prior to videos.
 * Small adjustments to .gitignore to improve Staging process.
 
 -- 0.8.04.02 - 01/10/26 --
