@@ -540,6 +540,7 @@ modules ={'About': [0, 'About box and Splash screen', 'About.py'],
  'WizardCompanions': [0, '', 'Companions/WizardCompanions.py'],
  'XMLSupport': [0, '', 'Models/XMLSupport.py'],
  'XMLView': [0, '', 'Views/XMLView.py'],
+
  'ZipExplorer': [0, '', 'Explorers/ZipExplorer.py'],
  'ZopeCompanions': [0, '', 'ZopeLib/ZopeCompanions.py'],
  'ZopeEditorModels': [0, '', 'ZopeLib/ZopeEditorModels.py'],

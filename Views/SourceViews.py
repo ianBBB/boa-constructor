@@ -85,6 +85,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
 
         self.eol = None
         self.eolsChecked = False
+        # self.SetBackSpaceUnIndents(True)
 
         self.pos = 0
         self.stepPos = 0
@@ -370,7 +371,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
     def OnFindAgain(self, event):
         import FindReplaceDlg
         FindReplaceDlg.findAgain(self, self.model.editor.finder, self, False)
-        
+
     def OnFindAgainPrev(self, event):
         import FindReplaceDlg
         FindReplaceDlg.findAgain(self, self.model.editor.finder, self, True)
@@ -506,7 +507,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
         self.ConvertEOLs(eol)
         self.SetEOLMode(eol)
         self.eol = viewEOL
-        
+
 
 #---Macro recording/playback----------------------------------------------------
     _recordingMacro = False
@@ -546,7 +547,7 @@ class EditorStyledTextCtrl(wx.stc.StyledTextCtrl, EditorViews.EditorView,
 class TextView(EditorStyledTextCtrl, TextSTCMix):
     viewName = 'Text'
     viewTitle = _('Text')
-    
+
     def __init__(self, parent, model, actions=()):
         EditorStyledTextCtrl.__init__(self, parent, wxID_TEXTVIEW, model,
               actions, -1)
