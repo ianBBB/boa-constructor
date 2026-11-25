@@ -826,10 +826,6 @@ class PythonStyledTextCtrlMix(LanguageSTCMix):
             # self.Refresh(False)
 
     def doAutoIndent(self, prevline, pos):
-        # print(self.GetTabIndents())  # Tab indents current line
-        # print(self.GetBackSpaceUnIndents())  # Backspace reverses indentation
-        # print(self.GetIndent()) # Indentation size
-        # print(self.GetUseTabs()) # Use spaces
         # First check if previous line was a keyword requiring a dedent and action.
         if _is_mid_block_indenter(prevline):
             # get text of preceeding lines.

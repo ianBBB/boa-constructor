@@ -1186,16 +1186,23 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                 self.damagedLine = self.LineFromPosition(pos)
                 #ignore indenting when at start of line
                 if self.PositionFromLine(self.LineFromPosition(pos)) != pos:
-                    pos = pos -1
                     ln = self.LineFromPosition(pos)
                     ls = self.PositionFromLine(ln)
                     st = pos - ls
                     if not line[:st].strip():
-                        # self.SetSelection(ls + st/indtSze*indtSze, pos+1)   # orig
-                        self.SetSelection(ls + (st % indtSze), pos+1)
+                        indentMultiplier = st / indtSze
+                        if indentMultiplier.is_integer():
+                            # we are at an indent boundary, so set multiplier to remove one whole indent
+                            indentMultiplier = int(indentMultiplier) - 1
+                        else:
+                            # set multiplier to previous indent boundary
+                            indentMultiplier = int(indentMultiplier)
+                        self.SetSelection(ls + indentMultiplier * indtSze, pos)
                         self.ReplaceSelection('')
+                        self.SetCurrentPos(ls + indentMultiplier * indtSze)
                         return
-        #event.Skip()
+
+        event.Skip()
         BrowseStyledTextCtrlMix.OnKeyDown(self, event)
 
 #---Meta comment----------------------------------------------------------------
