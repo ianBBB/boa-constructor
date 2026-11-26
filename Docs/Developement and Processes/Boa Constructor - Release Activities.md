@@ -12,4 +12,5 @@
 2. In the Boa Constructor root directory, update the version number in \__version__.py
 3. In Config directory, set the _pythonInterpreterPath_ variable in _prefs_rc.py_ to _pythonInterpreterPath = ''_ (that is, two single quote marks)
 4. Update Changes.txt
+5. Check log file is empty
 >>>>>>> Boa is Bonza !!!
