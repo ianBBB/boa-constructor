@@ -43,7 +43,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                        DebuggingViewSTCMix):
     viewName = 'Source'
     viewTitle = _('Source')
-    
+
     breakBmp = 'Images/Debug/Breakpoints.png'
     runCrsBmp = 'Images/Editor/RunToCursor.png'
     modInfoBmp = 'Images/Modules/InfoBlock.png'
@@ -140,6 +140,17 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
         if self.CallTipActive():
             pass
 
+    def leading_alpha(self,text):
+        text = text.lstrip()
+
+        i = 0
+        while i < len(text) and text[i].isalpha():
+            i += 1
+
+        return text[:i]
+
+
+    mid_block_dedent_keyword_list = ('elif', 'else', 'except' , 'finally', 'case')
 #---Call Tips-------------------------------------------------------------------
 
     def OnParamTips(self, event):
@@ -353,20 +364,20 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
     def importInShell(self, name, fromlist=()):
         locs = self.model.editor.shell.getShellLocals()
         try:
-            mod = __import__(name, {}, locs, fromlist) 
+            mod = __import__(name, {}, locs, fromlist)
         except Exception:
-            # just swallow all errors, no way to guess what code could execute 
+            # just swallow all errors, no way to guess what code could execute
             # in the global scope of arbitrary modules
             return None
-        
+
         if fromlist and hasattr(mod, fromlist[0]):
             return getattr(mod, fromlist[0])
 
-        components = name.split('.') 
-        for comp in components[1:]: 
+        components = name.split('.')
+        for comp in components[1:]:
             if hasattr(mod, comp):
-                mod = getattr(mod, comp) 
-        return mod 
+                mod = getattr(mod, comp)
+        return mod
 
     def getImportedShellObj(self, words):
         module = self.model.getModule()
@@ -381,7 +392,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                     if name in module.from_imports_names:
                         fromlist = [name]
                         name = module.from_imports_names[name]
-                    
+
                     m = self.importInShell(name, fromlist)
                     if m is None:
                         raise ShellNameNotFound
@@ -563,11 +574,11 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                         self.model.editor.addBrowseMarker(currLineNo)
                         model, ctrlr = self.model.editor.openOrGotoModule(path)
                         if impType == 'name':
-                            model.views['Source'].gotoName(model.getModule(), 
+                            model.views['Source'].gotoName(model.getModule(),
                                   words[-1], currLineNo)
                         return True, model
         return False, None
-                
+
 
     def handleBrwsImports(self, module, word, currLineNo):
         words = word.split('.')
@@ -925,18 +936,42 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             else:
                 if len(prevlines) == 1 and err.offset is not None and not contLinesOffset:
                     # Check for dedenting keywords
-                    possblkeyword = stripprevline[:err.offset-len(indent)]
-                    if possblkeyword in list(self.if_keywords.keys()):
-                        self.checkSyntax( (prevline.replace(possblkeyword,
-                              self.if_keywords[possblkeyword], 1),),
-                            lineNo, getPrevLine)
-                        return
-                    elif possblkeyword in list(self.try_keywords.keys()):
-                        if stripprevline[-1] == ':':
-                            prevline = prevline.rstrip()+'pass\n'
 
-                        self.checkSyntax( (self.try_keywords[possblkeyword],
-                                           prevline), lineNo, getPrevLine)
+                    possblkeyword = self.leading_alpha(prevline)
+                    if possblkeyword in self.mid_block_dedent_keyword_list:
+                        linePos = self.PositionFromLine(lineNo - 1)
+                        indent = Utils.getIndentBlock()
+                        currLinePos = self.GetCurrentPos()
+                        # if self.GetTextRange(linePos, linePos + len(indent)) == indent:
+                        #     self.SetSelection(linePos, linePos + len(indent))
+                        #     self.ReplaceSelection('')
+                        #     self.SetSelection(currLinePos, currLinePos)
+                            # self.ClearSelections()
+                            # self.SetCurrentPos(currLinePos)
+                        return
+
+                    # orig code
+                    # possblkeyword = stripprevline[:err.offset-len(indent)]
+                    # if possblkeyword in list(self.if_keywords.keys()):
+                    #     self.checkSyntax( (prevline.replace(possblkeyword,
+                    #           self.if_keywords[possblkeyword], 1),),
+                    #         lineNo, getPrevLine)
+                    #     return
+                    # elif possblkeyword in list(self.try_keywords.keys()):
+                    #     if stripprevline[-1] == ':':
+                    #         prevline = prevline.rstrip()+'pass\n'
+                    #
+                    #     self.checkSyntax( (self.try_keywords[possblkeyword],
+                    #                        prevline), lineNo, getPrevLine)
+                    #     return
+
+                    # linePos = self.PositionFromLine(self.LineFromPosition(selStartPos))
+                    # if self.GetTextRange(linePos, linePos + indentLevel) == indentBlock:
+                    #     self.SetSelection(linePos, linePos + indentLevel)
+                    #     self.ReplaceSelection('')
+                    #     newStartPos = selStartPos - indentLevel
+                    #     self.SetSelection(newStartPos, newStartPos)
+                    #
                         return
 
                     # Check for line continueations
@@ -1066,7 +1101,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
             self.AddText(Utils.getIndentBlock())
             self.SetSelection(selStartPos, selStartPos)
 
-    def OnDedent(self, event):
+    def OnDedent(self, event=None):
         selStartPos, selEndPos = self.GetSelection()
         indentBlock = Utils.getIndentBlock()
         indentLevel = len(indentBlock)
@@ -1151,16 +1186,23 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
                 self.damagedLine = self.LineFromPosition(pos)
                 #ignore indenting when at start of line
                 if self.PositionFromLine(self.LineFromPosition(pos)) != pos:
-                    pos = pos -1
                     ln = self.LineFromPosition(pos)
                     ls = self.PositionFromLine(ln)
                     st = pos - ls
                     if not line[:st].strip():
-                        # self.SetSelection(ls + st/indtSze*indtSze, pos+1)   # orig
-                        self.SetSelection(ls + (st % indtSze), pos+1)
+                        indentMultiplier = st / indtSze
+                        if indentMultiplier.is_integer():
+                            # we are at an indent boundary, so set multiplier to remove one whole indent
+                            indentMultiplier = int(indentMultiplier) - 1
+                        else:
+                            # set multiplier to previous indent boundary
+                            indentMultiplier = int(indentMultiplier)
+                        self.SetSelection(ls + indentMultiplier * indtSze, pos)
                         self.ReplaceSelection('')
+                        self.SetCurrentPos(ls + indentMultiplier * indtSze)
                         return
-        #event.Skip()
+
+        event.Skip()
         BrowseStyledTextCtrlMix.OnKeyDown(self, event)
 
 #---Meta comment----------------------------------------------------------------
@@ -1278,7 +1320,7 @@ class PythonSourceView(EditorStyledTextCtrl, PythonStyledTextCtrlMix,
 class PythonDisView(EditorStyledTextCtrl, PythonStyledTextCtrlMix):
     viewName = 'Disassemble'
     viewTitle = _('Disassemble')
-    
+
     breakBmp = 'Images/Debug/Breakpoints.png'
     def __init__(self, parent, model):
         wxID_PYTHONDISVIEW = wx.NewIdRef(count=1)

@@ -38,6 +38,16 @@ _is_block_closer = re.compile(r'''
     )
     \b
 ''', re.VERBOSE).match
+_is_mid_block_indenter = re.compile(r'''
+    \s*
+    ( elif
+    | else
+    | except
+    | finally
+    | case
+    )
+    \b
+''', re.VERBOSE).match
 
 
 def ver_tot(ma, mi, re):
@@ -816,6 +826,24 @@ class PythonStyledTextCtrlMix(LanguageSTCMix):
             # self.Refresh(False)
 
     def doAutoIndent(self, prevline, pos):
+        # First check if previous line was a keyword requiring a dedent and action.
+        if _is_mid_block_indenter(prevline):
+            # get text of preceeding lines.
+            currlineNo = self.LineFromPosition(pos)
+            back2linesText = self.GetLine(currlineNo - 2)
+            # compare the indents.
+            prevlineIndent = prevline[:prevline.find(prevline.strip())]
+            back2linesIndent = back2linesText[:back2linesText.find(back2linesText.strip())]
+            if back2linesIndent == prevlineIndent:
+                # indent the prev line
+                linePos = self.PositionFromLine(currlineNo - 1)
+                self.SetSelection(linePos, linePos)
+                self.OnDedent()
+                prevline = self.GetLine(currlineNo - 1)
+                pos = pos - self.GetTabWidth()
+
+
+        # Now set the indent for the next line
         stripprevline = prevline.strip()
         if stripprevline:
             indent = prevline[:prevline.find(stripprevline)]
